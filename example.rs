@@ -1,7 +1,7 @@
 #![feature(default_type_params)]
 #![allow(dead_code)]
 
-use foundation::NSObject;
+use foundation::{NSObject, NSString, INSString};
 
 mod runtime;
 mod id;
@@ -15,4 +15,7 @@ fn main() {
 
 	let obj3 = NSObject::new();
 	println!("{} == {}? {}", obj, obj3, obj == obj3);
+
+	let string = NSString::from_str("Hello, world!");
+	println!("{}", string.as_str());
 }

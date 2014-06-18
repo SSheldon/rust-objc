@@ -11,8 +11,8 @@ fn main() {
 	let obj = NSObject::new();
 	let obj2 = obj.clone();
 
-	println!("{}", obj == obj2);
+	println!("{} == {}? {}", obj, obj2, obj == obj2);
 
 	let obj3 = NSObject::new();
-	println!("{}", obj == obj3);
+	println!("{} == {}? {}", obj, obj3, obj == obj3);
 }

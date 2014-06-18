@@ -5,6 +5,12 @@ pub enum Object { }
 
 pub trait Messageable {
 	unsafe fn as_ptr(&self) -> *Object;
+
+	fn is_nil(&self) -> bool {
+		unsafe {
+			self.as_ptr().is_null()
+		}
+	}
 }
 
 pub struct Sel {

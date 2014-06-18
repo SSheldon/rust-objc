@@ -1,7 +1,7 @@
 #![feature(default_type_params)]
 #![allow(dead_code)]
 
-use foundation::{NSObject, NSString, INSString};
+use foundation::{NSObject, NSArray, INSArray, NSString, INSString};
 
 mod runtime;
 mod id;
@@ -15,6 +15,11 @@ fn main() {
 
 	let obj3 = NSObject::new();
 	println!("{} == {}? {}", obj, obj3, obj == obj3);
+
+	let array = NSArray::from_slice(&[obj, obj2, obj3]);
+	for obj in array.object_enumerator() {
+		println!("{}", obj);
+	}
 
 	let string = NSString::from_str("Hello, world!");
 	println!("{}", string.as_str());

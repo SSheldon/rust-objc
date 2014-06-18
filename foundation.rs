@@ -1,19 +1,10 @@
+use std::hash;
 use std::mem;
 
 use runtime::{Class, Messageable, Object, Sel, objc_msgSend};
 use id::{Id, FromId};
 
 pub trait INSObject : Messageable {
-	unsafe fn retain(&self) {
-		let retain = Sel::register("retain");
-		objc_msgSend(self.as_ptr(), retain);
-	}
-
-	unsafe fn release(&self) {
-		let release = Sel::register("release");
-		objc_msgSend(self.as_ptr(), release);
-	}
-
 	fn hash_code(&self) -> uint {
 		let hash = Sel::register("hash");
 		unsafe {
@@ -31,7 +22,7 @@ pub trait INSObject : Messageable {
 	}
 }
 
-#[deriving(Clone, PartialEq, Eq, Hash)]
+#[deriving(Clone)]
 pub struct NSObject {
 	ptr: Id,
 }
@@ -49,6 +40,20 @@ impl FromId for NSObject {
 }
 
 impl INSObject for NSObject { }
+
+impl PartialEq for NSObject {
+	fn eq(&self, other: &NSObject) -> bool {
+		self.is_equal(other)
+	}
+}
+
+impl Eq for NSObject { }
+
+impl<S: hash::Writer> hash::Hash<S> for NSObject {
+	fn hash(&self, state: &mut S) {
+		self.hash_code().hash(state);
+	}
+}
 
 impl NSObject {
 	fn class() -> Class {

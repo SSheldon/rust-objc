@@ -1,7 +1,7 @@
 #![feature(default_type_params)]
 #![allow(dead_code)]
 
-use foundation::{NSObject, NSArray, INSArray, NSString, INSString};
+use foundation::{NSObject, NSArray, INSArray, NSString, INSString, INSCopying};
 
 mod runtime;
 mod id;
@@ -23,4 +23,6 @@ fn main() {
 
 	let string = NSString::from_str("Hello, world!");
 	println!("{}", string.as_str());
+	let string2 = string.copy();
+	println!("{}", string2.as_str());
 }

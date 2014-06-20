@@ -22,6 +22,7 @@ fn main() {
 	for obj in array.object_enumerator() {
 		println!("{}", obj);
 	}
+	println!("{}", array.len());
 
 	let string = NSString::from_str("Hello, world!");
 	println!("{}", string.as_str());
@@ -32,4 +33,5 @@ fn main() {
 	let vals = [obj.clone()];
 	let dict = NSDictionary::from_keys_and_objects(keys.as_slice(), vals.as_slice());
 	println!("{}", dict.object_for(&string));
+	println!("{}", dict.len());
 }

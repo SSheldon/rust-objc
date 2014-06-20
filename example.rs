@@ -1,7 +1,8 @@
 #![feature(default_type_params)]
 #![allow(dead_code)]
 
-use foundation::{NSObject, NSArray, INSArray, NSString, INSString, INSCopying};
+use foundation::{NSArray, NSDictionary, NSObject, NSString,
+	INSArray, INSCopying, INSDictionary, INSString};
 
 mod runtime;
 mod id;
@@ -16,7 +17,8 @@ fn main() {
 	let obj3 = NSObject::new();
 	println!("{} == {}? {}", obj, obj3, obj == obj3);
 
-	let array = NSArray::from_slice(&[obj, obj2, obj3]);
+	let objs = [obj.clone(), obj2.clone(), obj3.clone()];
+	let array = NSArray::from_slice(objs.as_slice());
 	for obj in array.object_enumerator() {
 		println!("{}", obj);
 	}
@@ -25,4 +27,9 @@ fn main() {
 	println!("{}", string.as_str());
 	let string2 = string.copy();
 	println!("{}", string2.as_str());
+
+	let keys = [string.clone()];
+	let vals = [obj.clone()];
+	let dict = NSDictionary::from_keys_and_objects(keys.as_slice(), vals.as_slice());
+	println!("{}", dict.object_for(&string));
 }

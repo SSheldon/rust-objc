@@ -1,8 +1,10 @@
-#![feature(default_type_params)]
+#![feature(default_type_params, macro_rules)]
 #![allow(dead_code)]
 
 use foundation::{NSArray, NSDictionary, NSObject, NSString,
 	INSArray, INSCopying, INSDictionary, INSObject, INSString};
+
+mod macros;
 
 mod runtime;
 mod id;

@@ -9,6 +9,7 @@ macro_rules! object_struct(
 
 		impl ::runtime::Messageable for $name {
 			unsafe fn as_ptr(&self) -> *::runtime::Object {
+				use runtime::Messageable;
 				self.ptr.as_ptr()
 			}
 		}
@@ -35,6 +36,7 @@ macro_rules! object_struct(
 
 		impl ::std::cmp::PartialEq for $name {
 			fn eq(&self, other: &$name) -> bool {
+				use foundation::INSObject;
 				self.is_equal(other)
 			}
 		}
@@ -49,6 +51,7 @@ macro_rules! object_struct(
 
 		impl ::std::fmt::Show for $name {
 			fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+				use foundation::{INSObject, INSString};
 				self.description().as_str().fmt(f)
 			}
 		}

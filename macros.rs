@@ -1,6 +1,20 @@
 #![macro_escape]
 
 #[macro_export]
+macro_rules! msg_send(
+	($obj:expr $name:ident) => ({
+		let sel_name = stringify!($name);
+		let sel = ::runtime::Sel::register(sel_name);
+		::runtime::objc_msgSend($obj, sel)
+	});
+	($obj:expr $($name:ident : $arg:expr)+) => ({
+		let sel_name = concat!($(stringify!($name), ':'),+);
+		let sel = ::runtime::Sel::register(sel_name);
+		::runtime::objc_msgSend($obj, sel $(,$arg)+)
+	});
+)
+
+#[macro_export]
 macro_rules! object_struct(
 	($name:ident<$($t:ident),+>) => (
 		object_struct!($name, $($t),+)

@@ -2,27 +2,10 @@
 
 #[macro_export]
 macro_rules! object_struct(
-	($name:ident) => (
-		object_struct!($name,)
-
-		impl<S: ::std::hash::Writer> ::std::hash::Hash<S> for $name {
-			fn hash(&self, state: &mut S) {
-				use foundation::INSObject;
-				self.hash_code().hash(state);
-			}
-		}
-	);
 	($name:ident<$($t:ident),+>) => (
 		object_struct!($name, $($t),+)
-
-		impl<$($t),+, S: ::std::hash::Writer> ::std::hash::Hash<S> for $name<$($t),+> {
-			fn hash(&self, state: &mut S) {
-				use foundation::INSObject;
-				self.hash_code().hash(state);
-			}
-		}
 	);
-	($name:ident, $($t:ident),*) => (
+	($name:ident $(,$t:ident)*) => (
 		pub struct $name<$($t),*> {
 			ptr: ::id::Id,
 		}
@@ -62,6 +45,13 @@ macro_rules! object_struct(
 		}
 
 		impl<$($t),*> ::std::cmp::Eq for $name<$($t),*> { }
+
+		impl<$($t,)* S: ::std::hash::Writer> ::std::hash::Hash<S> for $name<$($t),*> {
+			fn hash(&self, state: &mut S) {
+				use foundation::INSObject;
+				self.hash_code().hash(state);
+			}
+		}
 
 		impl<$($t),*> ::std::fmt::Show for $name<$($t),*> {
 			fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {

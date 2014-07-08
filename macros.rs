@@ -20,34 +20,17 @@ macro_rules! object_struct(
 		object_struct!($name, $($t),+)
 	);
 	($name:ident $(,$t:ident)*) => (
-		pub struct $name<$($t),*> {
-			ptr: ::id::Id,
-		}
+		pub enum $name<$($t),*> { }
 
 		impl<$($t),*> ::runtime::Messageable for $name<$($t),*> {
 			unsafe fn as_ptr(&self) -> *::runtime::Object {
-				use runtime::Messageable;
-				self.ptr.as_ptr()
-			}
-		}
-
-		impl<$($t),*> ::id::FromId for $name<$($t),*> {
-			unsafe fn from_id(id: ::id::Id) -> $name<$($t),*> {
-				$name { ptr: id }
+				(self as *$name<$($t),*>) as *::runtime::Object
 			}
 		}
 
 		impl<$($t),*> ::foundation::INSObject for $name<$($t),*> {
 			fn class_name() -> ::id::ClassName<$name<$($t),*>> {
 				::id::ClassName::from_str(stringify!($name))
-			}
-		}
-
-		impl<$($t),*> ::std::clone::Clone for $name<$($t),*> {
-			fn clone(&self) -> $name<$($t),*> {
-				unsafe {
-					::id::FromId::from_id(self.ptr.clone())
-				}
 			}
 		}
 

@@ -22,11 +22,9 @@ fn main() {
 
 	let objs = vec![obj.clone(), obj2.clone(), obj3.clone()];
 	let array: Id<NSArray<NSObject>> = INSArray::from_vec(objs);
-/*
 	for obj in array.object_enumerator() {
 		println!("{}", obj);
 	}
-*/
 	println!("{}", array.len());
 
 	let string: Id<NSString> = INSString::from_str("Hello, world!");

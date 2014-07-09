@@ -2,8 +2,8 @@
 #![allow(dead_code)]
 
 use id::Id;
-use foundation::{NSArray, NSObject, NSString,
-	INSArray, INSCopying, INSObject, INSString};
+use foundation::{NSArray, NSDictionary, NSObject, NSString,
+	INSArray, INSCopying, INSDictionary, INSObject, INSString};
 
 mod macros;
 
@@ -34,12 +34,10 @@ fn main() {
 	let string2 = string.copy();
 	println!("{}", string2.as_str());
 
-/*
-	let keys = [string.clone()];
-	let vals = [obj.clone()];
-	let dict: NSDictionary<NSString, NSObject> =
-		INSDictionary::from_keys_and_objects(keys.as_slice(), vals.as_slice());
-	println!("{}", dict.object_for(&string));
+	let keys = [&*string];
+	let vals = vec![obj.clone()];
+	let dict: Id<NSDictionary<NSString, NSObject>> =
+		INSDictionary::from_keys_and_objects(keys.as_slice(), vals);
+	println!("{}", dict.object_for(&*string));
 	println!("{}", dict.len());
-*/
 }

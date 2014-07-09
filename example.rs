@@ -2,7 +2,8 @@
 #![allow(dead_code)]
 
 use id::Id;
-use foundation::{NSObject, NSString, INSCopying, INSObject, INSString};
+use foundation::{NSArray, NSObject, NSString,
+	INSArray, INSCopying, INSObject, INSString};
 
 mod macros;
 
@@ -19,14 +20,14 @@ fn main() {
 	let obj3: Id<NSObject> = INSObject::new();
 	println!("{} == {}? {}", obj, obj3, obj == obj3);
 
+	let objs = vec![obj.clone(), obj2.clone(), obj3.clone()];
+	let array: Id<NSArray<NSObject>> = INSArray::from_vec(objs);
 /*
-	let objs = [obj.clone(), obj2.clone(), obj3.clone()];
-	let array: NSArray<NSObject> = INSArray::from_slice(objs.as_slice());
 	for obj in array.object_enumerator() {
 		println!("{}", obj);
 	}
-	println!("{}", array.len());
 */
+	println!("{}", array.len());
 
 	let string: Id<NSString> = INSString::from_str("Hello, world!");
 	println!("{}", string.as_str());

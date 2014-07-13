@@ -25,7 +25,7 @@ macro_rules! object_struct(
 		pub enum $name<$($t),*> { }
 
 		impl<$($t),*> ::runtime::Messageable for $name<$($t),*> {
-			unsafe fn as_ptr(&self) -> *::runtime::Object {
+			fn as_ptr(&self) -> *::runtime::Object {
 				(self as *$name<$($t),*>) as *::runtime::Object
 			}
 		}

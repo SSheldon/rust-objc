@@ -4,12 +4,10 @@ enum Selector { }
 pub enum Object { }
 
 pub trait Messageable {
-	unsafe fn as_ptr(&self) -> *Object;
+	fn as_ptr(&self) -> *Object;
 
 	fn is_nil(&self) -> bool {
-		unsafe {
-			self.as_ptr().is_null()
-		}
+		self.as_ptr().is_null()
 	}
 }
 
@@ -62,13 +60,13 @@ impl Clone for Sel {
 }
 
 impl Messageable for Object {
-	unsafe fn as_ptr(&self) -> *Object {
+	fn as_ptr(&self) -> *Object {
 		self as *Object
 	}
 }
 
 impl Messageable for *Object {
-	unsafe fn as_ptr(&self) -> *Object {
+	fn as_ptr(&self) -> *Object {
 		*self
 	}
 }
@@ -89,7 +87,7 @@ impl Class {
 }
 
 impl Messageable for Class {
-	unsafe fn as_ptr(&self) -> *Object {
+	fn as_ptr(&self) -> *Object {
 		self.ptr
 	}
 }

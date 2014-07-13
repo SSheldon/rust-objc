@@ -22,7 +22,9 @@ macro_rules! object_struct(
 		object_struct!($name, $($t),+)
 	);
 	($name:ident $(,$t:ident)*) => (
-		pub enum $name<$($t),*> { }
+		pub struct $name<$($t),*> {
+			nocopy: ::std::kinds::marker::NoCopy,
+		}
 
 		impl<$($t),*> ::runtime::Messageable for $name<$($t),*> {
 			fn as_ptr(&self) -> *::runtime::Object {

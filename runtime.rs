@@ -61,6 +61,12 @@ impl Clone for Sel {
 	}
 }
 
+impl Messageable for Object {
+	unsafe fn as_ptr(&self) -> *Object {
+		self as *Object
+	}
+}
+
 impl Messageable for *Object {
 	unsafe fn as_ptr(&self) -> *Object {
 		*self

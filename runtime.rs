@@ -61,6 +61,12 @@ impl Clone for Sel {
 	}
 }
 
+impl Messageable for *Object {
+	unsafe fn as_ptr(&self) -> *Object {
+		*self
+	}
+}
+
 impl Class {
 	pub fn get(name: &str) -> Class {
 		name.with_c_str(|name| unsafe {

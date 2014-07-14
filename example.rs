@@ -1,15 +1,8 @@
-#![feature(default_type_params, macro_rules, unsafe_destructor)]
-#![allow(dead_code)]
+extern crate objc;
 
-use id::Id;
-use foundation::{NSArray, NSDictionary, NSObject, NSString,
+use objc::id::Id;
+use objc::foundation::{NSArray, NSDictionary, NSObject, NSString,
 	INSArray, INSCopying, INSDictionary, INSObject, INSString};
-
-mod macros;
-
-mod runtime;
-mod id;
-mod foundation;
 
 fn main() {
 	let obj: Id<NSObject> = INSObject::new();

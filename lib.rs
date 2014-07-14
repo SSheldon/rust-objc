@@ -2,8 +2,10 @@
 
 #![feature(default_type_params, macro_rules, unsafe_destructor)]
 
+pub use id::{class, ClassName, Id, IdVector};
+
 mod macros;
 
 pub mod runtime;
-pub mod id;
+mod id;
 pub mod foundation;

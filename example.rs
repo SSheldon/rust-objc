@@ -1,6 +1,6 @@
 extern crate objc;
 
-use objc::id::Id;
+use objc::Id;
 use objc::foundation::{NSArray, NSDictionary, NSObject, NSString,
 	INSArray, INSCopying, INSDictionary, INSObject, INSString};
 

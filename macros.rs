@@ -33,8 +33,8 @@ macro_rules! object_struct(
 		}
 
 		impl<$($t),*> ::foundation::INSObject for $name<$($t),*> {
-			fn class_name() -> ::id::ClassName<$name<$($t),*>> {
-				::id::ClassName::from_str(stringify!($name))
+			fn class_name() -> ::ClassName<$name<$($t),*>> {
+				::ClassName::from_str(stringify!($name))
 			}
 		}
 

@@ -3,13 +3,13 @@
 #[macro_export]
 macro_rules! msg_send(
 	($obj:expr $name:ident) => ({
-		use runtime::Message;
+		use runtime::ToMessage;
 		let sel_name = stringify!($name);
 		let sel = ::runtime::Sel::register(sel_name);
 		::runtime::objc_msgSend($obj.as_ptr(), sel)
 	});
 	($obj:expr $($name:ident : $arg:expr)+) => ({
-		use runtime::Message;
+		use runtime::ToMessage;
 		let sel_name = concat!($(stringify!($name), ':'),+);
 		let sel = ::runtime::Sel::register(sel_name);
 		::runtime::objc_msgSend($obj.as_ptr(), sel $(,$arg)+)
@@ -26,11 +26,7 @@ macro_rules! object_struct(
 			nocopy: ::std::kinds::marker::NoCopy,
 		}
 
-		impl<$($t),*> ::runtime::Message for $name<$($t),*> {
-			fn as_ptr(&self) -> *::runtime::Object {
-				(self as *$name<$($t),*>) as *::runtime::Object
-			}
-		}
+		impl<$($t),*> ::runtime::Message for $name<$($t),*> { }
 
 		impl<$($t),*> ::foundation::INSObject for $name<$($t),*> {
 			fn class_name() -> ::ClassName<$name<$($t),*>> {

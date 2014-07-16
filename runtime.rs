@@ -3,13 +3,9 @@ use std::str::raw::c_str_to_static_slice;
 enum Selector { }
 pub enum Object { }
 
-pub trait Message {
-	fn as_ptr(&self) -> *Object;
+pub trait Message { }
 
-	fn is_nil(&self) -> bool {
-		self.as_ptr().is_null()
-	}
-}
+impl Message for Object { }
 
 pub struct Sel {
 	ptr: *Selector,
@@ -59,15 +55,23 @@ impl Clone for Sel {
 	}
 }
 
-impl Message for Object {
-	fn as_ptr(&self) -> *Object {
-		self as *Object
+pub trait ToMessage {
+	fn as_ptr(&self) -> *Object;
+
+	fn is_nil(&self) -> bool {
+		self.as_ptr().is_null()
 	}
 }
 
-impl Message for *Object {
+impl<T: Message> ToMessage for *T {
 	fn as_ptr(&self) -> *Object {
-		*self
+		*self as *Object
+	}
+}
+
+impl<'a, T: Message> ToMessage for &'a T {
+	fn as_ptr(&self) -> *Object {
+		(*self as *T).as_ptr()
 	}
 }
 
@@ -86,7 +90,7 @@ impl Class {
 	}
 }
 
-impl Message for Class {
+impl ToMessage for Class {
 	fn as_ptr(&self) -> *Object {
 		self.ptr
 	}

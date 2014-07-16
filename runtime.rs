@@ -3,7 +3,7 @@ use std::str::raw::c_str_to_static_slice;
 enum Selector { }
 pub enum Object { }
 
-pub trait Messageable {
+pub trait Message {
 	fn as_ptr(&self) -> *Object;
 
 	fn is_nil(&self) -> bool {
@@ -59,13 +59,13 @@ impl Clone for Sel {
 	}
 }
 
-impl Messageable for Object {
+impl Message for Object {
 	fn as_ptr(&self) -> *Object {
 		self as *Object
 	}
 }
 
-impl Messageable for *Object {
+impl Message for *Object {
 	fn as_ptr(&self) -> *Object {
 		*self
 	}
@@ -86,7 +86,7 @@ impl Class {
 	}
 }
 
-impl Messageable for Class {
+impl Message for Class {
 	fn as_ptr(&self) -> *Object {
 		self.ptr
 	}

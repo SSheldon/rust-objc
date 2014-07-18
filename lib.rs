@@ -3,7 +3,7 @@
 
 #![feature(default_type_params, macro_rules, unsafe_destructor)]
 
-pub use id::{Id, IdVector};
+pub use id::{Id, IdVector, IntoIdVector};
 pub use class_name::{class, ClassName};
 
 mod macros;

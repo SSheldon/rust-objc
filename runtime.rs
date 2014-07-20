@@ -22,6 +22,7 @@ extern {
 
 	pub fn objc_getClass(name: *i8) -> Class;
 	pub fn class_getName(cls: Class) -> *i8;
+	pub fn object_getClass(obj: *Object) -> Class;
 
 	pub fn objc_msgSend(obj: *Object, op: Sel, ...) -> *Object;
 }

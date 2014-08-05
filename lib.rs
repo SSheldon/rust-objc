@@ -1,4 +1,4 @@
-#![crate_id = "objc"]
+#![crate_name = "objc"]
 #![crate_type = "lib"]
 
 #![feature(default_type_params, macro_rules, unsafe_destructor)]

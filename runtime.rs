@@ -8,23 +8,23 @@ pub trait Message { }
 impl Message for Object { }
 
 pub struct Sel {
-	ptr: *Selector,
+	ptr: *mut Selector,
 }
 
 pub struct Class {
-	ptr: *Object,
+	ptr: *mut Object,
 }
 
 #[link(name = "Foundation", kind = "framework")]
 extern {
-	pub fn sel_registerName(name: *i8) -> Sel;
-	pub fn sel_getName(sel: Sel) -> *i8;
+	pub fn sel_registerName(name: *const i8) -> Sel;
+	pub fn sel_getName(sel: Sel) -> *const i8;
 
-	pub fn objc_getClass(name: *i8) -> Class;
-	pub fn class_getName(cls: Class) -> *i8;
-	pub fn object_getClass(obj: *Object) -> Class;
+	pub fn objc_getClass(name: *const i8) -> Class;
+	pub fn class_getName(cls: Class) -> *const i8;
+	pub fn object_getClass(obj: *mut Object) -> Class;
 
-	pub fn objc_msgSend(obj: *Object, op: Sel, ...) -> *Object;
+	pub fn objc_msgSend(obj: *mut Object, op: Sel, ...) -> *mut Object;
 }
 
 impl Sel {
@@ -57,22 +57,22 @@ impl Clone for Sel {
 }
 
 pub trait ToMessage {
-	fn as_ptr(&self) -> *Object;
+	fn as_ptr(&self) -> *mut Object;
 
 	fn is_nil(&self) -> bool {
 		self.as_ptr().is_null()
 	}
 }
 
-impl<T: Message> ToMessage for *T {
-	fn as_ptr(&self) -> *Object {
-		*self as *Object
+impl<T: Message> ToMessage for *mut T {
+	fn as_ptr(&self) -> *mut Object {
+		*self as *mut Object
 	}
 }
 
 impl<'a, T: Message> ToMessage for &'a T {
-	fn as_ptr(&self) -> *Object {
-		(*self as *T).as_ptr()
+	fn as_ptr(&self) -> *mut Object {
+		(*self as *const T as *mut T).as_ptr()
 	}
 }
 
@@ -92,7 +92,7 @@ impl Class {
 }
 
 impl ToMessage for Class {
-	fn as_ptr(&self) -> *Object {
+	fn as_ptr(&self) -> *mut Object {
 		self.ptr
 	}
 }

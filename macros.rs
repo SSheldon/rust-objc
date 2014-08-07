@@ -58,3 +58,20 @@ macro_rules! object_struct(
 		}
 	);
 )
+
+#[macro_export]
+macro_rules! add_method(
+	(
+		$cls:expr, ($self_ty:ty)$self_name:ident
+		- ($ret_ty:ty) $name:ident : ($arg_ty:ty) $arg_name:ident
+		$body:block
+	) => ({
+		extern fn _method($self_name: $self_ty, _cmd: ::runtime::Sel, $arg_name: $arg_ty) -> $ret_ty $body
+		let sel = ::runtime::Sel::register(stringify!($name));
+		let imp: ::runtime::Imp = unsafe { ::std::mem::transmute(_method) };
+		let types = "v@:@";
+		types.with_c_str(|types| unsafe {
+			::runtime::class_addMethod($cls, sel, imp, types);
+		})
+	})
+)

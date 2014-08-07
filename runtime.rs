@@ -15,6 +15,8 @@ pub struct Class {
 	ptr: *mut Object,
 }
 
+pub type Imp = extern fn(*mut Object, Sel, ...);
+
 #[link(name = "Foundation", kind = "framework")]
 extern {
 	pub fn sel_registerName(name: *const i8) -> Sel;
@@ -22,6 +24,7 @@ extern {
 
 	pub fn objc_getClass(name: *const i8) -> Class;
 	pub fn class_getName(cls: Class) -> *const i8;
+	pub fn class_addMethod(cls: Class, name: Sel, imp: Imp, types: *const i8) -> bool;
 	pub fn object_getClass(obj: *mut Object) -> Class;
 
 	pub fn objc_msgSend(obj: *mut Object, op: Sel, ...) -> *mut Object;

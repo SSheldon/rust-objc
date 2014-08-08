@@ -15,4 +15,5 @@ pub mod runtime;
 mod id;
 mod class_name;
 mod declare;
+mod encode;
 pub mod foundation;

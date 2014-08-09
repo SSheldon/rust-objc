@@ -45,7 +45,7 @@ mod tests {
 
 	#[test]
 	fn test_custom_class() {
-		let superclass = Class::get("NSObject");
+		let superclass = Class::get("NSObject").unwrap();
 		let decl = ClassDecl::new(&superclass, "MyObject");
 		assert!(decl.is_some());
 		let mut decl = decl.unwrap();

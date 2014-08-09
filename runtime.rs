@@ -85,10 +85,15 @@ impl<'a, T: Message> ToMessage for &'a T {
 }
 
 impl Class {
-	pub fn get(name: &str) -> Class {
-		name.with_c_str(|name| unsafe {
+	pub fn get(name: &str) -> Option<Class> {
+		let cls = name.with_c_str(|name| unsafe {
 			objc_getClass(name)
-		})
+		});
+		if cls.is_nil() {
+			None
+		} else {
+			Some(cls)
+		}
 	}
 
 	pub fn name(&self) -> &str {

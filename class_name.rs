@@ -17,5 +17,8 @@ impl<T> ClassName<T> {
 
 pub fn class<T: INSObject>() -> Class {
 	let name: ClassName<T> = INSObject::class_name();
-	Class::get(name.as_str())
+	match Class::get(name.as_str()) {
+		Some(cls) => cls,
+		None => fail!("Class {} not found", name.as_str()),
+	}
 }

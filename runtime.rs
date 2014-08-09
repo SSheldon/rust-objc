@@ -1,4 +1,5 @@
 use std::str::raw::c_str_to_static_slice;
+use libc::c_char;
 
 enum Selector { }
 pub enum Object { }
@@ -19,12 +20,12 @@ pub type Imp = extern fn(*mut Object, Sel, ...);
 
 #[link(name = "Foundation", kind = "framework")]
 extern {
-	pub fn sel_registerName(name: *const i8) -> Sel;
-	pub fn sel_getName(sel: Sel) -> *const i8;
+	pub fn sel_registerName(name: *const c_char) -> Sel;
+	pub fn sel_getName(sel: Sel) -> *const c_char;
 
-	pub fn objc_getClass(name: *const i8) -> Class;
-	pub fn class_getName(cls: Class) -> *const i8;
-	pub fn class_addMethod(cls: Class, name: Sel, imp: Imp, types: *const i8) -> bool;
+	pub fn objc_getClass(name: *const c_char) -> Class;
+	pub fn class_getName(cls: Class) -> *const c_char;
+	pub fn class_addMethod(cls: Class, name: Sel, imp: Imp, types: *const c_char) -> bool;
 	pub fn object_getClass(obj: *mut Object) -> Class;
 
 	pub fn objc_msgSend(obj: *mut Object, op: Sel, ...) -> *mut Object;

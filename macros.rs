@@ -60,18 +60,24 @@ macro_rules! object_struct(
 )
 
 #[macro_export]
-macro_rules! add_method(
+macro_rules! method(
+	// No arguments
 	(
-		$cls:expr, ($self_ty:ty)$self_name:ident
-		- ($ret_ty:ty) $name:ident : ($arg_ty:ty) $arg_name:ident
+		($self_ty:ty)$self_name:ident
+		- ($ret_ty:ty) $name:ident
 		$body:block
 	) => ({
-		extern fn _method($self_name: $self_ty, _cmd: ::runtime::Sel, $arg_name: $arg_ty) -> $ret_ty $body
-		let sel = ::runtime::Sel::register(stringify!($name));
+		method!(, stringify!($name), $body, $ret_ty, $self_name: $self_ty,)
+	});
+	// Preceding comma is necessary to disambiguate
+	(, $sel_name:expr, $body:block, $ret_ty:ty, $self_name:ident : $self_ty:ty, $($arg_name:ident : $arg_ty:ty),*) => ({
+		extern fn _method($self_name: $self_ty, _cmd: ::runtime::Sel $(, $arg_name: $arg_ty)*) -> $ret_ty $body
+		let sel = ::runtime::Sel::register($sel_name);
 		let imp: ::runtime::Imp = unsafe { ::std::mem::transmute(_method) };
-		let types = "v@:@";
-		types.with_c_str(|types| unsafe {
-			::runtime::class_addMethod($cls, sel, imp, types);
-		})
+		let mut types = ::encode::encode::<$ret_ty>().to_string();
+		types.push_str(::encode::encode::<$self_ty>());
+		types.push_str(::encode::encode::<::runtime::Sel>());
+		$(types.push_str(::encode::encode::<$arg_ty>());)*
+		::declare::MethodDecl { sel: sel, imp: imp, types: types }
 	})
 )

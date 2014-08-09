@@ -50,14 +50,11 @@ mod tests {
 		assert!(decl.is_some());
 		let mut decl = decl.unwrap();
 
-		fn do_something(this: *mut Object, _: Sel) -> *mut Object {
-			this
-		}
-		let method_decl = MethodDecl {
-			sel: Sel::register("doSomething"),
-			imp: unsafe { mem::transmute(do_something) },
-			types: "@@:".to_string(),
-		};
+		let method_decl = method!(
+			(*mut Object)this -(*mut Object)doSomething {
+				this
+			}
+		);
 		decl.add_method(method_decl);
 
 		let cls = decl.register();

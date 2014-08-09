@@ -39,9 +39,8 @@ impl ClassDecl {
 
 #[cfg(test)]
 mod tests {
-	use std::mem;
-	use runtime::{Class, Object, Sel};
-	use super::{ClassDecl, MethodDecl};
+	use runtime::{Class, Object};
+	use super::ClassDecl;
 
 	#[test]
 	fn test_custom_class() {

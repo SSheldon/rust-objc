@@ -69,6 +69,15 @@ macro_rules! method(
 	) => ({
 		method!(, stringify!($name), $body, $ret_ty, $self_name: $self_ty,)
 	});
+	// Arguments
+	(
+		($self_ty:ty)$self_name:ident
+		- ($ret_ty:ty) $($name:ident : ($arg_ty:ty) $arg_name:ident)+
+		$body:block
+	) => ({
+		let sel_name = concat!($(stringify!($name), ':'),+);
+		method!(, sel_name, $body, $ret_ty, $self_name: $self_ty, $($arg_name: $arg_ty),*)
+	});
 	// Preceding comma is necessary to disambiguate
 	(, $sel_name:expr, $body:block, $ret_ty:ty, $self_name:ident : $self_ty:ty, $($arg_name:ident : $arg_ty:ty),*) => ({
 		extern fn _method($self_name: $self_ty, _cmd: ::runtime::Sel $(, $arg_name: $arg_ty)*) -> $ret_ty $body
@@ -79,5 +88,5 @@ macro_rules! method(
 		types.push_str(::encode::encode::<::runtime::Sel>());
 		$(types.push_str(::encode::encode::<$arg_ty>());)*
 		::declare::MethodDecl { sel: sel, imp: imp, types: types }
-	})
+	});
 )

@@ -11,4 +11,5 @@ mod macros;
 pub mod runtime;
 mod id;
 mod class_name;
+mod declare;
 pub mod foundation;

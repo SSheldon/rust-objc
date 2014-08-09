@@ -1,5 +1,5 @@
 use std::str::raw::c_str_to_static_slice;
-use libc::c_char;
+use libc::{c_char, size_t};
 
 enum Selector { }
 pub enum Object { }
@@ -27,6 +27,10 @@ extern {
 	pub fn class_getName(cls: Class) -> *const c_char;
 	pub fn class_addMethod(cls: Class, name: Sel, imp: Imp, types: *const c_char) -> bool;
 	pub fn object_getClass(obj: *mut Object) -> Class;
+
+	pub fn objc_allocateClassPair(superclass: Class, name: *const c_char, extraBytes: size_t) -> Class;
+	pub fn objc_disposeClassPair(cls: Class);
+	pub fn objc_registerClassPair(cls: Class);
 
 	pub fn objc_msgSend(obj: *mut Object, op: Sel, ...) -> *mut Object;
 }

@@ -1,3 +1,5 @@
+use std::mem;
+
 use runtime::{Class, Sel};
 
 pub struct Encoding<T>(&'static str);
@@ -22,6 +24,18 @@ impl Encode for i64 {
 	fn code() -> Encoding<i64> { Encoding("q") }
 }
 
+impl Encode for int {
+	fn code() -> Encoding<int> {
+		match mem::size_of::<int>() {
+			1 => Encoding("c"),
+			2 => Encoding("s"),
+			4 => Encoding("i"),
+			8 => Encoding("q"),
+			_ => Encoding("?"),
+		}
+	}
+}
+
 impl Encode for u8 {
 	fn code() -> Encoding<u8> { Encoding("C") }
 }
@@ -38,12 +52,32 @@ impl Encode for u64 {
 	fn code() -> Encoding<u64> { Encoding("Q") }
 }
 
+impl Encode for uint {
+	fn code() -> Encoding<uint> {
+		match mem::size_of::<uint>() {
+			1 => Encoding("C"),
+			2 => Encoding("S"),
+			4 => Encoding("I"),
+			8 => Encoding("Q"),
+			_ => Encoding("?"),
+		}
+	}
+}
+
 impl Encode for f32 {
 	fn code() -> Encoding<f32> { Encoding("f") }
 }
 
 impl Encode for f64 {
 	fn code() -> Encoding<f64> { Encoding("d") }
+}
+
+impl Encode for bool {
+	fn code() -> Encoding<bool> { Encoding("B") }
+}
+
+impl Encode for () {
+	fn code() -> Encoding<()> { Encoding("v") }
 }
 
 impl Encode for Class {
@@ -54,7 +88,7 @@ impl Encode for Sel {
 	fn code() -> Encoding<Sel> { Encoding(":") }
 }
 
-fn encode<T: Encode>() -> &'static str {
+pub fn encode<T: Encode>() -> &'static str {
 	let Encoding(code): Encoding<T> = Encode::code();
 	code
 }
@@ -67,6 +101,7 @@ mod tests {
 	#[test]
 	fn test_encode() {
 		assert!(encode::<u32>() == "I");
+		assert!(encode::<()>() == "v");
 		assert!(encode::<Class>() == "#");
 		assert!(encode::<Sel>() == ":");
 	}

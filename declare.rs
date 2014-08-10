@@ -49,12 +49,11 @@ mod tests {
 		assert!(decl.is_some());
 		let mut decl = decl.unwrap();
 
-		let method_decl = method!(
-			(*mut Object)this -(*mut Object)doSomething {
+		decl.add_method(method!(
+			(*mut Object)this, doSomething -> *mut Object {
 				this
 			}
-		);
-		decl.add_method(method_decl);
+		));
 
 		let cls = decl.register();
 		unsafe {

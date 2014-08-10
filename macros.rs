@@ -61,19 +61,36 @@ macro_rules! object_struct(
 
 #[macro_export]
 macro_rules! method(
+	// Void no arguments
+	(
+		($self_ty:ty)$self_name:ident
+		, $name:ident;
+		$body:block
+	) => ({
+		method!(, stringify!($name), $body, (), $self_name: $self_ty,)
+	});
 	// No arguments
 	(
 		($self_ty:ty)$self_name:ident
-		- ($ret_ty:ty) $name:ident
-		$body:block
+		, $name:ident
+		-> $ret_ty:ty $body:block
 	) => ({
 		method!(, stringify!($name), $body, $ret_ty, $self_name: $self_ty,)
+	});
+	// Void with arguments
+	(
+		($self_ty:ty)$self_name:ident
+		$(, $name:ident : ($arg_ty:ty) $arg_name:ident)+;
+		$body:block
+	) => ({
+		let sel_name = concat!($(stringify!($name), ':'),+);
+		method!(, sel_name, $body, (), $self_name: $self_ty, $($arg_name: $arg_ty),*)
 	});
 	// Arguments
 	(
 		($self_ty:ty)$self_name:ident
-		- ($ret_ty:ty) $($name:ident : ($arg_ty:ty) $arg_name:ident)+
-		$body:block
+		$(, $name:ident : ($arg_ty:ty) $arg_name:ident)+
+		-> $ret_ty:ty $body:block
 	) => ({
 		let sel_name = concat!($(stringify!($name), ':'),+);
 		method!(, sel_name, $body, $ret_ty, $self_name: $self_ty, $($arg_name: $arg_ty),*)

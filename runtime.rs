@@ -16,7 +16,7 @@ pub struct Class {
 	ptr: *mut Object,
 }
 
-pub type Imp = extern fn(*mut Object, Sel, ...);
+pub type Imp = extern fn(*mut Object, Sel, ...) -> *mut Object;
 
 #[link(name = "Foundation", kind = "framework")]
 extern {

@@ -8,6 +8,7 @@ extern crate libc;
 pub use id::{Id, IdVector, IntoIdVector};
 pub use class_name::{class, ClassName};
 pub use declare::{ClassDecl, MethodDecl};
+pub use encode::{encode, Encode, Encoding};
 
 mod macros;
 

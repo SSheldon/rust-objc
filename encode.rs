@@ -2,7 +2,7 @@ use std::mem;
 
 use runtime::{Class, Message, Sel};
 
-pub struct Encoding<T>(&'static str);
+pub struct Encoding<T>(pub &'static str);
 
 pub trait Encode {
 	fn code() -> Encoding<Self>;

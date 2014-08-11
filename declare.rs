@@ -1,3 +1,5 @@
+use std::mem;
+
 use runtime::{Class, Imp, Sel, ToMessage};
 use runtime;
 
@@ -33,7 +35,20 @@ impl ClassDecl {
 		unsafe {
 			runtime::objc_registerClassPair(self.cls);
 		}
-		self.cls
+		let cls = self.cls;
+		// Forget self otherwise the class will be disposed in drop
+		unsafe {
+			mem::forget(self);
+		}
+		cls
+	}
+}
+
+impl Drop for ClassDecl {
+	fn drop(&mut self) {
+		unsafe {
+			runtime::objc_disposeClassPair(self.cls);
+		}
 	}
 }
 

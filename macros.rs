@@ -3,16 +3,16 @@
 #[macro_export]
 macro_rules! msg_send(
 	($obj:expr $name:ident) => ({
-		use runtime::ToMessage;
+		use objc::runtime::ToMessage;
 		let sel_name = stringify!($name);
-		let sel = ::runtime::Sel::register(sel_name);
-		::runtime::objc_msgSend($obj.as_ptr(), sel)
+		let sel = ::objc::runtime::Sel::register(sel_name);
+		::objc::runtime::objc_msgSend($obj.as_ptr(), sel)
 	});
 	($obj:expr $($name:ident : $arg:expr)+) => ({
-		use runtime::ToMessage;
+		use objc::runtime::ToMessage;
 		let sel_name = concat!($(stringify!($name), ':'),+);
-		let sel = ::runtime::Sel::register(sel_name);
-		::runtime::objc_msgSend($obj.as_ptr(), sel $(,$arg)+)
+		let sel = ::objc::runtime::Sel::register(sel_name);
+		::objc::runtime::objc_msgSend($obj.as_ptr(), sel $(,$arg)+)
 	});
 )
 
@@ -26,17 +26,17 @@ macro_rules! object_struct(
 			nocopy: ::std::kinds::marker::NoCopy,
 		}
 
-		impl<$($t),*> ::runtime::Message for $name<$($t),*> { }
+		impl<$($t),*> ::objc::runtime::Message for $name<$($t),*> { }
 
-		impl<$($t),*> ::foundation::INSObject for $name<$($t),*> {
-			fn class_name() -> ::ClassName<$name<$($t),*>> {
-				::ClassName(stringify!($name))
+		impl<$($t),*> ::objc::foundation::INSObject for $name<$($t),*> {
+			fn class_name() -> ::objc::ClassName<$name<$($t),*>> {
+				::objc::ClassName(stringify!($name))
 			}
 		}
 
 		impl<$($t),*> ::std::cmp::PartialEq for $name<$($t),*> {
 			fn eq(&self, other: &$name<$($t),*>) -> bool {
-				use foundation::INSObject;
+				use objc::foundation::INSObject;
 				self.is_equal(other)
 			}
 		}
@@ -45,14 +45,14 @@ macro_rules! object_struct(
 
 		impl<$($t,)* S: ::std::hash::Writer> ::std::hash::Hash<S> for $name<$($t),*> {
 			fn hash(&self, state: &mut S) {
-				use foundation::INSObject;
+				use objc::foundation::INSObject;
 				self.hash_code().hash(state);
 			}
 		}
 
 		impl<$($t),*> ::std::fmt::Show for $name<$($t),*> {
 			fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-				use foundation::{INSObject, INSString};
+				use objc::foundation::{INSObject, INSString};
 				self.description().as_str().fmt(f)
 			}
 		}
@@ -101,17 +101,17 @@ macro_rules! method(
 	});
 	// Preceding comma is necessary to disambiguate
 	(, $sel_name:expr, $body:block, $fn_name:ident, $ret_ty:ty, $self_name:ident : $self_ty:ty, $($arg_name:ident : $arg_ty:ty),*) => ({
-		let sel = ::runtime::Sel::register($sel_name);
+		let sel = ::objc::runtime::Sel::register($sel_name);
 
 		#[allow(non_snake_case_functions)]
-		extern fn $fn_name($self_name: $self_ty, _cmd: ::runtime::Sel $(, $arg_name: $arg_ty)*) -> $ret_ty $body
-		let imp: ::runtime::Imp = unsafe { ::std::mem::transmute($fn_name) };
+		extern fn $fn_name($self_name: $self_ty, _cmd: ::objc::runtime::Sel $(, $arg_name: $arg_ty)*) -> $ret_ty $body
+		let imp: ::objc::runtime::Imp = unsafe { ::std::mem::transmute($fn_name) };
 
-		let mut types = ::encode::encode::<$ret_ty>().to_string();
-		types.push_str(::encode::encode::<$self_ty>());
-		types.push_str(::encode::encode::<::runtime::Sel>());
-		$(types.push_str(::encode::encode::<$arg_ty>());)*
+		let mut types = ::objc::encode::<$ret_ty>().to_string();
+		types.push_str(::objc::encode::<$self_ty>());
+		types.push_str(::objc::encode::<::objc::runtime::Sel>());
+		$(types.push_str(::objc::encode::<$arg_ty>());)*
 
-		::declare::MethodDecl { sel: sel, imp: imp, types: types }
+		::objc::MethodDecl { sel: sel, imp: imp, types: types }
 	});
 )

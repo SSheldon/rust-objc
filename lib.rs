@@ -1,7 +1,7 @@
 #![crate_name = "objc"]
 #![crate_type = "lib"]
 
-#![feature(default_type_params, macro_rules, unsafe_destructor)]
+#![feature(default_type_params, globs, macro_rules, unsafe_destructor)]
 
 extern crate libc;
 
@@ -18,3 +18,10 @@ mod class_name;
 mod declare;
 mod encode;
 pub mod foundation;
+
+// Shim to re-export under the objc:: path for macros
+mod objc {
+	pub use runtime;
+	pub use foundation;
+	pub use super::*;
+}

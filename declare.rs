@@ -4,9 +4,9 @@ use runtime::{Class, Imp, Sel, ToMessage};
 use runtime;
 
 pub struct MethodDecl {
-	sel: Sel,
-	imp: Imp,
-	types: String,
+	pub sel: Sel,
+	pub imp: Imp,
+	pub types: String,
 }
 
 pub struct ClassDecl {

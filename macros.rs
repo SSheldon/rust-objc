@@ -67,7 +67,7 @@ macro_rules! method(
 		, $name:ident;
 		$body:block
 	) => ({
-		method!(, stringify!($name), $body, (), $self_name: $self_ty,)
+		method!(, stringify!($name), $body, $name, (), $self_name: $self_ty,)
 	});
 	// No arguments
 	(
@@ -75,35 +75,43 @@ macro_rules! method(
 		, $name:ident
 		-> $ret_ty:ty $body:block
 	) => ({
-		method!(, stringify!($name), $body, $ret_ty, $self_name: $self_ty,)
+		method!(, stringify!($name), $body, $name, $ret_ty, $self_name: $self_ty,)
 	});
 	// Void with arguments
 	(
 		($self_ty:ty)$self_name:ident
-		$(, $name:ident : ($arg_ty:ty) $arg_name:ident)+;
+		, $name:ident : ($first_arg_ty:ty) $first_arg_name:ident
+		$(, $next_name:ident : ($next_arg_ty:ty) $next_arg_name:ident)*;
 		$body:block
 	) => ({
-		let sel_name = concat!($(stringify!($name), ':'),+);
-		method!(, sel_name, $body, (), $self_name: $self_ty, $($arg_name: $arg_ty),*)
+		let sel_name = concat!(stringify!($name), ':', $(stringify!($next_name), ':'),*);
+		method!(, sel_name, $body, $name, (), $self_name: $self_ty,
+			$first_arg_name: $first_arg_ty$(, $next_arg_name: $next_arg_ty)*)
 	});
 	// Arguments
 	(
 		($self_ty:ty)$self_name:ident
-		$(, $name:ident : ($arg_ty:ty) $arg_name:ident)+
+		, $name:ident : ($first_arg_ty:ty) $first_arg_name:ident
+		$(, $next_name:ident : ($next_arg_ty:ty) $next_arg_name:ident)*
 		-> $ret_ty:ty $body:block
 	) => ({
-		let sel_name = concat!($(stringify!($name), ':'),+);
-		method!(, sel_name, $body, $ret_ty, $self_name: $self_ty, $($arg_name: $arg_ty),*)
+		let sel_name = concat!(stringify!($name), ':', $(stringify!($next_name), ':'),*);
+		method!(, sel_name, $body, $name, $ret_ty, $self_name: $self_ty,
+			$first_arg_name: $first_arg_ty$(, $next_arg_name: $next_arg_ty)*)
 	});
 	// Preceding comma is necessary to disambiguate
-	(, $sel_name:expr, $body:block, $ret_ty:ty, $self_name:ident : $self_ty:ty, $($arg_name:ident : $arg_ty:ty),*) => ({
-		extern fn _method($self_name: $self_ty, _cmd: ::runtime::Sel $(, $arg_name: $arg_ty)*) -> $ret_ty $body
+	(, $sel_name:expr, $body:block, $fn_name:ident, $ret_ty:ty, $self_name:ident : $self_ty:ty, $($arg_name:ident : $arg_ty:ty),*) => ({
 		let sel = ::runtime::Sel::register($sel_name);
-		let imp: ::runtime::Imp = unsafe { ::std::mem::transmute(_method) };
+
+		#[allow(non_snake_case_functions)]
+		extern fn $fn_name($self_name: $self_ty, _cmd: ::runtime::Sel $(, $arg_name: $arg_ty)*) -> $ret_ty $body
+		let imp: ::runtime::Imp = unsafe { ::std::mem::transmute($fn_name) };
+
 		let mut types = ::encode::encode::<$ret_ty>().to_string();
 		types.push_str(::encode::encode::<$self_ty>());
 		types.push_str(::encode::encode::<::runtime::Sel>());
 		$(types.push_str(::encode::encode::<$arg_ty>());)*
+
 		::declare::MethodDecl { sel: sel, imp: imp, types: types }
 	});
 )

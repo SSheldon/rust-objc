@@ -50,7 +50,22 @@ mod tests {
 		let mut decl = decl.unwrap();
 
 		decl.add_method(method!(
+			(*mut Object)_this, doNothing; {
+				()
+			}
+		));
+		decl.add_method(method!(
+			(*mut Object)_this, doNothingWithFoo:(uint)_foo; {
+				()
+			}
+		));
+		decl.add_method(method!(
 			(*mut Object)this, doSomething -> *mut Object {
+				this
+			}
+		));
+		decl.add_method(method!(
+			(*mut Object)this, doSomethingWithFoo:(uint)_foo -> *mut Object {
 				this
 			}
 		));
@@ -59,8 +74,14 @@ mod tests {
 		unsafe {
 			let obj = msg_send![cls alloc];
 			let obj = msg_send![obj init];
+
+			msg_send![obj doNothing];
+			msg_send![obj doNothingWithFoo:0u];
 			let result = msg_send![obj doSomething];
 			assert!(result == obj);
+			let result = msg_send![obj doSomethingWithFoo:0u];
+			assert!(result == obj);
+
 			msg_send![obj release];
 		}
 	}

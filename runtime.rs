@@ -1,10 +1,14 @@
 use std::str::raw::c_str_to_static_slice;
-use libc::{c_char, c_void, size_t};
+use libc::{c_char, c_void, ptrdiff_t, size_t};
 
 pub enum Object { }
 
 pub struct Sel {
 	ptr: *const c_void,
+}
+
+pub struct Ivar {
+	_ptr: *const c_void,
 }
 
 pub struct Class {
@@ -27,6 +31,10 @@ extern {
 	pub fn objc_allocateClassPair(superclass: Class, name: *const c_char, extraBytes: size_t) -> Class;
 	pub fn objc_disposeClassPair(cls: Class);
 	pub fn objc_registerClassPair(cls: Class);
+
+	pub fn ivar_getName(ivar: Ivar) -> *const c_char;
+	pub fn ivar_getOffset(ivar: Ivar) -> ptrdiff_t;
+	pub fn ivar_getTypeEncoding(ivar: Ivar) -> *const c_char;
 
 	pub fn objc_msgSend(obj: *mut Object, op: Sel, ...) -> *mut Object;
 }
@@ -57,6 +65,29 @@ impl Eq for Sel { }
 impl Clone for Sel {
 	fn clone(&self) -> Sel {
 		Sel { ptr: self.ptr }
+	}
+}
+
+impl Ivar {
+	pub fn name(&self) -> &str {
+		unsafe {
+			let name = ivar_getName(*self);
+			c_str_to_static_slice(name)
+		}
+	}
+
+	pub fn offset(&self) -> int {
+		let offset = unsafe {
+			ivar_getOffset(*self)
+		};
+		offset as int
+	}
+
+	pub fn type_encoding(&self) -> &str {
+		unsafe {
+			let encoding = ivar_getName(*self);
+			c_str_to_static_slice(encoding)
+		}
 	}
 }
 

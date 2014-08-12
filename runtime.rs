@@ -21,6 +21,7 @@ extern {
 	pub fn objc_getClass(name: *const c_char) -> Class;
 	pub fn class_getName(cls: Class) -> *const c_char;
 	pub fn class_addMethod(cls: Class, name: Sel, imp: Imp, types: *const c_char) -> bool;
+	pub fn class_addIvar(cls: Class, name: *const c_char, size: size_t, alignment: u8, types: *const c_char) -> bool;
 	pub fn object_getClass(obj: *mut Object) -> Class;
 
 	pub fn objc_allocateClassPair(superclass: Class, name: *const c_char, extraBytes: size_t) -> Class;

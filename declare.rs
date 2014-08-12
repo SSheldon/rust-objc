@@ -1,5 +1,7 @@
 use std::mem;
+use libc::size_t;
 
+use {encode, Encode};
 use runtime::{Class, Imp, Sel, ToMessage};
 use runtime;
 
@@ -28,6 +30,17 @@ impl ClassDecl {
 	pub fn add_method(&mut self, method: MethodDecl) -> bool {
 		method.types.with_c_str(|types| unsafe {
 			runtime::class_addMethod(self.cls, method.sel, method.imp, types)
+		})
+	}
+
+	pub fn add_ivar<T: Encode>(&mut self, name: &str) -> bool {
+		let types = encode::<T>();
+		let size = mem::size_of::<T>() as size_t;
+		let align = mem::align_of::<T>() as u8;
+		types.with_c_str(|types| {
+			name.with_c_str(|name| unsafe {
+				runtime::class_addIvar(self.cls, name, size, align, types)
+			})
 		})
 	}
 

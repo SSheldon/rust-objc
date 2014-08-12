@@ -1,15 +1,10 @@
 use std::str::raw::c_str_to_static_slice;
-use libc::{c_char, size_t};
+use libc::{c_char, c_void, size_t};
 
-enum Selector { }
 pub enum Object { }
 
-pub trait Message { }
-
-impl Message for Object { }
-
 pub struct Sel {
-	ptr: *mut Selector,
+	ptr: *const c_void,
 }
 
 pub struct Class {
@@ -64,26 +59,6 @@ impl Clone for Sel {
 	}
 }
 
-pub trait ToMessage {
-	fn as_ptr(&self) -> *mut Object;
-
-	fn is_nil(&self) -> bool {
-		self.as_ptr().is_null()
-	}
-}
-
-impl<T: Message> ToMessage for *mut T {
-	fn as_ptr(&self) -> *mut Object {
-		*self as *mut Object
-	}
-}
-
-impl<'a, T: Message> ToMessage for &'a T {
-	fn as_ptr(&self) -> *mut Object {
-		(*self as *const T as *mut T).as_ptr()
-	}
-}
-
 impl Class {
 	pub fn get(name: &str) -> Option<Class> {
 		let cls = name.with_c_str(|name| unsafe {
@@ -101,6 +76,30 @@ impl Class {
 			let name = class_getName(*self);
 			c_str_to_static_slice(name)
 		}
+	}
+}
+
+pub trait Message { }
+
+impl Message for Object { }
+
+pub trait ToMessage {
+	fn as_ptr(&self) -> *mut Object;
+
+	fn is_nil(&self) -> bool {
+		self.as_ptr().is_null()
+	}
+}
+
+impl<T: Message> ToMessage for *mut T {
+	fn as_ptr(&self) -> *mut Object {
+		*self as *mut Object
+	}
+}
+
+impl<'a, T: Message> ToMessage for &'a T {
+	fn as_ptr(&self) -> *mut Object {
+		(*self as *const T as *mut T).as_ptr()
 	}
 }
 

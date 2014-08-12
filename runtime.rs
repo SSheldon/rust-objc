@@ -26,11 +26,16 @@ extern {
 	pub fn class_getName(cls: Class) -> *const c_char;
 	pub fn class_addMethod(cls: Class, name: Sel, imp: Imp, types: *const c_char) -> bool;
 	pub fn class_addIvar(cls: Class, name: *const c_char, size: size_t, alignment: u8, types: *const c_char) -> bool;
-	pub fn object_getClass(obj: *mut Object) -> Class;
 
 	pub fn objc_allocateClassPair(superclass: Class, name: *const c_char, extraBytes: size_t) -> Class;
 	pub fn objc_disposeClassPair(cls: Class);
 	pub fn objc_registerClassPair(cls: Class);
+
+	pub fn object_setInstanceVariable(obj: *mut Object, name: *const c_char, value: *mut c_void) -> Ivar;
+	pub fn object_getInstanceVariable(obj: *mut Object, name: *const c_char, outValue: *mut *mut c_void) -> Ivar;
+	pub fn object_setIvar(obj: *mut Object, ivar: Ivar, value: *mut Object);
+	pub fn object_getIvar(obj: *mut Object, ivar: Ivar) -> *mut Object;
+	pub fn object_getClass(obj: *mut Object) -> Class;
 
 	pub fn ivar_getName(ivar: Ivar) -> *const c_char;
 	pub fn ivar_getOffset(ivar: Ivar) -> ptrdiff_t;
@@ -88,6 +93,34 @@ impl Ivar {
 			let encoding = ivar_getName(*self);
 			c_str_to_static_slice(encoding)
 		}
+	}
+}
+
+impl Object {
+	unsafe fn get_ivar_ptr<T>(obj: *mut Object, name: &str) -> *mut T {
+		if obj.is_null() {
+			RawPtr::null()
+		} else {
+			let ivar = name.with_c_str(|name| {
+				object_getInstanceVariable(obj, name, RawPtr::null())
+			});
+			let bytes = obj as *mut u8;
+			let offset = ivar.offset();
+			bytes.offset(offset) as *mut T
+		}
+	}
+
+	pub unsafe fn get_ivar<T>(&self, name: &str) -> &T {
+		let obj = self as *const Object as *mut Object;
+		&*Object::get_ivar_ptr(obj, name)
+	}
+
+	pub unsafe fn get_mut_ivar<T>(&mut self, name: &str) -> &mut T {
+		&mut *Object::get_ivar_ptr(self, name)
+	}
+
+	pub unsafe fn set_ivar<T>(&mut self, name: &str, value: T) {
+		*self.get_mut_ivar::<T>(name) = value;
 	}
 }
 

@@ -77,19 +77,24 @@ mod tests {
 		assert!(decl.is_some());
 		let mut decl = decl.unwrap();
 
+		decl.add_ivar::<uint>("_foo");
 		decl.add_method(method!(
 			(*mut Object)_this, doNothing; {
 				()
 			}
 		));
 		decl.add_method(method!(
-			(*mut Object)_this, doNothingWithFoo:(uint)_foo; {
-				()
+			(&mut Object)this, setFoo:(uint)foo; {
+				unsafe {
+					this.set_ivar::<uint>("_foo", foo);
+				}
 			}
 		));
 		decl.add_method(method!(
-			(*mut Object)this, doSomething -> *mut Object {
-				this
+			(&Object)this, foo -> uint {
+				unsafe {
+					*this.get_ivar::<uint>("_foo")
+				}
 			}
 		));
 		decl.add_method(method!(
@@ -104,10 +109,10 @@ mod tests {
 			let obj = msg_send![obj init];
 
 			msg_send![obj doNothing];
-			msg_send![obj doNothingWithFoo:0u];
-			let result = msg_send![obj doSomething];
-			assert!(result == obj);
-			let result = msg_send![obj doSomethingWithFoo:0u];
+			msg_send![obj setFoo:13u];
+			let result = msg_send![obj foo] as uint;
+			assert!(result == 13);
+			let result = msg_send![obj doSomethingWithFoo:13u];
 			assert!(result == obj);
 
 			msg_send![obj release];

@@ -67,12 +67,6 @@ impl PartialEq for Sel {
 
 impl Eq for Sel { }
 
-impl Clone for Sel {
-	fn clone(&self) -> Sel {
-		Sel { ptr: self.ptr }
-	}
-}
-
 impl Ivar {
 	pub fn name(&self) -> &str {
 		unsafe {

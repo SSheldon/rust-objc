@@ -1,5 +1,7 @@
+use std::slice::raw::buf_as_slice;
 use std::str::raw::c_str_to_static_slice;
-use libc::{c_char, c_void, ptrdiff_t, size_t};
+use libc::{c_char, c_uint, c_void, ptrdiff_t, size_t};
+use libc;
 
 pub enum Object { }
 
@@ -26,6 +28,7 @@ extern {
 	pub fn class_getName(cls: Class) -> *const c_char;
 	pub fn class_getInstanceSize(cls: Class) -> size_t;
 	pub fn class_getInstanceVariable(cls: Class, name: *const c_char) -> Ivar;
+	pub fn class_copyIvarList(cls: Class, outCount: *mut c_uint) -> *mut Ivar;
 	pub fn class_addMethod(cls: Class, name: Sel, imp: Imp, types: *const c_char) -> bool;
 	pub fn class_addIvar(cls: Class, name: *const c_char, size: size_t, alignment: u8, types: *const c_char) -> bool;
 
@@ -69,6 +72,10 @@ impl PartialEq for Sel {
 
 impl Eq for Sel { }
 
+impl Clone for Sel {
+	fn clone(&self) -> Sel { *self }
+}
+
 impl Ivar {
 	pub fn name(&self) -> &str {
 		unsafe {
@@ -90,6 +97,10 @@ impl Ivar {
 			c_str_to_static_slice(encoding)
 		}
 	}
+}
+
+impl Clone for Ivar {
+	fn clone(&self) -> Ivar { *self }
 }
 
 impl Object {
@@ -155,6 +166,22 @@ impl Class {
 			Some(ivar)
 		}
 	}
+
+	pub fn instance_variables(&self) -> Vec<Ivar> {
+		unsafe {
+			let mut count: c_uint = 0;
+			let ivars = class_copyIvarList(*self, &mut count) as *const Ivar;
+			let vec = buf_as_slice(ivars, count as uint, |ivars| {
+				ivars.to_vec()
+			});
+			libc::free(ivars as *mut c_void);
+			vec
+		}
+	}
+}
+
+impl Clone for Class {
+	fn clone(&self) -> Class { *self }
 }
 
 pub trait Message { }

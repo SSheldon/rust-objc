@@ -104,26 +104,32 @@ impl Clone for Ivar {
 }
 
 impl Object {
-	unsafe fn get_ivar_ptr<T>(obj: *mut Object, name: &str) -> *mut T {
-		if obj.is_null() {
-			RawPtr::null()
-		} else {
-			let ivar = name.with_c_str(|name| {
-				object_getInstanceVariable(obj, name, RawPtr::null())
-			});
-			let bytes = obj as *mut u8;
-			let offset = ivar.offset();
-			bytes.offset(offset) as *mut T
+	pub fn class(&self) -> Class {
+		unsafe {
+			object_getClass(self as *const Object as *mut Object)
 		}
 	}
 
 	pub unsafe fn get_ivar<T>(&self, name: &str) -> &T {
-		let obj = self as *const Object as *mut Object;
-		&*Object::get_ivar_ptr(obj, name)
+		let cls = self.class();
+		let ivar = cls.instance_variable(name).unwrap();
+		let ptr = {
+			let offset = ivar.offset();
+			let self_ptr = self as *const Object;
+			(self_ptr as *const u8).offset(offset) as *const T
+		};
+		&*ptr
 	}
 
 	pub unsafe fn get_mut_ivar<T>(&mut self, name: &str) -> &mut T {
-		&mut *Object::get_ivar_ptr(self, name)
+		let cls = self.class();
+		let ivar = cls.instance_variable(name).unwrap();
+		let ptr = {
+			let offset = ivar.offset();
+			let self_ptr = self as *mut Object;
+			(self_ptr as *mut u8).offset(offset) as *mut T
+		};
+		&mut *ptr
 	}
 
 	pub unsafe fn set_ivar<T>(&mut self, name: &str, value: T) {

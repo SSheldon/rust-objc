@@ -3,6 +3,8 @@ use std::str::raw::c_str_to_static_slice;
 use libc::{c_char, c_uint, c_void, ptrdiff_t, size_t};
 use libc;
 
+use {encode, Encode};
+
 pub enum Object { }
 
 pub struct Sel {
@@ -93,7 +95,7 @@ impl Ivar {
 
 	pub fn type_encoding(&self) -> &str {
 		unsafe {
-			let encoding = ivar_getName(*self);
+			let encoding = ivar_getTypeEncoding(*self);
 			c_str_to_static_slice(encoding)
 		}
 	}
@@ -110,29 +112,35 @@ impl Object {
 		}
 	}
 
-	pub unsafe fn get_ivar<T>(&self, name: &str) -> &T {
+	pub unsafe fn get_ivar<T: Encode>(&self, name: &str) -> &T {
 		let cls = self.class();
-		let ivar = cls.instance_variable(name).unwrap();
-		let ptr = {
-			let offset = ivar.offset();
-			let self_ptr = self as *const Object;
-			(self_ptr as *const u8).offset(offset) as *const T
+		let ptr = match cls.instance_variable(name) {
+			Some(ivar) => {
+				assert!(ivar.type_encoding() == encode::<T>());
+				let offset = ivar.offset();
+				let self_ptr = self as *const Object;
+				(self_ptr as *const u8).offset(offset) as *const T
+			}
+			None => fail!("Ivar {} not found on class {}", name, cls.name()),
 		};
 		&*ptr
 	}
 
-	pub unsafe fn get_mut_ivar<T>(&mut self, name: &str) -> &mut T {
+	pub unsafe fn get_mut_ivar<T: Encode>(&mut self, name: &str) -> &mut T {
 		let cls = self.class();
-		let ivar = cls.instance_variable(name).unwrap();
-		let ptr = {
-			let offset = ivar.offset();
-			let self_ptr = self as *mut Object;
-			(self_ptr as *mut u8).offset(offset) as *mut T
+		let ptr = match cls.instance_variable(name) {
+			Some(ivar) => {
+				assert!(ivar.type_encoding() == encode::<T>());
+				let offset = ivar.offset();
+				let self_ptr = self as *mut Object;
+				(self_ptr as *mut u8).offset(offset) as *mut T
+			}
+			None => fail!("Ivar {} not found on class {}", name, cls.name()),
 		};
 		&mut *ptr
 	}
 
-	pub unsafe fn set_ivar<T>(&mut self, name: &str, value: T) {
+	pub unsafe fn set_ivar<T: Encode>(&mut self, name: &str, value: T) {
 		*self.get_mut_ivar::<T>(name) = value;
 	}
 }

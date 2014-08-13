@@ -8,7 +8,7 @@ pub struct Sel {
 }
 
 pub struct Ivar {
-	_ptr: *const c_void,
+	ptr: *const c_void,
 }
 
 pub struct Class {
@@ -24,6 +24,8 @@ extern {
 
 	pub fn objc_getClass(name: *const c_char) -> Class;
 	pub fn class_getName(cls: Class) -> *const c_char;
+	pub fn class_getInstanceSize(cls: Class) -> size_t;
+	pub fn class_getInstanceVariable(cls: Class, name: *const c_char) -> Ivar;
 	pub fn class_addMethod(cls: Class, name: Sel, imp: Imp, types: *const c_char) -> bool;
 	pub fn class_addIvar(cls: Class, name: *const c_char, size: size_t, alignment: u8, types: *const c_char) -> bool;
 
@@ -123,7 +125,7 @@ impl Class {
 		let cls = name.with_c_str(|name| unsafe {
 			objc_getClass(name)
 		});
-		if cls.is_nil() {
+		if cls.ptr.is_null() {
 			None
 		} else {
 			Some(cls)
@@ -134,6 +136,23 @@ impl Class {
 		unsafe {
 			let name = class_getName(*self);
 			c_str_to_static_slice(name)
+		}
+	}
+
+	pub fn instance_size(&self) -> uint {
+		unsafe {
+			class_getInstanceSize(*self) as uint
+		}
+	}
+
+	pub fn instance_variable(&self, name: &str) -> Option<Ivar> {
+		let ivar = name.with_c_str(|name| unsafe {
+			class_getInstanceVariable(*self, name)
+		});
+		if ivar.ptr.is_null() {
+			None
+		} else {
+			Some(ivar)
 		}
 	}
 }

@@ -15,6 +15,10 @@ pub struct Ivar {
 	ptr: *const c_void,
 }
 
+pub struct Method {
+	ptr: *mut c_void,
+}
+
 pub struct Class {
 	ptr: *mut Object,
 }
@@ -49,6 +53,12 @@ extern {
 	pub fn ivar_getTypeEncoding(ivar: Ivar) -> *const c_char;
 
 	pub fn objc_msgSend(obj: *mut Object, op: Sel, ...) -> *mut Object;
+
+	pub fn method_getName(method: Method) -> Sel;
+	pub fn method_getImplementation(method: Method) -> Imp;
+	pub fn method_getTypeEncoding(method: Method) -> *const c_char;
+	pub fn method_getNumberOfArguments(method: Method) -> c_uint;
+	pub fn method_setImplementation(method: Method, imp: Imp) -> Imp;
 }
 
 impl Sel {
@@ -103,6 +113,37 @@ impl Ivar {
 
 impl Clone for Ivar {
 	fn clone(&self) -> Ivar { *self }
+}
+
+impl Method {
+	pub fn name(&self) -> Sel {
+		unsafe {
+			method_getName(*self)
+		}
+	}
+
+	pub fn type_encoding(&self) -> &str {
+		unsafe {
+			let encoding = method_getTypeEncoding(*self);
+			c_str_to_static_slice(encoding)
+		}
+	}
+
+	pub fn arguments(&self) -> uint {
+		unsafe {
+			method_getNumberOfArguments(*self) as uint
+		}
+	}
+
+	pub fn implementation(&self) -> Imp {
+		unsafe {
+			method_getImplementation(*self)
+		}
+	}
+
+	pub unsafe fn set_implementation(&mut self, imp: Imp) -> Imp {
+		method_setImplementation(*self, imp)
+	}
 }
 
 impl Object {

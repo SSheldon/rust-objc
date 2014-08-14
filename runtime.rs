@@ -33,6 +33,7 @@ extern {
 	pub fn objc_getClass(name: *const c_char) -> Class;
 	pub fn class_getName(cls: Class) -> *const c_char;
 	pub fn class_getInstanceSize(cls: Class) -> size_t;
+	pub fn class_getInstanceMethod(cls: Class, sel: Sel) -> Method;
 	pub fn class_getInstanceVariable(cls: Class, name: *const c_char) -> Ivar;
 	pub fn class_copyIvarList(cls: Class, outCount: *mut c_uint) -> *mut Ivar;
 	pub fn class_addMethod(cls: Class, name: Sel, imp: Imp, types: *const c_char) -> bool;
@@ -208,6 +209,17 @@ impl Class {
 	pub fn instance_size(&self) -> uint {
 		unsafe {
 			class_getInstanceSize(*self) as uint
+		}
+	}
+
+	pub fn instance_method(&self, sel: Sel) -> Option<Method> {
+		let method = unsafe {
+			class_getInstanceMethod(*self, sel)
+		};
+		if method.ptr.is_null() {
+			None
+		} else {
+			Some(method)
 		}
 	}
 

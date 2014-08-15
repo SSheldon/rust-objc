@@ -15,9 +15,7 @@ pub enum Ivar { }
 
 pub enum Method { }
 
-pub struct Class {
-	ptr: *mut Object,
-}
+pub enum Class { }
 
 pub type Imp = extern fn(*mut Object, Sel, ...) -> *mut Object;
 
@@ -26,20 +24,20 @@ extern {
 	pub fn sel_registerName(name: *const c_char) -> Sel;
 	pub fn sel_getName(sel: Sel) -> *const c_char;
 
-	pub fn objc_getClass(name: *const c_char) -> Class;
-	pub fn class_getName(cls: Class) -> *const c_char;
-	pub fn class_getInstanceSize(cls: Class) -> size_t;
-	pub fn class_getInstanceMethod(cls: Class, sel: Sel) -> *const Method;
-	pub fn class_getInstanceVariable(cls: Class, name: *const c_char) -> *const Ivar;
-	pub fn class_copyIvarList(cls: Class, outCount: *mut c_uint) -> *mut *const Ivar;
-	pub fn class_addMethod(cls: Class, name: Sel, imp: Imp, types: *const c_char) -> bool;
-	pub fn class_addIvar(cls: Class, name: *const c_char, size: size_t, alignment: u8, types: *const c_char) -> bool;
+	pub fn objc_getClass(name: *const c_char) -> *const Class;
+	pub fn class_getName(cls: *const Class) -> *const c_char;
+	pub fn class_getInstanceSize(cls: *const Class) -> size_t;
+	pub fn class_getInstanceMethod(cls: *const Class, sel: Sel) -> *const Method;
+	pub fn class_getInstanceVariable(cls: *const Class, name: *const c_char) -> *const Ivar;
+	pub fn class_copyIvarList(cls: *const Class, outCount: *mut c_uint) -> *mut *const Ivar;
+	pub fn class_addMethod(cls: *mut Class, name: Sel, imp: Imp, types: *const c_char) -> bool;
+	pub fn class_addIvar(cls: *mut Class, name: *const c_char, size: size_t, alignment: u8, types: *const c_char) -> bool;
 
-	pub fn objc_allocateClassPair(superclass: Class, name: *const c_char, extraBytes: size_t) -> Class;
-	pub fn objc_disposeClassPair(cls: Class);
-	pub fn objc_registerClassPair(cls: Class);
+	pub fn objc_allocateClassPair(superclass: *const Class, name: *const c_char, extraBytes: size_t) -> *mut Class;
+	pub fn objc_disposeClassPair(cls: *mut Class);
+	pub fn objc_registerClassPair(cls: *mut Class);
 
-	pub fn object_getClass(obj: *mut Object) -> Class;
+	pub fn object_getClass(obj: *const Object) -> *const Class;
 
 	pub fn ivar_getName(ivar: *const Ivar) -> *const c_char;
 	pub fn ivar_getOffset(ivar: *const Ivar) -> ptrdiff_t;
@@ -136,9 +134,9 @@ impl Method {
 }
 
 impl Object {
-	pub fn class(&self) -> Class {
+	pub fn class(&self) -> &'static Class {
 		unsafe {
-			object_getClass(self as *const Object as *mut Object)
+			&*object_getClass(self)
 		}
 	}
 
@@ -176,33 +174,33 @@ impl Object {
 }
 
 impl Class {
-	pub fn get(name: &str) -> Option<Class> {
+	pub fn get(name: &str) -> Option<&'static Class> {
 		let cls = name.with_c_str(|name| unsafe {
 			objc_getClass(name)
 		});
-		if cls.ptr.is_null() {
+		if cls.is_null() {
 			None
 		} else {
-			Some(cls)
+			Some(unsafe { &*cls })
 		}
 	}
 
 	pub fn name(&self) -> &str {
 		unsafe {
-			let name = class_getName(*self);
+			let name = class_getName(self);
 			c_str_to_static_slice(name)
 		}
 	}
 
 	pub fn instance_size(&self) -> uint {
 		unsafe {
-			class_getInstanceSize(*self) as uint
+			class_getInstanceSize(self) as uint
 		}
 	}
 
 	pub fn instance_method(&self, sel: Sel) -> Option<&Method> {
 		let method = unsafe {
-			class_getInstanceMethod(*self, sel)
+			class_getInstanceMethod(self, sel)
 		};
 		if method.is_null() {
 			None
@@ -213,7 +211,7 @@ impl Class {
 
 	pub fn instance_variable(&self, name: &str) -> Option<&Ivar> {
 		let ivar = name.with_c_str(|name| unsafe {
-			class_getInstanceVariable(*self, name)
+			class_getInstanceVariable(self, name)
 		});
 		if ivar.is_null() {
 			None
@@ -225,7 +223,7 @@ impl Class {
 	pub fn instance_variables(&self) -> Vec<&Ivar> {
 		unsafe {
 			let mut count: c_uint = 0;
-			let ivars = class_copyIvarList(*self, &mut count);
+			let ivars = class_copyIvarList(self, &mut count);
 			let vec = buf_as_slice(ivars as *const _, count as uint, |ivars| {
 				ivars.to_vec()
 			});
@@ -235,13 +233,11 @@ impl Class {
 	}
 }
 
-impl Clone for Class {
-	fn clone(&self) -> Class { *self }
-}
-
 pub trait Message { }
 
 impl Message for Object { }
+
+impl Message for Class { }
 
 pub trait ToMessage {
 	fn as_ptr(&self) -> *mut Object;
@@ -260,11 +256,5 @@ impl<T: Message> ToMessage for *mut T {
 impl<'a, T: Message> ToMessage for &'a T {
 	fn as_ptr(&self) -> *mut Object {
 		(*self as *const T as *mut T).as_ptr()
-	}
-}
-
-impl ToMessage for Class {
-	fn as_ptr(&self) -> *mut Object {
-		self.ptr
 	}
 }

@@ -2,7 +2,7 @@ use std::mem;
 use libc::size_t;
 
 use {encode, Encode};
-use runtime::{Class, Imp, Sel, ToMessage};
+use runtime::{Class, Imp, Sel};
 use runtime;
 
 pub struct MethodDecl {
@@ -12,15 +12,15 @@ pub struct MethodDecl {
 }
 
 pub struct ClassDecl {
-	cls: Class,
+	cls: *mut Class,
 }
 
 impl ClassDecl {
 	pub fn new(superclass: &Class, name: &str) -> Option<ClassDecl> {
 		let cls = name.with_c_str(|name| unsafe {
-			runtime::objc_allocateClassPair(*superclass, name, 0)
+			runtime::objc_allocateClassPair(superclass, name, 0)
 		});
-		if cls.is_nil() {
+		if cls.is_null() {
 			None
 		} else {
 			Some(ClassDecl { cls: cls })
@@ -44,16 +44,14 @@ impl ClassDecl {
 		})
 	}
 
-	pub fn register(self) -> Class {
+	pub fn register(self) -> &'static Class {
 		unsafe {
 			runtime::objc_registerClassPair(self.cls);
-		}
-		let cls = self.cls;
-		// Forget self otherwise the class will be disposed in drop
-		unsafe {
+			let cls = self.cls;
+			// Forget self otherwise the class will be disposed in drop
 			mem::forget(self);
+			&*cls
 		}
-		cls
 	}
 }
 
@@ -73,7 +71,7 @@ mod tests {
 	#[test]
 	fn test_custom_class() {
 		let superclass = Class::get("NSObject").unwrap();
-		let decl = ClassDecl::new(&superclass, "MyObject");
+		let decl = ClassDecl::new(superclass, "MyObject");
 		assert!(decl.is_some());
 		let mut decl = decl.unwrap();
 

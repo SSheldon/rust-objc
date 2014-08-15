@@ -50,6 +50,7 @@ extern {
 	pub fn method_getTypeEncoding(method: *const Method) -> *const c_char;
 	pub fn method_getNumberOfArguments(method: *const Method) -> c_uint;
 	pub fn method_setImplementation(method: *mut Method, imp: Imp) -> Imp;
+	pub fn method_exchangeImplementations(m1: *mut Method, m2: *mut Method);
 }
 
 impl Sel {
@@ -130,6 +131,10 @@ impl Method {
 
 	pub unsafe fn set_implementation(&mut self, imp: Imp) -> Imp {
 		method_setImplementation(self, imp)
+	}
+
+	pub unsafe fn exchange_implementation(&mut self, other: &mut Method) {
+		method_exchangeImplementations(self, other);
 	}
 }
 

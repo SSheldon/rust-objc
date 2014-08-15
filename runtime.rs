@@ -13,9 +13,7 @@ pub struct Sel {
 
 pub enum Ivar { }
 
-pub struct Method {
-	ptr: *mut c_void,
-}
+pub enum Method { }
 
 pub struct Class {
 	ptr: *mut Object,
@@ -31,7 +29,7 @@ extern {
 	pub fn objc_getClass(name: *const c_char) -> Class;
 	pub fn class_getName(cls: Class) -> *const c_char;
 	pub fn class_getInstanceSize(cls: Class) -> size_t;
-	pub fn class_getInstanceMethod(cls: Class, sel: Sel) -> Method;
+	pub fn class_getInstanceMethod(cls: Class, sel: Sel) -> *const Method;
 	pub fn class_getInstanceVariable(cls: Class, name: *const c_char) -> *const Ivar;
 	pub fn class_copyIvarList(cls: Class, outCount: *mut c_uint) -> *mut *const Ivar;
 	pub fn class_addMethod(cls: Class, name: Sel, imp: Imp, types: *const c_char) -> bool;
@@ -49,11 +47,11 @@ extern {
 
 	pub fn objc_msgSend(obj: *mut Object, op: Sel, ...) -> *mut Object;
 
-	pub fn method_getName(method: Method) -> Sel;
-	pub fn method_getImplementation(method: Method) -> Imp;
-	pub fn method_getTypeEncoding(method: Method) -> *const c_char;
-	pub fn method_getNumberOfArguments(method: Method) -> c_uint;
-	pub fn method_setImplementation(method: Method, imp: Imp) -> Imp;
+	pub fn method_getName(method: *const Method) -> Sel;
+	pub fn method_getImplementation(method: *const Method) -> Imp;
+	pub fn method_getTypeEncoding(method: *const Method) -> *const c_char;
+	pub fn method_getNumberOfArguments(method: *const Method) -> c_uint;
+	pub fn method_setImplementation(method: *mut Method, imp: Imp) -> Imp;
 }
 
 impl Sel {
@@ -109,31 +107,31 @@ impl Ivar {
 impl Method {
 	pub fn name(&self) -> Sel {
 		unsafe {
-			method_getName(*self)
+			method_getName(self)
 		}
 	}
 
 	pub fn type_encoding(&self) -> &str {
 		unsafe {
-			let encoding = method_getTypeEncoding(*self);
+			let encoding = method_getTypeEncoding(self);
 			c_str_to_static_slice(encoding)
 		}
 	}
 
 	pub fn arguments(&self) -> uint {
 		unsafe {
-			method_getNumberOfArguments(*self) as uint
+			method_getNumberOfArguments(self) as uint
 		}
 	}
 
 	pub fn implementation(&self) -> Imp {
 		unsafe {
-			method_getImplementation(*self)
+			method_getImplementation(self)
 		}
 	}
 
 	pub unsafe fn set_implementation(&mut self, imp: Imp) -> Imp {
-		method_setImplementation(*self, imp)
+		method_setImplementation(self, imp)
 	}
 }
 
@@ -202,14 +200,14 @@ impl Class {
 		}
 	}
 
-	pub fn instance_method(&self, sel: Sel) -> Option<Method> {
+	pub fn instance_method(&self, sel: Sel) -> Option<&Method> {
 		let method = unsafe {
 			class_getInstanceMethod(*self, sel)
 		};
-		if method.ptr.is_null() {
+		if method.is_null() {
 			None
 		} else {
-			Some(method)
+			Some(unsafe { &*method })
 		}
 	}
 

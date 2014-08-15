@@ -5,8 +5,6 @@ use libc;
 
 use {encode, Encode};
 
-pub enum Object { }
-
 pub struct Sel {
 	ptr: *const c_void,
 }
@@ -16,6 +14,8 @@ pub enum Ivar { }
 pub enum Method { }
 
 pub enum Class { }
+
+pub enum Object { }
 
 pub type Imp = extern fn(*mut Object, Sel, ...) -> *mut Object;
 
@@ -138,46 +138,6 @@ impl Method {
 	}
 }
 
-impl Object {
-	pub fn class(&self) -> &'static Class {
-		unsafe {
-			&*object_getClass(self)
-		}
-	}
-
-	pub unsafe fn get_ivar<T: Encode>(&self, name: &str) -> &T {
-		let cls = self.class();
-		let ptr = match cls.instance_variable(name) {
-			Some(ivar) => {
-				assert!(ivar.type_encoding() == encode::<T>());
-				let offset = ivar.offset();
-				let self_ptr = self as *const Object;
-				(self_ptr as *const u8).offset(offset) as *const T
-			}
-			None => fail!("Ivar {} not found on class {}", name, cls.name()),
-		};
-		&*ptr
-	}
-
-	pub unsafe fn get_mut_ivar<T: Encode>(&mut self, name: &str) -> &mut T {
-		let cls = self.class();
-		let ptr = match cls.instance_variable(name) {
-			Some(ivar) => {
-				assert!(ivar.type_encoding() == encode::<T>());
-				let offset = ivar.offset();
-				let self_ptr = self as *mut Object;
-				(self_ptr as *mut u8).offset(offset) as *mut T
-			}
-			None => fail!("Ivar {} not found on class {}", name, cls.name()),
-		};
-		&mut *ptr
-	}
-
-	pub unsafe fn set_ivar<T: Encode>(&mut self, name: &str, value: T) {
-		*self.get_mut_ivar::<T>(name) = value;
-	}
-}
-
 impl Class {
 	pub fn get(name: &str) -> Option<&'static Class> {
 		let cls = name.with_c_str(|name| unsafe {
@@ -235,6 +195,46 @@ impl Class {
 			libc::free(ivars as *mut c_void);
 			vec
 		}
+	}
+}
+
+impl Object {
+	pub fn class(&self) -> &'static Class {
+		unsafe {
+			&*object_getClass(self)
+		}
+	}
+
+	pub unsafe fn get_ivar<T: Encode>(&self, name: &str) -> &T {
+		let cls = self.class();
+		let ptr = match cls.instance_variable(name) {
+			Some(ivar) => {
+				assert!(ivar.type_encoding() == encode::<T>());
+				let offset = ivar.offset();
+				let self_ptr = self as *const Object;
+				(self_ptr as *const u8).offset(offset) as *const T
+			}
+			None => fail!("Ivar {} not found on class {}", name, cls.name()),
+		};
+		&*ptr
+	}
+
+	pub unsafe fn get_mut_ivar<T: Encode>(&mut self, name: &str) -> &mut T {
+		let cls = self.class();
+		let ptr = match cls.instance_variable(name) {
+			Some(ivar) => {
+				assert!(ivar.type_encoding() == encode::<T>());
+				let offset = ivar.offset();
+				let self_ptr = self as *mut Object;
+				(self_ptr as *mut u8).offset(offset) as *mut T
+			}
+			None => fail!("Ivar {} not found on class {}", name, cls.name()),
+		};
+		&mut *ptr
+	}
+
+	pub unsafe fn set_ivar<T: Encode>(&mut self, name: &str, value: T) {
+		*self.get_mut_ivar::<T>(name) = value;
 	}
 }
 

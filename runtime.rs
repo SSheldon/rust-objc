@@ -11,9 +11,7 @@ pub struct Sel {
 	ptr: *const c_void,
 }
 
-pub struct Ivar {
-	ptr: *const c_void,
-}
+pub enum Ivar { }
 
 pub struct Method {
 	ptr: *mut c_void,
@@ -34,8 +32,8 @@ extern {
 	pub fn class_getName(cls: Class) -> *const c_char;
 	pub fn class_getInstanceSize(cls: Class) -> size_t;
 	pub fn class_getInstanceMethod(cls: Class, sel: Sel) -> Method;
-	pub fn class_getInstanceVariable(cls: Class, name: *const c_char) -> Ivar;
-	pub fn class_copyIvarList(cls: Class, outCount: *mut c_uint) -> *mut Ivar;
+	pub fn class_getInstanceVariable(cls: Class, name: *const c_char) -> *const Ivar;
+	pub fn class_copyIvarList(cls: Class, outCount: *mut c_uint) -> *mut *const Ivar;
 	pub fn class_addMethod(cls: Class, name: Sel, imp: Imp, types: *const c_char) -> bool;
 	pub fn class_addIvar(cls: Class, name: *const c_char, size: size_t, alignment: u8, types: *const c_char) -> bool;
 
@@ -43,15 +41,11 @@ extern {
 	pub fn objc_disposeClassPair(cls: Class);
 	pub fn objc_registerClassPair(cls: Class);
 
-	pub fn object_setInstanceVariable(obj: *mut Object, name: *const c_char, value: *mut c_void) -> Ivar;
-	pub fn object_getInstanceVariable(obj: *mut Object, name: *const c_char, outValue: *mut *mut c_void) -> Ivar;
-	pub fn object_setIvar(obj: *mut Object, ivar: Ivar, value: *mut Object);
-	pub fn object_getIvar(obj: *mut Object, ivar: Ivar) -> *mut Object;
 	pub fn object_getClass(obj: *mut Object) -> Class;
 
-	pub fn ivar_getName(ivar: Ivar) -> *const c_char;
-	pub fn ivar_getOffset(ivar: Ivar) -> ptrdiff_t;
-	pub fn ivar_getTypeEncoding(ivar: Ivar) -> *const c_char;
+	pub fn ivar_getName(ivar: *const Ivar) -> *const c_char;
+	pub fn ivar_getOffset(ivar: *const Ivar) -> ptrdiff_t;
+	pub fn ivar_getTypeEncoding(ivar: *const Ivar) -> *const c_char;
 
 	pub fn objc_msgSend(obj: *mut Object, op: Sel, ...) -> *mut Object;
 
@@ -92,28 +86,24 @@ impl Clone for Sel {
 impl Ivar {
 	pub fn name(&self) -> &str {
 		unsafe {
-			let name = ivar_getName(*self);
+			let name = ivar_getName(self);
 			c_str_to_static_slice(name)
 		}
 	}
 
 	pub fn offset(&self) -> int {
 		let offset = unsafe {
-			ivar_getOffset(*self)
+			ivar_getOffset(self)
 		};
 		offset as int
 	}
 
 	pub fn type_encoding(&self) -> &str {
 		unsafe {
-			let encoding = ivar_getTypeEncoding(*self);
+			let encoding = ivar_getTypeEncoding(self);
 			c_str_to_static_slice(encoding)
 		}
 	}
-}
-
-impl Clone for Ivar {
-	fn clone(&self) -> Ivar { *self }
 }
 
 impl Method {
@@ -223,22 +213,22 @@ impl Class {
 		}
 	}
 
-	pub fn instance_variable(&self, name: &str) -> Option<Ivar> {
+	pub fn instance_variable(&self, name: &str) -> Option<&Ivar> {
 		let ivar = name.with_c_str(|name| unsafe {
 			class_getInstanceVariable(*self, name)
 		});
-		if ivar.ptr.is_null() {
+		if ivar.is_null() {
 			None
 		} else {
-			Some(ivar)
+			Some(unsafe { &*ivar })
 		}
 	}
 
-	pub fn instance_variables(&self) -> Vec<Ivar> {
+	pub fn instance_variables(&self) -> Vec<&Ivar> {
 		unsafe {
 			let mut count: c_uint = 0;
-			let ivars = class_copyIvarList(*self, &mut count) as *const Ivar;
-			let vec = buf_as_slice(ivars, count as uint, |ivars| {
+			let ivars = class_copyIvarList(*self, &mut count);
+			let vec = buf_as_slice(ivars as *const _, count as uint, |ivars| {
 				ivars.to_vec()
 			});
 			libc::free(ivars as *mut c_void);

@@ -1,3 +1,4 @@
+use std::c_str::CString;
 use std::c_vec::CVec;
 use std::kinds::marker::NoCopy;
 use std::str::raw::c_str_to_static_slice;
@@ -58,6 +59,8 @@ extern {
 	pub fn method_getName(method: *const Method) -> Sel;
 	pub fn method_getImplementation(method: *const Method) -> Imp;
 	pub fn method_getTypeEncoding(method: *const Method) -> *const c_char;
+	pub fn method_copyReturnType(method: *const Method) -> *mut c_char;
+	pub fn method_copyArgumentType(method: *const Method, index: c_uint) -> *mut c_char;
 	pub fn method_getNumberOfArguments(method: *const Method) -> c_uint;
 	pub fn method_setImplementation(method: *mut Method, imp: Imp) -> Imp;
 	pub fn method_exchangeImplementations(m1: *mut Method, m2: *mut Method);
@@ -124,6 +127,20 @@ impl Method {
 		unsafe {
 			let encoding = method_getTypeEncoding(self);
 			c_str_to_static_slice(encoding)
+		}
+	}
+
+	pub fn return_type(&self) -> CString {
+		unsafe {
+			let encoding = method_copyReturnType(self);
+			CString::new(encoding as *const _, true)
+		}
+	}
+
+	pub fn argument_type(&self, index: uint) -> CString {
+		unsafe {
+			let encoding = method_copyArgumentType(self, index as c_uint);
+			CString::new(encoding as *const _, true)
 		}
 	}
 
@@ -296,6 +313,8 @@ mod tests {
 		assert!(method.name().name() == "description");
 		assert!(method.type_encoding() != "");
 		assert!(method.arguments() == 2);
+		assert!(method.return_type().as_bytes_no_nul() == "@".as_bytes());
+		assert!(method.argument_type(1).as_bytes_no_nul() == ":".as_bytes());
 
 		let methods = cls.instance_methods();
 		assert!(methods.len() > 0);

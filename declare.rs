@@ -46,8 +46,8 @@ impl ClassDecl {
 
 	pub fn register(self) -> &'static Class {
 		unsafe {
-			runtime::objc_registerClassPair(self.cls);
 			let cls = self.cls;
+			runtime::objc_registerClassPair(cls);
 			// Forget self otherwise the class will be disposed in drop
 			mem::forget(self);
 			&*cls

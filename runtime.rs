@@ -280,3 +280,49 @@ impl<'a, T: Message> ToMessage for &'a T {
 		(*self as *const T as *mut T).as_ptr()
 	}
 }
+
+#[cfg(test)]
+mod tests {
+	use std::mem;
+	use super::{Class, Sel};
+
+	#[test]
+	fn test_ivar() {
+		let cls = Class::get("NSObject").unwrap();
+		let ivar = cls.instance_variable("isa").unwrap();
+		assert!(ivar.name() == "isa");
+		assert!(ivar.type_encoding() == "#");
+		assert!(ivar.offset() == 0);
+	}
+
+	#[test]
+	fn test_method() {
+		let cls = Class::get("NSObject").unwrap();
+		let sel = Sel::register("description");
+		let method = cls.instance_method(sel).unwrap();
+		assert!(method.name().name() == "description");
+		assert!(method.type_encoding() != "");
+		assert!(method.arguments() == 2);
+	}
+
+	#[test]
+	fn test_class() {
+		let cls = Class::get("NSObject").unwrap();
+		assert!(cls.name() == "NSObject");
+		assert!(cls.instance_size() == mem::size_of::<*const Class>());
+	}
+
+	#[test]
+	fn test_object() {
+		let cls = Class::get("NSObject").unwrap();
+		let obj = unsafe {
+			let obj = msg_send![cls alloc];
+			let obj = msg_send![obj init];
+			&*obj
+		};
+		assert!(obj.class() == cls);
+		unsafe {
+			msg_send![obj release];
+		}
+	}
+}

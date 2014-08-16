@@ -1,3 +1,4 @@
+use std::kinds::marker::NoCopy;
 use std::slice::raw::buf_as_slice;
 use std::str::raw::c_str_to_static_slice;
 use libc::{c_char, c_uint, c_void, ptrdiff_t, size_t};
@@ -9,13 +10,21 @@ pub struct Sel {
 	ptr: *const c_void,
 }
 
-pub enum Ivar { }
+pub struct Ivar {
+	nocopy: NoCopy,
+}
 
-pub enum Method { }
+pub struct Method {
+	nocopy: NoCopy,
+}
 
-pub enum Class { }
+pub struct Class {
+	nocopy: NoCopy,
+}
 
-pub enum Object { }
+pub struct Object {
+	nocopy: NoCopy,
+}
 
 pub type Imp = extern fn(*mut Object, Sel, ...) -> *mut Object;
 

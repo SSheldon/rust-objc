@@ -38,6 +38,7 @@ extern {
 	pub fn class_getInstanceSize(cls: *const Class) -> size_t;
 	pub fn class_getInstanceMethod(cls: *const Class, sel: Sel) -> *const Method;
 	pub fn class_getInstanceVariable(cls: *const Class, name: *const c_char) -> *const Ivar;
+	pub fn class_copyMethodList(cls: *const Class, outCount: *mut c_uint) -> *mut *const Method;
 	pub fn class_copyIvarList(cls: *const Class, outCount: *mut c_uint) -> *mut *const Ivar;
 	pub fn class_addMethod(cls: *mut Class, name: Sel, imp: Imp, types: *const c_char) -> bool;
 	pub fn class_addIvar(cls: *mut Class, name: *const c_char, size: size_t, alignment: u8, types: *const c_char) -> bool;
@@ -194,6 +195,17 @@ impl Class {
 		}
 	}
 
+	pub fn instance_methods(&self) -> CVec<&Method> {
+		unsafe {
+			let mut count: c_uint = 0;
+			let methods = class_copyMethodList(self, &mut count);
+			CVec::new_with_dtor(methods as *mut _, count as uint, proc() {
+				libc::free(methods as *mut c_void);
+			})
+		}
+
+	}
+
 	pub fn instance_variables(&self) -> CVec<&Ivar> {
 		unsafe {
 			let mut count: c_uint = 0;
@@ -271,6 +283,9 @@ mod tests {
 		assert!(ivar.name() == "isa");
 		assert!(ivar.type_encoding() == "#");
 		assert!(ivar.offset() == 0);
+
+		let ivars = cls.instance_variables();
+		assert!(ivars.len() > 0);
 	}
 
 	#[test]
@@ -281,6 +296,9 @@ mod tests {
 		assert!(method.name().name() == "description");
 		assert!(method.type_encoding() != "");
 		assert!(method.arguments() == 2);
+
+		let methods = cls.instance_methods();
+		assert!(methods.len() > 0);
 	}
 
 	#[test]

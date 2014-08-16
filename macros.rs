@@ -43,8 +43,8 @@ macro_rules! object_struct(
 
 		impl<$($t),*> ::std::cmp::Eq for $name<$($t),*> { }
 
-		impl<$($t,)* S: ::std::hash::Writer> ::std::hash::Hash<S> for $name<$($t),*> {
-			fn hash(&self, state: &mut S) {
+		impl<$($t),*> ::std::hash::Hash for $name<$($t),*> {
+			fn hash(&self, state: &mut ::std::hash::sip::SipState) {
 				use objc::foundation::INSObject;
 				self.hash_code().hash(state);
 			}

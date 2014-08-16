@@ -1,6 +1,6 @@
 use std::mem;
 
-use runtime::{Class, Message, Sel};
+use runtime::{Message, Sel};
 
 pub struct Encoding<T>(pub &'static str);
 
@@ -96,10 +96,6 @@ impl<T: Message> Encode for *mut T {
 	fn code() -> Encoding<*mut T> { Encoding("@") }
 }
 
-impl Encode for Class {
-	fn code() -> Encoding<Class> { Encoding("#") }
-}
-
 impl Encode for Sel {
 	fn code() -> Encoding<Sel> { Encoding(":") }
 }
@@ -111,7 +107,7 @@ pub fn encode<T: Encode>() -> &'static str {
 
 #[cfg(test)]
 mod tests {
-	use runtime::{Class, Object, Sel};
+	use runtime::{Object, Sel};
 	use super::encode;
 
 	#[test]
@@ -120,7 +116,6 @@ mod tests {
 		assert!(encode::<()>() == "v");
 		assert!(encode::<&Object>() == "@");
 		assert!(encode::<*mut Object>() == "@");
-		assert!(encode::<Class>() == "#");
 		assert!(encode::<Sel>() == ":");
 	}
 }

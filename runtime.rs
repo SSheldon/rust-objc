@@ -1,5 +1,5 @@
+use std::c_vec::CVec;
 use std::kinds::marker::NoCopy;
-use std::slice::raw::buf_as_slice;
 use std::str::raw::c_str_to_static_slice;
 use libc::{c_char, c_uint, c_void, ptrdiff_t, size_t};
 use libc;
@@ -194,15 +194,13 @@ impl Class {
 		}
 	}
 
-	pub fn instance_variables(&self) -> Vec<&Ivar> {
+	pub fn instance_variables(&self) -> CVec<&Ivar> {
 		unsafe {
 			let mut count: c_uint = 0;
 			let ivars = class_copyIvarList(self, &mut count);
-			let vec = buf_as_slice(ivars as *const _, count as uint, |ivars| {
-				ivars.to_vec()
-			});
-			libc::free(ivars as *mut c_void);
-			vec
+			CVec::new_with_dtor(ivars as *mut _, count as uint, proc() {
+				libc::free(ivars as *mut c_void);
+			})
 		}
 	}
 }

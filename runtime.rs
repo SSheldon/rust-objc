@@ -207,6 +207,14 @@ impl Class {
 	}
 }
 
+impl PartialEq for Class {
+	fn eq(&self, other: &Class) -> bool {
+		self as *const Class == other as *const Class
+	}
+}
+
+impl Eq for Class { }
+
 impl Object {
 	pub fn class(&self) -> &'static Class {
 		unsafe {

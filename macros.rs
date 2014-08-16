@@ -3,16 +3,16 @@
 #[macro_export]
 macro_rules! msg_send(
 	($obj:expr $name:ident) => ({
-		use objc::runtime::ToMessage;
 		let sel_name = stringify!($name);
 		let sel = ::objc::runtime::Sel::register(sel_name);
-		::objc::runtime::objc_msgSend($obj.as_ptr(), sel)
+		let ptr = ::objc::to_ptr(&$obj);
+		::objc::runtime::objc_msgSend(ptr, sel)
 	});
 	($obj:expr $($name:ident : $arg:expr)+) => ({
-		use objc::runtime::ToMessage;
 		let sel_name = concat!($(stringify!($name), ':'),+);
 		let sel = ::objc::runtime::Sel::register(sel_name);
-		::objc::runtime::objc_msgSend($obj.as_ptr(), sel $(,$arg)+)
+		let ptr = ::objc::to_ptr(&$obj);
+		::objc::runtime::objc_msgSend(ptr, sel $(,$arg)+)
 	});
 )
 

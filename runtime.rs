@@ -261,26 +261,6 @@ impl Message for Object { }
 
 impl Message for Class { }
 
-pub trait ToMessage {
-	fn as_ptr(&self) -> *mut Object;
-
-	fn is_nil(&self) -> bool {
-		self.as_ptr().is_null()
-	}
-}
-
-impl<T: Message> ToMessage for *mut T {
-	fn as_ptr(&self) -> *mut Object {
-		*self as *mut Object
-	}
-}
-
-impl<'a, T: Message> ToMessage for &'a T {
-	fn as_ptr(&self) -> *mut Object {
-		(*self as *const T as *mut T).as_ptr()
-	}
-}
-
 #[cfg(test)]
 mod tests {
 	use std::mem;

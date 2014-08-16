@@ -2,7 +2,7 @@ use std::c_str::CString;
 use std::c_vec::CVec;
 use std::kinds::marker::NoCopy;
 use std::str::raw::c_str_to_static_slice;
-use libc::{c_char, c_uint, c_void, ptrdiff_t, size_t};
+use libc::{c_char, c_int, c_uint, c_void, ptrdiff_t, size_t};
 use libc;
 
 use {encode, Encode};
@@ -34,7 +34,6 @@ extern {
 	pub fn sel_registerName(name: *const c_char) -> Sel;
 	pub fn sel_getName(sel: Sel) -> *const c_char;
 
-	pub fn objc_getClass(name: *const c_char) -> *const Class;
 	pub fn class_getName(cls: *const Class) -> *const c_char;
 	pub fn class_getInstanceSize(cls: *const Class) -> size_t;
 	pub fn class_getInstanceMethod(cls: *const Class, sel: Sel) -> *const Method;
@@ -49,6 +48,10 @@ extern {
 	pub fn objc_registerClassPair(cls: *mut Class);
 
 	pub fn object_getClass(obj: *const Object) -> *const Class;
+
+	pub fn objc_getClassList(buffer: *mut *const Class, bufferLen: c_int) -> c_int;
+	pub fn objc_copyClassList(outCount: *mut c_uint) -> *mut *const Class;
+	pub fn objc_getClass(name: *const c_char) -> *const Class;
 
 	pub fn ivar_getName(ivar: *const Ivar) -> *const c_char;
 	pub fn ivar_getOffset(ivar: *const Ivar) -> ptrdiff_t;
@@ -144,7 +147,7 @@ impl Method {
 		}
 	}
 
-	pub fn arguments(&self) -> uint {
+	pub fn arguments_count(&self) -> uint {
 		unsafe {
 			method_getNumberOfArguments(self) as uint
 		}
@@ -174,6 +177,22 @@ impl Class {
 			None
 		} else {
 			Some(unsafe { &*cls })
+		}
+	}
+
+	pub fn classes() -> CVec<&'static Class> {
+		unsafe {
+			let mut count: c_uint = 0;
+			let classes = objc_copyClassList(&mut count);
+			CVec::new_with_dtor(classes as *mut _, count as uint, proc() {
+				libc::free(classes as *mut c_void);
+			})
+		}
+	}
+
+	pub fn classes_count() -> uint {
+		unsafe {
+			objc_getClassList(RawPtr::null(), 0) as uint
 		}
 	}
 
@@ -312,7 +331,7 @@ mod tests {
 		let method = cls.instance_method(sel).unwrap();
 		assert!(method.name().name() == "description");
 		assert!(method.type_encoding() != "");
-		assert!(method.arguments() == 2);
+		assert!(method.arguments_count() == 2);
 		assert!(method.return_type().as_bytes_no_nul() == "@".as_bytes());
 		assert!(method.argument_type(1).as_bytes_no_nul() == ":".as_bytes());
 
@@ -325,6 +344,15 @@ mod tests {
 		let cls = Class::get("NSObject").unwrap();
 		assert!(cls.name() == "NSObject");
 		assert!(cls.instance_size() == mem::size_of::<*const Class>());
+	}
+
+	#[test]
+	fn test_classes() {
+		let classes_count = Class::classes_count();
+		assert!(classes_count > 0);
+
+		let classes = Class::classes();
+		assert!(classes.len() == classes_count);
 	}
 
 	#[test]

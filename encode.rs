@@ -1,5 +1,3 @@
-use std::mem;
-
 use runtime::{Message, Sel};
 
 pub struct Encoding<T>(pub &'static str);
@@ -25,15 +23,11 @@ impl Encode for i64 {
 }
 
 impl Encode for int {
-	fn code() -> Encoding<int> {
-		match mem::size_of::<int>() {
-			1 => Encoding("c"),
-			2 => Encoding("s"),
-			4 => Encoding("i"),
-			8 => Encoding("q"),
-			_ => Encoding("?"),
-		}
-	}
+	#[cfg(target_word_size = "32")]
+	fn code() -> Encoding<int> { Encoding("i") }
+
+	#[cfg(target_word_size = "64")]
+	fn code() -> Encoding<int> { Encoding("q") }
 }
 
 impl Encode for u8 {
@@ -53,15 +47,11 @@ impl Encode for u64 {
 }
 
 impl Encode for uint {
-	fn code() -> Encoding<uint> {
-		match mem::size_of::<uint>() {
-			1 => Encoding("C"),
-			2 => Encoding("S"),
-			4 => Encoding("I"),
-			8 => Encoding("Q"),
-			_ => Encoding("?"),
-		}
-	}
+	#[cfg(target_word_size = "32")]
+	fn code() -> Encoding<uint> { Encoding("I") }
+
+	#[cfg(target_word_size = "64")]
+	fn code() -> Encoding<uint> { Encoding("Q") }
 }
 
 impl Encode for f32 {

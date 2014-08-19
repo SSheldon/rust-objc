@@ -26,6 +26,16 @@ macro_rules! object_struct(
 			nocopy: ::std::kinds::marker::NoCopy,
 		}
 
+		object_impl!($name $(,$t)*)
+	);
+)
+
+#[macro_export]
+macro_rules! object_impl(
+	($name:ident<$($t:ident),+>) => (
+		object_impl!($name, $($t),+)
+	);
+	($name:ident $(,$t:ident)*) => (
 		impl<$($t),*> ::objc::runtime::Message for $name<$($t),*> { }
 
 		impl<$($t),*> ::objc::foundation::INSObject for $name<$($t),*> {

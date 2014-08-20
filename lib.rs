@@ -10,6 +10,7 @@ pub use class_name::{class, ClassName};
 pub use declare::{ClassDecl, MethodDecl};
 pub use encode::{encode, Encode, Encoding};
 pub use message::{to_ptr, ToMessage};
+pub use weak::WeakId;
 
 mod macros;
 
@@ -19,6 +20,7 @@ mod class_name;
 mod declare;
 mod encode;
 mod message;
+mod weak;
 pub mod foundation;
 
 // Shim to re-export under the objc:: path for macros

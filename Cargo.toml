@@ -1,12 +1,8 @@
 [package]
 name = "objc"
 version = "0.0.0"
-authors = ["steven@sasheldon.com"]
+authors = ["Steven Sheldon"]
 
-[[lib]]
+[lib]
 name = "objc"
 path = "lib.rs"
-
-[[bin]]
-name = "example"
-path = "example.rs"

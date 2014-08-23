@@ -7,6 +7,7 @@ use libc;
 
 use {encode, Encode};
 
+#[repr(C)]
 pub struct Sel {
 	ptr: *const c_void,
 }
@@ -29,6 +30,7 @@ pub struct Object {
 
 pub type Imp = extern fn(*mut Object, Sel, ...) -> *mut Object;
 
+#[allow(ctypes)]
 #[link(name = "Foundation", kind = "framework")]
 extern {
 	pub fn sel_registerName(name: *const c_char) -> Sel;

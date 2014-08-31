@@ -1,11 +1,11 @@
 #![crate_name = "objc"]
 #![crate_type = "lib"]
 
-#![feature(globs, macro_rules, unsafe_destructor)]
+#![feature(default_type_params, globs, macro_rules, unsafe_destructor)]
 
 extern crate libc;
 
-pub use id::{Id, IdVector, IntoIdVector};
+pub use id::{Id, IdVector, IntoIdVector, Owned, Ownership, Shared, ShareId};
 pub use class_name::{class, ClassName};
 pub use declare::{ClassDecl, MethodDecl};
 pub use encode::{encode, Encode, Encoding};

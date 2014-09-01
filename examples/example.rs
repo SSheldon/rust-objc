@@ -34,7 +34,7 @@ fn main() {
 	let keys = &[&*string];
 	let vals = vec![obj];
 	let dict: Id<NSDictionary<NSString, NSObject>> =
-		INSDictionary::from_keys_and_objects(keys.as_slice(), vals);
+		INSDictionary::from_keys_and_objects(keys, vals);
 	println!("{}", dict.object_for(&*string));
 	println!("{}", dict.len());
 }

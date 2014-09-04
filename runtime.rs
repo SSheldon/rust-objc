@@ -172,14 +172,9 @@ impl Method {
 
 impl Class {
 	pub fn get(name: &str) -> Option<&'static Class> {
-		let cls = name.with_c_str(|name| unsafe {
-			objc_getClass(name)
-		});
-		if cls.is_null() {
-			None
-		} else {
-			Some(unsafe { &*cls })
-		}
+		name.with_c_str(|name| unsafe {
+			objc_getClass(name).as_ref()
+		})
 	}
 
 	pub fn classes() -> CVec<&'static Class> {
@@ -212,25 +207,15 @@ impl Class {
 	}
 
 	pub fn instance_method(&self, sel: Sel) -> Option<&Method> {
-		let method = unsafe {
-			class_getInstanceMethod(self, sel)
-		};
-		if method.is_null() {
-			None
-		} else {
-			Some(unsafe { &*method })
+		unsafe {
+			class_getInstanceMethod(self, sel).as_ref()
 		}
 	}
 
 	pub fn instance_variable(&self, name: &str) -> Option<&Ivar> {
-		let ivar = name.with_c_str(|name| unsafe {
-			class_getInstanceVariable(self, name)
-		});
-		if ivar.is_null() {
-			None
-		} else {
-			Some(unsafe { &*ivar })
-		}
+		name.with_c_str(|name| unsafe {
+			class_getInstanceVariable(self, name).as_ref()
+		})
 	}
 
 	pub fn instance_methods(&self) -> CVec<&Method> {

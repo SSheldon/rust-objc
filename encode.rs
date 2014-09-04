@@ -70,11 +70,11 @@ impl Encode for () {
 	fn code() -> Encoding<()> { Encoding("v") }
 }
 
-impl<'a, T: Message> Encode for &'a T {
+impl<'a, T: 'a + Message> Encode for &'a T {
 	fn code() -> Encoding<&'a T> { Encoding("@") }
 }
 
-impl<'a, T: Message> Encode for &'a mut T {
+impl<'a, T: 'a + Message> Encode for &'a mut T {
 	fn code() -> Encoding<&'a mut T> { Encoding("@") }
 }
 

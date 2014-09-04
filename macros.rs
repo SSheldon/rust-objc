@@ -113,7 +113,7 @@ macro_rules! method(
 	(, $sel_name:expr, $body:block, $fn_name:ident, $ret_ty:ty, $self_name:ident : $self_ty:ty, $($arg_name:ident : $arg_ty:ty),*) => ({
 		let sel = ::objc::runtime::Sel::register($sel_name);
 
-		#[allow(non_snake_case_functions)]
+		#[allow(non_snake_case)]
 		extern fn $fn_name($self_name: $self_ty, _cmd: ::objc::runtime::Sel $(, $arg_name: $arg_ty)*) -> $ret_ty $body
 		let imp: ::objc::runtime::Imp = unsafe { ::std::mem::transmute($fn_name) };
 

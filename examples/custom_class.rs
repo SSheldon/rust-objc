@@ -53,7 +53,7 @@ fn main() {
 	let mut obj: Id<MYObject> = INSObject::new();
 	println!("{}", obj);
 
-	obj.deref_mut().set_number(7);
+	obj.set_number(7);
 	println!("Number: {}", obj.number());
 
 	unsafe {

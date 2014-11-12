@@ -264,7 +264,7 @@ impl Object {
 				let self_ptr = self as *const Object;
 				(self_ptr as *const u8).offset(offset) as *const T
 			}
-			None => fail!("Ivar {} not found on class {}", name, cls.name()),
+			None => panic!("Ivar {} not found on class {}", name, cls.name()),
 		};
 		&*ptr
 	}
@@ -278,7 +278,7 @@ impl Object {
 				let self_ptr = self as *mut Object;
 				(self_ptr as *mut u8).offset(offset) as *mut T
 			}
-			None => fail!("Ivar {} not found on class {}", name, cls.name()),
+			None => panic!("Ivar {} not found on class {}", name, cls.name()),
 		};
 		&mut *ptr
 	}

@@ -7,6 +7,6 @@ pub fn class<T: INSObject>() -> &'static Class {
 	let ClassName(name): ClassName<T> = INSObject::class_name();
 	match Class::get(name) {
 		Some(cls) => cls,
-		None => fail!("Class {} not found", name),
+		None => panic!("Class {} not found", name),
 	}
 }

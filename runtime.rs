@@ -30,7 +30,7 @@ pub struct Object {
 
 pub type Imp = extern fn(*mut Object, Sel, ...) -> *mut Object;
 
-#[allow(ctypes)]
+#[allow(improper_ctypes)]
 #[link(name = "Foundation", kind = "framework")]
 extern {
 	pub fn sel_registerName(name: *const c_char) -> Sel;

@@ -17,6 +17,47 @@ macro_rules! msg_send(
 )
 
 #[macro_export]
+macro_rules! encode_message_impl(
+	($code:expr, $name:ident $(,$t:ident)*) => (
+		impl<'a $(, $t)*> ::objc::Encode for &'a $name<$($t),*> {
+			fn code() -> ::objc::Encoding<&'a $name<$($t),*>> {
+				::objc::Encoding($code)
+			}
+		}
+
+		impl<'a $(, $t)*> ::objc::Encode for &'a mut $name<$($t),*> {
+			fn code() -> ::objc::Encoding<&'a mut $name<$($t),*>> {
+				::objc::Encoding($code)
+			}
+		}
+
+		impl<'a $(, $t)*> ::objc::Encode for Option<&'a $name<$($t),*>> {
+			fn code() -> ::objc::Encoding<Option<&'a $name<$($t),*>>> {
+				::objc::Encoding($code)
+			}
+		}
+
+		impl<'a $(, $t)*> ::objc::Encode for Option<&'a mut $name<$($t),*>> {
+			fn code() -> ::objc::Encoding<Option<&'a mut $name<$($t),*>>> {
+				::objc::Encoding($code)
+			}
+		}
+
+		impl<$($t),*> ::objc::Encode for *const $name<$($t),*> {
+			fn code() -> ::objc::Encoding<*const $name<$($t),*>> {
+				::objc::Encoding($code)
+			}
+		}
+
+		impl<$($t),*> ::objc::Encode for *mut $name<$($t),*> {
+			fn code() -> ::objc::Encoding<*mut $name<$($t),*>> {
+				::objc::Encoding($code)
+			}
+		}
+	);
+)
+
+#[macro_export]
 macro_rules! method(
 	// Void no arguments
 	(

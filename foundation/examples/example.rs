@@ -1,7 +1,8 @@
 extern crate objc;
+extern crate objc_foundation;
 
 use objc::Id;
-use objc::foundation::{NSArray, NSDictionary, NSObject, NSString,
+use objc_foundation::{NSArray, NSDictionary, NSObject, NSString,
 	INSArray, INSCopying, INSDictionary, INSObject, INSString};
 
 fn main() {

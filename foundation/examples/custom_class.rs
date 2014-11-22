@@ -2,10 +2,12 @@
 
 #[phase(plugin, link)]
 extern crate objc;
+#[phase(plugin, link)]
+extern crate objc_foundation;
 
-use objc::{class, ClassDecl, Id};
+use objc::{ClassDecl, Id};
 use objc::runtime::Object;
-use objc::foundation::{INSObject, NSObject};
+use objc_foundation::{class, INSObject, NSObject};
 
 object_struct!(MYObject)
 

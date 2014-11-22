@@ -8,7 +8,7 @@ extern crate libc;
 pub use id::{Id, IdVector, IntoIdVector, Owned, Ownership, Shared, ShareId};
 pub use declare::{ClassDecl, MethodDecl};
 pub use encode::{encode, Encode, Encoding};
-pub use message::{to_ptr, ToMessage};
+pub use message::{to_ptr, Message, ToMessage};
 pub use weak::WeakId;
 
 mod macros;

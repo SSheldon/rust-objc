@@ -288,12 +288,6 @@ impl Object {
 	}
 }
 
-pub trait Message { }
-
-impl Message for Object { }
-
-impl Message for Class { }
-
 #[cfg(test)]
 mod tests {
 	use std::mem;

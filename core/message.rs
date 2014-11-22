@@ -1,4 +1,10 @@
-use runtime::{Message, Object};
+use runtime::{Class, Object};
+
+pub trait Message { }
+
+impl Message for Object { }
+
+impl Message for Class { }
 
 pub trait ToMessage<T: Message> {
 	fn as_ptr(&self) -> *mut T;

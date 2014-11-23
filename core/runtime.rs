@@ -142,10 +142,14 @@ impl Method {
 		}
 	}
 
-	pub fn argument_type(&self, index: uint) -> CString {
+	pub fn argument_type(&self, index: uint) -> Option<CString> {
 		unsafe {
 			let encoding = method_copyArgumentType(self, index as c_uint);
-			CString::new(encoding as *const _, true)
+			if encoding.is_null() {
+				None
+			} else {
+				Some(CString::new(encoding as *const _, true))
+			}
 		}
 	}
 
@@ -314,7 +318,8 @@ mod tests {
 		assert!(method.type_encoding() != "");
 		assert!(method.arguments_count() == 2);
 		assert!(method.return_type().as_bytes_no_nul() == "@".as_bytes());
-		assert!(method.argument_type(1).as_bytes_no_nul() == ":".as_bytes());
+		assert!(method.argument_type(1).unwrap().as_bytes_no_nul() ==
+			":".as_bytes());
 
 		let methods = cls.instance_methods();
 		assert!(methods.len() > 0);

@@ -1,11 +1,15 @@
 use runtime::{Class, Object};
 
+/// Types that may be sent Objective-C messages.
+/// For example: objects, classes, and blocks.
 pub trait Message { }
 
 impl Message for Object { }
 
 impl Message for Class { }
 
+/// A trait for converting to a pointer to a type that may be sent Objective-C
+/// messages.
 pub trait ToMessage<T: Message> {
 	fn as_ptr(&self) -> *mut T;
 

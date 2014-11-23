@@ -1,8 +1,14 @@
 use runtime::{Class, Object, Sel};
 
+/// A simple wrapper around a static string slice to contain the Objective-C
+/// type encoding for a type. This is necessary for the `Encode` trait.
 pub struct Encoding<T>(pub &'static str);
 
+/// Types that have an Objective-C type encoding. For more information, see
+/// Apple's documentation:
+/// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
 pub trait Encode {
+	/// Return the Encoding for Self.
 	fn code() -> Encoding<Self>;
 }
 
@@ -70,14 +76,15 @@ impl Encode for () {
 	fn code() -> Encoding<()> { Encoding("v") }
 }
 
-encode_message_impl!("@", Object)
-
-encode_message_impl!("#", Class)
-
 impl Encode for Sel {
 	fn code() -> Encoding<Sel> { Encoding(":") }
 }
 
+encode_message_impl!("@", Object)
+
+encode_message_impl!("#", Class)
+
+/// Returns the Objective-C type encoding for a type.
 pub fn encode<T: Encode>() -> &'static str {
 	let Encoding(code): Encoding<T> = Encode::code();
 	code

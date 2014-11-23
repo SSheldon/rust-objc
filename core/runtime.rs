@@ -1,3 +1,8 @@
+//! A Rust interface for the functionality of the Objective-C runtime.
+//!
+//! For more information on foreign functions, see Apple's documentation:
+//! https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html
+
 use std::c_str::CString;
 use std::c_vec::CVec;
 use std::kinds::marker::NoCopy;
@@ -7,27 +12,33 @@ use libc;
 
 use {encode, Encode};
 
+/// A type that represents a method selector.
 #[repr(C)]
 pub struct Sel {
 	ptr: *const c_void,
 }
 
+/// A type that represents an instance variable.
 pub struct Ivar {
 	nocopy: NoCopy,
 }
 
+/// A type that represents a method in a class definition.
 pub struct Method {
 	nocopy: NoCopy,
 }
 
+/// A type that represents an Objective-C class.
 pub struct Class {
 	nocopy: NoCopy,
 }
 
+/// A type that represents an instance of a class.
 pub struct Object {
 	nocopy: NoCopy,
 }
 
+/// A pointer to the start of a method implementation.
 pub type Imp = extern fn(*mut Object, Sel, ...) -> *mut Object;
 
 #[allow(improper_ctypes)]
@@ -72,12 +83,15 @@ extern {
 }
 
 impl Sel {
+	/// Registers a method with the Objective-C runtime system,
+	/// maps the method name to a selector, and returns the selector value.
 	pub fn register(name: &str) -> Sel {
 		name.with_c_str(|name| unsafe {
 			sel_registerName(name)
 		})
 	}
 
+	/// Returns the name of the method specified by self.
 	pub fn name(&self) -> &str {
 		unsafe {
 			let name = sel_getName(*self);
@@ -99,6 +113,7 @@ impl Clone for Sel {
 }
 
 impl Ivar {
+	/// Returns the name of self.
 	pub fn name(&self) -> &str {
 		unsafe {
 			let name = ivar_getName(self);
@@ -106,6 +121,7 @@ impl Ivar {
 		}
 	}
 
+	/// Returns the offset of self.
 	pub fn offset(&self) -> int {
 		let offset = unsafe {
 			ivar_getOffset(self)
@@ -113,6 +129,7 @@ impl Ivar {
 		offset as int
 	}
 
+	/// Returns the type string of self.
 	pub fn type_encoding(&self) -> &str {
 		unsafe {
 			let encoding = ivar_getTypeEncoding(self);
@@ -122,12 +139,14 @@ impl Ivar {
 }
 
 impl Method {
+	/// Returns the name of self.
 	pub fn name(&self) -> Sel {
 		unsafe {
 			method_getName(self)
 		}
 	}
 
+	/// Returns a string describing self's parameter and return types.
 	pub fn type_encoding(&self) -> &str {
 		unsafe {
 			let encoding = method_getTypeEncoding(self);
@@ -135,6 +154,7 @@ impl Method {
 		}
 	}
 
+	/// Returns a string describing self's return type.
 	pub fn return_type(&self) -> CString {
 		unsafe {
 			let encoding = method_copyReturnType(self);
@@ -142,6 +162,8 @@ impl Method {
 		}
 	}
 
+	/// Returns a string describing a single parameter type of self, or
+	/// None if self has no parameter at the given index.
 	pub fn argument_type(&self, index: uint) -> Option<CString> {
 		unsafe {
 			let encoding = method_copyArgumentType(self, index as c_uint);
@@ -153,22 +175,30 @@ impl Method {
 		}
 	}
 
+	/// Returns the number of arguments accepted by self.
 	pub fn arguments_count(&self) -> uint {
 		unsafe {
 			method_getNumberOfArguments(self) as uint
 		}
 	}
 
+	/// Returns the implementation of self.
 	pub fn implementation(&self) -> Imp {
 		unsafe {
 			method_getImplementation(self)
 		}
 	}
 
+	/// Sets the implementation of self.
+	/// Unsafe because the caller must ensure the implementation has the
+	/// correct self, return, and argument types for the method.
 	pub unsafe fn set_implementation(&mut self, imp: Imp) -> Imp {
 		method_setImplementation(self, imp)
 	}
 
+	/// Exchanges the implementations of self with another `Method`.
+	/// Unsafe because the caller must ensure the two methods have the same
+	/// self, return, and argument types.
 	pub unsafe fn exchange_implementation(&mut self, other: &mut Method) {
 		method_exchangeImplementations(self, other);
 	}

@@ -163,7 +163,7 @@ impl Method {
 	}
 
 	/// Returns a string describing a single parameter type of self, or
-	/// None if self has no parameter at the given index.
+	/// `None` if self has no parameter at the given index.
 	pub fn argument_type(&self, index: uint) -> Option<CString> {
 		unsafe {
 			let encoding = method_copyArgumentType(self, index as c_uint);
@@ -205,12 +205,15 @@ impl Method {
 }
 
 impl Class {
+	/// Returns the class definition of a specified class, or `None` if the
+	/// class is not registered with the Objective-C runtime.
 	pub fn get(name: &str) -> Option<&'static Class> {
 		name.with_c_str(|name| unsafe {
 			objc_getClass(name).as_ref()
 		})
 	}
 
+	/// Obtains the list of registered class definitions.
 	pub fn classes() -> CVec<&'static Class> {
 		unsafe {
 			let mut count: c_uint = 0;
@@ -221,12 +224,14 @@ impl Class {
 		}
 	}
 
+	/// Returns the total number of registered classes.
 	pub fn classes_count() -> uint {
 		unsafe {
 			objc_getClassList(RawPtr::null(), 0) as uint
 		}
 	}
 
+	/// Returns the name of self.
 	pub fn name(&self) -> &str {
 		unsafe {
 			let name = class_getName(self);
@@ -234,24 +239,31 @@ impl Class {
 		}
 	}
 
+	/// Returns the size of instances of self.
 	pub fn instance_size(&self) -> uint {
 		unsafe {
 			class_getInstanceSize(self) as uint
 		}
 	}
 
+	/// Returns a specified instance method for self, or `None` if self and
+	/// its superclasses do not contain an instance method with the
+	/// specified selector.
 	pub fn instance_method(&self, sel: Sel) -> Option<&Method> {
 		unsafe {
 			class_getInstanceMethod(self, sel).as_ref()
 		}
 	}
 
+	/// Returns the ivar for a specified instance variable of self, or `None`
+	/// if self has no ivar with the given name.
 	pub fn instance_variable(&self, name: &str) -> Option<&Ivar> {
 		name.with_c_str(|name| unsafe {
 			class_getInstanceVariable(self, name).as_ref()
 		})
 	}
 
+	/// Describes the instance methods implemented by self.
 	pub fn instance_methods(&self) -> CVec<&Method> {
 		unsafe {
 			let mut count: c_uint = 0;
@@ -263,6 +275,7 @@ impl Class {
 
 	}
 
+	/// Describes the instance variables declared by self.
 	pub fn instance_variables(&self) -> CVec<&Ivar> {
 		unsafe {
 			let mut count: c_uint = 0;
@@ -283,12 +296,17 @@ impl PartialEq for Class {
 impl Eq for Class { }
 
 impl Object {
+	/// Returns the class of self.
 	pub fn class(&self) -> &'static Class {
 		unsafe {
 			&*object_getClass(self)
 		}
 	}
 
+	/// Returns a reference to the ivar of self with the given name.
+	/// Panics if self has no ivar with the given name.
+	/// Unsafe because the caller must ensure that the ivar is actually
+	/// of type `T`.
 	pub unsafe fn get_ivar<T: Encode>(&self, name: &str) -> &T {
 		let cls = self.class();
 		let ptr = match cls.instance_variable(name) {
@@ -303,6 +321,10 @@ impl Object {
 		&*ptr
 	}
 
+	/// Returns a mutable reference to the ivar of self with the given name.
+	/// Panics if self has no ivar with the given name.
+	/// Unsafe because the caller must ensure that the ivar is actually
+	/// of type `T`.
 	pub unsafe fn get_mut_ivar<T: Encode>(&mut self, name: &str) -> &mut T {
 		let cls = self.class();
 		let ptr = match cls.instance_variable(name) {
@@ -317,6 +339,10 @@ impl Object {
 		&mut *ptr
 	}
 
+	/// Sets the value of the ivar of self with the given name.
+	/// Panics if self has no ivar with the given name.
+	/// Unsafe because the caller must ensure that the ivar is actually
+	/// of type `T`.
 	pub unsafe fn set_ivar<T: Encode>(&mut self, name: &str, value: T) {
 		*self.get_mut_ivar::<T>(name) = value;
 	}

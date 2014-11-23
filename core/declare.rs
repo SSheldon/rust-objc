@@ -5,17 +5,26 @@ use {encode, Encode};
 use runtime::{Class, Imp, Sel};
 use runtime;
 
+/// A type for declaring a new method.
+/// `MethodDecl`s are usually created using the `method!` macro.
 pub struct MethodDecl {
+	/// The method's selector.
 	pub sel: Sel,
+	/// The method's implementation.
 	pub imp: Imp,
+	/// The types of the method's arguments.
 	pub types: String,
 }
 
+/// A type for declaring a new class and adding new methods and ivars to it
+/// before registering it.
 pub struct ClassDecl {
 	cls: *mut Class,
 }
 
 impl ClassDecl {
+	/// Constructs a `ClassDecl` with the given superclass and name.
+	/// Returns `None` if the class couldn't be allocated.
 	pub fn new(superclass: &Class, name: &str) -> Option<ClassDecl> {
 		let cls = name.with_c_str(|name| unsafe {
 			runtime::objc_allocateClassPair(superclass, name, 0)
@@ -27,12 +36,16 @@ impl ClassDecl {
 		}
 	}
 
+	/// Adds a method declared with the given `MethodDecl` to self.
+	/// Returns true if the method was sucessfully added.
 	pub fn add_method(&mut self, method: MethodDecl) -> bool {
 		method.types.with_c_str(|types| unsafe {
 			runtime::class_addMethod(self.cls, method.sel, method.imp, types)
 		})
 	}
 
+	/// Adds an ivar with type `T` and the provided name to self.
+	/// Returns true if the ivar was sucessfully added.
 	pub fn add_ivar<T: Encode>(&mut self, name: &str) -> bool {
 		let types = encode::<T>();
 		let size = mem::size_of::<T>() as size_t;
@@ -44,6 +57,8 @@ impl ClassDecl {
 		})
 	}
 
+	/// Registers self, consuming it and returning a reference to the
+	/// newly registered `Class`.
 	pub fn register(self) -> &'static Class {
 		unsafe {
 			let cls = self.cls;

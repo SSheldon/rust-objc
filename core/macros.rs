@@ -5,13 +5,13 @@ macro_rules! msg_send(
 	($obj:expr $name:ident) => ({
 		let sel_name = stringify!($name);
 		let sel = ::objc::runtime::Sel::register(sel_name);
-		let ptr = ::objc::to_ptr(&$obj);
+		let ptr = ::objc::to_obj_ptr(&$obj);
 		::objc::runtime::objc_msgSend(ptr, sel)
 	});
 	($obj:expr $($name:ident : $arg:expr)+) => ({
 		let sel_name = concat!($(stringify!($name), ':'),+);
 		let sel = ::objc::runtime::Sel::register(sel_name);
-		let ptr = ::objc::to_ptr(&$obj);
+		let ptr = ::objc::to_obj_ptr(&$obj);
 		::objc::runtime::objc_msgSend(ptr, sel $(,$arg)+)
 	});
 )

@@ -8,76 +8,76 @@ pub struct Encoding<T>(pub &'static str);
 /// Apple's documentation:
 /// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
 pub trait Encode {
-	/// Return the Encoding for Self.
-	fn code() -> Encoding<Self>;
+    /// Return the Encoding for Self.
+    fn code() -> Encoding<Self>;
 }
 
 impl Encode for i8 {
-	fn code() -> Encoding<i8> { Encoding("c") }
+    fn code() -> Encoding<i8> { Encoding("c") }
 }
 
 impl Encode for i16 {
-	fn code() -> Encoding<i16> { Encoding("s") }
+    fn code() -> Encoding<i16> { Encoding("s") }
 }
 
 impl Encode for i32 {
-	fn code() -> Encoding<i32> { Encoding("i") }
+    fn code() -> Encoding<i32> { Encoding("i") }
 }
 
 impl Encode for i64 {
-	fn code() -> Encoding<i64> { Encoding("q") }
+    fn code() -> Encoding<i64> { Encoding("q") }
 }
 
 impl Encode for int {
-	#[cfg(target_word_size = "32")]
-	fn code() -> Encoding<int> { Encoding("i") }
+    #[cfg(target_word_size = "32")]
+    fn code() -> Encoding<int> { Encoding("i") }
 
-	#[cfg(target_word_size = "64")]
-	fn code() -> Encoding<int> { Encoding("q") }
+    #[cfg(target_word_size = "64")]
+    fn code() -> Encoding<int> { Encoding("q") }
 }
 
 impl Encode for u8 {
-	fn code() -> Encoding<u8> { Encoding("C") }
+    fn code() -> Encoding<u8> { Encoding("C") }
 }
 
 impl Encode for u16 {
-	fn code() -> Encoding<u16> { Encoding("S") }
+    fn code() -> Encoding<u16> { Encoding("S") }
 }
 
 impl Encode for u32 {
-	fn code() -> Encoding<u32> { Encoding("I") }
+    fn code() -> Encoding<u32> { Encoding("I") }
 }
 
 impl Encode for u64 {
-	fn code() -> Encoding<u64> { Encoding("Q") }
+    fn code() -> Encoding<u64> { Encoding("Q") }
 }
 
 impl Encode for uint {
-	#[cfg(target_word_size = "32")]
-	fn code() -> Encoding<uint> { Encoding("I") }
+    #[cfg(target_word_size = "32")]
+    fn code() -> Encoding<uint> { Encoding("I") }
 
-	#[cfg(target_word_size = "64")]
-	fn code() -> Encoding<uint> { Encoding("Q") }
+    #[cfg(target_word_size = "64")]
+    fn code() -> Encoding<uint> { Encoding("Q") }
 }
 
 impl Encode for f32 {
-	fn code() -> Encoding<f32> { Encoding("f") }
+    fn code() -> Encoding<f32> { Encoding("f") }
 }
 
 impl Encode for f64 {
-	fn code() -> Encoding<f64> { Encoding("d") }
+    fn code() -> Encoding<f64> { Encoding("d") }
 }
 
 impl Encode for bool {
-	fn code() -> Encoding<bool> { Encoding("B") }
+    fn code() -> Encoding<bool> { Encoding("B") }
 }
 
 impl Encode for () {
-	fn code() -> Encoding<()> { Encoding("v") }
+    fn code() -> Encoding<()> { Encoding("v") }
 }
 
 impl Encode for Sel {
-	fn code() -> Encoding<Sel> { Encoding(":") }
+    fn code() -> Encoding<Sel> { Encoding(":") }
 }
 
 encode_message_impl!("@", Object)
@@ -86,22 +86,22 @@ encode_message_impl!("#", Class)
 
 /// Returns the Objective-C type encoding for a type.
 pub fn encode<T: Encode>() -> &'static str {
-	let Encoding(code): Encoding<T> = Encode::code();
-	code
+    let Encoding(code): Encoding<T> = Encode::code();
+    code
 }
 
 #[cfg(test)]
 mod tests {
-	use runtime::{Class, Object, Sel};
-	use super::encode;
+    use runtime::{Class, Object, Sel};
+    use super::encode;
 
-	#[test]
-	fn test_encode() {
-		assert!(encode::<u32>() == "I");
-		assert!(encode::<()>() == "v");
-		assert!(encode::<&Object>() == "@");
-		assert!(encode::<*mut Object>() == "@");
-		assert!(encode::<&Class>() == "#");
-		assert!(encode::<Sel>() == ":");
-	}
+    #[test]
+    fn test_encode() {
+        assert!(encode::<u32>() == "I");
+        assert!(encode::<()>() == "v");
+        assert!(encode::<&Object>() == "@");
+        assert!(encode::<*mut Object>() == "@");
+        assert!(encode::<&Class>() == "#");
+        assert!(encode::<Sel>() == ":");
+    }
 }

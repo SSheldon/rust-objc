@@ -5,6 +5,9 @@
 
 extern crate libc;
 
+#[cfg(test)]
+extern crate objc_test_utils;
+
 pub use id::{Id, IdVector, IntoIdVector, Owned, Ownership, Shared, ShareId};
 pub use declare::{ClassDecl, MethodDecl};
 pub use encode::{encode, Encode, Encoding};

@@ -11,3 +11,6 @@ documentation = "http://ssheldon.github.io/rust-objc/objc/"
 name = "objc"
 path = "lib.rs"
 doctest = false
+
+[dev-dependencies.objc_test_utils]
+path = "../test_utils"

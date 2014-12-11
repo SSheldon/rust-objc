@@ -6,7 +6,7 @@
 use std::c_str::CString;
 use std::c_vec::CVec;
 use std::kinds::marker::NoCopy;
-use std::str::raw::c_str_to_static_slice;
+use std::str::from_c_str;
 use libc::{c_char, c_int, c_uint, c_void, ptrdiff_t, size_t};
 use libc;
 
@@ -95,7 +95,7 @@ impl Sel {
     pub fn name(&self) -> &str {
         unsafe {
             let name = sel_getName(*self);
-            c_str_to_static_slice(name)
+            from_c_str(name)
         }
     }
 }
@@ -117,7 +117,7 @@ impl Ivar {
     pub fn name(&self) -> &str {
         unsafe {
             let name = ivar_getName(self);
-            c_str_to_static_slice(name)
+            from_c_str(name)
         }
     }
 
@@ -133,7 +133,7 @@ impl Ivar {
     pub fn type_encoding(&self) -> &str {
         unsafe {
             let encoding = ivar_getTypeEncoding(self);
-            c_str_to_static_slice(encoding)
+            from_c_str(encoding)
         }
     }
 }
@@ -150,7 +150,7 @@ impl Method {
     pub fn type_encoding(&self) -> &str {
         unsafe {
             let encoding = method_getTypeEncoding(self);
-            c_str_to_static_slice(encoding)
+            from_c_str(encoding)
         }
     }
 
@@ -235,7 +235,7 @@ impl Class {
     pub fn name(&self) -> &str {
         unsafe {
             let name = class_getName(self);
-            c_str_to_static_slice(name)
+            from_c_str(name)
         }
     }
 

@@ -5,7 +5,6 @@
 
 use std::c_str::CString;
 use std::c_vec::CVec;
-use std::kinds::marker::NoCopy;
 use std::str::from_c_str;
 use libc::{c_char, c_int, c_uint, c_void, ptrdiff_t, size_t};
 use libc;
@@ -19,24 +18,20 @@ pub struct Sel {
 }
 
 /// A type that represents an instance variable.
-pub struct Ivar {
-    nocopy: NoCopy,
-}
+#[allow(missing_copy_implementations)]
+pub enum Ivar { }
 
 /// A type that represents a method in a class definition.
-pub struct Method {
-    nocopy: NoCopy,
-}
+#[allow(missing_copy_implementations)]
+pub enum Method { }
 
 /// A type that represents an Objective-C class.
-pub struct Class {
-    nocopy: NoCopy,
-}
+#[allow(missing_copy_implementations)]
+pub enum Class { }
 
 /// A type that represents an instance of a class.
-pub struct Object {
-    nocopy: NoCopy,
-}
+#[allow(missing_copy_implementations)]
+pub enum Object { }
 
 /// A pointer to the start of a method implementation.
 pub type Imp = extern fn(*mut Object, Sel, ...) -> *mut Object;
@@ -107,6 +102,8 @@ impl PartialEq for Sel {
 }
 
 impl Eq for Sel { }
+
+impl Copy for Sel { }
 
 impl Clone for Sel {
     fn clone(&self) -> Sel { *self }

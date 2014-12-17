@@ -215,7 +215,7 @@ impl Class {
         unsafe {
             let mut count: c_uint = 0;
             let classes = objc_copyClassList(&mut count);
-            CVec::new_with_dtor(classes as *mut _, count as uint, proc() {
+            CVec::new_with_dtor(classes as *mut _, count as uint, move || {
                 libc::free(classes as *mut c_void);
             })
         }
@@ -265,7 +265,7 @@ impl Class {
         unsafe {
             let mut count: c_uint = 0;
             let methods = class_copyMethodList(self, &mut count);
-            CVec::new_with_dtor(methods as *mut _, count as uint, proc() {
+            CVec::new_with_dtor(methods as *mut _, count as uint, move || {
                 libc::free(methods as *mut c_void);
             })
         }
@@ -277,7 +277,7 @@ impl Class {
         unsafe {
             let mut count: c_uint = 0;
             let ivars = class_copyIvarList(self, &mut count);
-            CVec::new_with_dtor(ivars as *mut _, count as uint, proc() {
+            CVec::new_with_dtor(ivars as *mut _, count as uint, move || {
                 libc::free(ivars as *mut c_void);
             })
         }

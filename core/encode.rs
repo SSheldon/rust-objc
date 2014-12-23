@@ -80,9 +80,9 @@ impl Encode for Sel {
     fn code() -> Encoding<Sel> { Encoding(":") }
 }
 
-encode_message_impl!("@", Object)
+encode_message_impl!("@", Object);
 
-encode_message_impl!("#", Class)
+encode_message_impl!("#", Class);
 
 /// Returns the Objective-C type encoding for a type.
 pub fn encode<T: Encode>() -> &'static str {

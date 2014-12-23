@@ -29,7 +29,7 @@ macro_rules! msg_send(
         let ptr = ::objc::to_obj_ptr(&$obj);
         ::objc::runtime::objc_msgSend(ptr, sel $(,$arg)+)
     });
-)
+);
 
 /// Implements the `Encode` trait for a `Message` type.
 /// Specifically, this will implement `Encode` for reference, pointers, and
@@ -87,7 +87,7 @@ macro_rules! encode_message_impl(
             }
         }
     );
-)
+);
 
 /// Declares a method, returning a `MethodDecl`.
 /// The syntax is a combination of Objective-C's syntax and Rust's:
@@ -170,4 +170,4 @@ macro_rules! method(
 
         ::objc::MethodDecl { sel: sel, imp: imp, types: types }
     });
-)
+);

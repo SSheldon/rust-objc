@@ -12,7 +12,7 @@ fn main() {
     println!("NSObject size: {}", cls.instance_size());
 
     // Inspect its ivars
-    println!("NSObject ivars:")
+    println!("NSObject ivars:");
     for ivar in cls.instance_variables().as_slice().iter() {
         println!("{}", ivar.name());
     }

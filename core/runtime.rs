@@ -155,7 +155,7 @@ impl Method {
     pub fn return_type(&self) -> CString {
         unsafe {
             let encoding = method_copyReturnType(self);
-            CString::new(encoding as *const _, true)
+            CString::new(encoding, true)
         }
     }
 
@@ -167,7 +167,7 @@ impl Method {
             if encoding.is_null() {
                 None
             } else {
-                Some(CString::new(encoding as *const _, true))
+                Some(CString::new(encoding, true))
             }
         }
     }

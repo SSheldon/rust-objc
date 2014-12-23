@@ -18,7 +18,7 @@ mod macros;
 
 pub mod runtime;
 mod id;
-mod block;
+pub mod block;
 mod declare;
 mod encode;
 mod message;

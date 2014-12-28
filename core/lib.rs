@@ -1,7 +1,7 @@
 #![crate_name = "objc"]
 #![crate_type = "lib"]
 
-#![feature(default_type_params, globs, macro_rules, unsafe_destructor)]
+#![feature(default_type_params, globs, macro_rules, unboxed_closures, unsafe_destructor)]
 
 extern crate libc;
 

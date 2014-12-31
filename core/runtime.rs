@@ -4,12 +4,64 @@
 //! https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html
 
 use std::c_str::CString;
-use std::c_vec::CVec;
+use std::mem;
+use std::raw;
 use std::str::from_c_str;
 use libc::{c_char, c_int, c_uint, c_void, ptrdiff_t, size_t};
 use libc;
 
 use {encode, Encode};
+
+/// A type that represents a `malloc`'d chunk of memory.
+pub struct MallocBuffer<T> {
+    ptr: *mut T,
+    len: uint,
+}
+
+impl<T> MallocBuffer<T> {
+    /// Constructs a new `MallocBuffer` for a `malloc`'d buffer
+    /// with the given length at the given pointer.
+    /// Returns `None` if the given pointer is null.
+    /// When this `MallocBuffer` drops, the buffer will be `free`'d.
+    ///
+    /// Unsafe because there must be `len` contiguous, valid instances of `T`
+    /// at `ptr`, and `T` must not be a type that implements `Drop`
+    /// (because the `MallocBuffer` makes no attempt to drop its elements,
+    /// just the buffer containing them).
+    pub unsafe fn new(ptr: *mut T, len: uint) -> Option<MallocBuffer<T>> {
+        if ptr.is_null() {
+            None
+        } else {
+            Some(MallocBuffer { ptr: ptr, len: len })
+        }
+    }
+
+    /// Returns the number of items in self.
+    pub fn len(&self) -> uint {
+        self.len
+    }
+}
+
+#[unsafe_destructor]
+impl<T> Drop for MallocBuffer<T> {
+    fn drop(&mut self) {
+        unsafe {
+            libc::free(self.ptr as *mut c_void);
+        }
+    }
+}
+
+impl<T> AsSlice<T> for MallocBuffer<T> {
+    fn as_slice(&self) -> &[T] {
+        let raw_slice = raw::Slice {
+            data: self.ptr as *const T,
+            len: self.len,
+        };
+        unsafe {
+            mem::transmute(raw_slice)
+        }
+    }
+}
 
 /// A type that represents a method selector.
 #[repr(C)]
@@ -211,13 +263,11 @@ impl Class {
     }
 
     /// Obtains the list of registered class definitions.
-    pub fn classes() -> CVec<&'static Class> {
+    pub fn classes() -> MallocBuffer<&'static Class> {
         unsafe {
             let mut count: c_uint = 0;
             let classes = objc_copyClassList(&mut count);
-            CVec::new_with_dtor(classes as *mut _, count as uint, move || {
-                libc::free(classes as *mut c_void);
-            })
+            MallocBuffer::new(classes as *mut _, count as uint).unwrap()
         }
     }
 
@@ -261,25 +311,21 @@ impl Class {
     }
 
     /// Describes the instance methods implemented by self.
-    pub fn instance_methods(&self) -> CVec<&Method> {
+    pub fn instance_methods(&self) -> MallocBuffer<&Method> {
         unsafe {
             let mut count: c_uint = 0;
             let methods = class_copyMethodList(self, &mut count);
-            CVec::new_with_dtor(methods as *mut _, count as uint, move || {
-                libc::free(methods as *mut c_void);
-            })
+            MallocBuffer::new(methods as *mut _, count as uint).unwrap()
         }
 
     }
 
     /// Describes the instance variables declared by self.
-    pub fn instance_variables(&self) -> CVec<&Ivar> {
+    pub fn instance_variables(&self) -> MallocBuffer<&Ivar> {
         unsafe {
             let mut count: c_uint = 0;
             let ivars = class_copyIvarList(self, &mut count);
-            CVec::new_with_dtor(ivars as *mut _, count as uint, move || {
-                libc::free(ivars as *mut c_void);
-            })
+            MallocBuffer::new(ivars as *mut _, count as uint).unwrap()
         }
     }
 }

@@ -1,8 +1,16 @@
+use std::ptr;
+
 use runtime::{Class, Object};
 
+/*
+ The Sized bound on Message is unfortunate; ideally, objc objects would not be
+ treated as Sized. However, rust won't allow casting a dynamically-sized type
+ pointer to an Object pointer, because dynamically-sized types can have fat
+ pointers (two words) instead of real pointers.
+ */
 /// Types that may be sent Objective-C messages.
 /// For example: objects, classes, and blocks.
-pub trait Message { }
+pub trait Message: Sized { }
 
 impl Message for Object { }
 
@@ -45,7 +53,7 @@ impl<'a, T: Message> ToMessage<T> for &'a mut T {
 impl<'a, T: Message> ToMessage<T> for Option<&'a T> {
     fn as_ptr(&self) -> *mut T {
         match *self {
-            None => RawPtr::null(),
+            None => ptr::null_mut(),
             Some(ref obj) => obj.as_ptr(),
         }
     }
@@ -54,7 +62,7 @@ impl<'a, T: Message> ToMessage<T> for Option<&'a T> {
 impl<'a, T: Message> ToMessage<T> for Option<&'a mut T> {
     fn as_ptr(&self) -> *mut T {
         match *self {
-            None => RawPtr::null(),
+            None => ptr::null_mut(),
             Some(ref obj) => obj.as_ptr(),
         }
     }

@@ -3,8 +3,9 @@
 //! For more information on foreign functions, see Apple's documentation:
 //! https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html
 
-use std::c_str::CString;
+use std::c_str::{CString, ToCStr};
 use std::mem;
+use std::ptr;
 use std::raw;
 use std::str::from_c_str;
 use libc::{c_char, c_int, c_uint, c_void, ptrdiff_t, size_t};
@@ -274,7 +275,7 @@ impl Class {
     /// Returns the total number of registered classes.
     pub fn classes_count() -> uint {
         unsafe {
-            objc_getClassList(RawPtr::null(), 0) as uint
+            objc_getClassList(ptr::null_mut(), 0) as uint
         }
     }
 

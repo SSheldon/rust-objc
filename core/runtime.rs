@@ -3,11 +3,11 @@
 //! For more information on foreign functions, see Apple's documentation:
 //! https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html
 
-use std::c_str::{CString, ToCStr};
+use std::c_str::ToCStr;
 use std::mem;
 use std::ptr;
 use std::raw;
-use std::str::from_c_str;
+use std::str::{from_c_str, from_utf8, from_utf8_unchecked};
 use libc::{c_char, c_int, c_uint, c_void, ptrdiff_t, size_t};
 use libc;
 
@@ -56,6 +56,40 @@ impl<T> AsSlice<T> for MallocBuffer<T> {
         unsafe {
             mem::transmute(raw_slice)
         }
+    }
+}
+
+/// A type that represents a `malloc`'d string.
+pub struct MallocString {
+    data: MallocBuffer<u8>,
+}
+
+impl MallocString {
+    /// Constructs a new `MallocString` for a `malloc`'d C string buffer.
+    /// Returns `None` if the given pointer is null or the C string isn't UTF8.
+    /// When this `MallocString` drops, the buffer will be `free`'d.
+    ///
+    /// Unsafe because `ptr` must point to a valid, nul-terminated C string.
+    pub unsafe fn new(ptr: *mut c_char) -> Option<MallocString> {
+        if ptr.is_null() {
+            None
+        } else {
+            let len = libc::strlen(ptr) as uint;
+            // len + 1 to account for the nul byte
+            let data = MallocBuffer { ptr: ptr as *mut u8, len: len + 1 };
+            if from_utf8(data.as_slice().slice_to(len)).is_ok() {
+                Some(MallocString { data: data })
+            } else {
+                None
+            }
+        }
+    }
+}
+
+impl Str for MallocString {
+    fn as_slice(&self) -> &str {
+        let v = self.data.as_slice().slice_to(self.data.len - 1);
+        unsafe { from_utf8_unchecked(v) }
     }
 }
 
@@ -200,22 +234,22 @@ impl Method {
     }
 
     /// Returns a string describing self's return type.
-    pub fn return_type(&self) -> CString {
+    pub fn return_type(&self) -> MallocString {
         unsafe {
             let encoding = method_copyReturnType(self);
-            CString::new(encoding, true)
+            MallocString::new(encoding).unwrap()
         }
     }
 
     /// Returns a string describing a single parameter type of self, or
     /// `None` if self has no parameter at the given index.
-    pub fn argument_type(&self, index: uint) -> Option<CString> {
+    pub fn argument_type(&self, index: uint) -> Option<MallocString> {
         unsafe {
             let encoding = method_copyArgumentType(self, index as c_uint);
             if encoding.is_null() {
                 None
             } else {
-                Some(CString::new(encoding, true))
+                Some(MallocString::new(encoding).unwrap())
             }
         }
     }
@@ -412,9 +446,8 @@ mod tests {
         assert!(method.name().name() == "description");
         assert!(method.type_encoding() != "");
         assert!(method.arguments_count() == 2);
-        assert!(method.return_type().as_bytes_no_nul() == "@".as_bytes());
-        assert!(method.argument_type(1).unwrap().as_bytes_no_nul() ==
-            ":".as_bytes());
+        assert!(method.return_type().as_slice() == "@");
+        assert!(method.argument_type(1).unwrap().as_slice() == ":");
 
         let methods = cls.instance_methods();
         assert!(methods.as_slice().len() > 0);

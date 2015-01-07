@@ -35,8 +35,8 @@ fn main() {
     let hash_sel = Sel::register("hash");
     let hash_method = cls.instance_method(hash_sel).unwrap();
     let hash_return = hash_method.return_type();
-    println!("-[NSObject hash] return type: {}", hash_return.as_str().unwrap());
-    assert!(encode::<uint>() == hash_return.as_str().unwrap());
+    println!("-[NSObject hash] return type: {}", hash_return.as_slice());
+    assert!(encode::<uint>() == hash_return.as_slice());
 
     // Invoke a method on the object
     let hash = unsafe {

@@ -36,11 +36,6 @@ impl<T> MallocBuffer<T> {
             Some(MallocBuffer { ptr: ptr, len: len })
         }
     }
-
-    /// Returns the number of items in self.
-    pub fn len(&self) -> uint {
-        self.len
-    }
 }
 
 #[unsafe_destructor]
@@ -406,7 +401,7 @@ mod tests {
         assert!(ivar.offset() == 0);
 
         let ivars = cls.instance_variables();
-        assert!(ivars.len() > 0);
+        assert!(ivars.as_slice().len() > 0);
     }
 
     #[test]
@@ -422,7 +417,7 @@ mod tests {
             ":".as_bytes());
 
         let methods = cls.instance_methods();
-        assert!(methods.len() > 0);
+        assert!(methods.as_slice().len() > 0);
     }
 
     #[test]
@@ -438,7 +433,7 @@ mod tests {
         assert!(classes_count > 0);
 
         let classes = Class::classes();
-        assert!(classes.len() == classes_count);
+        assert!(classes.as_slice().len() == classes_count);
     }
 
     #[test]

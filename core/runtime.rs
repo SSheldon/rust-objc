@@ -3,7 +3,7 @@
 //! For more information on foreign functions, see Apple's documentation:
 //! https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html
 
-use std::c_str::ToCStr;
+use std::ffi::CString;
 use std::mem;
 use std::ptr;
 use std::raw;
@@ -163,9 +163,10 @@ impl Sel {
     /// Registers a method with the Objective-C runtime system,
     /// maps the method name to a selector, and returns the selector value.
     pub fn register(name: &str) -> Sel {
-        name.with_c_str(|name| unsafe {
-            sel_registerName(name)
-        })
+        let name = CString::from_slice(name.as_bytes());
+        unsafe {
+            sel_registerName(name.as_ptr())
+        }
     }
 
     /// Returns the name of the method specified by self.
@@ -287,9 +288,10 @@ impl Class {
     /// Returns the class definition of a specified class, or `None` if the
     /// class is not registered with the Objective-C runtime.
     pub fn get(name: &str) -> Option<&'static Class> {
-        name.with_c_str(|name| unsafe {
-            objc_getClass(name).as_ref()
-        })
+        let name = CString::from_slice(name.as_bytes());
+        unsafe {
+            objc_getClass(name.as_ptr()).as_ref()
+        }
     }
 
     /// Obtains the list of registered class definitions.
@@ -335,9 +337,10 @@ impl Class {
     /// Returns the ivar for a specified instance variable of self, or `None`
     /// if self has no ivar with the given name.
     pub fn instance_variable(&self, name: &str) -> Option<&Ivar> {
-        name.with_c_str(|name| unsafe {
-            class_getInstanceVariable(self, name).as_ref()
-        })
+        let name = CString::from_slice(name.as_bytes());
+        unsafe {
+            class_getInstanceVariable(self, name.as_ptr()).as_ref()
+        }
     }
 
     /// Describes the instance methods implemented by self.

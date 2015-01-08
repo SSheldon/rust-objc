@@ -1,6 +1,6 @@
 #![feature(phase)]
 
-#[phase(plugin, link)]
+#[macro_use]
 extern crate objc;
 
 use objc::{encode, Id, ToMessage, WeakId};

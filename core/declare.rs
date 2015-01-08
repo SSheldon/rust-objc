@@ -1,4 +1,4 @@
-use std::c_str::ToCStr;
+use std::ffi::CString;
 use std::mem;
 use libc::size_t;
 
@@ -27,9 +27,10 @@ impl ClassDecl {
     /// Constructs a `ClassDecl` with the given superclass and name.
     /// Returns `None` if the class couldn't be allocated.
     pub fn new(superclass: &Class, name: &str) -> Option<ClassDecl> {
-        let cls = name.with_c_str(|name| unsafe {
-            runtime::objc_allocateClassPair(superclass, name, 0)
-        });
+        let name = CString::from_slice(name.as_bytes());
+        let cls = unsafe {
+            runtime::objc_allocateClassPair(superclass, name.as_ptr(), 0)
+        };
         if cls.is_null() {
             None
         } else {
@@ -40,22 +41,24 @@ impl ClassDecl {
     /// Adds a method declared with the given `MethodDecl` to self.
     /// Returns true if the method was sucessfully added.
     pub fn add_method(&mut self, method: MethodDecl) -> bool {
-        method.types.with_c_str(|types| unsafe {
-            runtime::class_addMethod(self.cls, method.sel, method.imp, types)
-        })
+        let MethodDecl { sel, imp, types } = method;
+        let types = CString::from_vec(types.into_bytes());
+        unsafe {
+            runtime::class_addMethod(self.cls, sel, imp, types.as_ptr())
+        }
     }
 
     /// Adds an ivar with type `T` and the provided name to self.
     /// Returns true if the ivar was sucessfully added.
     pub fn add_ivar<T: Encode>(&mut self, name: &str) -> bool {
-        let types = encode::<T>();
+        let name = CString::from_slice(name.as_bytes());
+        let types = CString::from_slice(encode::<T>().as_bytes());
         let size = mem::size_of::<T>() as size_t;
         let align = mem::align_of::<T>() as u8;
-        types.with_c_str(|types| {
-            name.with_c_str(|name| unsafe {
-                runtime::class_addIvar(self.cls, name, size, align, types)
-            })
-        })
+        unsafe {
+            runtime::class_addIvar(self.cls, name.as_ptr(), size, align,
+                types.as_ptr())
+        }
     }
 
     /// Registers self, consuming it and returning a reference to the

@@ -3,11 +3,11 @@
 //! For more information on foreign functions, see Apple's documentation:
 //! https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html
 
-use std::ffi::CString;
+use std::ffi::{CString, self};
 use std::mem;
 use std::ptr;
-use std::raw;
-use std::str::{from_c_str, from_utf8, from_utf8_unchecked};
+use std::slice;
+use std::str;
 use libc::{c_char, c_int, c_uint, c_void, ptrdiff_t, size_t};
 use libc;
 
@@ -49,12 +49,10 @@ impl<T> Drop for MallocBuffer<T> {
 
 impl<T> AsSlice<T> for MallocBuffer<T> {
     fn as_slice(&self) -> &[T] {
-        let raw_slice = raw::Slice {
-            data: self.ptr as *const T,
-            len: self.len,
-        };
+        let const_ptr = self.ptr as *const T;
         unsafe {
-            mem::transmute(raw_slice)
+            let s = slice::from_raw_buf(&const_ptr, self.len);
+            mem::transmute(s)
         }
     }
 }
@@ -74,10 +72,14 @@ impl MallocString {
         if ptr.is_null() {
             None
         } else {
-            let len = libc::strlen(ptr) as uint;
-            // len + 1 to account for the nul byte
-            let data = MallocBuffer { ptr: ptr as *mut u8, len: len + 1 };
-            if from_utf8(data.as_slice().slice_to(len)).is_ok() {
+            let const_ptr = ptr as *const c_char;
+            let bytes = ffi::c_str_to_bytes(&const_ptr);
+            if str::from_utf8(bytes).is_ok() {
+                let data = MallocBuffer {
+                    ptr: ptr as *mut u8,
+                    // len + 1 to account for the nul byte
+                    len: bytes.len() + 1,
+                };
                 Some(MallocString { data: data })
             } else {
                 None
@@ -89,8 +91,14 @@ impl MallocString {
 impl Str for MallocString {
     fn as_slice(&self) -> &str {
         let v = self.data.as_slice().slice_to(self.data.len - 1);
-        unsafe { from_utf8_unchecked(v) }
+        unsafe { str::from_utf8_unchecked(v) }
     }
+}
+
+unsafe fn from_c_str<'a>(ptr: *const c_char) -> &'a str {
+    let bytes = ffi::c_str_to_bytes(&ptr);
+    let s = str::from_utf8(bytes).unwrap();
+    mem::transmute(s)
 }
 
 /// A type that represents a method selector.

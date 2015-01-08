@@ -1,5 +1,3 @@
-#![macro_escape]
-
 /// Sends a message to an object. The first argument should implement the
 /// `ToMessage` trait, and the syntax is similar to the message syntax in
 /// Objective-C.
@@ -16,20 +14,20 @@
 /// msg_send![obj setArg1:1u arg2:2u];
 /// ```
 #[macro_export]
-macro_rules! msg_send(
+macro_rules! msg_send {
     ($obj:expr $name:ident) => ({
         let sel_name = stringify!($name);
-        let sel = ::objc::runtime::Sel::register(sel_name);
-        let ptr = ::objc::to_obj_ptr(&$obj);
-        ::objc::runtime::objc_msgSend(ptr, sel)
+        let sel = $crate::runtime::Sel::register(sel_name);
+        let ptr = $crate::to_obj_ptr(&$obj);
+        $crate::runtime::objc_msgSend(ptr, sel)
     });
     ($obj:expr $($name:ident : $arg:expr)+) => ({
         let sel_name = concat!($(stringify!($name), ':'),+);
-        let sel = ::objc::runtime::Sel::register(sel_name);
-        let ptr = ::objc::to_obj_ptr(&$obj);
-        ::objc::runtime::objc_msgSend(ptr, sel $(,$arg)+)
+        let sel = $crate::runtime::Sel::register(sel_name);
+        let ptr = $crate::to_obj_ptr(&$obj);
+        $crate::runtime::objc_msgSend(ptr, sel $(,$arg)+)
     });
-);
+}
 
 /// Implements the `Encode` trait for a `Message` type.
 /// Specifically, this will implement `Encode` for reference, pointers, and
@@ -49,45 +47,45 @@ macro_rules! msg_send(
 /// encode_message_impl!("@", Array, T)
 /// ```
 #[macro_export]
-macro_rules! encode_message_impl(
+macro_rules! encode_message_impl {
     ($code:expr, $name:ident $(,$t:ident)*) => (
-        impl<'a $(, $t)*> ::objc::Encode for &'a $name<$($t),*> {
-            fn code() -> ::objc::Encoding<&'a $name<$($t),*>> {
-                ::objc::Encoding($code)
+        impl<'a $(, $t)*> $crate::Encode for &'a $name<$($t),*> {
+            fn code() -> $crate::Encoding<&'a $name<$($t),*>> {
+                $crate::Encoding($code)
             }
         }
 
-        impl<'a $(, $t)*> ::objc::Encode for &'a mut $name<$($t),*> {
-            fn code() -> ::objc::Encoding<&'a mut $name<$($t),*>> {
-                ::objc::Encoding($code)
+        impl<'a $(, $t)*> $crate::Encode for &'a mut $name<$($t),*> {
+            fn code() -> $crate::Encoding<&'a mut $name<$($t),*>> {
+                $crate::Encoding($code)
             }
         }
 
-        impl<'a $(, $t)*> ::objc::Encode for Option<&'a $name<$($t),*>> {
-            fn code() -> ::objc::Encoding<Option<&'a $name<$($t),*>>> {
-                ::objc::Encoding($code)
+        impl<'a $(, $t)*> $crate::Encode for Option<&'a $name<$($t),*>> {
+            fn code() -> $crate::Encoding<Option<&'a $name<$($t),*>>> {
+                $crate::Encoding($code)
             }
         }
 
-        impl<'a $(, $t)*> ::objc::Encode for Option<&'a mut $name<$($t),*>> {
-            fn code() -> ::objc::Encoding<Option<&'a mut $name<$($t),*>>> {
-                ::objc::Encoding($code)
+        impl<'a $(, $t)*> $crate::Encode for Option<&'a mut $name<$($t),*>> {
+            fn code() -> $crate::Encoding<Option<&'a mut $name<$($t),*>>> {
+                $crate::Encoding($code)
             }
         }
 
-        impl<$($t),*> ::objc::Encode for *const $name<$($t),*> {
-            fn code() -> ::objc::Encoding<*const $name<$($t),*>> {
-                ::objc::Encoding($code)
+        impl<$($t),*> $crate::Encode for *const $name<$($t),*> {
+            fn code() -> $crate::Encoding<*const $name<$($t),*>> {
+                $crate::Encoding($code)
             }
         }
 
-        impl<$($t),*> ::objc::Encode for *mut $name<$($t),*> {
-            fn code() -> ::objc::Encoding<*mut $name<$($t),*>> {
-                ::objc::Encoding($code)
+        impl<$($t),*> $crate::Encode for *mut $name<$($t),*> {
+            fn code() -> $crate::Encoding<*mut $name<$($t),*>> {
+                $crate::Encoding($code)
             }
         }
     );
-);
+}
 
 /// Declares a method, returning a `MethodDecl`.
 /// The syntax is a combination of Objective-C's syntax and Rust's:
@@ -116,7 +114,7 @@ macro_rules! encode_message_impl(
 /// )
 /// ```
 #[macro_export]
-macro_rules! method(
+macro_rules! method {
     // Void no arguments
     (
         ($self_ty:ty)$self_name:ident
@@ -157,17 +155,17 @@ macro_rules! method(
     });
     // Preceding comma is necessary to disambiguate
     (, $sel_name:expr, $body:block, $fn_name:ident, $ret_ty:ty, $self_name:ident : $self_ty:ty, $($arg_name:ident : $arg_ty:ty),*) => ({
-        let sel = ::objc::runtime::Sel::register($sel_name);
+        let sel = $crate::runtime::Sel::register($sel_name);
 
         #[allow(non_snake_case)]
-        extern fn $fn_name($self_name: $self_ty, _cmd: ::objc::runtime::Sel $(, $arg_name: $arg_ty)*) -> $ret_ty $body
-        let imp: ::objc::runtime::Imp = unsafe { ::std::mem::transmute($fn_name) };
+        extern fn $fn_name($self_name: $self_ty, _cmd: $crate::runtime::Sel $(, $arg_name: $arg_ty)*) -> $ret_ty $body
+        let imp: $crate::runtime::Imp = unsafe { ::std::mem::transmute($fn_name) };
 
-        let mut types = ::objc::encode::<$ret_ty>().to_string();
-        types.push_str(::objc::encode::<$self_ty>());
-        types.push_str(::objc::encode::<::objc::runtime::Sel>());
-        $(types.push_str(::objc::encode::<$arg_ty>());)*
+        let mut types = $crate::encode::<$ret_ty>().to_string();
+        types.push_str($crate::encode::<$self_ty>());
+        types.push_str($crate::encode::<$crate::runtime::Sel>());
+        $(types.push_str($crate::encode::<$arg_ty>());)*
 
-        ::objc::MethodDecl { sel: sel, imp: imp, types: types }
+        $crate::MethodDecl { sel: sel, imp: imp, types: types }
     });
-);
+}

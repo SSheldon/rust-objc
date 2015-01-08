@@ -14,6 +14,7 @@ pub use encode::{encode, Encode, Encoding};
 pub use message::{to_obj_ptr, Message, ToMessage};
 pub use weak::WeakId;
 
+#[macro_use]
 mod macros;
 
 pub mod runtime;
@@ -23,8 +24,3 @@ mod declare;
 mod encode;
 mod message;
 mod weak;
-
-// Shim to re-export under the objc:: path for macros
-mod objc {
-    pub use super::*;
-}

@@ -90,7 +90,6 @@ macro_rules! encode_message_impl {
     );
 }
 
-/*
 /// Declares a method, returning a `MethodDecl`.
 /// The syntax is a combination of Objective-C's syntax and Rust's:
 ///
@@ -112,7 +111,7 @@ macro_rules! encode_message_impl {
 /// )
 ///
 /// method!(
-///     (&MYObject)this, number -> uint {
+///     (&MYObject)this, number -> uint, {
 ///         this.number()
 ///     }
 /// )
@@ -121,49 +120,49 @@ macro_rules! encode_message_impl {
 macro_rules! method {
     // Void no arguments
     (
-        ($self_ty:ty)$self_name:ident
-        , $name:ident;
-        $body:block
+        ($self_ty:ty)$self_name:ident,
+        $name:ident
+        ; $body:block
     ) => ({
-        method!(, stringify!($name), $body, $name, (), $self_name: $self_ty,)
+        method!(-$name,; stringify!($name), $body, (), $self_name: $self_ty,)
     });
     // No arguments
     (
-        ($self_ty:ty)$self_name:ident
-        , $name:ident
-        -> $ret_ty:ty $body:block
+        ($self_ty:ty)$self_name:ident,
+        $name:ident
+        -> $ret_ty:ty, $body:block
     ) => ({
-        method!(, stringify!($name), $body, $name, $ret_ty, $self_name: $self_ty,)
+        method!(-$name,; stringify!($name), $body, $ret_ty, $self_name: $self_ty,)
     });
     // Void with arguments
     (
-        ($self_ty:ty)$self_name:ident
-        , $name:ident : ($first_arg_ty:ty) $first_arg_name:ident
-        $(, $next_name:ident : ($next_arg_ty:ty) $next_arg_name:ident)*;
-        $body:block
+        ($self_ty:ty)$self_name:ident,
+        $($name:ident : ($arg_ty:ty) $arg_name:ident),+
+        ; $body:block
     ) => ({
-        let sel_name = concat!(stringify!($name), ':', $(stringify!($next_name), ':'),*);
-        method!(, sel_name, $body, $name, (), $self_name: $self_ty,
-            $first_arg_name: $first_arg_ty$(, $next_arg_name: $next_arg_ty)*)
+        let sel_name = concat!($(stringify!($name), ':'),*);
+        method!($(-$name,)+; sel_name, $body, (), $self_name: $self_ty, $($arg_name: $arg_ty),+)
     });
     // Arguments
     (
-        ($self_ty:ty)$self_name:ident
-        , $name:ident : ($first_arg_ty:ty) $first_arg_name:ident
-        $(, $next_name:ident : ($next_arg_ty:ty) $next_arg_name:ident)*
-        -> $ret_ty:ty $body:block
+        ($self_ty:ty)$self_name:ident,
+        $($name:ident : ($arg_ty:ty) $arg_name:ident),+
+        -> $ret_ty:ty, $body:block
     ) => ({
-        let sel_name = concat!(stringify!($name), ':', $(stringify!($next_name), ':'),*);
-        method!(, sel_name, $body, $name, $ret_ty, $self_name: $self_ty,
-            $first_arg_name: $first_arg_ty$(, $next_arg_name: $next_arg_ty)*)
+        let sel_name = concat!($(stringify!($name), ':'),*);
+        method!($(-$name,)+; sel_name, $body, $ret_ty, $self_name: $self_ty, $($arg_name: $arg_ty),+)
     });
-    // Preceding comma is necessary to disambiguate
-    (, $sel_name:expr, $body:block, $fn_name:ident, $ret_ty:ty, $self_name:ident : $self_ty:ty, $($arg_name:ident : $arg_ty:ty),*) => ({
+    (
+        // Preceding dash is necessary to disambiguate
+        -$first_name:ident, $(-$next_name:ident,)*;
+        $sel_name:expr, $body:block, $ret_ty:ty,
+        $self_name:ident : $self_ty:ty, $($arg_name:ident : $arg_ty:ty),*
+    ) => ({
         let sel = $crate::runtime::Sel::register($sel_name);
 
         #[allow(non_snake_case)]
-        extern fn $fn_name($self_name: $self_ty, _cmd: $crate::runtime::Sel $(, $arg_name: $arg_ty)*) -> $ret_ty $body
-        let imp: $crate::runtime::Imp = unsafe { ::std::mem::transmute($fn_name) };
+        extern fn $first_name($self_name: $self_ty, _cmd: $crate::runtime::Sel $(, $arg_name: $arg_ty)*) -> $ret_ty $body
+        let imp: $crate::runtime::Imp = unsafe { ::std::mem::transmute($first_name) };
 
         let mut types = $crate::encode::<$ret_ty>().to_string();
         types.push_str($crate::encode::<$self_ty>());
@@ -173,4 +172,3 @@ macro_rules! method {
         $crate::MethodDecl { sel: sel, imp: imp, types: types }
     });
 }
-*/

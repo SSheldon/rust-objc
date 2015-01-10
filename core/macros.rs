@@ -1,3 +1,22 @@
+/// Registers a selector, returning an `Sel`.
+///
+/// # Example
+/// ```
+/// let sel = sel!(description);
+/// let sel = sel!(setObject:forKey:);
+/// ```
+#[macro_export]
+macro_rules! sel {
+    ($name:ident) => ({
+        let sel_name = concat!(stringify!($name), '\0');
+        $crate::runtime::sel_registerName(sel_name.as_ptr() as *const i8)
+    });
+    ($($name:ident :)+) => ({
+        let sel_name = concat!($(stringify!($name), ':'),+, '\0');
+        $crate::runtime::sel_registerName(sel_name.as_ptr() as *const i8)
+    });
+}
+
 /// Sends a message to an object. The first argument should implement the
 /// `ToMessage` trait, and the syntax is similar to the message syntax in
 /// Objective-C.
@@ -16,14 +35,12 @@
 #[macro_export]
 macro_rules! msg_send {
     ($obj:expr, $name:ident) => ({
-        let sel_name = stringify!($name);
-        let sel = $crate::runtime::Sel::register(sel_name);
+        let sel = sel!($name);
         let ptr = $crate::to_obj_ptr(&$obj);
         $crate::runtime::objc_msgSend(ptr, sel)
     });
     ($obj:expr, $($name:ident : $arg:expr)+) => ({
-        let sel_name = concat!($(stringify!($name), ':'),+);
-        let sel = $crate::runtime::Sel::register(sel_name);
+        let sel = sel!($($name:)+);
         let ptr = $crate::to_obj_ptr(&$obj);
         $crate::runtime::objc_msgSend(ptr, sel $(,$arg)+)
     });

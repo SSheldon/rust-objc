@@ -10,11 +10,11 @@ use runtime::{Class, Object};
  */
 /// Types that may be sent Objective-C messages.
 /// For example: objects, classes, and blocks.
-pub trait Message: Sized { }
+pub unsafe trait Message: Sized { }
 
-impl Message for Object { }
+unsafe impl Message for Object { }
 
-impl Message for Class { }
+unsafe impl Message for Class { }
 
 /// A trait for converting to a pointer to a type that may be sent Objective-C
 /// messages.

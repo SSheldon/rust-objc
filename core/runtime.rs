@@ -16,7 +16,7 @@ use {encode, Encode};
 /// A type that represents a `malloc`'d chunk of memory.
 pub struct MallocBuffer<T> {
     ptr: *mut T,
-    len: uint,
+    len: usize,
 }
 
 impl<T> MallocBuffer<T> {
@@ -29,7 +29,7 @@ impl<T> MallocBuffer<T> {
     /// at `ptr`, and `T` must not be a type that implements `Drop`
     /// (because the `MallocBuffer` makes no attempt to drop its elements,
     /// just the buffer containing them).
-    pub unsafe fn new(ptr: *mut T, len: uint) -> Option<MallocBuffer<T>> {
+    pub unsafe fn new(ptr: *mut T, len: usize) -> Option<MallocBuffer<T>> {
         if ptr.is_null() {
             None
         } else {
@@ -210,11 +210,11 @@ impl Ivar {
     }
 
     /// Returns the offset of self.
-    pub fn offset(&self) -> int {
+    pub fn offset(&self) -> isize {
         let offset = unsafe {
             ivar_getOffset(self)
         };
-        offset as int
+        offset as isize
     }
 
     /// Returns the type string of self.
@@ -252,7 +252,7 @@ impl Method {
 
     /// Returns a string describing a single parameter type of self, or
     /// `None` if self has no parameter at the given index.
-    pub fn argument_type(&self, index: uint) -> Option<MallocString> {
+    pub fn argument_type(&self, index: usize) -> Option<MallocString> {
         unsafe {
             let encoding = method_copyArgumentType(self, index as c_uint);
             if encoding.is_null() {
@@ -264,9 +264,9 @@ impl Method {
     }
 
     /// Returns the number of arguments accepted by self.
-    pub fn arguments_count(&self) -> uint {
+    pub fn arguments_count(&self) -> usize {
         unsafe {
-            method_getNumberOfArguments(self) as uint
+            method_getNumberOfArguments(self) as usize
         }
     }
 
@@ -307,14 +307,14 @@ impl Class {
         unsafe {
             let mut count: c_uint = 0;
             let classes = objc_copyClassList(&mut count);
-            MallocBuffer::new(classes as *mut _, count as uint).unwrap()
+            MallocBuffer::new(classes as *mut _, count as usize).unwrap()
         }
     }
 
     /// Returns the total number of registered classes.
-    pub fn classes_count() -> uint {
+    pub fn classes_count() -> usize {
         unsafe {
-            objc_getClassList(ptr::null_mut(), 0) as uint
+            objc_getClassList(ptr::null_mut(), 0) as usize
         }
     }
 
@@ -327,9 +327,9 @@ impl Class {
     }
 
     /// Returns the size of instances of self.
-    pub fn instance_size(&self) -> uint {
+    pub fn instance_size(&self) -> usize {
         unsafe {
-            class_getInstanceSize(self) as uint
+            class_getInstanceSize(self) as usize
         }
     }
 
@@ -356,7 +356,7 @@ impl Class {
         unsafe {
             let mut count: c_uint = 0;
             let methods = class_copyMethodList(self, &mut count);
-            MallocBuffer::new(methods as *mut _, count as uint).unwrap()
+            MallocBuffer::new(methods as *mut _, count as usize).unwrap()
         }
 
     }
@@ -366,7 +366,7 @@ impl Class {
         unsafe {
             let mut count: c_uint = 0;
             let ivars = class_copyIvarList(self, &mut count);
-            MallocBuffer::new(ivars as *mut _, count as uint).unwrap()
+            MallocBuffer::new(ivars as *mut _, count as usize).unwrap()
         }
     }
 }

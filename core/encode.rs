@@ -28,12 +28,12 @@ impl Encode for i64 {
     fn code() -> Encoding<i64> { Encoding("q") }
 }
 
-impl Encode for int {
+impl Encode for isize {
     #[cfg(target_pointer_width = "32")]
-    fn code() -> Encoding<int> { Encoding("i") }
+    fn code() -> Encoding<isize> { Encoding("i") }
 
     #[cfg(target_pointer_width = "64")]
-    fn code() -> Encoding<int> { Encoding("q") }
+    fn code() -> Encoding<isize> { Encoding("q") }
 }
 
 impl Encode for u8 {
@@ -52,12 +52,12 @@ impl Encode for u64 {
     fn code() -> Encoding<u64> { Encoding("Q") }
 }
 
-impl Encode for uint {
+impl Encode for usize {
     #[cfg(target_pointer_width = "32")]
-    fn code() -> Encoding<uint> { Encoding("I") }
+    fn code() -> Encoding<usize> { Encoding("I") }
 
     #[cfg(target_pointer_width = "64")]
-    fn code() -> Encoding<uint> { Encoding("Q") }
+    fn code() -> Encoding<usize> { Encoding("Q") }
 }
 
 impl Encode for f32 {

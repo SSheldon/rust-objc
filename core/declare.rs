@@ -94,28 +94,28 @@ mod tests {
         assert!(decl.is_some());
         let mut decl = decl.unwrap();
 
-        decl.add_ivar::<uint>("_foo");
+        decl.add_ivar::<u32>("_foo");
         decl.add_method(method!(
             (*mut Object)_this, doNothing; {
                 ()
             }
         ));
         decl.add_method(method!(
-            (&mut Object)this, setFoo:(uint)foo, bar:(uint)_bar; {
+            (&mut Object)this, setFoo:(u32)foo, bar:(u32)_bar; {
                 unsafe {
-                    this.set_ivar::<uint>("_foo", foo);
+                    this.set_ivar::<u32>("_foo", foo);
                 }
             }
         ));
         decl.add_method(method!(
-            (&Object)this, foo -> uint, {
+            (&Object)this, foo -> u32, {
                 unsafe {
-                    *this.get_ivar::<uint>("_foo")
+                    *this.get_ivar::<u32>("_foo")
                 }
             }
         ));
         decl.add_method(method!(
-            (*mut Object)this, doSomethingWithFoo:(uint)_foo, bar:(uint)_bar -> *mut Object, {
+            (*mut Object)this, doSomethingWithFoo:(u32)_foo, bar:(u32)_bar -> *mut Object, {
                 this
             }
         ));
@@ -126,10 +126,10 @@ mod tests {
             let obj = msg_send![obj, init];
 
             msg_send![obj, doNothing];
-            msg_send![obj, setFoo:13u bar:0u];
-            let result = msg_send![obj, foo] as uint;
+            msg_send![obj, setFoo:13u32 bar:0u32];
+            let result = msg_send![obj, foo] as u32;
             assert!(result == 13);
-            let result = msg_send![obj, doSomethingWithFoo:13u bar:0u];
+            let result = msg_send![obj, doSomethingWithFoo:13u32 bar:0u32];
             assert!(result == obj);
 
             msg_send![obj, release];

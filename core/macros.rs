@@ -7,13 +7,24 @@
 /// ```
 #[macro_export]
 macro_rules! sel {
+    // Declare a function to hide unsafety, otherwise we can trigger the
+    // unused_unsafe lint; see rust-lang/rust#8472
     ($name:ident) => ({
-        let sel_name = concat!(stringify!($name), '\0');
-        $crate::runtime::sel_registerName(sel_name.as_ptr() as *const i8)
+        #[inline(always)]
+        fn register_sel(name_with_nul: &str) -> $crate::runtime::Sel {
+            let ptr = name_with_nul.as_ptr() as *const i8;
+            unsafe { $crate::runtime::sel_registerName(ptr) }
+        }
+        register_sel(concat!(stringify!($name), '\0'))
+
     });
     ($($name:ident :)+) => ({
-        let sel_name = concat!($(stringify!($name), ':'),+, '\0');
-        $crate::runtime::sel_registerName(sel_name.as_ptr() as *const i8)
+        #[inline(always)]
+        fn register_sel(name_with_nul: &str) -> $crate::runtime::Sel {
+            let ptr = name_with_nul.as_ptr() as *const i8;
+            unsafe { $crate::runtime::sel_registerName(ptr) }
+        }
+        register_sel(concat!($(stringify!($name), ':'),+, '\0'))
     });
 }
 
@@ -141,7 +152,7 @@ macro_rules! method {
         $name:ident
         ; $body:block
     ) => ({
-        method!(-$name,; stringify!($name), $body, (), $self_name: $self_ty,)
+        method!(-$name,; sel!($name), $body, (), $self_name: $self_ty,)
     });
     // No arguments
     (
@@ -149,7 +160,7 @@ macro_rules! method {
         $name:ident
         -> $ret_ty:ty, $body:block
     ) => ({
-        method!(-$name,; stringify!($name), $body, $ret_ty, $self_name: $self_ty,)
+        method!(-$name,; sel!($name), $body, $ret_ty, $self_name: $self_ty,)
     });
     // Void with arguments
     (
@@ -157,8 +168,7 @@ macro_rules! method {
         $($name:ident : ($arg_ty:ty) $arg_name:ident),+
         ; $body:block
     ) => ({
-        let sel_name = concat!($(stringify!($name), ':'),*);
-        method!($(-$name,)+; sel_name, $body, (), $self_name: $self_ty, $($arg_name: $arg_ty),+)
+        method!($(-$name,)+; sel!($($name:)+), $body, (), $self_name: $self_ty, $($arg_name: $arg_ty),+)
     });
     // Arguments
     (
@@ -166,17 +176,14 @@ macro_rules! method {
         $($name:ident : ($arg_ty:ty) $arg_name:ident),+
         -> $ret_ty:ty, $body:block
     ) => ({
-        let sel_name = concat!($(stringify!($name), ':'),*);
-        method!($(-$name,)+; sel_name, $body, $ret_ty, $self_name: $self_ty, $($arg_name: $arg_ty),+)
+        method!($(-$name,)+; sel!($($name:)+), $body, $ret_ty, $self_name: $self_ty, $($arg_name: $arg_ty),+)
     });
     (
         // Preceding dash is necessary to disambiguate
         -$first_name:ident, $(-$next_name:ident,)*;
-        $sel_name:expr, $body:block, $ret_ty:ty,
+        $sel:expr, $body:block, $ret_ty:ty,
         $self_name:ident : $self_ty:ty, $($arg_name:ident : $arg_ty:ty),*
     ) => ({
-        let sel = $crate::runtime::Sel::register($sel_name);
-
         #[allow(non_snake_case)]
         extern fn $first_name($self_name: $self_ty, _cmd: $crate::runtime::Sel $(, $arg_name: $arg_ty)*) -> $ret_ty $body
         let imp: $crate::runtime::Imp = unsafe { ::std::mem::transmute($first_name) };
@@ -186,6 +193,6 @@ macro_rules! method {
         types.push_str($crate::encode::<$crate::runtime::Sel>());
         $(types.push_str($crate::encode::<$arg_ty>());)*
 
-        $crate::MethodDecl { sel: sel, imp: imp, types: types }
+        $crate::MethodDecl { sel: $sel, imp: imp, types: types }
     });
 }

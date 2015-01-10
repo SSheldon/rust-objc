@@ -29,10 +29,10 @@ impl Encode for i64 {
 }
 
 impl Encode for int {
-    #[cfg(target_word_size = "32")]
+    #[cfg(target_pointer_width = "32")]
     fn code() -> Encoding<int> { Encoding("i") }
 
-    #[cfg(target_word_size = "64")]
+    #[cfg(target_pointer_width = "64")]
     fn code() -> Encoding<int> { Encoding("q") }
 }
 
@@ -53,10 +53,10 @@ impl Encode for u64 {
 }
 
 impl Encode for uint {
-    #[cfg(target_word_size = "32")]
+    #[cfg(target_pointer_width = "32")]
     fn code() -> Encoding<uint> { Encoding("I") }
 
-    #[cfg(target_word_size = "64")]
+    #[cfg(target_pointer_width = "64")]
     fn code() -> Encoding<uint> { Encoding("Q") }
 }
 

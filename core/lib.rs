@@ -1,7 +1,8 @@
 #![crate_name = "objc"]
 #![crate_type = "lib"]
 
-#![feature(unsafe_destructor)]
+#![feature(int_uint, unsafe_destructor)]
+#![allow(unstable)]
 
 extern crate libc;
 

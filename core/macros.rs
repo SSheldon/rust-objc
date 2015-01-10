@@ -1,3 +1,4 @@
+/*
 /// Sends a message to an object. The first argument should implement the
 /// `ToMessage` trait, and the syntax is similar to the message syntax in
 /// Objective-C.
@@ -28,6 +29,7 @@ macro_rules! msg_send {
         $crate::runtime::objc_msgSend(ptr, sel $(,$arg)+)
     });
 }
+*/
 
 /// Implements the `Encode` trait for a `Message` type.
 /// Specifically, this will implement `Encode` for reference, pointers, and
@@ -48,7 +50,10 @@ macro_rules! msg_send {
 /// ```
 #[macro_export]
 macro_rules! encode_message_impl {
-    ($code:expr, $name:ident $(,$t:ident)*) => (
+    ($code:expr, $name:ident) => (
+        encode_message_impl!($code, $name,);
+    );
+    ($code:expr, $name:ident, $($t:ident),*) => (
         impl<'a $(, $t)*> $crate::Encode for &'a $name<$($t),*> {
             fn code() -> $crate::Encoding<&'a $name<$($t),*>> {
                 $crate::Encoding($code)
@@ -87,6 +92,7 @@ macro_rules! encode_message_impl {
     );
 }
 
+/*
 /// Declares a method, returning a `MethodDecl`.
 /// The syntax is a combination of Objective-C's syntax and Rust's:
 ///
@@ -169,3 +175,4 @@ macro_rules! method {
         $crate::MethodDecl { sel: sel, imp: imp, types: types }
     });
 }
+*/

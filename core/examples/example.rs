@@ -1,5 +1,3 @@
-#![feature(phase)]
-
 #[macro_use]
 extern crate objc;
 
@@ -23,24 +21,24 @@ fn main() {
         let obj = msg_send![obj, init];
         Id::from_retained_ptr(obj)
     };
-    println!("NSObject address: {}", obj.as_ptr());
+    println!("NSObject address: {:?}", obj.as_ptr());
 
     // Access an ivar of the object
     let isa: *const Class = unsafe {
         *obj.get_ivar("isa")
     };
-    println!("NSObject isa: {}", isa);
+    println!("NSObject isa: {:?}", isa);
 
     // Inspect a method of the class
     let hash_sel = Sel::register("hash");
     let hash_method = cls.instance_method(hash_sel).unwrap();
     let hash_return = hash_method.return_type();
     println!("-[NSObject hash] return type: {}", hash_return.as_slice());
-    assert!(encode::<uint>() == hash_return.as_slice());
+    assert!(encode::<usize>() == hash_return.as_slice());
 
     // Invoke a method on the object
     let hash = unsafe {
-        (msg_send![obj, hash]) as uint
+        (msg_send![obj, hash]) as usize
     };
     println!("NSObject hash: {}", hash);
 

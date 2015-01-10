@@ -1,4 +1,3 @@
-/*
 /// Sends a message to an object. The first argument should implement the
 /// `ToMessage` trait, and the syntax is similar to the message syntax in
 /// Objective-C.
@@ -11,25 +10,24 @@
 ///
 /// # Example
 /// ```
-/// let description = msg_send![obj description];
-/// msg_send![obj setArg1:1u arg2:2u];
+/// let description = msg_send![obj, description];
+/// msg_send![obj, setArg1:1u arg2:2u];
 /// ```
 #[macro_export]
 macro_rules! msg_send {
-    ($obj:expr $name:ident) => ({
+    ($obj:expr, $name:ident) => ({
         let sel_name = stringify!($name);
         let sel = $crate::runtime::Sel::register(sel_name);
         let ptr = $crate::to_obj_ptr(&$obj);
         $crate::runtime::objc_msgSend(ptr, sel)
     });
-    ($obj:expr $($name:ident : $arg:expr)+) => ({
+    ($obj:expr, $($name:ident : $arg:expr)+) => ({
         let sel_name = concat!($(stringify!($name), ':'),+);
         let sel = $crate::runtime::Sel::register(sel_name);
         let ptr = $crate::to_obj_ptr(&$obj);
         $crate::runtime::objc_msgSend(ptr, sel $(,$arg)+)
     });
 }
-*/
 
 /// Implements the `Encode` trait for a `Message` type.
 /// Specifically, this will implement `Encode` for reference, pointers, and

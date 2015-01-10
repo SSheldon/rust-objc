@@ -84,8 +84,10 @@ impl Drop for ClassDecl {
 
 #[cfg(test)]
 mod tests {
-    use runtime::{Class, Object};
-    use super::ClassDecl;
+    use std::mem;
+    use encode;
+    use runtime::{Class, Object, Sel};
+    use super::{ClassDecl, MethodDecl};
 
     #[test]
     fn test_custom_class() {
@@ -95,42 +97,37 @@ mod tests {
         let mut decl = decl.unwrap();
 
         decl.add_ivar::<uint>("_foo");
-        decl.add_method(method!(
-            (*mut Object)_this, doNothing; {
-                ()
+
+        extern fn my_object_get_foo(this: &Object, _cmd: Sel) -> uint {
+            unsafe {
+                *this.get_ivar::<uint>("_foo")
             }
-        ));
-        decl.add_method(method!(
-            (&mut Object)this, setFoo:(uint)foo; {
-                unsafe {
-                    this.set_ivar::<uint>("_foo", foo);
-                }
+        }
+        decl.add_method(MethodDecl {
+            sel: Sel::register("foo"),
+            imp: unsafe { mem::transmute(my_object_get_foo) },
+            types: String::from_str(encode::<uint>()) + "@:",
+        });
+
+        extern fn my_object_set_foo(this: &mut Object, _cmd: Sel, foo: uint) {
+            unsafe {
+                this.set_ivar::<uint>("_foo", foo);
             }
-        ));
-        decl.add_method(method!(
-            (&Object)this, foo -> uint {
-                unsafe {
-                    *this.get_ivar::<uint>("_foo")
-                }
-            }
-        ));
-        decl.add_method(method!(
-            (*mut Object)this, doSomethingWithFoo:(uint)_foo -> *mut Object {
-                this
-            }
-        ));
+        }
+        decl.add_method(MethodDecl {
+            sel: Sel::register("setFoo:"),
+            imp: unsafe { mem::transmute(my_object_set_foo) },
+            types: String::from_str("v@:") + encode::<uint>(),
+        });
 
         let cls = decl.register();
         unsafe {
             let obj = msg_send![cls, alloc];
             let obj = msg_send![obj, init];
 
-            msg_send![obj, doNothing];
             msg_send![obj, setFoo:13u];
             let result = msg_send![obj, foo] as uint;
             assert!(result == 13);
-            let result = msg_send![obj, doSomethingWithFoo:13u];
-            assert!(result == obj);
 
             msg_send![obj, release];
         }

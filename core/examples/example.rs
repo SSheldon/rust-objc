@@ -19,8 +19,8 @@ fn main() {
 
     // Allocate an instance
     let obj: Id<Object> = unsafe {
-        let obj = msg_send![cls alloc];
-        let obj = msg_send![obj init];
+        let obj = msg_send![cls, alloc];
+        let obj = msg_send![obj, init];
         Id::from_retained_ptr(obj)
     };
     println!("NSObject address: {}", obj.as_ptr());
@@ -40,7 +40,7 @@ fn main() {
 
     // Invoke a method on the object
     let hash = unsafe {
-        (msg_send![obj hash]) as uint
+        (msg_send![obj, hash]) as uint
     };
     println!("NSObject hash: {}", hash);
 

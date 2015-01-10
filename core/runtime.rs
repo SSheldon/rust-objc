@@ -484,13 +484,13 @@ mod tests {
     fn test_object() {
         let cls = Class::get("NSObject").unwrap();
         let obj = unsafe {
-            let obj = msg_send![cls alloc];
-            let obj = msg_send![obj init];
+            let obj = msg_send![cls, alloc];
+            let obj = msg_send![obj, init];
             &*obj
         };
         assert!(obj.class() == cls);
         unsafe {
-            msg_send![obj release];
+            msg_send![obj, release];
         }
     }
 }

@@ -6,6 +6,7 @@ authors = ["Steven Sheldon"]
 description = "Objective-C Runtime bindings and wrapper for Rust."
 repository = "http://github.com/SSheldon/rust-objc"
 documentation = "http://ssheldon.github.io/rust-objc/objc/"
+license = "MIT"
 
 [lib]
 name = "objc"

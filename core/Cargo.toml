@@ -1,6 +1,6 @@
 [package]
 name = "objc"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Steven Sheldon"]
 
 description = "Objective-C Runtime bindings and wrapper for Rust."
@@ -13,5 +13,5 @@ name = "objc"
 path = "lib.rs"
 doctest = false
 
-[dev-dependencies.objc_test_utils]
-path = "../test_utils"
+[dependencies]
+objc_test_utils = "0.0"

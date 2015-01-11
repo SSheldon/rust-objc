@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='index.html'>objc</a></p><div class='block mod'><h2>Modules</h2><a class='mod ' href='runtime/index.html'>runtime</a></div><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.ClassDecl.html'>ClassDecl</a><a class='struct ' href='struct.Encoding.html'>Encoding</a><a class='struct ' href='struct.Id.html'>Id</a><a class='struct ' href='struct.MethodDecl.html'>MethodDecl</a><a class='struct ' href='struct.Owned.html'>Owned</a><a class='struct ' href='struct.Shared.html'>Shared</a><a class='struct ' href='struct.WeakId.html'>WeakId</a></div><div class='block trait'><h2>Traits</h2><a class='trait ' href='trait.Encode.html'>Encode</a><a class='trait ' href='trait.IdVector.html'>IdVector</a><a class='trait ' href='trait.IntoIdVector.html'>IntoIdVector</a><a class='trait ' href='trait.Message.html'>Message</a><a class='trait ' href='trait.Ownership.html'>Ownership</a><a class='trait ' href='trait.ToMessage.html'>ToMessage</a></div><div class='block fn'><h2>Functions</h2><a class='fn ' href='fn.encode.html'>encode</a><a class='fn ' href='fn.to_obj_ptr.html'>to_obj_ptr</a></div><div class='block macro'><h2>Macros</h2><a class='macro ' href='macro.encode_message_impl!.html'>encode_message_impl!</a><a class='macro ' href='macro.method!.html'>method!</a><a class='macro current' href='macro.msg_send!.html'>msg_send!</a></div>
+        <p class='location'><a href='index.html'>objc</a></p><div class='block mod'><h2>Modules</h2><a class='mod ' href='block/index.html'>block</a><a class='mod ' href='runtime/index.html'>runtime</a></div><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.ClassDecl.html'>ClassDecl</a><a class='struct ' href='struct.Encoding.html'>Encoding</a><a class='struct ' href='struct.Id.html'>Id</a><a class='struct ' href='struct.MethodDecl.html'>MethodDecl</a><a class='struct ' href='struct.WeakId.html'>WeakId</a></div><div class='block enum'><h2>Enums</h2><a class='enum ' href='enum.Owned.html'>Owned</a><a class='enum ' href='enum.Shared.html'>Shared</a></div><div class='block trait'><h2>Traits</h2><a class='trait ' href='trait.Encode.html'>Encode</a><a class='trait ' href='trait.IdVector.html'>IdVector</a><a class='trait ' href='trait.IntoIdVector.html'>IntoIdVector</a><a class='trait ' href='trait.Message.html'>Message</a><a class='trait ' href='trait.Ownership.html'>Ownership</a><a class='trait ' href='trait.ToMessage.html'>ToMessage</a></div><div class='block fn'><h2>Functions</h2><a class='fn ' href='fn.encode.html'>encode</a><a class='fn ' href='fn.to_obj_ptr.html'>to_obj_ptr</a></div><div class='block macro'><h2>Macros</h2><a class='macro ' href='macro.encode_message_impl!.html'>encode_message_impl!</a><a class='macro ' href='macro.method!.html'>method!</a><a class='macro current' href='macro.msg_send!.html'>msg_send!</a><a class='macro ' href='macro.sel!.html'>sel!</a></div>
     </section>
 
     <nav class="sub">
@@ -44,22 +44,20 @@
 <h1 class='fqn'><span class='in-band'><a href='index.html'>objc</a>::<wbr><a class='macro' href=''>msg_send!</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-4294967295' href='../src/objc/macros.rs.html#19-32'>[src]</a></span></h1>
+        </span><a id='src-7795' href='../src/objc/macros.rs.html#47-58'>[src]</a></span></h1>
 <pre class='rust macro'>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>msg_send</span>(
-	(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>obj</span>:<span class='ident'>expr</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>) <span class='op'>=&gt;</span> ({
-		<span class='kw'>let</span> <span class='ident'>sel_name</span> <span class='op'>=</span> <span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>);
-		<span class='kw'>let</span> <span class='ident'>sel</span> <span class='op'>=</span> ::<span class='ident'>objc</span>::<span class='ident'>runtime</span>::<span class='ident'>Sel</span>::<span class='ident'>register</span>(<span class='ident'>sel_name</span>);
-		<span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> ::<span class='ident'>objc</span>::<span class='ident'>to_obj_ptr</span>(<span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>obj</span>);
-		::<span class='ident'>objc</span>::<span class='ident'>runtime</span>::<span class='ident'>objc_msgSend</span>(<span class='ident'>ptr</span>, <span class='ident'>sel</span>)
-	});
-	(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>obj</span>:<span class='ident'>expr</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> ({
-		<span class='kw'>let</span> <span class='ident'>sel_name</span> <span class='op'>=</span> <span class='macro'>concat</span><span class='macro'>!</span>($(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>), <span class='string'>&#39;:&#39;</span>),<span class='op'>+</span>);
-		<span class='kw'>let</span> <span class='ident'>sel</span> <span class='op'>=</span> ::<span class='ident'>objc</span>::<span class='ident'>runtime</span>::<span class='ident'>Sel</span>::<span class='ident'>register</span>(<span class='ident'>sel_name</span>);
-		<span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> ::<span class='ident'>objc</span>::<span class='ident'>to_obj_ptr</span>(<span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>obj</span>);
-		::<span class='ident'>objc</span>::<span class='ident'>runtime</span>::<span class='ident'>objc_msgSend</span>(<span class='ident'>ptr</span>, <span class='ident'>sel</span> $(,<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>)<span class='op'>+</span>)
-	});
-)
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>msg_send</span> {
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>obj</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>) <span class='op'>=&gt;</span> ({
+        <span class='kw'>let</span> <span class='ident'>sel</span> <span class='op'>=</span> <span class='macro'>sel</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>);
+        <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>to_obj_ptr</span>(<span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>obj</span>);
+        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>runtime</span>::<span class='ident'>objc_msgSend</span>(<span class='ident'>ptr</span>, <span class='ident'>sel</span>)
+    });
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>obj</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> ({
+        <span class='kw'>let</span> <span class='ident'>sel</span> <span class='op'>=</span> <span class='macro'>sel</span><span class='macro'>!</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:)<span class='op'>+</span>);
+        <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>to_obj_ptr</span>(<span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>obj</span>);
+        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>runtime</span>::<span class='ident'>objc_msgSend</span>(<span class='ident'>ptr</span>, <span class='ident'>sel</span> $(,<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>)<span class='op'>+</span>)
+    });
+}
 </pre>
 <div class='docblock'><p>Sends a message to an object. The first argument should implement the
 <code>ToMessage</code> trait, and the syntax is similar to the message syntax in
@@ -73,8 +71,8 @@ For more information, see Apple&#39;s documenation:
 
 <h1 id="example" class='section-header'><a
                            href="#example">Example</a></h1><pre class='rust '>
-<span class='kw'>let</span> <span class='ident'>description</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span> <span class='ident'>description</span>];
-<span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span> <span class='ident'>setArg1</span>:<span class='number'>1u</span> <span class='ident'>arg2</span>:<span class='number'>2u</span>];
+<span class='kw'>let</span> <span class='ident'>description</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>description</span>];
+<span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>setArg1</span>:<span class='number'>1u</span> <span class='ident'>arg2</span>:<span class='number'>2u</span>];
 </pre>
 </div></section>
     <section id='search' class="content hidden"></section>

@@ -40,55 +40,54 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class='line-numbers'><span id='1'> 1</span>
-<span id='2'> 2</span>
-<span id='3'> 3</span>
-<span id='4'> 4</span>
-<span id='5'> 5</span>
-<span id='6'> 6</span>
-<span id='7'> 7</span>
-<span id='8'> 8</span>
-<span id='9'> 9</span>
-<span id='10'>10</span>
-<span id='11'>11</span>
-<span id='12'>12</span>
-<span id='13'>13</span>
-<span id='14'>14</span>
-<span id='15'>15</span>
-<span id='16'>16</span>
-<span id='17'>17</span>
-<span id='18'>18</span>
-<span id='19'>19</span>
-<span id='20'>20</span>
-<span id='21'>21</span>
-<span id='22'>22</span>
-<span id='23'>23</span>
-<span id='24'>24</span>
-<span id='25'>25</span>
-<span id='26'>26</span>
-<span id='27'>27</span>
-<span id='28'>28</span>
-<span id='29'>29</span>
-<span id='30'>30</span>
+    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+<span id="2"> 2</span>
+<span id="3"> 3</span>
+<span id="4"> 4</span>
+<span id="5"> 5</span>
+<span id="6"> 6</span>
+<span id="7"> 7</span>
+<span id="8"> 8</span>
+<span id="9"> 9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
 </pre><pre class='rust '>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_name</span> <span class='op'>=</span> <span class='string'>&quot;objc_foundation&quot;</span>]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span> <span class='op'>=</span> <span class='string'>&quot;lib&quot;</span>]</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>default_type_params</span>, <span class='ident'>globs</span>, <span class='ident'>phase</span>, <span class='ident'>macro_rules</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>int_uint</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>unstable</span>)]</span>
 
-<span class='attribute'>#[<span class='ident'>phase</span>(<span class='ident'>plugin</span>, <span class='ident'>link</span>)]</span>
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>objc</span>;
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>array</span>::{
-	<span class='ident'>INSArray</span>, <span class='ident'>INSMutableArray</span>, <span class='ident'>INSOwnedArray</span>, <span class='ident'>INSSharedArray</span>,
-	<span class='ident'>NSArray</span>, <span class='ident'>NSEnumerator</span>, <span class='ident'>NSMutableArray</span>, <span class='ident'>NSRange</span>,
-	<span class='ident'>NSMutableSharedArray</span>, <span class='ident'>NSSharedArray</span>,
+    <span class='ident'>INSArray</span>, <span class='ident'>INSMutableArray</span>, <span class='ident'>INSOwnedArray</span>, <span class='ident'>INSSharedArray</span>,
+    <span class='ident'>NSArray</span>, <span class='ident'>NSComparisonResult</span>, <span class='ident'>NSEnumerator</span>, <span class='ident'>NSMutableArray</span>, <span class='ident'>NSRange</span>,
+    <span class='ident'>NSMutableSharedArray</span>, <span class='ident'>NSSharedArray</span>,
 };
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>dictionary</span>::{<span class='ident'>INSDictionary</span>, <span class='ident'>NSDictionary</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>object</span>::{<span class='ident'>class</span>, <span class='ident'>ClassName</span>, <span class='ident'>INSObject</span>, <span class='ident'>NSObject</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>string</span>::{<span class='ident'>INSCopying</span>, <span class='ident'>INSMutableCopying</span>, <span class='ident'>INSString</span>, <span class='ident'>NSString</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>value</span>::{<span class='ident'>INSValue</span>, <span class='ident'>NSValue</span>};
 
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>mod</span> <span class='ident'>macros</span>;
 
 <span class='kw'>mod</span> <span class='ident'>array</span>;
@@ -96,11 +95,6 @@
 <span class='kw'>mod</span> <span class='ident'>object</span>;
 <span class='kw'>mod</span> <span class='ident'>string</span>;
 <span class='kw'>mod</span> <span class='ident'>value</span>;
-
-<span class='comment'>// Shim to re-export under the objc_foundation:: path for macros</span>
-<span class='kw'>mod</span> <span class='ident'>objc_foundation</span> {
-	<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
-}
 </pre>
 </section>
     <section id='search' class="content hidden"></section>

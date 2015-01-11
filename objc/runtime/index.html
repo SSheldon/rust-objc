@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../index.html'>objc</a></p><div class='block mod'><h2>Modules</h2><a class='mod current' href='../runtime/index.html'>runtime</a></div><div class='block struct'><h2>Structs</h2><a class='struct ' href='../struct.ClassDecl.html'>ClassDecl</a><a class='struct ' href='../struct.Encoding.html'>Encoding</a><a class='struct ' href='../struct.Id.html'>Id</a><a class='struct ' href='../struct.MethodDecl.html'>MethodDecl</a><a class='struct ' href='../struct.Owned.html'>Owned</a><a class='struct ' href='../struct.Shared.html'>Shared</a><a class='struct ' href='../struct.WeakId.html'>WeakId</a></div><div class='block trait'><h2>Traits</h2><a class='trait ' href='../trait.Encode.html'>Encode</a><a class='trait ' href='../trait.IdVector.html'>IdVector</a><a class='trait ' href='../trait.IntoIdVector.html'>IntoIdVector</a><a class='trait ' href='../trait.Message.html'>Message</a><a class='trait ' href='../trait.Ownership.html'>Ownership</a><a class='trait ' href='../trait.ToMessage.html'>ToMessage</a></div><div class='block fn'><h2>Functions</h2><a class='fn ' href='../fn.encode.html'>encode</a><a class='fn ' href='../fn.to_obj_ptr.html'>to_obj_ptr</a></div><div class='block macro'><h2>Macros</h2><a class='macro ' href='../macro.encode_message_impl!.html'>encode_message_impl!</a><a class='macro ' href='../macro.method!.html'>method!</a><a class='macro ' href='../macro.msg_send!.html'>msg_send!</a></div>
+        <p class='location'><a href='../index.html'>objc</a></p><div class='block mod'><h2>Modules</h2><a class='mod ' href='../block/index.html'>block</a><a class='mod current' href='../runtime/index.html'>runtime</a></div><div class='block struct'><h2>Structs</h2><a class='struct ' href='../struct.ClassDecl.html'>ClassDecl</a><a class='struct ' href='../struct.Encoding.html'>Encoding</a><a class='struct ' href='../struct.Id.html'>Id</a><a class='struct ' href='../struct.MethodDecl.html'>MethodDecl</a><a class='struct ' href='../struct.WeakId.html'>WeakId</a></div><div class='block enum'><h2>Enums</h2><a class='enum ' href='../enum.Owned.html'>Owned</a><a class='enum ' href='../enum.Shared.html'>Shared</a></div><div class='block trait'><h2>Traits</h2><a class='trait ' href='../trait.Encode.html'>Encode</a><a class='trait ' href='../trait.IdVector.html'>IdVector</a><a class='trait ' href='../trait.IntoIdVector.html'>IntoIdVector</a><a class='trait ' href='../trait.Message.html'>Message</a><a class='trait ' href='../trait.Ownership.html'>Ownership</a><a class='trait ' href='../trait.ToMessage.html'>ToMessage</a></div><div class='block fn'><h2>Functions</h2><a class='fn ' href='../fn.encode.html'>encode</a><a class='fn ' href='../fn.to_obj_ptr.html'>to_obj_ptr</a></div><div class='block macro'><h2>Macros</h2><a class='macro ' href='../macro.encode_message_impl!.html'>encode_message_impl!</a><a class='macro ' href='../macro.method!.html'>method!</a><a class='macro ' href='../macro.msg_send!.html'>msg_send!</a><a class='macro ' href='../macro.sel!.html'>sel!</a></div>
     </section>
 
     <nav class="sub">
@@ -44,7 +44,7 @@
 <h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>objc</a>::<wbr><a class='mod' href=''>runtime</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-27' href='../../src/objc/runtime.rs.html#1-413'>[src]</a></span></h1>
+        </span><a id='src-27' href='../../src/objc/runtime.rs.html#1-496'>[src]</a></span></h1>
 <div class='docblock'><p>A Rust interface for the functionality of the Objective-C runtime.</p>
 
 <p>For more information on foreign functions, see Apple&#39;s documentation:
@@ -52,30 +52,16 @@
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Class.html'
-                               title='objc::runtime::Class'>Class</a></td>
-                        <td class='docblock short'><p>A type that represents an Objective-C class.</p>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.MallocBuffer.html'
+                               title='objc::runtime::MallocBuffer'>MallocBuffer</a></td>
+                        <td class='docblock short'><p>A type that represents a <code>malloc</code>&#39;d chunk of memory.</p>
 </td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Ivar.html'
-                               title='objc::runtime::Ivar'>Ivar</a></td>
-                        <td class='docblock short'><p>A type that represents an instance variable.</p>
-</td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Method.html'
-                               title='objc::runtime::Method'>Method</a></td>
-                        <td class='docblock short'><p>A type that represents a method in a class definition.</p>
-</td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Object.html'
-                               title='objc::runtime::Object'>Object</a></td>
-                        <td class='docblock short'><p>A type that represents an instance of a class.</p>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.MallocString.html'
+                               title='objc::runtime::MallocString'>MallocString</a></td>
+                        <td class='docblock short'><p>A type that represents a <code>malloc</code>&#39;d string.</p>
 </td>
                     </tr>
                 
@@ -85,178 +71,207 @@
                         <td class='docblock short'><p>A type that represents a method selector.</p>
 </td>
                     </tr>
-                </table><h2 id='ffi-fns' class='section-header'><a href="#ffi-fns">Foreign Functions</a></h2>
+                </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.class_addIvar.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.Class.html'
+                               title='objc::runtime::Class'>Class</a></td>
+                        <td class='docblock short'><p>A type that represents an Objective-C class.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.Ivar.html'
+                               title='objc::runtime::Ivar'>Ivar</a></td>
+                        <td class='docblock short'><p>A type that represents an instance variable.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.Method.html'
+                               title='objc::runtime::Method'>Method</a></td>
+                        <td class='docblock short'><p>A type that represents a method in a class definition.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.Object.html'
+                               title='objc::runtime::Object'>Object</a></td>
+                        <td class='docblock short'><p>A type that represents an instance of a class.</p>
+</td>
+                    </tr>
+                </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.class_addIvar.html'
                                title='objc::runtime::class_addIvar'>class_addIvar</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.class_addMethod.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.class_addMethod.html'
                                title='objc::runtime::class_addMethod'>class_addMethod</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.class_copyIvarList.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.class_copyIvarList.html'
                                title='objc::runtime::class_copyIvarList'>class_copyIvarList</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.class_copyMethodList.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.class_copyMethodList.html'
                                title='objc::runtime::class_copyMethodList'>class_copyMethodList</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.class_getInstanceMethod.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.class_getInstanceMethod.html'
                                title='objc::runtime::class_getInstanceMethod'>class_getInstanceMethod</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.class_getInstanceSize.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.class_getInstanceSize.html'
                                title='objc::runtime::class_getInstanceSize'>class_getInstanceSize</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.class_getInstanceVariable.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.class_getInstanceVariable.html'
                                title='objc::runtime::class_getInstanceVariable'>class_getInstanceVariable</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.class_getName.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.class_getName.html'
                                title='objc::runtime::class_getName'>class_getName</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.ivar_getName.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.ivar_getName.html'
                                title='objc::runtime::ivar_getName'>ivar_getName</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.ivar_getOffset.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.ivar_getOffset.html'
                                title='objc::runtime::ivar_getOffset'>ivar_getOffset</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.ivar_getTypeEncoding.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.ivar_getTypeEncoding.html'
                                title='objc::runtime::ivar_getTypeEncoding'>ivar_getTypeEncoding</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.method_copyArgumentType.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.method_copyArgumentType.html'
                                title='objc::runtime::method_copyArgumentType'>method_copyArgumentType</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.method_copyReturnType.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.method_copyReturnType.html'
                                title='objc::runtime::method_copyReturnType'>method_copyReturnType</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.method_exchangeImplementations.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.method_exchangeImplementations.html'
                                title='objc::runtime::method_exchangeImplementations'>method_exchangeImplementations</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.method_getImplementation.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.method_getImplementation.html'
                                title='objc::runtime::method_getImplementation'>method_getImplementation</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.method_getName.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.method_getName.html'
                                title='objc::runtime::method_getName'>method_getName</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.method_getNumberOfArguments.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.method_getNumberOfArguments.html'
                                title='objc::runtime::method_getNumberOfArguments'>method_getNumberOfArguments</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.method_getTypeEncoding.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.method_getTypeEncoding.html'
                                title='objc::runtime::method_getTypeEncoding'>method_getTypeEncoding</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.method_setImplementation.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.method_setImplementation.html'
                                title='objc::runtime::method_setImplementation'>method_setImplementation</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.objc_allocateClassPair.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.objc_allocateClassPair.html'
                                title='objc::runtime::objc_allocateClassPair'>objc_allocateClassPair</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.objc_copyClassList.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.objc_copyClassList.html'
                                title='objc::runtime::objc_copyClassList'>objc_copyClassList</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.objc_disposeClassPair.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.objc_disposeClassPair.html'
                                title='objc::runtime::objc_disposeClassPair'>objc_disposeClassPair</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.objc_getClass.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.objc_getClass.html'
                                title='objc::runtime::objc_getClass'>objc_getClass</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.objc_getClassList.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.objc_getClassList.html'
                                title='objc::runtime::objc_getClassList'>objc_getClassList</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.objc_msgSend.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.objc_msgSend.html'
                                title='objc::runtime::objc_msgSend'>objc_msgSend</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.objc_registerClassPair.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.objc_registerClassPair.html'
                                title='objc::runtime::objc_registerClassPair'>objc_registerClassPair</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.object_getClass.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.object_getClass.html'
                                title='objc::runtime::object_getClass'>object_getClass</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.sel_getName.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.sel_getName.html'
                                title='objc::runtime::sel_getName'>sel_getName</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='ffi' href='ffi.sel_registerName.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.sel_registerName.html'
                                title='objc::runtime::sel_registerName'>sel_registerName</a></td>
                         <td class='docblock short'></td>
                     </tr>

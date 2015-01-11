@@ -48,6 +48,13 @@
 <h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                     <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='block/index.html'
+                               title='objc::block'>block</a></td>
+                        <td class='docblock short'><p>A Rust interface for Objective-C blocks.</p>
+</td>
+                    </tr>
+                
+                    <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='runtime/index.html'
                                title='objc::runtime'>runtime</a></td>
                         <td class='docblock short'><p>A Rust interface for the functionality of the Objective-C runtime.</p>
@@ -78,6 +85,13 @@ The syntax is a combination of Objective-C&#39;s syntax and Rust&#39;s:</p>
                         <td class='docblock short'><p>Sends a message to an object. The first argument should implement the
 <code>ToMessage</code> trait, and the syntax is similar to the message syntax in
 Objective-C.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='macro' href='macro.sel!.html'
+                               title='objc::sel!'>sel!</a></td>
+                        <td class='docblock short'><p>Registers a selector, returning an <code>Sel</code>.</p>
 </td>
                     </tr>
                 </table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
@@ -115,7 +129,16 @@ an <code>Id</code> is retained and sent a <code>release</code> message when the 
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Owned.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.WeakId.html'
+                               title='objc::WeakId'>WeakId</a></td>
+                        <td class='docblock short'><p>A pointer type for a weak reference to an Objective-C reference counted
+object.</p>
+</td>
+                    </tr>
+                </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.Owned.html'
                                title='objc::Owned'>Owned</a></td>
                         <td class='docblock short'><p>A type used to mark that a struct owns the object(s) it contains,
 so it has the sole references to them.</p>
@@ -123,18 +146,10 @@ so it has the sole references to them.</p>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Shared.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.Shared.html'
                                title='objc::Shared'>Shared</a></td>
                         <td class='docblock short'><p>A type used to mark that the object(s) a struct contains are shared,
 so there may be other references to them.</p>
-</td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.WeakId.html'
-                               title='objc::WeakId'>WeakId</a></td>
-                        <td class='docblock short'><p>A pointer type for a weak reference to an Objective-C reference counted
-object.</p>
 </td>
                     </tr>
                 </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>

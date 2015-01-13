@@ -18,39 +18,51 @@ unsafe impl Message for Class { }
 
 /// A trait for converting to a pointer to a type that may be sent Objective-C
 /// messages.
-pub trait ToMessage<T: Message> {
-    fn as_ptr(&self) -> *mut T;
+pub trait ToMessage {
+    type Target: Message;
+
+    fn as_ptr(&self) -> *mut Self::Target;
 
     fn is_nil(&self) -> bool {
         self.as_ptr().is_null()
     }
 }
 
-impl<T: Message> ToMessage<T> for *const T {
+impl<T: Message> ToMessage for *const T {
+    type Target = T;
+
     fn as_ptr(&self) -> *mut T {
         *self as *mut T
     }
 }
 
-impl<T: Message> ToMessage<T> for *mut T {
+impl<T: Message> ToMessage for *mut T {
+    type Target = T;
+
     fn as_ptr(&self) -> *mut T {
         *self
     }
 }
 
-impl<'a, T: Message> ToMessage<T> for &'a T {
+impl<'a, T: Message> ToMessage for &'a T {
+    type Target = T;
+
     fn as_ptr(&self) -> *mut T {
         *self as *const T as *mut T
     }
 }
 
-impl<'a, T: Message> ToMessage<T> for &'a mut T {
+impl<'a, T: Message> ToMessage for &'a mut T {
+    type Target = T;
+
     fn as_ptr(&self) -> *mut T {
         *self
     }
 }
 
-impl<'a, T: Message> ToMessage<T> for Option<&'a T> {
+impl<'a, T: Message> ToMessage for Option<&'a T> {
+    type Target = T;
+
     fn as_ptr(&self) -> *mut T {
         match *self {
             None => ptr::null_mut(),
@@ -59,7 +71,9 @@ impl<'a, T: Message> ToMessage<T> for Option<&'a T> {
     }
 }
 
-impl<'a, T: Message> ToMessage<T> for Option<&'a mut T> {
+impl<'a, T: Message> ToMessage for Option<&'a mut T> {
+    type Target = T;
+
     fn as_ptr(&self) -> *mut T {
         match *self {
             None => ptr::null_mut(),
@@ -70,6 +84,6 @@ impl<'a, T: Message> ToMessage<T> for Option<&'a mut T> {
 
 /// Converts to an Object pointer; this function is mainly used by the
 /// `msg_send!` macro.
-pub fn to_obj_ptr<T: Message, M: ToMessage<T>>(obj_ref: &M) -> *mut Object {
+pub fn to_obj_ptr<M: ToMessage>(obj_ref: &M) -> *mut Object {
     obj_ref.as_ptr() as *mut Object
 }

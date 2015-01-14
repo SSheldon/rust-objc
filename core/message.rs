@@ -28,7 +28,7 @@ pub trait ToMessage {
     }
 }
 
-impl<T: Message> ToMessage for *const T {
+impl<T> ToMessage for *const T where T: Message {
     type Target = T;
 
     fn as_ptr(&self) -> *mut T {
@@ -36,7 +36,7 @@ impl<T: Message> ToMessage for *const T {
     }
 }
 
-impl<T: Message> ToMessage for *mut T {
+impl<T> ToMessage for *mut T where T: Message {
     type Target = T;
 
     fn as_ptr(&self) -> *mut T {
@@ -44,7 +44,7 @@ impl<T: Message> ToMessage for *mut T {
     }
 }
 
-impl<'a, T: Message> ToMessage for &'a T {
+impl<'a, T> ToMessage for &'a T where T: Message {
     type Target = T;
 
     fn as_ptr(&self) -> *mut T {
@@ -52,7 +52,7 @@ impl<'a, T: Message> ToMessage for &'a T {
     }
 }
 
-impl<'a, T: Message> ToMessage for &'a mut T {
+impl<'a, T> ToMessage for &'a mut T where T: Message {
     type Target = T;
 
     fn as_ptr(&self) -> *mut T {
@@ -60,7 +60,7 @@ impl<'a, T: Message> ToMessage for &'a mut T {
     }
 }
 
-impl<'a, T: Message> ToMessage for Option<&'a T> {
+impl<'a, T> ToMessage for Option<&'a T> where T: Message {
     type Target = T;
 
     fn as_ptr(&self) -> *mut T {
@@ -71,7 +71,7 @@ impl<'a, T: Message> ToMessage for Option<&'a T> {
     }
 }
 
-impl<'a, T: Message> ToMessage for Option<&'a mut T> {
+impl<'a, T> ToMessage for Option<&'a mut T> where T: Message {
     type Target = T;
 
     fn as_ptr(&self) -> *mut T {
@@ -84,6 +84,6 @@ impl<'a, T: Message> ToMessage for Option<&'a mut T> {
 
 /// Converts to an Object pointer; this function is mainly used by the
 /// `msg_send!` macro.
-pub fn to_obj_ptr<M: ToMessage>(obj_ref: &M) -> *mut Object {
+pub fn to_obj_ptr<M>(obj_ref: &M) -> *mut Object where M: ToMessage {
     obj_ref.as_ptr() as *mut Object
 }

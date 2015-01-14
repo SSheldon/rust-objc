@@ -50,7 +50,7 @@ impl ClassDecl {
 
     /// Adds an ivar with type `T` and the provided name to self.
     /// Returns true if the ivar was sucessfully added.
-    pub fn add_ivar<T: Encode>(&mut self, name: &str) -> bool {
+    pub fn add_ivar<T>(&mut self, name: &str) -> bool where T: Encode {
         let name = CString::from_slice(name.as_bytes());
         let types = CString::from_slice(encode::<T>().as_bytes());
         let size = mem::size_of::<T>() as size_t;

@@ -391,7 +391,7 @@ impl Object {
     /// Panics if self has no ivar with the given name.
     /// Unsafe because the caller must ensure that the ivar is actually
     /// of type `T`.
-    pub unsafe fn get_ivar<T: Encode>(&self, name: &str) -> &T {
+    pub unsafe fn get_ivar<T>(&self, name: &str) -> &T where T: Encode {
         let cls = self.class();
         let ptr = match cls.instance_variable(name) {
             Some(ivar) => {
@@ -409,7 +409,8 @@ impl Object {
     /// Panics if self has no ivar with the given name.
     /// Unsafe because the caller must ensure that the ivar is actually
     /// of type `T`.
-    pub unsafe fn get_mut_ivar<T: Encode>(&mut self, name: &str) -> &mut T {
+    pub unsafe fn get_mut_ivar<T>(&mut self, name: &str) -> &mut T
+            where T: Encode {
         let cls = self.class();
         let ptr = match cls.instance_variable(name) {
             Some(ivar) => {
@@ -427,7 +428,8 @@ impl Object {
     /// Panics if self has no ivar with the given name.
     /// Unsafe because the caller must ensure that the ivar is actually
     /// of type `T`.
-    pub unsafe fn set_ivar<T: Encode>(&mut self, name: &str, value: T) {
+    pub unsafe fn set_ivar<T>(&mut self, name: &str, value: T)
+            where T: Encode {
         *self.get_mut_ivar::<T>(name) = value;
     }
 }

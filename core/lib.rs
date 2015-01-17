@@ -5,6 +5,7 @@
 #![allow(unstable)]
 
 extern crate libc;
+extern crate malloc_buf;
 
 #[cfg(test)]
 extern crate objc_test_utils;

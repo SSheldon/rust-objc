@@ -6,94 +6,11 @@
 use std::ffi::{CString, self};
 use std::mem;
 use std::ptr;
-use std::slice;
 use std::str;
 use libc::{c_char, c_int, c_uint, c_void, ptrdiff_t, size_t};
-use libc;
+use malloc_buf::{MallocBuffer, MallocString};
 
 use {encode, Encode};
-
-/// A type that represents a `malloc`'d chunk of memory.
-pub struct MallocBuffer<T> {
-    ptr: *mut T,
-    len: usize,
-}
-
-impl<T> MallocBuffer<T> {
-    /// Constructs a new `MallocBuffer` for a `malloc`'d buffer
-    /// with the given length at the given pointer.
-    /// Returns `None` if the given pointer is null.
-    /// When this `MallocBuffer` drops, the buffer will be `free`'d.
-    ///
-    /// Unsafe because there must be `len` contiguous, valid instances of `T`
-    /// at `ptr`, and `T` must not be a type that implements `Drop`
-    /// (because the `MallocBuffer` makes no attempt to drop its elements,
-    /// just the buffer containing them).
-    pub unsafe fn new(ptr: *mut T, len: usize) -> Option<MallocBuffer<T>> {
-        if ptr.is_null() {
-            None
-        } else {
-            Some(MallocBuffer { ptr: ptr, len: len })
-        }
-    }
-}
-
-#[unsafe_destructor]
-impl<T> Drop for MallocBuffer<T> {
-    fn drop(&mut self) {
-        unsafe {
-            libc::free(self.ptr as *mut c_void);
-        }
-    }
-}
-
-impl<T> AsSlice<T> for MallocBuffer<T> {
-    fn as_slice(&self) -> &[T] {
-        let const_ptr = self.ptr as *const T;
-        unsafe {
-            let s = slice::from_raw_buf(&const_ptr, self.len);
-            mem::transmute(s)
-        }
-    }
-}
-
-/// A type that represents a `malloc`'d string.
-pub struct MallocString {
-    data: MallocBuffer<u8>,
-}
-
-impl MallocString {
-    /// Constructs a new `MallocString` for a `malloc`'d C string buffer.
-    /// Returns `None` if the given pointer is null or the C string isn't UTF8.
-    /// When this `MallocString` drops, the buffer will be `free`'d.
-    ///
-    /// Unsafe because `ptr` must point to a valid, nul-terminated C string.
-    pub unsafe fn new(ptr: *mut c_char) -> Option<MallocString> {
-        if ptr.is_null() {
-            None
-        } else {
-            let const_ptr = ptr as *const c_char;
-            let bytes = ffi::c_str_to_bytes(&const_ptr);
-            if str::from_utf8(bytes).is_ok() {
-                let data = MallocBuffer {
-                    ptr: ptr as *mut u8,
-                    // len + 1 to account for the nul byte
-                    len: bytes.len() + 1,
-                };
-                Some(MallocString { data: data })
-            } else {
-                None
-            }
-        }
-    }
-}
-
-impl Str for MallocString {
-    fn as_slice(&self) -> &str {
-        let v = self.data.as_slice().slice_to(self.data.len - 1);
-        unsafe { str::from_utf8_unchecked(v) }
-    }
-}
 
 unsafe fn from_c_str<'a>(ptr: *const c_char) -> &'a str {
     let bytes = ffi::c_str_to_bytes(&ptr);

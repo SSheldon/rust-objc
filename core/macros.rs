@@ -47,12 +47,12 @@ macro_rules! sel {
 macro_rules! msg_send {
     ($obj:expr, $name:ident) => ({
         let sel = sel!($name);
-        let ptr = $crate::to_obj_ptr(&$obj);
+        let ptr = $crate::ToMessage::as_ptr(&$obj) as *mut $crate::runtime::Object;
         $crate::runtime::objc_msgSend(ptr, sel)
     });
     ($obj:expr, $($name:ident : $arg:expr)+) => ({
         let sel = sel!($($name:)+);
-        let ptr = $crate::to_obj_ptr(&$obj);
+        let ptr = $crate::ToMessage::as_ptr(&$obj) as *mut $crate::runtime::Object;
         $crate::runtime::objc_msgSend(ptr, sel $(,$arg)+)
     });
 }

@@ -81,9 +81,3 @@ impl<'a, T> ToMessage for Option<&'a mut T> where T: Message {
         }
     }
 }
-
-/// Converts to an Object pointer; this function is mainly used by the
-/// `msg_send!` macro.
-pub fn to_obj_ptr<M>(obj_ref: &M) -> *mut Object where M: ToMessage {
-    obj_ref.as_ptr() as *mut Object
-}

@@ -3,8 +3,8 @@
 #[macro_use]
 extern crate objc;
 
-use objc::{encode, Id, ToMessage, WeakId};
-use objc::runtime::{Class, Object, Sel};
+use objc::{encode, Id, WeakId};
+use objc::runtime::{Class, Object};
 
 fn main() {
     // Get a class
@@ -23,7 +23,7 @@ fn main() {
         let obj = msg_send![obj, init];
         Id::from_retained_ptr(obj)
     };
-    println!("NSObject address: {:?}", obj.as_ptr());
+    println!("NSObject address: {:?}", &*obj as *const Object);
 
     // Access an ivar of the object
     let isa: *const Class = unsafe {
@@ -32,7 +32,7 @@ fn main() {
     println!("NSObject isa: {:?}", isa);
 
     // Inspect a method of the class
-    let hash_sel = Sel::register("hash");
+    let hash_sel = sel!(hash);
     let hash_method = cls.instance_method(hash_sel).unwrap();
     let hash_return = hash_method.return_type();
     println!("-[NSObject hash] return type: {}", hash_return.as_slice());
@@ -40,7 +40,7 @@ fn main() {
 
     // Invoke a method on the object
     let hash = unsafe {
-        (msg_send![obj, hash]) as usize
+        msg_send![obj, hash] as usize
     };
     println!("NSObject hash: {}", hash);
 

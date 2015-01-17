@@ -13,5 +13,8 @@ name = "objc"
 path = "lib.rs"
 doctest = false
 
+[dependencies]
+libc = "0.1"
+
 [dev-dependencies]
 objc_test_utils = "0.0"

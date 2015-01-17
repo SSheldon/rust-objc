@@ -1,6 +1,6 @@
 [package]
 name = "objc"
-version = "0.0.3"
+version = "0.0.4"
 authors = ["Steven Sheldon"]
 
 description = "Objective-C Runtime bindings and wrapper for Rust."

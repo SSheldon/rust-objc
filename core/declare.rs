@@ -122,17 +122,18 @@ mod tests {
 
         let cls = decl.register();
         unsafe {
-            let obj = msg_send![cls, alloc];
-            let obj = msg_send![obj, init];
+            let obj: *mut Object = msg_send![cls, alloc];
+            let obj: *mut Object = msg_send![obj, init];
 
-            msg_send![obj, doNothing];
-            msg_send![obj, setFoo:13u32 bar:0u32];
-            let result = msg_send![obj, foo] as u32;
+            let _: () = msg_send![obj, doNothing];
+            let _: () = msg_send![obj, setFoo:13u32 bar:0u32];
+            let result: u32 = msg_send![obj, foo];
             assert!(result == 13);
-            let result = msg_send![obj, doSomethingWithFoo:13u32 bar:0u32];
+            let result: *mut Object = msg_send![obj, doSomethingWithFoo:13u32
+                                                                    bar:0u32];
             assert!(result == obj);
 
-            msg_send![obj, release];
+            let _: () = msg_send![obj, release];
         }
     }
 }

@@ -19,8 +19,8 @@ fn main() {
 
     // Allocate an instance
     let obj: Id<Object> = unsafe {
-        let obj = msg_send![cls, alloc];
-        let obj = msg_send![obj, init];
+        let obj: *mut Object = msg_send![cls, alloc];
+        let obj: *mut Object = msg_send![obj, init];
         Id::from_retained_ptr(obj)
     };
     println!("NSObject address: {:?}", &*obj as *const Object);
@@ -39,8 +39,8 @@ fn main() {
     assert!(encode::<usize>() == hash_return.as_slice());
 
     // Invoke a method on the object
-    let hash = unsafe {
-        msg_send![obj, hash] as usize
+    let hash: usize = unsafe {
+        msg_send![obj, hash]
     };
     println!("NSObject hash: {}", hash);
 

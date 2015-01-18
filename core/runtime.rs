@@ -354,7 +354,7 @@ impl Object {
 #[cfg(test)]
 mod tests {
     use std::mem;
-    use super::{Class, Sel};
+    use super::{Class, Object, Sel};
 
     #[test]
     fn test_ivar() {
@@ -403,13 +403,13 @@ mod tests {
     fn test_object() {
         let cls = Class::get("NSObject").unwrap();
         let obj = unsafe {
-            let obj = msg_send![cls, alloc];
-            let obj = msg_send![obj, init];
+            let obj: *mut Object = msg_send![cls, alloc];
+            let obj: *mut Object = msg_send![obj, init];
             &*obj
         };
         assert!(obj.class() == cls);
         unsafe {
-            msg_send![obj, release];
+            let _: () = msg_send![obj, release];
         }
     }
 }

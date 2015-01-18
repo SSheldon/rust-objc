@@ -13,7 +13,7 @@ extern crate objc_test_utils;
 pub use id::{Id, IdSlice, IntoIdVector, Owned, Ownership, Shared, ShareId};
 pub use declare::{ClassDecl, MethodDecl};
 pub use encode::{encode, Encode, Encoding};
-pub use message::{Message, ToMessage};
+pub use message::{Message, MessageArguments, ToMessage};
 pub use weak::WeakId;
 
 #[macro_use]

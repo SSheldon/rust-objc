@@ -1,6 +1,7 @@
+use std::mem;
 use std::ptr;
 
-use runtime::{Class, Object};
+use runtime::{Class, Object, Sel, self};
 
 /*
  The Sized bound on Message is unfortunate; ideally, objc objects would not be
@@ -81,3 +82,42 @@ impl<'a, T> ToMessage for Option<&'a mut T> where T: Message {
         }
     }
 }
+
+fn msg_send_fn<R>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
+    unsafe {
+        mem::transmute(runtime::objc_msgSend)
+    }
+}
+
+pub trait MessageArguments {
+    unsafe fn send<T, R>(self, obj: &T, sel: Sel) -> R where T: ToMessage;
+}
+
+macro_rules! message_args_impl {
+    ($($a:ident : $t:ident),*) => (
+        impl<$($t),*> MessageArguments for ($($t,)*) {
+            unsafe fn send<T, R>(self, obj: &T, sel: Sel) -> R where T: ToMessage {
+                let msg_send_fn = msg_send_fn::<R>();
+                let msg_send_fn: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
+                    mem::transmute(msg_send_fn);
+                let obj_ptr = obj.as_ptr() as *mut Object;
+                let ($($a,)*) = self;
+                msg_send_fn(obj_ptr, sel $(, $a)*)
+            }
+        }
+    );
+}
+
+message_args_impl!();
+message_args_impl!(a: A);
+message_args_impl!(a: A, b: B);
+message_args_impl!(a: A, b: B, c: C);
+message_args_impl!(a: A, b: B, c: C, d: D);
+message_args_impl!(a: A, b: B, c: C, d: D, e: E);
+message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F);
+message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G);
+message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H);
+message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I);
+message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J);
+message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K);
+message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K, l: L);

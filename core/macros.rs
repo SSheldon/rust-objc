@@ -46,13 +46,30 @@ macro_rules! sel {
 #[macro_export]
 macro_rules! msg_send {
     ($obj:expr, $name:ident) => ({
+        let obj = &$obj;
         let sel = sel!($name);
-        $crate::MessageArguments::send((), &$obj, sel)
+        let args = ();
+        if cfg!(not(ndebug)) {
+            match $crate::send_message_verified(obj, sel, args) {
+                Err(s) => panic!("Verify message failed: {}", s),
+                Ok(r) => r,
+            }
+        } else {
+            $crate::send_message(obj, sel, args)
+        }
     });
     ($obj:expr, $($name:ident : $arg:expr)+) => ({
+        let obj = &$obj;
         let sel = sel!($($name:)+);
         let args = ($($arg,)*);
-        $crate::MessageArguments::send(args, &$obj, sel)
+        if cfg!(not(ndebug)) {
+            match $crate::send_message_verified(obj, sel, args) {
+                Err(s) => panic!("Verify message failed: {}", s),
+                Ok(r) => r,
+            }
+        } else {
+            $crate::send_message(obj, sel, args)
+        }
     });
 }
 

@@ -1,3 +1,5 @@
+use libc::c_char;
+
 use runtime::{Class, Object, Sel};
 
 /// Types that have an Objective-C type encoding. For more information, see
@@ -70,6 +72,14 @@ impl Encode for bool {
 
 impl Encode for () {
     fn code() -> &'static str { "v" }
+}
+
+impl Encode for *mut c_char {
+    fn code() -> &'static str { "*" }
+}
+
+impl Encode for *const c_char {
+    fn code() -> &'static str { "r*" }
 }
 
 impl Encode for Sel {

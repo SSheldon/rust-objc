@@ -2,7 +2,7 @@ use std::mem;
 use std::ptr;
 
 use runtime::{Class, Object, Sel, self};
-use {Encode, EncodePtr};
+use {encode, Encode, EncodePtr};
 
 /*
  The Sized bound on Message is unfortunate; ideally, objc objects would not be
@@ -122,3 +122,42 @@ message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K, l: L);
+
+fn verify_message_signature<T, A, R>(obj: Option<&T>, sel: Sel, _args: &A) ->
+        Result<(), String> where T: Message, A: MessageArguments, R: Encode {
+    let obj = match obj {
+        Some(obj) => obj,
+        None => return Err(format!("Messaging {:?} to nil", sel)),
+    };
+    let cls = unsafe {
+        let obj = &*(obj as *const _ as *const Object);
+        obj.class()
+    };
+    let method = match cls.instance_method(sel) {
+        Some(method) => method,
+        None => return Err(format!("Method {:?} not found on class {:?}",
+            sel, cls)),
+    };
+
+    let ret = encode::<R>();
+    let expected_ret = method.return_type();
+    // Allow encoding "oneway void" (Vv) as "void" (v)
+    if expected_ret.as_slice() != ret && !(expected_ret.as_slice() == "Vv" && ret == "v") {
+        return Err(format!("Return type code {} does not match expected {} for method {:?} on class {:?}",
+            ret, expected_ret.as_slice(), sel, cls))
+    }
+
+    Ok(())
+}
+
+pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
+        where T: ToMessage, A: MessageArguments {
+    args.send(obj, sel)
+}
+
+pub unsafe fn send_message_verified<T, A, R>(obj: &T, sel: Sel, args: A) ->
+        Result<R, String> where T: ToMessage, A: MessageArguments, R: Encode {
+    let obj_ref = obj.as_ptr().as_ref();
+    verify_message_signature::<_, _, R>(obj_ref, sel, &args).and_then(
+        move |()| Ok(args.send(obj, sel)))
+}

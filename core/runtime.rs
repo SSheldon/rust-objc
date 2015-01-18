@@ -4,6 +4,7 @@
 //! https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html
 
 use std::ffi::{CString, self};
+use std::fmt;
 use std::mem;
 use std::ptr;
 use std::str;
@@ -115,6 +116,12 @@ impl Copy for Sel { }
 
 impl Clone for Sel {
     fn clone(&self) -> Sel { *self }
+}
+
+impl fmt::Show for Sel {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.name())
+    }
 }
 
 impl Ivar {
@@ -296,6 +303,12 @@ impl PartialEq for Class {
 
 impl Eq for Class { }
 
+impl fmt::Show for Class {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.name())
+    }
+}
+
 impl Object {
     /// Returns the class of self.
     pub fn class(&self) -> &'static Class {
@@ -348,6 +361,12 @@ impl Object {
     pub unsafe fn set_ivar<T>(&mut self, name: &str, value: T)
             where T: Encode {
         *self.get_mut_ivar::<T>(name) = value;
+    }
+}
+
+impl fmt::Show for Object {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "<{:?}: {:?}>", self.class(), self as *const Object)
     }
 }
 

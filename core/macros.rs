@@ -80,39 +80,27 @@ macro_rules! encode_message_impl {
     );
     ($code:expr, $name:ident, $($t:ident),*) => (
         impl<'a $(, $t)*> $crate::Encode for &'a $name<$($t),*> {
-            fn code() -> $crate::Encoding<&'a $name<$($t),*>> {
-                $crate::Encoding($code)
-            }
+            fn code() -> &'static str { $code }
         }
 
         impl<'a $(, $t)*> $crate::Encode for &'a mut $name<$($t),*> {
-            fn code() -> $crate::Encoding<&'a mut $name<$($t),*>> {
-                $crate::Encoding($code)
-            }
+            fn code() -> &'static str { $code }
         }
 
         impl<'a $(, $t)*> $crate::Encode for Option<&'a $name<$($t),*>> {
-            fn code() -> $crate::Encoding<Option<&'a $name<$($t),*>>> {
-                $crate::Encoding($code)
-            }
+            fn code() -> &'static str { $code }
         }
 
         impl<'a $(, $t)*> $crate::Encode for Option<&'a mut $name<$($t),*>> {
-            fn code() -> $crate::Encoding<Option<&'a mut $name<$($t),*>>> {
-                $crate::Encoding($code)
-            }
+            fn code() -> &'static str { $code }
         }
 
         impl<$($t),*> $crate::Encode for *const $name<$($t),*> {
-            fn code() -> $crate::Encoding<*const $name<$($t),*>> {
-                $crate::Encoding($code)
-            }
+            fn code() -> &'static str { $code }
         }
 
         impl<$($t),*> $crate::Encode for *mut $name<$($t),*> {
-            fn code() -> $crate::Encoding<*mut $name<$($t),*>> {
-                $crate::Encoding($code)
-            }
+            fn code() -> &'static str { $code }
         }
     );
 }

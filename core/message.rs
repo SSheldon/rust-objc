@@ -2,6 +2,7 @@ use std::mem;
 use std::ptr;
 
 use runtime::{Class, Object, Sel, self};
+use EncodePtr;
 
 /*
  The Sized bound on Message is unfortunate; ideally, objc objects would not be
@@ -11,7 +12,7 @@ use runtime::{Class, Object, Sel, self};
  */
 /// Types that may be sent Objective-C messages.
 /// For example: objects, classes, and blocks.
-pub unsafe trait Message: Sized { }
+pub unsafe trait Message: Sized + EncodePtr { }
 
 unsafe impl Message for Object { }
 

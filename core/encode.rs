@@ -76,9 +76,41 @@ impl Encode for Sel {
     fn code() -> &'static str { ":" }
 }
 
-encode_message_impl!("@", Object);
+pub trait EncodePtr {
+    fn ptr_code() -> &'static str;
+}
 
-encode_message_impl!("#", Class);
+impl<'a, T> Encode for &'a T where T: EncodePtr {
+    fn code() -> &'static str { <T as EncodePtr>::ptr_code() }
+}
+
+impl<'a, T> Encode for &'a mut T where T: EncodePtr {
+    fn code() -> &'static str { <T as EncodePtr>::ptr_code() }
+}
+
+impl<'a, T> Encode for Option<&'a T> where T: EncodePtr {
+    fn code() -> &'static str { <T as EncodePtr>::ptr_code() }
+}
+
+impl<'a, T> Encode for Option<&'a mut T> where T: EncodePtr {
+    fn code() -> &'static str { <T as EncodePtr>::ptr_code() }
+}
+
+impl<T> Encode for *const T where T: EncodePtr {
+    fn code() -> &'static str { <T as EncodePtr>::ptr_code() }
+}
+
+impl<T> Encode for *mut T where T: EncodePtr {
+    fn code() -> &'static str { <T as EncodePtr>::ptr_code() }
+}
+
+impl EncodePtr for Object {
+    fn ptr_code() -> &'static str { "@" }
+}
+
+impl EncodePtr for Class {
+    fn ptr_code() -> &'static str { "#" }
+}
 
 /// Returns the Objective-C type encoding for a type.
 pub fn encode<T>() -> &'static str where T: Encode {

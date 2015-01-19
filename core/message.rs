@@ -144,7 +144,25 @@ fn verify_message_signature<T, A, R>(obj: Option<&T>, sel: Sel, _args: &A) ->
     // Allow encoding "oneway void" (Vv) as "void" (v)
     if expected_ret.as_slice() != ret && !(expected_ret.as_slice() == "Vv" && ret == "v") {
         return Err(format!("Return type code {} does not match expected {} for method {:?} on class {:?}",
-            ret, expected_ret.as_slice(), sel, cls))
+            ret, expected_ret.as_slice(), sel, cls));
+    }
+
+    // I don't think either of these can happen, but just to be safe...
+    let accepts_self_arg = match method.argument_type(0) {
+        Some(s) => s.as_slice() == "@",
+        None => false,
+    };
+    if !accepts_self_arg {
+        return Err(format!("Method {:?} of class {:?} doesn't accept an argument for self",
+            sel, cls));
+    }
+    let accepts_cmd_arg = match method.argument_type(1) {
+        Some(s) => s.as_slice() == ":",
+        None => false,
+    };
+    if !accepts_cmd_arg {
+        return Err(format!("Method {:?} of class {:?} doesn't accept an argument for the selector",
+            sel, cls));
     }
 
     Ok(())

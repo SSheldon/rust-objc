@@ -1,7 +1,7 @@
 use std::mem;
 use std::ptr;
 
-use runtime::{Class, Object, Sel, self};
+use runtime::{Class, Method, Object, Sel, self};
 use {encode, Encode, EncodePtr};
 
 /*
@@ -92,11 +92,13 @@ fn msg_send_fn<R>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
 
 pub trait MessageArguments {
     unsafe fn send<T, R>(self, obj: &T, sel: Sel) -> R where T: ToMessage;
+
+    fn verify(&self, method: &Method) -> Result<(), String>;
 }
 
 macro_rules! message_args_impl {
     ($($a:ident : $t:ident),*) => (
-        impl<$($t),*> MessageArguments for ($($t,)*) {
+        impl<$($t: Encode),*> MessageArguments for ($($t,)*) {
             unsafe fn send<T, R>(self, obj: &T, sel: Sel) -> R where T: ToMessage {
                 let msg_send_fn = msg_send_fn::<R>();
                 let msg_send_fn: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
@@ -104,6 +106,35 @@ macro_rules! message_args_impl {
                 let obj_ptr = obj.as_ptr() as *mut Object;
                 let ($($a,)*) = self;
                 msg_send_fn(obj_ptr, sel $(, $a)*)
+            }
+
+            fn verify(&self, method: &Method) -> Result<(), String> {
+                let types = [$(encode::<$t>()),*];
+                // So rust can infer the type of the empty array:
+                let _: &[&str] = &types;
+
+                let count = 2 + types.len();
+                let expected_count = method.arguments_count();
+                if count != expected_count {
+                    return Err(format!("Method {:?} accepts {} arguments, but {} were given",
+                        method.name(), expected_count, count));
+                }
+
+                let expected_types = range(2, expected_count).map(
+                    |i| method.argument_type(i));
+                for (&arg, expected) in types.iter().zip(expected_types) {
+                    let expected = match expected {
+                        Some(s) => s,
+                        None => return Err(format!("Method {:?} doesn't expect argument with type code {}",
+                            method.name(), arg)),
+                    };
+                    if arg != expected.as_slice() {
+                        return Err(format!("Method {:?} expected argument with type code {} but was given {}",
+                            method.name(), expected.as_slice(), arg));
+                    }
+                }
+
+                Ok(())
             }
         }
     );
@@ -123,7 +154,7 @@ message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K, l: L);
 
-fn verify_message_signature<T, A, R>(obj: Option<&T>, sel: Sel, _args: &A) ->
+fn verify_message_signature<T, A, R>(obj: Option<&T>, sel: Sel, args: &A) ->
         Result<(), String> where T: Message, A: MessageArguments, R: Encode {
     let obj = match obj {
         Some(obj) => obj,
@@ -165,7 +196,7 @@ fn verify_message_signature<T, A, R>(obj: Option<&T>, sel: Sel, _args: &A) ->
             sel, cls));
     }
 
-    Ok(())
+    args.verify(method)
 }
 
 pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R

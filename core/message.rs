@@ -92,13 +92,11 @@ fn msg_send_fn<R>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
 
 pub trait MessageArguments {
     unsafe fn send<T, R>(self, obj: &T, sel: Sel) -> R where T: ToMessage;
-
-    fn verify(&self, method: &Method) -> Result<(), String>;
 }
 
 macro_rules! message_args_impl {
     ($($a:ident : $t:ident),*) => (
-        impl<$($t: Encode),*> MessageArguments for ($($t,)*) {
+        impl<$($t),*> MessageArguments for ($($t,)*) {
             unsafe fn send<T, R>(self, obj: &T, sel: Sel) -> R where T: ToMessage {
                 let msg_send_fn = msg_send_fn::<R>();
                 let msg_send_fn: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
@@ -106,11 +104,6 @@ macro_rules! message_args_impl {
                 let obj_ptr = obj.as_ptr() as *mut Object;
                 let ($($a,)*) = self;
                 msg_send_fn(obj_ptr, sel $(, $a)*)
-            }
-
-            fn verify(&self, method: &Method) -> Result<(), String> {
-                let types = [$(encode::<$t>()),*];
-                verify_message_arguments(&types, method)
             }
         }
     );
@@ -130,6 +123,7 @@ message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K, l: L);
 
+#[allow(dead_code)]
 fn verify_message_arguments(types: &[&str], method: &Method) -> Result<(), String> {
     let count = 2 + types.len();
     let expected_count = method.arguments_count();
@@ -154,7 +148,7 @@ fn verify_message_arguments(types: &[&str], method: &Method) -> Result<(), Strin
     Ok(())
 }
 
-fn verify_message_signature<T, A, R>(obj: Option<&T>, sel: Sel, args: &A) ->
+fn verify_message_signature<T, A, R>(obj: Option<&T>, sel: Sel, _args: &A) ->
         Result<(), String> where T: Message, A: MessageArguments, R: Encode {
     let obj = match obj {
         Some(obj) => obj,
@@ -196,7 +190,7 @@ fn verify_message_signature<T, A, R>(obj: Option<&T>, sel: Sel, args: &A) ->
             sel, cls));
     }
 
-    args.verify(method)
+    Ok(())
 }
 
 pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R

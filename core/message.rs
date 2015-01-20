@@ -110,31 +110,7 @@ macro_rules! message_args_impl {
 
             fn verify(&self, method: &Method) -> Result<(), String> {
                 let types = [$(encode::<$t>()),*];
-                // So rust can infer the type of the empty array:
-                let _: &[&str] = &types;
-
-                let count = 2 + types.len();
-                let expected_count = method.arguments_count();
-                if count != expected_count {
-                    return Err(format!("Method {:?} accepts {} arguments, but {} were given",
-                        method.name(), expected_count, count));
-                }
-
-                let expected_types = range(2, expected_count).map(
-                    |i| method.argument_type(i));
-                for (&arg, expected) in types.iter().zip(expected_types) {
-                    let expected = match expected {
-                        Some(s) => s,
-                        None => return Err(format!("Method {:?} doesn't expect argument with type code {}",
-                            method.name(), arg)),
-                    };
-                    if arg != expected.as_slice() {
-                        return Err(format!("Method {:?} expected argument with type code {} but was given {}",
-                            method.name(), expected.as_slice(), arg));
-                    }
-                }
-
-                Ok(())
+                verify_message_arguments(&types, method)
             }
         }
     );
@@ -153,6 +129,30 @@ message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K, l: L);
+
+fn verify_message_arguments(types: &[&str], method: &Method) -> Result<(), String> {
+    let count = 2 + types.len();
+    let expected_count = method.arguments_count();
+    if count != expected_count {
+        return Err(format!("Method {:?} accepts {} arguments, but {} were given",
+            method.name(), expected_count, count));
+    }
+
+    let expected_types = range(2, expected_count).map(|i| method.argument_type(i));
+    for (&arg, expected) in types.iter().zip(expected_types) {
+        let expected = match expected {
+            Some(s) => s,
+            None => return Err(format!("Method {:?} doesn't expect argument with type code {}",
+                method.name(), arg)),
+        };
+        if arg != expected.as_slice() {
+            return Err(format!("Method {:?} expected argument with type code {} but was given {}",
+                method.name(), expected.as_slice(), arg));
+        }
+    }
+
+    Ok(())
+}
 
 fn verify_message_signature<T, A, R>(obj: Option<&T>, sel: Sel, args: &A) ->
         Result<(), String> where T: Message, A: MessageArguments, R: Encode {

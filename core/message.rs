@@ -132,7 +132,7 @@ fn verify_message_arguments(types: &[&str], method: &Method) -> Result<(), Strin
             method.name(), expected_count, count));
     }
 
-    let expected_types = range(2, expected_count).map(|i| method.argument_type(i));
+    let expected_types = (2..expected_count).map(|i| method.argument_type(i));
     for (&arg, expected) in types.iter().zip(expected_types) {
         let expected = match expected {
             Some(s) => s,

@@ -118,7 +118,7 @@ impl Clone for Sel {
     fn clone(&self) -> Sel { *self }
 }
 
-impl fmt::Show for Sel {
+impl fmt::Debug for Sel {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.name())
     }
@@ -303,7 +303,7 @@ impl PartialEq for Class {
 
 impl Eq for Class { }
 
-impl fmt::Show for Class {
+impl fmt::Debug for Class {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.name())
     }
@@ -364,7 +364,7 @@ impl Object {
     }
 }
 
-impl fmt::Show for Object {
+impl fmt::Debug for Object {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "<{:?}: {:?}>", self.class(), self as *const Object)
     }

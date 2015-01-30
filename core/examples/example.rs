@@ -1,4 +1,4 @@
-#![allow(unstable)]
+#![feature(core)]
 
 #[macro_use]
 extern crate objc;

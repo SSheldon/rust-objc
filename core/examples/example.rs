@@ -1,5 +1,3 @@
-#![feature(core)]
-
 #[macro_use]
 extern crate objc;
 
@@ -13,7 +11,7 @@ fn main() {
 
     // Inspect its ivars
     println!("NSObject ivars:");
-    for ivar in cls.instance_variables().as_slice().iter() {
+    for ivar in cls.instance_variables().iter() {
         println!("{}", ivar.name());
     }
 
@@ -35,8 +33,8 @@ fn main() {
     let hash_sel = sel!(hash);
     let hash_method = cls.instance_method(hash_sel).unwrap();
     let hash_return = hash_method.return_type();
-    println!("-[NSObject hash] return type: {}", hash_return.as_slice());
-    assert!(encode::<usize>() == hash_return.as_slice());
+    println!("-[NSObject hash] return type: {}", &*hash_return);
+    assert!(encode::<usize>() == &*hash_return);
 
     // Invoke a method on the object
     let hash: usize = unsafe {

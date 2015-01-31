@@ -384,7 +384,7 @@ mod tests {
         assert!(ivar.offset() == 0);
 
         let ivars = cls.instance_variables();
-        assert!(ivars.as_slice().len() > 0);
+        assert!(ivars.len() > 0);
     }
 
     #[test]
@@ -395,11 +395,11 @@ mod tests {
         assert!(method.name().name() == "description");
         assert!(method.type_encoding() != "");
         assert!(method.arguments_count() == 2);
-        assert!(method.return_type().as_slice() == "@");
-        assert!(method.argument_type(1).unwrap().as_slice() == ":");
+        assert!(&*method.return_type() == "@");
+        assert!(&*method.argument_type(1).unwrap() == ":");
 
         let methods = cls.instance_methods();
-        assert!(methods.as_slice().len() > 0);
+        assert!(methods.len() > 0);
     }
 
     #[test]
@@ -415,7 +415,7 @@ mod tests {
         assert!(classes_count > 0);
 
         let classes = Class::classes();
-        assert!(classes.as_slice().len() == classes_count);
+        assert!(classes.len() == classes_count);
     }
 
     #[test]

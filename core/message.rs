@@ -139,9 +139,9 @@ fn verify_message_arguments(types: &[&str], method: &Method) -> Result<(), Strin
             None => return Err(format!("Method {:?} doesn't expect argument with type code {}",
                 method.name(), arg)),
         };
-        if arg != expected.as_slice() {
+        if arg != &*expected {
             return Err(format!("Method {:?} expected argument with type code {} but was given {}",
-                method.name(), expected.as_slice(), arg));
+                method.name(), &*expected, arg));
         }
     }
 
@@ -167,14 +167,14 @@ fn verify_message_signature<T, A, R>(obj: Option<&T>, sel: Sel, _args: &A) ->
     let ret = encode::<R>();
     let expected_ret = method.return_type();
     // Allow encoding "oneway void" (Vv) as "void" (v)
-    if expected_ret.as_slice() != ret && !(expected_ret.as_slice() == "Vv" && ret == "v") {
+    if &*expected_ret != ret && !(&*expected_ret == "Vv" && ret == "v") {
         return Err(format!("Return type code {} does not match expected {} for method {:?} on class {:?}",
-            ret, expected_ret.as_slice(), sel, cls));
+            ret, &*expected_ret, sel, cls));
     }
 
     // I don't think either of these can happen, but just to be safe...
     let accepts_self_arg = match method.argument_type(0) {
-        Some(s) => s.as_slice() == "@",
+        Some(s) => &*s == "@",
         None => false,
     };
     if !accepts_self_arg {
@@ -182,7 +182,7 @@ fn verify_message_signature<T, A, R>(obj: Option<&T>, sel: Sel, _args: &A) ->
             sel, cls));
     }
     let accepts_cmd_arg = match method.argument_type(1) {
-        Some(s) => s.as_slice() == ":",
+        Some(s) => &*s == ":",
         None => false,
     };
     if !accepts_cmd_arg {

@@ -1,7 +1,7 @@
 #![crate_name = "objc"]
 #![crate_type = "lib"]
 
-#![feature(collections, core, hash, std_misc, unboxed_closures, unsafe_destructor)]
+#![feature(collections, core, hash, std_misc, unsafe_destructor)]
 
 extern crate libc;
 extern crate malloc_buf;

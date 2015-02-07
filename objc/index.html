@@ -63,15 +63,6 @@
                 </table><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
 <table>
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='macro' href='macro.encode_message_impl!.html'
-                               title='objc::encode_message_impl!'>encode_message_impl!</a></td>
-                        <td class='docblock short'><p>Implements the <code>Encode</code> trait for a <code>Message</code> type.
-Specifically, this will implement <code>Encode</code> for reference, pointers, and
-<code>Option</code> references of the given type.</p>
-</td>
-                    </tr>
-                
-                    <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='macro' href='macro.method!.html'
                                title='objc::method!'>method!</a></td>
                         <td class='docblock short'><p>Declares a method, returning a <code>MethodDecl</code>.
@@ -101,14 +92,6 @@ Objective-C.</p>
                                title='objc::ClassDecl'>ClassDecl</a></td>
                         <td class='docblock short'><p>A type for declaring a new class and adding new methods and ivars to it
 before registering it.</p>
-</td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Encoding.html'
-                               title='objc::Encoding'>Encoding</a></td>
-                        <td class='docblock short'><p>A simple wrapper around a static string slice to contain the Objective-C
-type encoding for a type. This is necessary for the <code>Encode</code> trait.</p>
 </td>
                     </tr>
                 
@@ -164,8 +147,14 @@ Apple&#39;s documentation:
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.IdVector.html'
-                               title='objc::IdVector'>IdVector</a></td>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.EncodePtr.html'
+                               title='objc::EncodePtr'>EncodePtr</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.IdSlice.html'
+                               title='objc::IdSlice'>IdSlice</a></td>
                         <td class='docblock short'><p>Extension methods for slices containing <code>Id</code>s.</p>
 </td>
                     </tr>
@@ -183,6 +172,12 @@ Apple&#39;s documentation:
                         <td class='docblock short'><p>Types that may be sent Objective-C messages.
 For example: objects, classes, and blocks.</p>
 </td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.MessageArguments.html'
+                               title='objc::MessageArguments'>MessageArguments</a></td>
+                        <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
@@ -210,11 +205,15 @@ messages.</p>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.to_obj_ptr.html'
-                               title='objc::to_obj_ptr'>to_obj_ptr</a></td>
-                        <td class='docblock short'><p>Converts to an Object pointer; this function is mainly used by the
-<code>msg_send!</code> macro.</p>
-</td>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.send_message.html'
+                               title='objc::send_message'>send_message</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.send_message_verified.html'
+                               title='objc::send_message_verified'>send_message_verified</a></td>
+                        <td class='docblock short'></td>
                     </tr>
                 </table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>

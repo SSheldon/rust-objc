@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.MallocBuffer.html'>MallocBuffer</a><a class='struct ' href='struct.MallocString.html'>MallocString</a><a class='struct ' href='struct.Sel.html'>Sel</a></div><div class='block enum'><h2>Enums</h2><a class='enum ' href='enum.Class.html'>Class</a><a class='enum ' href='enum.Ivar.html'>Ivar</a><a class='enum current' href='enum.Method.html'>Method</a><a class='enum ' href='enum.Object.html'>Object</a></div>
+        <p class='location'><a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Sel.html' title='A type that represents a method selector.'>Sel</a></div><div class='block enum'><h2>Enums</h2><a class='enum ' href='enum.Class.html' title='A type that represents an Objective-C class.'>Class</a><a class='enum ' href='enum.Ivar.html' title='A type that represents an instance variable.'>Ivar</a><a class='enum current' href='enum.Method.html' title='A type that represents a method in a class definition.'>Method</a><a class='enum ' href='enum.Object.html' title='A type that represents an instance of a class.'>Object</a></div>
     </section>
 
     <nav class="sub">
@@ -44,15 +44,15 @@
 <h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a>::<wbr><a class='enum' href=''>Method</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-303' href='../../src/objc/runtime.rs.html#116'>[src]</a></span></h1>
+        </span><a id='src-90' href='../../src/objc/runtime.rs.html#34'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum Method {}</pre><div class='docblock'><p>A type that represents a method in a class definition.</p>
 </div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='enum' href='../../objc/runtime/enum.Method.html' title='objc::runtime::Method'>Method</a></code></h3><div class='impl-items'><h4 id='method.name' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.name' class='fnname'>name</a>(&amp;self) -&gt; <a class='struct' href='../../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a></code></h4>
 <div class='docblock'><p>Returns the name of self.</p>
 </div><h4 id='method.type_encoding' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.type_encoding' class='fnname'>type_encoding</a>(&amp;self) -&gt; &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></h4>
 <div class='docblock'><p>Returns a string describing self&#39;s parameter and return types.</p>
-</div><h4 id='method.return_type' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.return_type' class='fnname'>return_type</a>(&amp;self) -&gt; <a class='struct' href='../../objc/runtime/struct.MallocString.html' title='objc::runtime::MallocString'>MallocString</a></code></h4>
+</div><h4 id='method.return_type' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.return_type' class='fnname'>return_type</a>(&amp;self) -&gt; <a class='struct' href='../../malloc_buf/struct.MallocString.html' title='malloc_buf::MallocString'>MallocString</a></code></h4>
 <div class='docblock'><p>Returns a string describing self&#39;s return type.</p>
-</div><h4 id='method.argument_type' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.argument_type' class='fnname'>argument_type</a>(&amp;self, index: <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../objc/runtime/struct.MallocString.html' title='objc::runtime::MallocString'>MallocString</a>&gt;</code></h4>
+</div><h4 id='method.argument_type' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.argument_type' class='fnname'>argument_type</a>(&amp;self, index: <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../malloc_buf/struct.MallocString.html' title='malloc_buf::MallocString'>MallocString</a>&gt;</code></h4>
 <div class='docblock'><p>Returns a string describing a single parameter type of self, or
 <code>None</code> if self has no parameter at the given index.</p>
 </div><h4 id='method.arguments_count' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.arguments_count' class='fnname'>arguments_count</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>

@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../index.html'>objc</a>::<wbr><a href='index.html'>block</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Block.html'>Block</a><a class='struct ' href='struct.ConcreteBlock.html'>ConcreteBlock</a></div><div class='block trait'><h2>Traits</h2><a class='trait current' href='trait.BlockArguments.html'>BlockArguments</a></div>
+        <p class='location'><a href='../index.html'>objc</a>::<wbr><a href='index.html'>block</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Block.html' title='An Objective-C block that takes arguments of `A` when called and returns a value of `R`.'>Block</a><a class='struct ' href='struct.ConcreteBlock.html' title='An Objective-C block whose size is known at compile time and may be constructed on the stack.'>ConcreteBlock</a></div><div class='block trait'><h2>Traits</h2><a class='trait current' href='trait.BlockArguments.html' title='Types that may be used as the arguments to an Objective-C block.'>BlockArguments</a><a class='trait ' href='trait.IntoConcreteBlock.html' title=''>IntoConcreteBlock</a></div>
     </section>
 
     <nav class="sub">
@@ -44,17 +44,14 @@
 <h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>objc</a>::<wbr><a href='index.html'>block</a>::<wbr><a class='trait' href=''>BlockArguments</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-2416' href='../../src/objc/block.rs.html#21-29'>[src]</a></span></h1>
+        </span><a id='src-2670' href='../../src/objc/block.rs.html#61-64'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait BlockArguments {
     fn <a href='#tymethod.call_block' class='fnname'>call_block</a>&lt;R&gt;(self, block: &amp;mut <a class='struct' href='../../objc/block/struct.Block.html' title='objc::block::Block'>Block</a>&lt;Self, R&gt;) -&gt; R;
-    fn <a href='#tymethod.invoke_for_concrete_block' class='fnname'>invoke_for_concrete_block</a>&lt;R, F: <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>&lt;Self, R&gt;&gt;() -&gt; unsafe  extern "C" fn(*mut <a class='struct' href='../../objc/block/struct.ConcreteBlock.html' title='objc::block::ConcreteBlock'>ConcreteBlock</a>&lt;Self, R, F&gt;) -&gt; R;
 }</pre><div class='docblock'><p>Types that may be used as the arguments to an Objective-C block.</p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
         <h3 id='tymethod.call_block' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.call_block' class='fnname'>call_block</a>&lt;R&gt;(self, block: &amp;mut <a class='struct' href='../../objc/block/struct.Block.html' title='objc::block::Block'>Block</a>&lt;Self, R&gt;) -&gt; R</code></h3><div class='docblock'><p>Calls the given <code>Block</code> with self as the arguments.</p>
-</div><h3 id='tymethod.invoke_for_concrete_block' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.invoke_for_concrete_block' class='fnname'>invoke_for_concrete_block</a>&lt;R, F: <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>&lt;Self, R&gt;&gt;() -&gt; unsafe  extern "C" fn(*mut <a class='struct' href='../../objc/block/struct.ConcreteBlock.html' title='objc::block::ConcreteBlock'>ConcreteBlock</a>&lt;Self, R, F&gt;) -&gt; R</code></h3><div class='docblock'><p>Returns an invoke function for a <code>ConcreteBlock</code> that takes this type
-of arguments.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>

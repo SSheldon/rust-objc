@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.MallocBuffer.html'>MallocBuffer</a><a class='struct ' href='struct.MallocString.html'>MallocString</a><a class='struct ' href='struct.Sel.html'>Sel</a></div><div class='block enum'><h2>Enums</h2><a class='enum ' href='enum.Class.html'>Class</a><a class='enum ' href='enum.Ivar.html'>Ivar</a><a class='enum ' href='enum.Method.html'>Method</a><a class='enum current' href='enum.Object.html'>Object</a></div>
+        <p class='location'><a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Sel.html' title='A type that represents a method selector.'>Sel</a></div><div class='block enum'><h2>Enums</h2><a class='enum ' href='enum.Class.html' title='A type that represents an Objective-C class.'>Class</a><a class='enum ' href='enum.Ivar.html' title='A type that represents an instance variable.'>Ivar</a><a class='enum ' href='enum.Method.html' title='A type that represents a method in a class definition.'>Method</a><a class='enum current' href='enum.Object.html' title='A type that represents an instance of a class.'>Object</a></div>
     </section>
 
     <nav class="sub">
@@ -44,26 +44,28 @@
 <h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a>::<wbr><a class='enum' href=''>Object</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-307' href='../../src/objc/runtime.rs.html#124'>[src]</a></span></h1>
+        </span><a id='src-94' href='../../src/objc/runtime.rs.html#42'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum Object {}</pre><div class='docblock'><p>A type that represents an instance of a class.</p>
 </div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='enum' href='../../objc/runtime/enum.Object.html' title='objc::runtime::Object'>Object</a></code></h3><div class='impl-items'><h4 id='method.class' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.class' class='fnname'>class</a>(&amp;self) -&gt; &amp;'static <a class='enum' href='../../objc/runtime/enum.Class.html' title='objc::runtime::Class'>Class</a></code></h4>
 <div class='docblock'><p>Returns the class of self.</p>
-</div><h4 id='method.get_ivar' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#method.get_ivar' class='fnname'>get_ivar</a>&lt;T: <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a>&gt;(&amp;self, name: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; &amp;T</code></h4>
+</div><h4 id='method.get_ivar' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#method.get_ivar' class='fnname'>get_ivar</a>&lt;T&gt;(&amp;self, name: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; &amp;T <span class='where'>where T: <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a></span></code></h4>
 <div class='docblock'><p>Returns a reference to the ivar of self with the given name.
 Panics if self has no ivar with the given name.
 Unsafe because the caller must ensure that the ivar is actually
 of type <code>T</code>.</p>
-</div><h4 id='method.get_mut_ivar' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#method.get_mut_ivar' class='fnname'>get_mut_ivar</a>&lt;T: <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a>&gt;(&amp;mut self, name: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; &amp;mut T</code></h4>
+</div><h4 id='method.get_mut_ivar' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#method.get_mut_ivar' class='fnname'>get_mut_ivar</a>&lt;T&gt;(&amp;mut self, name: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; &amp;mut T <span class='where'>where T: <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a></span></code></h4>
 <div class='docblock'><p>Returns a mutable reference to the ivar of self with the given name.
 Panics if self has no ivar with the given name.
 Unsafe because the caller must ensure that the ivar is actually
 of type <code>T</code>.</p>
-</div><h4 id='method.set_ivar' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#method.set_ivar' class='fnname'>set_ivar</a>&lt;T: <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a>&gt;(&amp;mut self, name: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, value: T)</code></h4>
+</div><h4 id='method.set_ivar' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#method.set_ivar' class='fnname'>set_ivar</a>&lt;T&gt;(&amp;mut self, name: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, value: T) <span class='where'>where T: <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a></span></code></h4>
 <div class='docblock'><p>Sets the value of the ivar of self with the given name.
 Panics if self has no ivar with the given name.
 Unsafe because the caller must ensure that the ivar is actually
 of type <code>T</code>.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='trait' href='../../objc/trait.Message.html' title='objc::Message'>Message</a> for <a class='enum' href='../../objc/runtime/enum.Object.html' title='objc::runtime::Object'>Object</a></code></h3><div class='impl-items'></div></section>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../../objc/runtime/enum.Object.html' title='objc::runtime::Object'>Object</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='http://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='trait' href='../../objc/trait.EncodePtr.html' title='objc::EncodePtr'>EncodePtr</a> for <a class='enum' href='../../objc/runtime/enum.Object.html' title='objc::runtime::Object'>Object</a></code></h3><div class='impl-items'><h4 id='method.ptr_code' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.ptr_code' class='fnname'>ptr_code</a>() -&gt; &amp;'static <a href='http://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></h4>
+</div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='trait' href='../../objc/trait.Message.html' title='objc::Message'>Message</a> for <a class='enum' href='../../objc/runtime/enum.Object.html' title='objc::runtime::Object'>Object</a></code></h3><div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

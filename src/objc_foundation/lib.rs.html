@@ -66,13 +66,11 @@
 <span id="24">24</span>
 <span id="25">25</span>
 <span id="26">26</span>
-<span id="27">27</span>
 </pre><pre class='rust '>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_name</span> <span class='op'>=</span> <span class='string'>&quot;objc_foundation&quot;</span>]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span> <span class='op'>=</span> <span class='string'>&quot;lib&quot;</span>]</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>int_uint</span>)]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>unstable</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>core</span>, <span class='ident'>hash</span>, <span class='ident'>std_misc</span>)]</span>
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>objc</span>;
@@ -83,7 +81,7 @@
     <span class='ident'>NSMutableSharedArray</span>, <span class='ident'>NSSharedArray</span>,
 };
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>dictionary</span>::{<span class='ident'>INSDictionary</span>, <span class='ident'>NSDictionary</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>object</span>::{<span class='ident'>class</span>, <span class='ident'>ClassName</span>, <span class='ident'>INSObject</span>, <span class='ident'>NSObject</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>object</span>::{<span class='ident'>INSObject</span>, <span class='ident'>NSObject</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>string</span>::{<span class='ident'>INSCopying</span>, <span class='ident'>INSMutableCopying</span>, <span class='ident'>INSString</span>, <span class='ident'>NSString</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>value</span>::{<span class='ident'>INSValue</span>, <span class='ident'>NSValue</span>};
 

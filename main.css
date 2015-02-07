@@ -64,7 +64,6 @@
 
 body {
     color: #333;
-    min-width: 500px;
     font: 16px/1.4 "Source Serif Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin: 0;
     position: relative;
@@ -245,7 +244,6 @@ nav.sub {
 .content .highlighted.method { background-color: #c6afb3; }
 .content .highlighted.tymethod { background-color: #c6afb3; }
 .content .highlighted.type { background-color: #c6afb3; }
-.content .highlighted.ffi { background-color: #c6afb3; }
 
 .docblock.short.nowrap {
     display: block;
@@ -365,7 +363,6 @@ p a:hover { text-decoration: underline; }
 .content span.fn, .content a.fn, .block a.current.fn { color: #8c6067; }
 .content span.method, .content a.method, .block a.current.method { color: #8c6067; }
 .content span.tymethod, .content a.tymethod, .block a.current.tymethod { color: #8c6067; }
-.content span.ffi, .content a.ffi, .block a.current.ffi { color: #8c6067; }
 .content .fnname { color: #8c6067; }
 
 .search-input {
@@ -592,6 +589,14 @@ pre.rust { position: relative; }
 
     .content {
         margin-left: 0px;
+    }
+
+    .content .in-band {
+        width: 100%;
+    }
+
+    .content .out-of-band {
+        display: none;
     }
 
     .toggle-wrapper > .collapse-toggle {

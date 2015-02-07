@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/ssheldon/projects/rust-objc/core/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -71,18 +71,18 @@
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_name</span> <span class='op'>=</span> <span class='string'>&quot;objc&quot;</span>]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span> <span class='op'>=</span> <span class='string'>&quot;lib&quot;</span>]</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>unsafe_destructor</span>)]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>unstable</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>collections</span>, <span class='ident'>core</span>, <span class='ident'>hash</span>, <span class='ident'>std_misc</span>, <span class='ident'>unsafe_destructor</span>)]</span>
 
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>malloc_buf</span>;
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>objc_test_utils</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>id</span>::{<span class='ident'>Id</span>, <span class='ident'>IdVector</span>, <span class='ident'>IntoIdVector</span>, <span class='ident'>Owned</span>, <span class='ident'>Ownership</span>, <span class='ident'>Shared</span>, <span class='ident'>ShareId</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>id</span>::{<span class='ident'>Id</span>, <span class='ident'>IdSlice</span>, <span class='ident'>IntoIdVector</span>, <span class='ident'>Owned</span>, <span class='ident'>Ownership</span>, <span class='ident'>Shared</span>, <span class='ident'>ShareId</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>declare</span>::{<span class='ident'>ClassDecl</span>, <span class='ident'>MethodDecl</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>encode</span>::{<span class='ident'>encode</span>, <span class='ident'>Encode</span>, <span class='ident'>Encoding</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>message</span>::{<span class='ident'>to_obj_ptr</span>, <span class='ident'>Message</span>, <span class='ident'>ToMessage</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>encode</span>::{<span class='ident'>encode</span>, <span class='ident'>Encode</span>, <span class='ident'>EncodePtr</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>message</span>::{<span class='ident'>send_message</span>, <span class='ident'>send_message_verified</span>, <span class='ident'>Message</span>, <span class='ident'>MessageArguments</span>, <span class='ident'>ToMessage</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>weak</span>::<span class='ident'>WeakId</span>;
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `block.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/ssheldon/projects/rust-objc/core/block.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>block.rs.html -- source</title>
@@ -298,19 +298,141 @@
 <span id="256">256</span>
 <span id="257">257</span>
 <span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
 </pre><pre class='rust '>
-<span class='doccomment'>//! A Rust interface for Objective-C blocks.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! For more information on the specifics of the block implementation, see</span>
-<span class='doccomment'>//! Clang&#39;s documentation: http://clang.llvm.org/docs/Block-ABI-Apple.html</span>
+<span class='doccomment'>/*!
+A Rust interface for Objective-C blocks.
+
+For more information on the specifics of the block implementation, see
+Clang&#39;s documentation: http://clang.llvm.org/docs/Block-ABI-Apple.html
+
+# Invoking blocks
+
+The `Block` struct is used for invoking blocks from Objective-C. For example,
+consider this Objective-C function:
+
+``` objc
+int32_t sum(int32_t (^block)(int32_t, int32_t)) {
+    return block(5, 8);
+}
+```
+
+We could write it in Rust as the following:
+
+```
+fn sum(block: &amp;mut Block&lt;(i32, i32), i32&gt;) {
+    block.call((5, 8))
+}
+```
+
+Note the extra parentheses in the `call` method, since the arguments must be
+passed as a tuple.
+
+# Creating blocks
+
+Creating a block to pass to Objective-C can be done with the `ConcreteBlock`
+struct. For example, to create a block that adds two `i32`s, we could write:
+
+```
+let block = ConcreteBlock::new(|a: i32, b: i32| a + b);
+let mut block = block.copy();
+assert!(block.call((5, 8)) == 13);
+```
+
+It is important to copy your block to the heap (with the `copy` method) before
+passing it to Objective-C; this is because our `ConcreteBlock` is only meant
+to be copied once, and we can enforce this in Rust, but if Objective-C code
+were to copy it twice we could have a double free.
+*/</span>
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::{<span class='ident'>Deref</span>, <span class='ident'>DerefMut</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
 <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_int</span>, <span class='ident'>c_ulong</span>};
 
-<span class='kw'>use</span> <span class='ident'>runtime</span>::<span class='ident'>Class</span>;
-<span class='kw'>use</span> {<span class='ident'>Id</span>, <span class='ident'>Message</span>};
+<span class='kw'>use</span> <span class='ident'>runtime</span>::{<span class='ident'>Class</span>, <span class='ident'>Object</span>};
+<span class='kw'>use</span> {<span class='ident'>EncodePtr</span>, <span class='ident'>Id</span>, <span class='ident'>Message</span>};
 
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>improper_ctypes</span>)]</span>
 <span class='attribute'>#[<span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;Foundation&quot;</span>, <span class='ident'>kind</span> <span class='op'>=</span> <span class='string'>&quot;framework&quot;</span>)]</span>
@@ -322,18 +444,10 @@
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>BlockArguments</span> {
     <span class='doccomment'>/// Calls the given `Block` with self as the arguments.</span>
     <span class='kw'>fn</span> <span class='ident'>call_block</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>block</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>Self</span>, <span class='ident'>R</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span>;
-
-    <span class='doccomment'>/// Returns an invoke function for a `ConcreteBlock` that takes this type</span>
-    <span class='doccomment'>/// of arguments.</span>
-    <span class='kw'>fn</span> <span class='ident'>invoke_for_concrete_block</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>F</span>: <span class='ident'>Fn</span><span class='op'>&lt;</span><span class='ident'>Self</span>, <span class='ident'>R</span><span class='op'>&gt;&gt;</span>() <span class='op'>-&gt;</span>
-            <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>Self</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span>, ...) <span class='op'>-&gt;</span> <span class='ident'>R</span>;
 }
 
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>block_args_impl</span>(
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span>:<span class='ident'>ident</span>) <span class='op'>=&gt;</span> (
-        <span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span>,);
-    );
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span>:<span class='ident'>ident</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>:<span class='ident'>ident</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> (
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>block_args_impl</span> {
+    ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>:<span class='ident'>ident</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> (
         <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>),<span class='op'>*</span><span class='op'>&gt;</span> <span class='ident'>BlockArguments</span> <span class='kw'>for</span> ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>,)<span class='op'>*</span>) {
             <span class='kw'>fn</span> <span class='ident'>call_block</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>block</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>Self</span>, <span class='ident'>R</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span> {
                 <span class='kw'>let</span> <span class='ident'>invoke</span>: <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>Self</span>, <span class='ident'>R</span><span class='op'>&gt;</span> $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>)<span class='op'>*</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
@@ -344,42 +458,28 @@
                     <span class='ident'>invoke</span>(<span class='ident'>block</span> $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>)<span class='op'>*</span>)
                 }
             }
-
-            <span class='kw'>fn</span> <span class='ident'>invoke_for_concrete_block</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>X</span>: <span class='ident'>Fn</span><span class='op'>&lt;</span><span class='ident'>Self</span>, <span class='ident'>R</span><span class='op'>&gt;&gt;</span>() <span class='op'>-&gt;</span>
-                    <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>Self</span>, <span class='ident'>R</span>, <span class='ident'>X</span><span class='op'>&gt;</span>, ...) <span class='op'>-&gt;</span> <span class='ident'>R</span> {
-                <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>X</span>: <span class='ident'>Fn</span><span class='op'>&lt;</span><span class='ident'>Self</span>, <span class='ident'>R</span><span class='op'>&gt;</span> $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>)<span class='op'>*</span><span class='op'>&gt;</span>(
-                        <span class='ident'>block_ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>Self</span>, <span class='ident'>R</span>, <span class='ident'>X</span><span class='op'>&gt;</span>
-                        $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>)<span class='op'>*</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span> {
-                    <span class='kw'>let</span> <span class='ident'>block</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>block_ptr</span>;
-                    (<span class='ident'>block</span>.<span class='ident'>closure</span>)($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>),<span class='op'>*</span>)
-                }
-
-                <span class='kw'>unsafe</span> {
-                    <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span>::<span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>X</span> $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>)<span class='op'>*</span><span class='op'>&gt;</span>)
-                }
-            }
         }
     );
-);
+}
 
-<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args0</span>);
-<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args1</span>, <span class='ident'>a</span>: <span class='ident'>A</span>);
-<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args2</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>);
-<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args3</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>);
-<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args4</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>);
-<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args5</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>);
-<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args6</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>);
-<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args7</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>);
-<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args8</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>);
-<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args9</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>);
-<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args10</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>, <span class='ident'>j</span>: <span class='ident'>J</span>);
-<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args11</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>, <span class='ident'>j</span>: <span class='ident'>J</span>, <span class='ident'>k</span>: <span class='ident'>K</span>);
-<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args12</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>, <span class='ident'>j</span>: <span class='ident'>J</span>, <span class='ident'>k</span>: <span class='ident'>K</span>, <span class='ident'>l</span>: <span class='ident'>L</span>);
+<span class='macro'>block_args_impl</span><span class='macro'>!</span>();
+<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>);
+<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>);
+<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>);
+<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>);
+<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>);
+<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>);
+<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>);
+<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>);
+<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>);
+<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>, <span class='ident'>j</span>: <span class='ident'>J</span>);
+<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>, <span class='ident'>j</span>: <span class='ident'>J</span>, <span class='ident'>k</span>: <span class='ident'>K</span>);
+<span class='macro'>block_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>, <span class='ident'>j</span>: <span class='ident'>J</span>, <span class='ident'>k</span>: <span class='ident'>K</span>, <span class='ident'>l</span>: <span class='ident'>L</span>);
 
 <span class='doccomment'>/// An Objective-C block that takes arguments of `A` when called and</span>
 <span class='doccomment'>/// returns a value of `R`.</span>
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>BlockArguments</span>, <span class='ident'>R</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>A</span>: <span class='ident'>BlockArguments</span> {
     <span class='ident'>isa</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Class</span>,
     <span class='ident'>flags</span>: <span class='ident'>c_int</span>,
     <span class='ident'>_reserved</span>: <span class='ident'>c_int</span>,
@@ -387,40 +487,96 @@
 }
 
 <span class='comment'>// TODO: impl FnMut when it&#39;s possible</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>BlockArguments</span>, <span class='ident'>R</span><span class='op'>&gt;</span> <span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>BlockArguments</span>, <span class='ident'>R</span><span class='op'>&gt;</span> <span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>A</span>: <span class='ident'>BlockArguments</span> {
     <span class='doccomment'>/// Call self with the given arguments.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>call</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>args</span>: <span class='ident'>A</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span> {
         <span class='ident'>args</span>.<span class='ident'>call_block</span>(<span class='self'>self</span>)
     }
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>BlockArguments</span>, <span class='ident'>R</span><span class='op'>&gt;</span> <span class='ident'>Message</span> <span class='kw'>for</span> <span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span> { }
+<span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span> <span class='ident'>Message</span> <span class='kw'>for</span> <span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>A</span>: <span class='ident'>BlockArguments</span> { }
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span> <span class='ident'>EncodePtr</span> <span class='kw'>for</span> <span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>ptr_code</span>() <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> { <span class='string'>&quot;@?&quot;</span> }
+}
+
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>IntoConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>A</span>: <span class='ident'>BlockArguments</span> {
+    <span class='kw'>fn</span> <span class='ident'>into_concrete_block</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>Self</span><span class='op'>&gt;</span>;
+}
+
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>concrete_block_impl</span> {
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span>:<span class='ident'>ident</span>) <span class='op'>=&gt;</span> (
+        <span class='macro'>concrete_block_impl</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span>,);
+    );
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span>:<span class='ident'>ident</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>:<span class='ident'>ident</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> (
+        <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>,)<span class='op'>*</span> <span class='ident'>R</span>, <span class='ident'>X</span><span class='op'>&gt;</span> <span class='ident'>IntoConcreteBlock</span><span class='op'>&lt;</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>,)<span class='op'>*</span>), <span class='ident'>R</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>X</span>
+                <span class='kw'>where</span> <span class='ident'>X</span>: <span class='ident'>Fn</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>,)<span class='op'>*</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span> {
+            <span class='kw'>fn</span> <span class='ident'>into_concrete_block</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>,)<span class='op'>*</span>), <span class='ident'>R</span>, <span class='ident'>X</span><span class='op'>&gt;</span> {
+                <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>,)<span class='op'>*</span> <span class='ident'>R</span>, <span class='ident'>X</span><span class='op'>&gt;</span>(
+                        <span class='ident'>block_ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>,)<span class='op'>*</span>), <span class='ident'>R</span>, <span class='ident'>X</span><span class='op'>&gt;</span>
+                        $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>)<span class='op'>*</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span>
+                        <span class='kw'>where</span> <span class='ident'>X</span>: <span class='ident'>Fn</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>,)<span class='op'>*</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span> {
+                    <span class='kw'>let</span> <span class='ident'>block</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>block_ptr</span>;
+                    (<span class='ident'>block</span>.<span class='ident'>closure</span>)($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>),<span class='op'>*</span>)
+                }
+
+                <span class='kw'>unsafe</span> {
+                    <span class='ident'>ConcreteBlock</span>::<span class='ident'>with_invoke</span>(
+                        <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span>::<span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>,)<span class='op'>*</span> <span class='ident'>R</span>, <span class='ident'>X</span><span class='op'>&gt;</span>), <span class='self'>self</span>)
+                }
+            }
+        }
+    );
+}
+
+<span class='macro'>concrete_block_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args0</span>);
+<span class='macro'>concrete_block_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args1</span>, <span class='ident'>a</span>: <span class='ident'>A</span>);
+<span class='macro'>concrete_block_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args2</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>);
+<span class='macro'>concrete_block_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args3</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>);
+<span class='macro'>concrete_block_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args4</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>);
+<span class='macro'>concrete_block_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args5</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>);
+<span class='macro'>concrete_block_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args6</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>);
+<span class='macro'>concrete_block_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args7</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>);
+<span class='macro'>concrete_block_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args8</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>);
+<span class='macro'>concrete_block_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args9</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>);
+<span class='macro'>concrete_block_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args10</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>, <span class='ident'>j</span>: <span class='ident'>J</span>);
+<span class='macro'>concrete_block_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args11</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>, <span class='ident'>j</span>: <span class='ident'>J</span>, <span class='ident'>k</span>: <span class='ident'>K</span>);
+<span class='macro'>concrete_block_impl</span><span class='macro'>!</span>(<span class='ident'>concrete_block_invoke_args12</span>, <span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>, <span class='ident'>j</span>: <span class='ident'>J</span>, <span class='ident'>k</span>: <span class='ident'>K</span>, <span class='ident'>l</span>: <span class='ident'>L</span>);
 
 <span class='doccomment'>/// An Objective-C block whose size is known at compile time and may be</span>
 <span class='doccomment'>/// constructed on the stack.</span>
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>BlockArguments</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>A</span>: <span class='ident'>BlockArguments</span> {
     <span class='ident'>base</span>: <span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>,
     <span class='ident'>descriptor</span>: <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>BlockDescriptor</span><span class='op'>&lt;</span><span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
     <span class='ident'>closure</span>: <span class='ident'>F</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>BlockArguments</span>, <span class='ident'>R</span>, <span class='ident'>F</span>: <span class='ident'>Fn</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;&gt;</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
+        <span class='kw'>where</span> <span class='ident'>A</span>: <span class='ident'>BlockArguments</span>, <span class='ident'>F</span>: <span class='ident'>IntoConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Constructs a `ConcreteBlock` with the given closure.</span>
     <span class='doccomment'>/// When the block is called, it will return the value that results from</span>
     <span class='doccomment'>/// calling the closure.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>closure</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span> {
-        <span class='kw'>let</span> <span class='ident'>extern_invoke</span> <span class='op'>=</span>
-            <span class='ident'>BlockArguments</span>::<span class='ident'>invoke_for_concrete_block</span>::<span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span>();
+        <span class='ident'>closure</span>.<span class='ident'>into_concrete_block</span>()
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>A</span>: <span class='ident'>BlockArguments</span> {
+    <span class='doccomment'>/// Constructs a `ConcreteBlock` with the given invoke function and closure.</span>
+    <span class='doccomment'>/// Unsafe because the caller must ensure the invoke function takes the</span>
+    <span class='doccomment'>/// correct arguments.</span>
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>with_invoke</span>(<span class='ident'>invoke</span>: <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Self</span>, ...) <span class='op'>-&gt;</span> <span class='ident'>R</span>,
+            <span class='ident'>closure</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span> {
         <span class='ident'>ConcreteBlock</span> {
             <span class='ident'>base</span>: <span class='ident'>Block</span> {
                 <span class='ident'>isa</span>: <span class='kw-2'>&amp;</span><span class='ident'>_NSConcreteStackBlock</span>,
                 <span class='comment'>// 1 &lt;&lt; 25 = BLOCK_HAS_COPY_DISPOSE</span>
                 <span class='ident'>flags</span>: <span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='number'>25</span>,
                 <span class='ident'>_reserved</span>: <span class='number'>0</span>,
-                <span class='ident'>invoke</span>: <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>extern_invoke</span>) },
+                <span class='ident'>invoke</span>: <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>invoke</span>),
             },
-            <span class='ident'>descriptor</span>: <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>BlockDescriptor</span>::<span class='op'>&lt;</span><span class='ident'>Self</span><span class='op'>&gt;</span>::<span class='ident'>new</span>()),
+            <span class='ident'>descriptor</span>: <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>BlockDescriptor</span>::<span class='ident'>new</span>()),
             <span class='ident'>closure</span>: <span class='ident'>closure</span>,
         }
     }
@@ -428,7 +584,9 @@
     <span class='doccomment'>/// Copy self onto the heap.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>copy</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Id</span><span class='op'>&lt;</span><span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>block</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>base</span>, <span class='ident'>copy</span>] <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>;
+            <span class='comment'>// The copy method is declared as returning an object pointer.</span>
+            <span class='kw'>let</span> <span class='ident'>block</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>base</span>, <span class='ident'>copy</span>];
+            <span class='kw'>let</span> <span class='ident'>block</span> <span class='op'>=</span> <span class='ident'>block</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>;
             <span class='comment'>// At this point, our copy helper has been run so the block will</span>
             <span class='comment'>// be moved to the heap and we can forget the original block</span>
             <span class='comment'>// because the heap block will drop in our dispose helper.</span>
@@ -438,13 +596,18 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>BlockArguments</span>, <span class='ident'>R</span>, <span class='ident'>F</span>: <span class='ident'>Fn</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Clone</span><span class='op'>&gt;</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
+        <span class='kw'>where</span> <span class='ident'>A</span>: <span class='ident'>BlockArguments</span>, <span class='ident'>F</span>: <span class='ident'>Clone</span> {
     <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span> {
-        <span class='ident'>ConcreteBlock</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>closure</span>.<span class='ident'>clone</span>())
+        <span class='kw'>unsafe</span> {
+            <span class='ident'>ConcreteBlock</span>::<span class='ident'>with_invoke</span>(<span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='self'>self</span>.<span class='ident'>invoke</span>),
+                <span class='self'>self</span>.<span class='ident'>closure</span>.<span class='ident'>clone</span>())
+        }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>BlockArguments</span>, <span class='ident'>R</span>, <span class='ident'>F</span>: <span class='ident'>Fn</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;&gt;</span> <span class='ident'>Deref</span> <span class='kw'>for</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Deref</span> <span class='kw'>for</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
+        <span class='kw'>where</span> <span class='ident'>A</span>: <span class='ident'>BlockArguments</span> {
     <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> <span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>;
 
     <span class='kw'>fn</span> <span class='ident'>deref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span> {
@@ -452,7 +615,8 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>BlockArguments</span>, <span class='ident'>R</span>, <span class='ident'>F</span>: <span class='ident'>Fn</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;&gt;</span> <span class='ident'>DerefMut</span> <span class='kw'>for</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>DerefMut</span> <span class='kw'>for</span> <span class='ident'>ConcreteBlock</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span>
+        <span class='kw'>where</span> <span class='ident'>A</span>: <span class='ident'>BlockArguments</span> {
     <span class='kw'>fn</span> <span class='ident'>deref_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Block</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span> {
         <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>base</span>
     }
@@ -535,26 +699,26 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_create_block</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>block</span> <span class='op'>=</span> <span class='ident'>ConcreteBlock</span>::<span class='ident'>new</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span>:<span class='op'>|</span> <span class='number'>13</span>);
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>invoke_int_block</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='ident'>block</span>);
+        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>invoke_int_block</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>block</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>result</span> <span class='op'>==</span> <span class='number'>13</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_create_block_args</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>block</span> <span class='op'>=</span> <span class='ident'>ConcreteBlock</span>::<span class='ident'>new</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span>: <span class='ident'>a</span>: <span class='ident'>i32</span><span class='op'>|</span> <span class='ident'>a</span> <span class='op'>+</span> <span class='number'>5</span>);
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>invoke_add_block</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='ident'>block</span>, <span class='number'>6</span>);
+        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>invoke_add_block</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>block</span>, <span class='number'>6</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>result</span> <span class='op'>==</span> <span class='number'>11</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_concrete_block_copy</span>() {
-        <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;Hello!&quot;</span>);
+        <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot;Hello!&quot;</span>.<span class='ident'>to_string</span>();
         <span class='kw'>let</span> <span class='ident'>expected_len</span> <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>i32</span>;
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>block</span> <span class='op'>=</span> <span class='ident'>ConcreteBlock</span>::<span class='ident'>new</span>(<span class='kw'>move</span> <span class='op'>|</span><span class='kw-2'>&amp;</span>:<span class='op'>|</span> <span class='ident'>s</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>i32</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>invoke_int_block</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='ident'>block</span>) <span class='op'>==</span> <span class='ident'>expected_len</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>invoke_int_block</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>block</span>) <span class='op'>==</span> <span class='ident'>expected_len</span>);
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>copied</span> <span class='op'>=</span> <span class='ident'>block</span>.<span class='ident'>copy</span>();
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>invoke_int_block</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='ident'>copied</span>) <span class='op'>==</span> <span class='ident'>expected_len</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>invoke_int_block</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>copied</span>) <span class='op'>==</span> <span class='ident'>expected_len</span>);
     }
 }
 </pre>

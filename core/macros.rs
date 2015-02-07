@@ -1,7 +1,7 @@
 /// Registers a selector, returning an `Sel`.
 ///
 /// # Example
-/// ```
+/// ``` ignore
 /// let sel = sel!(description);
 /// let sel = sel!(setObject:forKey:);
 /// ```
@@ -39,7 +39,7 @@ macro_rules! sel {
 /// https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778
 ///
 /// # Example
-/// ```
+/// ``` ignore
 /// let description = msg_send![obj, description];
 /// msg_send![obj, setArg1:1u arg2:2u];
 /// ```
@@ -86,7 +86,7 @@ macro_rules! msg_send {
 /// arguments.
 ///
 /// # Example
-/// ```
+/// ``` ignore
 /// method!(
 ///     (&mut MYObject)this, setNumber:(uint)number; {
 ///         this.set_number(number);

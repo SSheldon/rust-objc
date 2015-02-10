@@ -1,7 +1,7 @@
 use std::mem;
 
 use runtime::{Class, Method, Object, Sel, self};
-use {encode, Encode, EncodePtr};
+use {encode, Encode};
 
 /*
  The Sized bound on Message is unfortunate; ideally, objc objects would not be
@@ -11,7 +11,7 @@ use {encode, Encode, EncodePtr};
  */
 /// Types that may be sent Objective-C messages.
 /// For example: objects, classes, and blocks.
-pub unsafe trait Message: Sized + EncodePtr { }
+pub unsafe trait Message: Sized { }
 
 unsafe impl Message for Object { }
 
@@ -19,7 +19,7 @@ unsafe impl Message for Class { }
 
 /// A trait for converting to a pointer to a type that may be sent Objective-C
 /// messages.
-pub trait ToMessage : Encode {
+pub trait ToMessage {
     type Target: Message;
 
     fn as_ptr(&self) -> *mut Self::Target;

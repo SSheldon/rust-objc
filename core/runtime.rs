@@ -26,19 +26,15 @@ pub struct Sel {
 }
 
 /// A type that represents an instance variable.
-#[allow(missing_copy_implementations)]
 pub enum Ivar { }
 
 /// A type that represents a method in a class definition.
-#[allow(missing_copy_implementations)]
 pub enum Method { }
 
 /// A type that represents an Objective-C class.
-#[allow(missing_copy_implementations)]
 pub enum Class { }
 
 /// A type that represents an instance of a class.
-#[allow(missing_copy_implementations)]
 pub enum Object { }
 
 /// A pointer to the start of a method implementation.

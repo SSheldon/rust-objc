@@ -1,5 +1,4 @@
 use std::mem;
-use std::ptr;
 
 use runtime::{Class, Method, Object, Sel, self};
 use {encode, Encode, EncodePtr};
@@ -59,28 +58,6 @@ impl<'a, T> ToMessage for &'a mut T where T: Message {
 
     fn as_ptr(&self) -> *mut T {
         *self
-    }
-}
-
-impl<'a, T> ToMessage for Option<&'a T> where T: Message {
-    type Target = T;
-
-    fn as_ptr(&self) -> *mut T {
-        match *self {
-            None => ptr::null_mut(),
-            Some(ref obj) => obj.as_ptr(),
-        }
-    }
-}
-
-impl<'a, T> ToMessage for Option<&'a mut T> where T: Message {
-    type Target = T;
-
-    fn as_ptr(&self) -> *mut T {
-        match *self {
-            None => ptr::null_mut(),
-            Some(ref obj) => obj.as_ptr(),
-        }
     }
 }
 

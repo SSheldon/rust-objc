@@ -44,7 +44,6 @@ pub enum Object { }
 /// A pointer to the start of a method implementation.
 pub type Imp = extern fn(*mut Object, Sel, ...) -> *mut Object;
 
-#[allow(improper_ctypes)]
 #[link(name = "Foundation", kind = "framework")]
 extern {
     pub fn sel_registerName(name: *const c_char) -> Sel;

@@ -1,4 +1,4 @@
-use libc::c_char;
+use libc::{c_char, c_void};
 
 use runtime::{Class, Object, Sel};
 
@@ -80,6 +80,14 @@ impl Encode for *mut c_char {
 
 impl Encode for *const c_char {
     fn code() -> &'static str { "r*" }
+}
+
+impl Encode for *mut c_void {
+    fn code() -> &'static str { "^v" }
+}
+
+impl Encode for *const c_void {
+    fn code() -> &'static str { "r^v" }
 }
 
 impl Encode for Sel {

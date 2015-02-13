@@ -143,6 +143,7 @@ pub type ShareId<T> = Id<T, Shared>;
 
 #[cfg(test)]
 mod tests {
+    use test::{Bencher, black_box};
     use runtime::Object;
     use test_utils;
 
@@ -164,5 +165,16 @@ mod tests {
 
         drop(obj);
         assert!(retain_count(&cloned) == 1);
+    }
+
+    #[bench]
+    fn bench_retain(b: &mut Bencher) {
+        let obj = test_utils::sample_object();
+        let obj = obj.share();
+
+        b.iter(|| {
+            let obj = obj.clone();
+            black_box(obj);
+        });
     }
 }

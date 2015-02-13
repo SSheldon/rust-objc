@@ -73,9 +73,13 @@ the [`declare`](declare/index.html) module.
 
 #![warn(missing_docs)]
 
+#![cfg_attr(test, feature(test))]
+
 extern crate libc;
 extern crate malloc_buf;
 
+#[cfg(test)]
+extern crate test;
 #[cfg(test)]
 extern crate objc_test_utils;
 

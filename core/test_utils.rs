@@ -1,7 +1,17 @@
 use objc_test_utils;
 
 use block::Block;
+use runtime::{Class, Object};
 use Id;
+
+pub fn sample_object() -> Id<Object> {
+    let cls = Class::get("NSObject").unwrap();
+    unsafe {
+        let obj: *mut Object = msg_send![cls, alloc];
+        let obj: *mut Object = msg_send![obj, init];
+        Id::from_retained_ptr(obj)
+    }
+}
 
 pub fn get_int_block_with(i: i32) -> Id<Block<(), i32>> {
     unsafe {

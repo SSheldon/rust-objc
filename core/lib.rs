@@ -25,3 +25,6 @@ mod declare;
 mod encode;
 mod message;
 mod weak;
+
+#[cfg(test)]
+mod test_utils;

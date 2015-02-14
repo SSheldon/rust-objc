@@ -181,3 +181,19 @@ pub unsafe fn send_message_verified<T, A, R>(obj: &T, sel: Sel, args: A) ->
     verify_message_signature::<_, _, R>(obj_ref, sel, &args).and_then(
         move |()| Ok(args.send(obj, sel)))
 }
+
+#[cfg(test)]
+mod tests {
+    use runtime::Object;
+    use test_utils;
+    use super::send_message;
+
+    #[test]
+    fn test_send_message() {
+        let obj = test_utils::sample_object();
+        let result: *const Object = unsafe {
+            send_message(&obj, sel!(self), ())
+        };
+        assert!(&*obj as *const Object == result);
+    }
+}

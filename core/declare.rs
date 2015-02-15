@@ -54,10 +54,6 @@ macro_rules! method_decl_impl {
     ($($t:ident),*) => (
         method_decl_impl!(-T, &T, $($t),*);
         method_decl_impl!(-T, &mut T, $($t),*);
-        method_decl_impl!(-T, Option<&T>, $($t),*);
-        method_decl_impl!(-T, Option<&mut T>, $($t),*);
-        method_decl_impl!(-T, *const T, $($t),*);
-        method_decl_impl!(-T, *mut T, $($t),*);
     );
 }
 

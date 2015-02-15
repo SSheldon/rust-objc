@@ -2,20 +2,60 @@ use std::ffi::CString;
 use std::mem;
 use libc::size_t;
 
-use {encode, Encode};
-use runtime::{Class, Imp, Sel};
-use runtime;
+use {encode, Encode, EncodePtr, Message};
+use runtime::{Class, Imp, Sel, self};
 
 /// A type for declaring a new method.
 /// `MethodDecl`s are usually created using the `method!` macro.
 pub struct MethodDecl {
-    /// The method's selector.
-    pub sel: Sel,
-    /// The method's implementation.
-    pub imp: Imp,
-    /// The types of the method's arguments.
-    pub types: String,
+    sel: Sel,
+    imp: Imp,
+    types: String,
 }
+
+pub trait IntoMethodDecl {
+    fn into_method_decl(self, sel: Sel) -> MethodDecl;
+}
+
+macro_rules! method_decl_impl {
+    (-$s:ident, $sp:ty, $($t:ident),*) => (
+        impl<$s, R $(, $t)*> IntoMethodDecl for extern fn($sp, Sel $(, $t)*) -> R
+                where $s: Message + EncodePtr, R: Encode $(, $t: Encode)* {
+            fn into_method_decl(self, sel: Sel) -> MethodDecl {
+                let imp: Imp = unsafe { mem::transmute(self) };
+
+                let mut types = encode::<R>().to_string();
+                types.push_str(encode::<$sp>());
+                types.push_str(encode::<Sel>());
+                $(types.push_str(encode::<$t>());)*
+
+                MethodDecl { sel: sel, imp: imp, types: types }
+            }
+        }
+    );
+    ($($t:ident),*) => (
+        method_decl_impl!(-T, &T, $($t),*);
+        method_decl_impl!(-T, &mut T, $($t),*);
+        method_decl_impl!(-T, Option<&T>, $($t),*);
+        method_decl_impl!(-T, Option<&mut T>, $($t),*);
+        method_decl_impl!(-T, *const T, $($t),*);
+        method_decl_impl!(-T, *mut T, $($t),*);
+    );
+}
+
+method_decl_impl!();
+method_decl_impl!(A);
+method_decl_impl!(A, B);
+method_decl_impl!(A, B, C);
+method_decl_impl!(A, B, C, D);
+method_decl_impl!(A, B, C, D, E);
+method_decl_impl!(A, B, C, D, E, F);
+method_decl_impl!(A, B, C, D, E, F, G);
+method_decl_impl!(A, B, C, D, E, F, G, H);
+method_decl_impl!(A, B, C, D, E, F, G, H, I);
+method_decl_impl!(A, B, C, D, E, F, G, H, I, J);
+method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K);
+method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K, L);
 
 /// A type for declaring a new class and adding new methods and ivars to it
 /// before registering it.

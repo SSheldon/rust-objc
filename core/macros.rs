@@ -141,13 +141,8 @@ macro_rules! method {
     ) => ({
         #[allow(non_snake_case)]
         extern fn $first_name($self_name: $self_ty, _cmd: $crate::runtime::Sel $(, $arg_name: $arg_ty)*) -> $ret_ty $body
-        let imp: $crate::runtime::Imp = unsafe { ::std::mem::transmute($first_name) };
 
-        let mut types = $crate::encode::<$ret_ty>().to_string();
-        types.push_str($crate::encode::<$self_ty>());
-        types.push_str($crate::encode::<$crate::runtime::Sel>());
-        $(types.push_str($crate::encode::<$arg_ty>());)*
-
-        $crate::MethodDecl { sel: $sel, imp: imp, types: types }
+        let f: extern fn($self_ty, $crate::runtime::Sel $(, $arg_ty)*) -> $ret_ty = $first_name;
+        $crate::IntoMethodDecl::into_method_decl(f, $sel)
     });
 }

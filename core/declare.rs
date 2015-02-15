@@ -13,6 +13,13 @@ pub struct MethodDecl {
     types: String,
 }
 
+impl MethodDecl {
+    pub fn new<F>(sel: Sel, func: F) -> Result<MethodDecl, ()>
+            where F: IntoMethodDecl {
+        func.into_method_decl(sel)
+    }
+}
+
 pub trait IntoMethodDecl {
     fn into_method_decl(self, sel: Sel) -> Result<MethodDecl, ()>;
 }
@@ -136,7 +143,7 @@ impl Drop for ClassDecl {
 #[cfg(test)]
 mod tests {
     use runtime::{Class, Object, Sel};
-    use super::{ClassDecl, IntoMethodDecl};
+    use super::{ClassDecl, MethodDecl};
 
     #[test]
     fn test_custom_class() {
@@ -194,7 +201,7 @@ mod tests {
 
         let sel = sel!(doSomethingWithFoo:bar:);
         let f: extern fn(&Object, Sel, i32) = wrong_num_args_method;
-        let decl = f.into_method_decl(sel);
+        let decl = MethodDecl::new(sel, f);
         assert!(decl.is_err());
     }
 }

@@ -143,6 +143,6 @@ macro_rules! method {
         extern fn $first_name($self_name: $self_ty, _cmd: $crate::runtime::Sel $(, $arg_name: $arg_ty)*) -> $ret_ty $body
 
         let f: extern fn($self_ty, $crate::runtime::Sel $(, $arg_ty)*) -> $ret_ty = $first_name;
-        $crate::IntoMethodDecl::into_method_decl(f, $sel).unwrap()
+        $crate::MethodDecl::new($sel, f).unwrap()
     });
 }

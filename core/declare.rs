@@ -14,22 +14,33 @@ pub struct MethodDecl {
 }
 
 pub trait IntoMethodDecl {
-    fn into_method_decl(self, sel: Sel) -> MethodDecl;
+    fn into_method_decl(self, sel: Sel) -> Result<MethodDecl, ()>;
+}
+
+macro_rules! count_idents {
+    () => (0);
+    ($a:ident) => (1);
+    ($a:ident, $($b:ident),+) => (1 + count_idents!($($b),*));
 }
 
 macro_rules! method_decl_impl {
     (-$s:ident, $sp:ty, $($t:ident),*) => (
         impl<$s, R $(, $t)*> IntoMethodDecl for extern fn($sp, Sel $(, $t)*) -> R
                 where $s: Message + EncodePtr, R: Encode $(, $t: Encode)* {
-            fn into_method_decl(self, sel: Sel) -> MethodDecl {
-                let imp: Imp = unsafe { mem::transmute(self) };
+            fn into_method_decl(self, sel: Sel) -> Result<MethodDecl, ()> {
+                let num_args = count_idents!($($t),*);
+                if sel.name().chars().filter(|&c| c == ':').count() == num_args {
+                    let imp: Imp = unsafe { mem::transmute(self) };
 
-                let mut types = encode::<R>().to_string();
-                types.push_str(encode::<$sp>());
-                types.push_str(encode::<Sel>());
-                $(types.push_str(encode::<$t>());)*
+                    let mut types = encode::<R>().to_string();
+                    types.push_str(encode::<$sp>());
+                    types.push_str(encode::<Sel>());
+                    $(types.push_str(encode::<$t>());)*
 
-                MethodDecl { sel: sel, imp: imp, types: types }
+                    Ok(MethodDecl { sel: sel, imp: imp, types: types })
+                } else {
+                    Err(())
+                }
             }
         }
     );
@@ -124,8 +135,8 @@ impl Drop for ClassDecl {
 
 #[cfg(test)]
 mod tests {
-    use runtime::{Class, Object};
-    use super::ClassDecl;
+    use runtime::{Class, Object, Sel};
+    use super::{ClassDecl, IntoMethodDecl};
 
     #[test]
     fn test_custom_class() {
@@ -175,5 +186,15 @@ mod tests {
 
             let _: () = msg_send![obj, release];
         }
+    }
+
+    #[test]
+    fn test_mismatched_args() {
+        extern fn wrong_num_args_method(_obj: &Object, _cmd: Sel, _a: i32) { }
+
+        let sel = sel!(doSomethingWithFoo:bar:);
+        let f: extern fn(&Object, Sel, i32) = wrong_num_args_method;
+        let decl = f.into_method_decl(sel);
+        assert!(decl.is_err());
     }
 }

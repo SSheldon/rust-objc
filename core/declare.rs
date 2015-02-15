@@ -152,44 +152,30 @@ mod tests {
         assert!(decl.is_some());
         let mut decl = decl.unwrap();
 
-        decl.add_ivar::<u32>("_foo");
-        decl.add_method(method!(
-            (*mut Object)_this, doNothing; {
-                ()
-            }
-        ));
-        decl.add_method(method!(
-            (&mut Object)this, setFoo:(u32)foo, bar:(u32)_bar; {
-                unsafe {
-                    this.set_ivar::<u32>("_foo", foo);
-                }
-            }
-        ));
-        decl.add_method(method!(
-            (&Object)this, foo -> u32, {
-                unsafe {
-                    *this.get_ivar::<u32>("_foo")
-                }
-            }
-        ));
-        decl.add_method(method!(
-            (*mut Object)this, doSomethingWithFoo:(u32)_foo, bar:(u32)_bar -> *mut Object, {
-                this
-            }
-        ));
+        assert!(decl.add_ivar::<u32>("_foo"));
+
+        extern fn my_obj_set_foo(this: &mut Object, _cmd: Sel, foo: u32) {
+            unsafe { this.set_ivar::<u32>("_foo", foo); }
+        }
+        let method = MethodDecl::new(sel!(setFoo:),
+            my_obj_set_foo as extern fn(&mut Object, Sel, u32));
+        assert!(decl.add_method(method.unwrap()));
+
+        extern fn my_obj_get_foo(this: &Object, _cmd: Sel) -> u32 {
+            unsafe { *this.get_ivar::<u32>("_foo") }
+        }
+        let method = MethodDecl::new(sel!(foo),
+            my_obj_get_foo as extern fn(&Object, Sel) -> u32);
+        assert!(decl.add_method(method.unwrap()));
 
         let cls = decl.register();
         unsafe {
             let obj: *mut Object = msg_send![cls, alloc];
             let obj: *mut Object = msg_send![obj, init];
 
-            let _: () = msg_send![obj, doNothing];
-            let _: () = msg_send![obj, setFoo:13u32 bar:0u32];
+            let _: () = msg_send![obj, setFoo:13u32];
             let result: u32 = msg_send![obj, foo];
             assert!(result == 13);
-            let result: *mut Object = msg_send![obj, doSomethingWithFoo:13u32
-                                                                    bar:0u32];
-            assert!(result == obj);
 
             let _: () = msg_send![obj, release];
         }

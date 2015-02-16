@@ -196,4 +196,14 @@ mod tests {
         };
         assert!(&*obj as *const Object == result);
     }
+
+    #[test]
+    fn test_send_message_stret() {
+        let obj = test_utils::custom_object();
+        let result: test_utils::CustomStruct = unsafe {
+            send_message(&obj, sel!(customStruct), ())
+        };
+        let expected = test_utils::CustomStruct { a: 1, b:2, c: 3, d: 4 };
+        assert!(result == expected);
+    }
 }

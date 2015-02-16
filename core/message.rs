@@ -61,9 +61,12 @@ impl<'a, T> ToMessage for &'a mut T where T: Message {
     }
 }
 
+#[cfg(target_arch = "x86_64")]
 fn msg_send_fn<R>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
-    unsafe {
-        mem::transmute(runtime::objc_msgSend)
+    if mem::size_of::<R>() <= 16 {
+        unsafe { mem::transmute(runtime::objc_msgSend) }
+    } else {
+        unsafe { mem::transmute(runtime::objc_msgSend_stret) }
     }
 }
 

@@ -138,42 +138,18 @@ impl Drop for ClassDecl {
 
 #[cfg(test)]
 mod tests {
-    use runtime::{Class, Object, Sel};
-    use super::{ClassDecl, MethodDecl};
+    use runtime::{Object, Sel};
+    use test_utils;
+    use super::MethodDecl;
 
     #[test]
     fn test_custom_class() {
-        let superclass = Class::get("NSObject").unwrap();
-        let decl = ClassDecl::new(superclass, "MyObject");
-        assert!(decl.is_some());
-        let mut decl = decl.unwrap();
-
-        assert!(decl.add_ivar::<u32>("_foo"));
-
-        extern fn my_obj_set_foo(this: &mut Object, _cmd: Sel, foo: u32) {
-            unsafe { this.set_ivar::<u32>("_foo", foo); }
-        }
-        let method = MethodDecl::new(sel!(setFoo:),
-            my_obj_set_foo as extern fn(&mut Object, Sel, u32));
-        assert!(decl.add_method(method.unwrap()));
-
-        extern fn my_obj_get_foo(this: &Object, _cmd: Sel) -> u32 {
-            unsafe { *this.get_ivar::<u32>("_foo") }
-        }
-        let method = MethodDecl::new(sel!(foo),
-            my_obj_get_foo as extern fn(&Object, Sel) -> u32);
-        assert!(decl.add_method(method.unwrap()));
-
-        let cls = decl.register();
+        // Registering the custom class is in test_utils
+        let obj = test_utils::custom_object();
         unsafe {
-            let obj: *mut Object = msg_send![cls, alloc];
-            let obj: *mut Object = msg_send![obj, init];
-
             let _: () = msg_send![obj, setFoo:13u32];
             let result: u32 = msg_send![obj, foo];
             assert!(result == 13);
-
-            let _: () = msg_send![obj, release];
         }
     }
 

@@ -1,3 +1,4 @@
+use std::any::Any;
 use std::mem;
 
 use runtime::{Class, Object, Sel, Super, self};
@@ -49,18 +50,20 @@ pub trait MessageArguments {
     ///
     /// It is recommended to use the `msg_send!` macro rather than calling this
     /// method directly.
-    unsafe fn send<T, R>(self, obj: *mut T, sel: Sel) -> R where T: Message;
+    unsafe fn send<T, R>(self, obj: *mut T, sel: Sel) -> R
+            where T: Message, R: Any;
 
     /// Sends a message to the superclass of an instance of a class with self
     /// as the arguments.
     unsafe fn send_super<T, R>(self, obj: *mut T, superclass: &Class, sel: Sel) -> R
-            where T: Message;
+            where T: Message, R: Any;
 }
 
 macro_rules! message_args_impl {
     ($($a:ident : $t:ident),*) => (
         impl<$($t),*> MessageArguments for ($($t,)*) {
-            unsafe fn send<T, R>(self, obj: *mut T, sel: Sel) -> R where T: Message {
+            unsafe fn send<T, R>(self, obj: *mut T, sel: Sel) -> R
+                    where T: Message, R: Any {
                 let msg_send_fn = msg_send_fn::<R>();
                 let msg_send_fn: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
                     mem::transmute(msg_send_fn);
@@ -71,7 +74,7 @@ macro_rules! message_args_impl {
             }
 
             unsafe fn send_super<T, R>(self, obj: *mut T, superclass: &Class, sel: Sel) -> R
-                    where T: Message {
+                    where T: Message, R: Any {
                 let msg_send_fn = msg_send_super_fn::<R>();
                 let msg_send_fn: unsafe extern fn(*const Super, Sel $(, $t)*) -> R =
                     mem::transmute(msg_send_fn);

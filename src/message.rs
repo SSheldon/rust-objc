@@ -11,6 +11,31 @@ unsafe impl Message for Object { }
 
 unsafe impl Message for Class { }
 
+#[cfg(target_arch = "x86")]
+fn msg_send_fn<R: Any>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
+    use std::any::TypeId;
+
+    let type_id = TypeId::of::<R>();
+    let size = mem::size_of::<R>();
+    if type_id == TypeId::of::<f32>() || type_id == TypeId::of::<f64>() {
+        unsafe { mem::transmute(runtime::objc_msgSend_fpret) }
+    } else if size == 0 || size == 1 || size == 2 || size == 4 || size == 8 {
+        unsafe { mem::transmute(runtime::objc_msgSend) }
+    } else {
+        unsafe { mem::transmute(runtime::objc_msgSend_stret) }
+    }
+}
+
+#[cfg(target_arch = "x86")]
+fn msg_send_super_fn<R: Any>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
+    let size = mem::size_of::<R>();
+    if size == 0 || size == 1 || size == 2 || size == 4 || size == 8 {
+        unsafe { mem::transmute(runtime::objc_msgSend) }
+    } else {
+        unsafe { mem::transmute(runtime::objc_msgSend_stret) }
+    }
+}
+
 #[cfg(target_arch = "x86_64")]
 fn msg_send_fn<R>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
     if mem::size_of::<R>() <= 16 {

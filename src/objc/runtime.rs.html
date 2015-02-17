@@ -470,10 +470,6 @@
 <span id="428">428</span>
 <span id="429">429</span>
 <span id="430">430</span>
-<span id="431">431</span>
-<span id="432">432</span>
-<span id="433">433</span>
-<span id="434">434</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! A Rust interface for the functionality of the Objective-C runtime.</span>
 <span class='doccomment'>//!</span>
@@ -503,26 +499,21 @@
 }
 
 <span class='doccomment'>/// A type that represents an instance variable.</span>
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>missing_copy_implementations</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Ivar</span> { }
 
 <span class='doccomment'>/// A type that represents a method in a class definition.</span>
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>missing_copy_implementations</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Method</span> { }
 
 <span class='doccomment'>/// A type that represents an Objective-C class.</span>
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>missing_copy_implementations</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Class</span> { }
 
 <span class='doccomment'>/// A type that represents an instance of a class.</span>
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>missing_copy_implementations</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Object</span> { }
 
 <span class='doccomment'>/// A pointer to the start of a method implementation.</span>
 <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>Imp</span> <span class='op'>=</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>Sel</span>, ...) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>;
 
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>improper_ctypes</span>)]</span>
-<span class='attribute'>#[<span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;Foundation&quot;</span>, <span class='ident'>kind</span> <span class='op'>=</span> <span class='string'>&quot;framework&quot;</span>)]</span>
+<span class='attribute'>#[<span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;objc&quot;</span>, <span class='ident'>kind</span> <span class='op'>=</span> <span class='string'>&quot;dylib&quot;</span>)]</span>
 <span class='kw'>extern</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sel_registerName</span>(<span class='ident'>name</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>Sel</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sel_getName</span>(<span class='ident'>sel</span>: <span class='ident'>Sel</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
@@ -551,6 +542,7 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ivar_getTypeEncoding</span>(<span class='ident'>ivar</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Ivar</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>objc_msgSend</span>(<span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>op</span>: <span class='ident'>Sel</span>, ...) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>objc_msgSend_stret</span>(<span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>op</span>: <span class='ident'>Sel</span>, ...) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>;
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>method_getName</span>(<span class='ident'>method</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Method</span>) <span class='op'>-&gt;</span> <span class='ident'>Sel</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>method_getImplementation</span>(<span class='ident'>method</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Method</span>) <span class='op'>-&gt;</span> <span class='ident'>Imp</span>;

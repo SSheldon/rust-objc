@@ -184,8 +184,16 @@
 <span id="142">142</span>
 <span id="143">143</span>
 <span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
 </pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_char</span>;
+<span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_char</span>, <span class='ident'>c_void</span>};
 
 <span class='kw'>use</span> <span class='ident'>runtime</span>::{<span class='ident'>Class</span>, <span class='ident'>Object</span>, <span class='ident'>Sel</span>};
 
@@ -267,6 +275,14 @@
 
 <span class='kw'>impl</span> <span class='ident'>Encode</span> <span class='kw'>for</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span> {
     <span class='kw'>fn</span> <span class='ident'>code</span>() <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> { <span class='string'>&quot;r*&quot;</span> }
+}
+
+<span class='kw'>impl</span> <span class='ident'>Encode</span> <span class='kw'>for</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span> {
+    <span class='kw'>fn</span> <span class='ident'>code</span>() <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> { <span class='string'>&quot;^v&quot;</span> }
+}
+
+<span class='kw'>impl</span> <span class='ident'>Encode</span> <span class='kw'>for</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span> {
+    <span class='kw'>fn</span> <span class='ident'>code</span>() <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> { <span class='string'>&quot;r^v&quot;</span> }
 }
 
 <span class='kw'>impl</span> <span class='ident'>Encode</span> <span class='kw'>for</span> <span class='ident'>Sel</span> {

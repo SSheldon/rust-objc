@@ -105,7 +105,6 @@
 <span id="63">63</span>
 <span id="64">64</span>
 <span id="65">65</span>
-<span id="66">66</span>
 </pre><pre class='rust '>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>object_struct</span> {
@@ -116,7 +115,6 @@
         <span class='macro'>object_struct</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>),<span class='op'>+</span>);
     );
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>:<span class='ident'>ident</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> (
-        <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>missing_copy_implementations</span>)]</span>
         <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>),<span class='op'>*</span><span class='op'>&gt;</span> { }
 
         <span class='macro'>object_impl</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> $(,<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>)<span class='op'>*</span>);

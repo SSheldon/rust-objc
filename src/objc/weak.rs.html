@@ -117,9 +117,6 @@
 <span id="75">75</span>
 <span id="76">76</span>
 <span id="77">77</span>
-<span id="78">78</span>
-<span id="79">79</span>
-<span id="80">80</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>UnsafeCell</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
@@ -127,8 +124,7 @@
 <span class='kw'>use</span> {<span class='ident'>Id</span>, <span class='ident'>ShareId</span>, <span class='ident'>Message</span>, <span class='ident'>ToMessage</span>};
 <span class='kw'>use</span> <span class='ident'>runtime</span>::<span class='ident'>Object</span>;
 
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>improper_ctypes</span>)]</span>
-<span class='attribute'>#[<span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;Foundation&quot;</span>, <span class='ident'>kind</span> <span class='op'>=</span> <span class='string'>&quot;framework&quot;</span>)]</span>
+<span class='attribute'>#[<span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;objc&quot;</span>, <span class='ident'>kind</span> <span class='op'>=</span> <span class='string'>&quot;dylib&quot;</span>)]</span>
 <span class='kw'>extern</span> {
     <span class='kw'>fn</span> <span class='ident'>objc_storeWeak</span>(<span class='ident'>location</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>;
     <span class='kw'>fn</span> <span class='ident'>objc_loadWeakRetained</span>(<span class='ident'>location</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>;
@@ -160,8 +156,12 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>load</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>ShareId</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='ident'>loc</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>ptr</span>.<span class='ident'>get</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>;
-            <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='ident'>objc_loadWeakRetained</span>(<span class='ident'>loc</span>);
-            <span class='ident'>Id</span>::<span class='ident'>maybe_from_retained_ptr</span>(<span class='ident'>obj</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>)
+            <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='ident'>objc_loadWeakRetained</span>(<span class='ident'>loc</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>;
+            <span class='kw'>if</span> <span class='ident'>obj</span>.<span class='ident'>is_null</span>() {
+                <span class='prelude-val'>None</span>
+            } <span class='kw'>else</span> {
+                <span class='prelude-val'>Some</span>(<span class='ident'>Id</span>::<span class='ident'>from_retained_ptr</span>(<span class='ident'>obj</span>))
+            }
         }
     }
 }
@@ -178,19 +178,13 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> {<span class='ident'>Id</span>};
-    <span class='kw'>use</span> <span class='ident'>runtime</span>::{<span class='ident'>Class</span>, <span class='ident'>Object</span>};
+    <span class='kw'>use</span> <span class='ident'>runtime</span>::<span class='ident'>Object</span>;
+    <span class='kw'>use</span> <span class='ident'>test_utils</span>;
     <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>WeakId</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_weak</span>() {
-        <span class='kw'>let</span> <span class='ident'>cls</span> <span class='op'>=</span> <span class='ident'>Class</span>::<span class='ident'>get</span>(<span class='string'>&quot;NSObject&quot;</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>cls</span>, <span class='ident'>alloc</span>];
-            <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>init</span>];
-            <span class='ident'>Id</span>::<span class='ident'>from_retained_ptr</span>(<span class='ident'>obj</span>)
-        };
-        <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='ident'>obj</span>.<span class='ident'>share</span>();
+        <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>sample_object</span>().<span class='ident'>share</span>();
 
         <span class='kw'>let</span> <span class='ident'>weak</span> <span class='op'>=</span> <span class='ident'>WeakId</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='ident'>obj</span>);
         <span class='kw'>let</span> <span class='ident'>strong</span> <span class='op'>=</span> <span class='ident'>weak</span>.<span class='ident'>load</span>().<span class='ident'>unwrap</span>();

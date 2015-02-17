@@ -66,30 +66,46 @@
 <span id="24">24</span>
 <span id="25">25</span>
 <span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
 </pre><pre class='rust '>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_name</span> <span class='op'>=</span> <span class='string'>&quot;objc_foundation&quot;</span>]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span> <span class='op'>=</span> <span class='string'>&quot;lib&quot;</span>]</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>core</span>, <span class='ident'>hash</span>, <span class='ident'>std_misc</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>collections</span>, <span class='ident'>core</span>, <span class='ident'>hash</span>, <span class='ident'>std_misc</span>)]</span>
 
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>objc</span>;
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>array</span>::{
     <span class='ident'>INSArray</span>, <span class='ident'>INSMutableArray</span>, <span class='ident'>INSOwnedArray</span>, <span class='ident'>INSSharedArray</span>,
-    <span class='ident'>NSArray</span>, <span class='ident'>NSComparisonResult</span>, <span class='ident'>NSEnumerator</span>, <span class='ident'>NSMutableArray</span>, <span class='ident'>NSRange</span>,
+    <span class='ident'>NSArray</span>, <span class='ident'>NSComparisonResult</span>, <span class='ident'>NSMutableArray</span>, <span class='ident'>NSRange</span>,
     <span class='ident'>NSMutableSharedArray</span>, <span class='ident'>NSSharedArray</span>,
 };
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>data</span>::{<span class='ident'>INSData</span>, <span class='ident'>INSMutableData</span>, <span class='ident'>NSData</span>, <span class='ident'>NSMutableData</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>dictionary</span>::{<span class='ident'>INSDictionary</span>, <span class='ident'>NSDictionary</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>enumerator</span>::{<span class='ident'>INSFastEnumeration</span>, <span class='ident'>NSEnumerator</span>, <span class='ident'>NSFastEnumerator</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>object</span>::{<span class='ident'>INSObject</span>, <span class='ident'>NSObject</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>string</span>::{<span class='ident'>INSCopying</span>, <span class='ident'>INSMutableCopying</span>, <span class='ident'>INSString</span>, <span class='ident'>NSString</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>value</span>::{<span class='ident'>INSValue</span>, <span class='ident'>NSValue</span>};
+
+<span class='attribute'>#[<span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;Foundation&quot;</span>, <span class='ident'>kind</span> <span class='op'>=</span> <span class='string'>&quot;framework&quot;</span>)]</span>
+<span class='kw'>extern</span> { }
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>mod</span> <span class='ident'>macros</span>;
 
 <span class='kw'>mod</span> <span class='ident'>array</span>;
+<span class='kw'>mod</span> <span class='ident'>data</span>;
 <span class='kw'>mod</span> <span class='ident'>dictionary</span>;
+<span class='kw'>mod</span> <span class='ident'>enumerator</span>;
 <span class='kw'>mod</span> <span class='ident'>object</span>;
 <span class='kw'>mod</span> <span class='ident'>string</span>;
 <span class='kw'>mod</span> <span class='ident'>value</span>;

@@ -180,6 +180,14 @@ pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
     args.send(obj, sel)
 }
 
+/// Sends a message to an object with selector `sel` and arguments `args`.
+/// This function will choose the correct version of `objc_msgSend` based on the
+/// return type. For more information, see Apple's documenation:
+/// https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778
+///
+/// When the verify_message_encode feature is defined, at runtime in debug
+/// builds this function will verify that the encoding of the return type
+/// matches the encoding of the method.
 #[cfg(all(not(ndebug), feature = "verify_message_encode"))]
 pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
         where T: ToMessage, A: MessageArguments, R: Encode {

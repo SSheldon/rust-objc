@@ -30,13 +30,7 @@ macro_rules! sel {
 
 /// Sends a message to an object. The first argument should implement the
 /// `ToMessage` trait, and the syntax is similar to the message syntax in
-/// Objective-C.
-///
-/// Variadic arguments are not currently supported. This macro should only be
-/// used in cases where `objc_msgSend` would be used, as opposed to
-/// `objc_msgSend_stret` or `objc_msgSend_fpret`.
-/// For more information, see Apple's documenation:
-/// https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778
+/// Objective-C. Variadic arguments are not currently supported.
 ///
 /// # Example
 /// ``` ignore

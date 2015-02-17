@@ -69,7 +69,7 @@ extern {
     pub fn ivar_getTypeEncoding(ivar: *const Ivar) -> *const c_char;
 
     pub fn objc_msgSend(obj: *mut Object, op: Sel, ...) -> *mut Object;
-    pub fn objc_msgSend_stret(obj: *mut Object, op: Sel, ...) -> *mut Object;
+    pub fn objc_msgSend_stret(obj: *mut Object, op: Sel, ...);
 
     pub fn method_getName(method: *const Method) -> Sel;
     pub fn method_getImplementation(method: *const Method) -> Imp;

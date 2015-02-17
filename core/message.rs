@@ -174,13 +174,13 @@ fn verify_message_signature<T, A, R>(obj: Option<&T>, sel: Sel, _args: &A) ->
     Ok(())
 }
 
-#[cfg(ndebug)]
+#[cfg(any(ndebug, not(feature = "verify_message_encode")))]
 pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
         where T: ToMessage, A: MessageArguments {
     args.send(obj, sel)
 }
 
-#[cfg(not(ndebug))]
+#[cfg(all(not(ndebug), feature = "verify_message_encode"))]
 pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
         where T: ToMessage, A: MessageArguments, R: Encode {
     let obj_ref = obj.as_ptr().as_ref();

@@ -128,6 +128,7 @@ fn verify_message_arguments(types: &[&str], method: &Method) -> Result<(), Strin
     Ok(())
 }
 
+#[allow(dead_code)]
 fn verify_message_signature<T, A, R>(obj: Option<&T>, sel: Sel, _args: &A) ->
         Result<(), String> where T: Message, A: MessageArguments, R: Encode {
     let obj = match obj {
@@ -173,16 +174,20 @@ fn verify_message_signature<T, A, R>(obj: Option<&T>, sel: Sel, _args: &A) ->
     Ok(())
 }
 
+#[cfg(ndebug)]
 pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
         where T: ToMessage, A: MessageArguments {
     args.send(obj, sel)
 }
 
-pub unsafe fn send_message_verified<T, A, R>(obj: &T, sel: Sel, args: A) ->
-        Result<R, String> where T: ToMessage, A: MessageArguments, R: Encode {
+#[cfg(not(ndebug))]
+pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
+        where T: ToMessage, A: MessageArguments, R: Encode {
     let obj_ref = obj.as_ptr().as_ref();
-    verify_message_signature::<_, _, R>(obj_ref, sel, &args).and_then(
-        move |()| Ok(args.send(obj, sel)))
+    match verify_message_signature::<_, _, R>(obj_ref, sel, &args) {
+        Err(s) => panic!("Verify message failed: {}", s),
+        Ok(_) => args.send(obj, sel),
+    }
 }
 
 #[cfg(test)]

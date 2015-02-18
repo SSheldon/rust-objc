@@ -20,48 +20,34 @@ unsafe impl Message for Class { }
 /// A trait for converting to a pointer to a type that may be sent Objective-C
 /// messages.
 pub trait ToMessage {
-    type Target: Message;
-
-    fn as_ptr(&self) -> *mut Self::Target;
-
-    fn as_id_ptr(&self) -> *mut Object {
-        self.as_ptr() as *mut Object
-    }
+    fn as_id_ptr(&self) -> *mut Object;
 
     fn is_nil(&self) -> bool {
-        self.as_ptr().is_null()
+        self.as_id_ptr().is_null()
     }
 }
 
 impl<T> ToMessage for *const T where T: Message {
-    type Target = T;
-
-    fn as_ptr(&self) -> *mut T {
-        *self as *mut T
+    fn as_id_ptr(&self) -> *mut Object {
+        *self as *mut Object
     }
 }
 
 impl<T> ToMessage for *mut T where T: Message {
-    type Target = T;
-
-    fn as_ptr(&self) -> *mut T {
-        *self
+    fn as_id_ptr(&self) -> *mut Object {
+        *self as *mut Object
     }
 }
 
 impl<'a, T> ToMessage for &'a T where T: Message {
-    type Target = T;
-
-    fn as_ptr(&self) -> *mut T {
-        *self as *const T as *mut T
+    fn as_id_ptr(&self) -> *mut Object {
+        *self as *const T as *mut Object
     }
 }
 
 impl<'a, T> ToMessage for &'a mut T where T: Message {
-    type Target = T;
-
-    fn as_ptr(&self) -> *mut T {
-        *self
+    fn as_id_ptr(&self) -> *mut Object {
+        *self as *mut T as *mut Object
     }
 }
 

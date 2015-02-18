@@ -11,7 +11,7 @@ use {encode, Encode};
  */
 /// Types that may be sent Objective-C messages.
 /// For example: objects, classes, and blocks.
-pub unsafe trait Message: Sized { }
+pub unsafe trait Message { }
 
 unsafe impl Message for Object { }
 

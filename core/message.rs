@@ -24,6 +24,10 @@ pub trait ToMessage {
 
     fn as_ptr(&self) -> *mut Self::Target;
 
+    fn as_id_ptr(&self) -> *mut Object {
+        self.as_ptr() as *mut Object
+    }
+
     fn is_nil(&self) -> bool {
         self.as_ptr().is_null()
     }
@@ -81,7 +85,7 @@ macro_rules! message_args_impl {
                 let msg_send_fn = msg_send_fn::<R>();
                 let msg_send_fn: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
                     mem::transmute(msg_send_fn);
-                let obj_ptr = obj.as_ptr() as *mut Object;
+                let obj_ptr = obj.as_id_ptr();
                 let ($($a,)*) = self;
                 msg_send_fn(obj_ptr, sel $(, $a)*)
             }

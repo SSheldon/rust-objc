@@ -71,3 +71,51 @@ macro_rules! msg_send {
         $crate::send_message(&$obj, sel, ($($arg,)*))
     });
 }
+
+/// Implements the `Encode` trait for a `Message` type.
+/// Specifically, this will implement `Encode` for reference, pointers, and
+/// `Option` references of the given type.
+///
+/// The first argument should be a static string that is the type encoding
+/// to use in the implementation. The second argument is the ident of the name
+/// of the type to implement `Encode` for, and any further arguments are
+/// used as type parameters for the type.
+///
+/// # Example
+/// ``` ignore
+/// impl Message for Object { }
+/// encode_message_impl!("@", Object)
+///
+/// impl<T> Message for Array<T> { }
+/// encode_message_impl!("@", Array, T)
+/// ```
+macro_rules! encode_message_impl {
+    ($code:expr, $name:ident) => (
+        encode_message_impl!($code, $name,);
+    );
+    ($code:expr, $name:ident, $($t:ident),*) => (
+        impl<'a $(, $t)*> $crate::Encode for &'a $name<$($t),*> {
+            fn code() -> &'static str { $code }
+        }
+
+        impl<'a $(, $t)*> $crate::Encode for &'a mut $name<$($t),*> {
+            fn code() -> &'static str { $code }
+        }
+
+        impl<'a $(, $t)*> $crate::Encode for Option<&'a $name<$($t),*>> {
+            fn code() -> &'static str { $code }
+        }
+
+        impl<'a $(, $t)*> $crate::Encode for Option<&'a mut $name<$($t),*>> {
+            fn code() -> &'static str { $code }
+        }
+
+        impl<$($t),*> $crate::Encode for *const $name<$($t),*> {
+            fn code() -> &'static str { $code }
+        }
+
+        impl<$($t),*> $crate::Encode for *mut $name<$($t),*> {
+            fn code() -> &'static str { $code }
+        }
+    );
+}

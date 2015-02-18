@@ -96,47 +96,9 @@ impl Encode for Sel {
     fn code() -> &'static str { ":" }
 }
 
-/// Types that pointers to have an Objective-C type encoding.
-///
-/// This trait is largely for convenience, so that it can be implemnted once
-/// to implement encode for the 6 pointer types: immutable/mutable references,
-/// optional immutable/mutable references, and const/mutable pointers.
-pub trait EncodePtr : PhantomFn<Self> {
-    /// Returns the encoding for pointers to Self.
-    fn ptr_code() -> &'static str;
-}
+encode_message_impl!("@", Object);
 
-impl<'a, T> Encode for &'a T where T: EncodePtr {
-    fn code() -> &'static str { T::ptr_code() }
-}
-
-impl<'a, T> Encode for &'a mut T where T: EncodePtr {
-    fn code() -> &'static str { T::ptr_code() }
-}
-
-impl<'a, T> Encode for Option<&'a T> where T: EncodePtr {
-    fn code() -> &'static str { T::ptr_code() }
-}
-
-impl<'a, T> Encode for Option<&'a mut T> where T: EncodePtr {
-    fn code() -> &'static str { T::ptr_code() }
-}
-
-impl<T> Encode for *const T where T: EncodePtr {
-    fn code() -> &'static str { T::ptr_code() }
-}
-
-impl<T> Encode for *mut T where T: EncodePtr {
-    fn code() -> &'static str { T::ptr_code() }
-}
-
-impl EncodePtr for Object {
-    fn ptr_code() -> &'static str { "@" }
-}
-
-impl EncodePtr for Class {
-    fn ptr_code() -> &'static str { "#" }
-}
+encode_message_impl!("#", Class);
 
 /// Returns the Objective-C type encoding for a type.
 pub fn encode<T>() -> &'static str where T: Encode {

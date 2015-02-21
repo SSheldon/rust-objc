@@ -362,7 +362,8 @@ impl fmt::Debug for Object {
 #[cfg(test)]
 mod tests {
     use std::mem;
-    use super::{Class, Object, Sel};
+    use test_utils;
+    use super::{Class, Sel};
 
     #[test]
     fn test_ivar() {
@@ -410,14 +411,9 @@ mod tests {
     #[test]
     fn test_object() {
         let cls = Class::get("NSObject").unwrap();
-        let obj = unsafe {
-            let obj: *mut Object = msg_send![cls, alloc];
-            let obj: *mut Object = msg_send![obj, init];
-            &*obj
-        };
+        let obj = test_utils::sample_object();
         assert!(obj.class() == cls);
-        unsafe {
-            let _: () = msg_send![obj, release];
-        }
+        let isa = unsafe { *obj.get_ivar("isa") };
+        assert!(isa == cls as *const Class);
     }
 }

@@ -2,8 +2,9 @@ use std::sync::{Once, ONCE_INIT};
 use objc_test_utils;
 
 use block::Block;
+use declare::{ClassDecl, MethodDecl};
 use runtime::{Class, Object, Sel};
-use {ClassDecl, Encode, Id, MethodDecl};
+use {Encode, Id};
 
 pub fn sample_object() -> Id<Object> {
     let cls = Class::get("NSObject").unwrap();

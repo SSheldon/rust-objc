@@ -1,3 +1,5 @@
+//! Functionality for declaring Objective-C classes.
+
 use std::ffi::CString;
 use std::mem;
 use libc::size_t;

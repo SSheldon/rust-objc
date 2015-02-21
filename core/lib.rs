@@ -10,7 +10,6 @@ extern crate malloc_buf;
 extern crate objc_test_utils;
 
 pub use id::{Id, IdSlice, Owned, Ownership, Shared, ShareId};
-pub use declare::{ClassDecl, MethodDecl, IntoMethodDecl};
 pub use encode::{encode, Encode, EncodePtr};
 pub use message::{send_message, Message, MessageArguments, ToMessage};
 pub use weak::WeakId;
@@ -21,7 +20,7 @@ mod macros;
 pub mod runtime;
 mod id;
 pub mod block;
-mod declare;
+pub mod declare;
 mod encode;
 mod message;
 mod weak;

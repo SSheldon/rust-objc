@@ -18,7 +18,7 @@ unsafe impl Message for Object { }
 
 unsafe impl Message for Class { }
 
-/// A trait for converting to a pointer to a type that may be sent Objective-C
+/// A trait for converting to an `id` pointer that may be sent Objective-C
 /// messages.
 pub trait ToMessage {
     fn as_id_ptr(&self) -> *mut Object;
@@ -61,7 +61,13 @@ fn msg_send_fn<R>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
     }
 }
 
+/// Types that may be used as the arguments of an Objective-C message.
 pub trait MessageArguments {
+    /// Sends a message to the given obj with the given selector and self as
+    /// the arguments.
+    ///
+    /// It is recommended to use the `msg_send!` macro rather than calling this
+    /// method directly.
     unsafe fn send<T, R>(self, obj: &T, sel: Sel) -> R where T: ToMessage;
 }
 
@@ -176,6 +182,13 @@ pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
 /// When the verify_message_encode feature is defined, at runtime in debug
 /// builds this function will verify that the encoding of the return type
 /// matches the encoding of the method.
+///
+/// # Example
+/// ``` ignore
+/// use objc::send_message;
+/// let _: () = send_message(dict, sel!(setObject:forKey:), (obj, key));
+/// let obj = send_message(dict, sel!(objectForKey:), (key,));
+/// ```
 #[cfg(all(not(ndebug), feature = "verify_message_encode"))]
 pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
         where T: ToMessage, A: MessageArguments, R: Encode {

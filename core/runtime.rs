@@ -3,9 +3,8 @@
 //! For more information on foreign functions, see Apple's documentation:
 //! https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html
 
-use std::ffi::{CString, self};
+use std::ffi::{CStr, CString};
 use std::fmt;
-use std::mem;
 use std::ptr;
 use std::str;
 use libc::{c_char, c_int, c_uint, c_void, ptrdiff_t, size_t};
@@ -14,9 +13,8 @@ use malloc_buf::{MallocBuffer, MallocString};
 use {encode, Encode};
 
 unsafe fn from_c_str<'a>(ptr: *const c_char) -> &'a str {
-    let bytes = ffi::c_str_to_bytes(&ptr);
-    let s = str::from_utf8(bytes).unwrap();
-    mem::transmute(s)
+    let s = CStr::from_ptr(ptr);
+    str::from_utf8(s.to_bytes()).unwrap()
 }
 
 /// A type that represents a method selector.
@@ -85,7 +83,7 @@ impl Sel {
     /// Registers a method with the Objective-C runtime system,
     /// maps the method name to a selector, and returns the selector value.
     pub fn register(name: &str) -> Sel {
-        let name = CString::from_slice(name.as_bytes());
+        let name = CString::new(name).unwrap();
         unsafe {
             sel_registerName(name.as_ptr())
         }
@@ -216,7 +214,7 @@ impl Class {
     /// Returns the class definition of a specified class, or `None` if the
     /// class is not registered with the Objective-C runtime.
     pub fn get(name: &str) -> Option<&'static Class> {
-        let name = CString::from_slice(name.as_bytes());
+        let name = CString::new(name).unwrap();
         unsafe {
             objc_getClass(name.as_ptr()).as_ref()
         }
@@ -265,7 +263,7 @@ impl Class {
     /// Returns the ivar for a specified instance variable of self, or `None`
     /// if self has no ivar with the given name.
     pub fn instance_variable(&self, name: &str) -> Option<&Ivar> {
-        let name = CString::from_slice(name.as_bytes());
+        let name = CString::new(name).unwrap();
         unsafe {
             class_getInstanceVariable(self, name.as_ptr()).as_ref()
         }

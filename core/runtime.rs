@@ -12,11 +12,6 @@ use malloc_buf::{MallocBuffer, MallocString};
 
 use {encode, Encode};
 
-unsafe fn from_c_str<'a>(ptr: *const c_char) -> &'a str {
-    let s = CStr::from_ptr(ptr);
-    str::from_utf8(s.to_bytes()).unwrap()
-}
-
 /// A type that represents a method selector.
 #[repr(C)]
 pub struct Sel {
@@ -91,10 +86,10 @@ impl Sel {
 
     /// Returns the name of the method specified by self.
     pub fn name(&self) -> &str {
-        unsafe {
-            let name = sel_getName(*self);
-            from_c_str(name)
-        }
+        let name = unsafe {
+            CStr::from_ptr(sel_getName(*self))
+        };
+        str::from_utf8(name.to_bytes()).unwrap()
     }
 }
 
@@ -121,10 +116,10 @@ impl fmt::Debug for Sel {
 impl Ivar {
     /// Returns the name of self.
     pub fn name(&self) -> &str {
-        unsafe {
-            let name = ivar_getName(self);
-            from_c_str(name)
-        }
+        let name = unsafe {
+            CStr::from_ptr(ivar_getName(self))
+        };
+        str::from_utf8(name.to_bytes()).unwrap()
     }
 
     /// Returns the offset of self.
@@ -137,10 +132,10 @@ impl Ivar {
 
     /// Returns the type string of self.
     pub fn type_encoding(&self) -> &str {
-        unsafe {
-            let encoding = ivar_getTypeEncoding(self);
-            from_c_str(encoding)
-        }
+        let encoding = unsafe {
+            CStr::from_ptr(ivar_getTypeEncoding(self))
+        };
+        str::from_utf8(encoding.to_bytes()).unwrap()
     }
 }
 
@@ -154,10 +149,10 @@ impl Method {
 
     /// Returns a string describing self's parameter and return types.
     pub fn type_encoding(&self) -> &str {
-        unsafe {
-            let encoding = method_getTypeEncoding(self);
-            from_c_str(encoding)
-        }
+        let encoding = unsafe {
+            CStr::from_ptr(method_getTypeEncoding(self))
+        };
+        str::from_utf8(encoding.to_bytes()).unwrap()
     }
 
     /// Returns a string describing self's return type.
@@ -238,10 +233,10 @@ impl Class {
 
     /// Returns the name of self.
     pub fn name(&self) -> &str {
-        unsafe {
-            let name = class_getName(self);
-            from_c_str(name)
-        }
+        let name = unsafe {
+            CStr::from_ptr(class_getName(self))
+        };
+        str::from_utf8(name.to_bytes()).unwrap()
     }
 
     /// Returns the size of instances of self.

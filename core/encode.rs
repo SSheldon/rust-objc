@@ -1,3 +1,4 @@
+use std::marker::MarkerTrait;
 use libc::{c_char, c_void};
 
 use runtime::{Class, Object, Sel};
@@ -5,7 +6,7 @@ use runtime::{Class, Object, Sel};
 /// Types that have an Objective-C type encoding. For more information, see
 /// Apple's documentation:
 /// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
-pub trait Encode {
+pub trait Encode : MarkerTrait {
     /// Return the Encoding for Self.
     fn code() -> &'static str;
 }
@@ -94,7 +95,7 @@ impl Encode for Sel {
     fn code() -> &'static str { ":" }
 }
 
-pub trait EncodePtr {
+pub trait EncodePtr : MarkerTrait {
     fn ptr_code() -> &'static str;
 }
 

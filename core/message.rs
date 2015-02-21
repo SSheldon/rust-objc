@@ -1,3 +1,4 @@
+use std::marker::MarkerTrait;
 use std::mem;
 
 use runtime::{Class, Method, Object, Sel, self};
@@ -11,7 +12,7 @@ use {encode, Encode};
  */
 /// Types that may be sent Objective-C messages.
 /// For example: objects, classes, and blocks.
-pub unsafe trait Message { }
+pub unsafe trait Message : MarkerTrait { }
 
 unsafe impl Message for Object { }
 

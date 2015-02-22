@@ -62,28 +62,28 @@ pub fn custom_class() -> &'static Class {
         let superclass = Class::get("NSObject").unwrap();
         let mut decl = ClassDecl::new(superclass, "CustomObject").unwrap();
 
-        assert!(decl.add_ivar::<u32>("_foo"));
+        decl.add_ivar::<u32>("_foo");
 
         extern fn custom_obj_set_foo(this: &mut Object, _cmd: Sel, foo: u32) {
             unsafe { this.set_ivar::<u32>("_foo", foo); }
         }
         let method = MethodDecl::new(sel!(setFoo:),
             custom_obj_set_foo as extern fn(&mut Object, Sel, u32));
-        assert!(decl.add_method(method.unwrap()));
+        decl.add_method(method.unwrap());
 
         extern fn custom_obj_get_foo(this: &Object, _cmd: Sel) -> u32 {
             unsafe { *this.get_ivar::<u32>("_foo") }
         }
         let method = MethodDecl::new(sel!(foo),
             custom_obj_get_foo as extern fn(&Object, Sel) -> u32);
-        assert!(decl.add_method(method.unwrap()));
+        decl.add_method(method.unwrap());
 
         extern fn custom_obj_get_struct(_this: &Object, _cmd: Sel) -> CustomStruct {
             CustomStruct { a: 1, b: 2, c: 3, d: 4 }
         }
         let method = MethodDecl::new(sel!(customStruct),
             custom_obj_get_struct as extern fn(&Object, Sel) -> CustomStruct);
-        assert!(decl.add_method(method.unwrap()));
+        decl.add_method(method.unwrap());
 
         decl.register();
     });

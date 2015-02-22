@@ -18,7 +18,7 @@ let superclass = Class::get("NSObject").unwrap();
 let mut decl = ClassDecl::new(superclass, "MyNumber").unwrap();
 
 // Add an instance variable
-assert!(decl.add_ivar::<u32>("_number"));
+decl.add_ivar::<u32>("_number");
 
 // Add an ObjC method for getting the number
 extern fn my_number_get(this: &Object, _cmd: Sel) -> u32 {
@@ -26,7 +26,7 @@ extern fn my_number_get(this: &Object, _cmd: Sel) -> u32 {
 }
 let method = MethodDecl::new(sel!(number),
     my_number_get as extern fn(&Object, Sel) -> u32);
-assert!(decl.add_method(method.unwrap()));
+decl.add_method(method.unwrap());
 
 decl.register();
 # }
@@ -138,26 +138,28 @@ impl ClassDecl {
     }
 
     /// Adds a method declared with the given `MethodDecl` to self.
-    /// Returns true if the method was sucessfully added.
-    pub fn add_method(&mut self, method: MethodDecl) -> bool {
+    /// Panics if the method wasn't sucessfully added.
+    pub fn add_method(&mut self, method: MethodDecl) {
         let MethodDecl { sel, imp, types } = method;
         let types = CString::new(types).unwrap();
-        unsafe {
+        let success = unsafe {
             runtime::class_addMethod(self.cls, sel, imp, types.as_ptr())
-        }
+        };
+        assert!(success, "Failed to add method {:?}", sel);
     }
 
     /// Adds an ivar with type `T` and the provided name to self.
-    /// Returns true if the ivar was sucessfully added.
-    pub fn add_ivar<T>(&mut self, name: &str) -> bool where T: Encode {
-        let name = CString::new(name).unwrap();
+    /// Panics if the ivar wasn't successfully added.
+    pub fn add_ivar<T>(&mut self, name: &str) where T: Encode {
+        let c_name = CString::new(name).unwrap();
         let types = CString::new(encode::<T>()).unwrap();
         let size = mem::size_of::<T>() as size_t;
         let align = mem::align_of::<T>() as u8;
-        unsafe {
-            runtime::class_addIvar(self.cls, name.as_ptr(), size, align,
+        let success = unsafe {
+            runtime::class_addIvar(self.cls, c_name.as_ptr(), size, align,
                 types.as_ptr())
-        }
+        };
+        assert!(success, "Failed to add ivar {}", name);
     }
 
     /// Registers self, consuming it and returning a reference to the

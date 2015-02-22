@@ -1,10 +1,15 @@
-/// Registers a selector, returning an `Sel`.
-///
-/// # Example
-/// ``` ignore
-/// let sel = sel!(description);
-/// let sel = sel!(setObject:forKey:);
-/// ```
+/**
+Registers a selector, returning an `Sel`.
+
+# Example
+```
+# #[macro_use] extern crate objc;
+# fn main() {
+let sel = sel!(description);
+let sel = sel!(setObject:forKey:);
+# }
+```
+*/
 #[macro_export]
 macro_rules! sel {
     // Declare a function to hide unsafety, otherwise we can trigger the
@@ -28,15 +33,25 @@ macro_rules! sel {
     });
 }
 
-/// Sends a message to an object. The first argument should implement the
-/// `ToMessage` trait, and the syntax is similar to the message syntax in
-/// Objective-C. Variadic arguments are not currently supported.
-///
-/// # Example
-/// ``` ignore
-/// let description = msg_send![obj, description];
-/// msg_send![obj, setArg1:1u arg2:2u];
-/// ```
+/**
+Sends a message to an object. The first argument should implement the
+`ToMessage` trait, and the syntax is similar to the message syntax in
+Objective-C. Variadic arguments are not currently supported.
+
+# Example
+``` no_run
+# #[macro_use] extern crate objc;
+# use objc::runtime::Object;
+# fn main() {
+# unsafe {
+let obj: *mut Object;
+# let obj: *mut Object = 0 as *mut Object;
+let description: *const Object = msg_send![obj, description];
+let _: () = msg_send![obj, setArg1:1 arg2:2];
+# }
+# }
+```
+*/
 #[macro_export]
 macro_rules! msg_send {
     ($obj:expr, $name:ident) => ({

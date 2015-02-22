@@ -21,8 +21,10 @@ unsafe impl Message for Class { }
 /// A trait for converting to an `id` pointer that may be sent Objective-C
 /// messages.
 pub trait ToMessage {
+    /// Returns self as an `id` pointer, a pointer to an `Object`.
     fn as_id_ptr(&self) -> *mut Object;
 
+    /// Returns true if self is nil.
     fn is_nil(&self) -> bool {
         self.as_id_ptr().is_null()
     }

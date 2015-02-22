@@ -3,11 +3,12 @@ use libc::{c_char, c_void};
 
 use runtime::{Class, Object, Sel};
 
-/// Types that have an Objective-C type encoding. For more information, see
-/// Apple's documentation:
+/// Types that have an Objective-C type encoding.
+///
+/// For more information, see Apple's documentation:
 /// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
 pub trait Encode : MarkerTrait {
-    /// Return the Encoding for Self.
+    /// Returns the encoding for Self.
     fn code() -> &'static str;
 }
 
@@ -95,7 +96,13 @@ impl Encode for Sel {
     fn code() -> &'static str { ":" }
 }
 
+/// Types that pointers to have an Objective-C type encoding.
+///
+/// This trait is largely for convenience, so that it can be implemnted once
+/// to implement encode for the 6 pointer types: immutable/mutable references,
+/// optional immutable/mutable references, and const/mutable pointers.
 pub trait EncodePtr : MarkerTrait {
+    /// Returns the encoding for pointers to Self.
     fn ptr_code() -> &'static str;
 }
 

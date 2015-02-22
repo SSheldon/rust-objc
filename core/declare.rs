@@ -1,4 +1,37 @@
-//! Functionality for declaring Objective-C classes.
+/*!
+Functionality for declaring Objective-C classes.
+
+Classes can be declared using the `ClassDecl` struct. Instance variables and
+methods can then be added before the class is ultimately registered.
+
+# Example
+
+The following example demonstrates declaring a class named `MyNumber` that has
+one ivar, a `u32` named `_number` and a `number` method that returns it:
+
+```
+# #[macro_use] extern crate objc;
+# use objc::declare::{ClassDecl, MethodDecl};
+# use objc::runtime::{Class, Object, Sel};
+# fn main() {
+let superclass = Class::get("NSObject").unwrap();
+let mut decl = ClassDecl::new(superclass, "MyNumber").unwrap();
+
+// Add an instance variable
+assert!(decl.add_ivar::<u32>("_number"));
+
+// Add an ObjC method for getting the number
+extern fn my_number_get(this: &Object, _cmd: Sel) -> u32 {
+    unsafe { *this.get_ivar("_number") }
+}
+let method = MethodDecl::new(sel!(number),
+    my_number_get as extern fn(&Object, Sel) -> u32);
+assert!(decl.add_method(method.unwrap()));
+
+decl.register();
+# }
+```
+*/
 
 use std::ffi::CString;
 use std::mem;

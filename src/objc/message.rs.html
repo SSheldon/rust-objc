@@ -257,7 +257,31 @@
 <span id="215">215</span>
 <span id="216">216</span>
 <span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
 </pre><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>MarkerTrait</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 
 <span class='kw'>use</span> <span class='ident'>runtime</span>::{<span class='ident'>Class</span>, <span class='ident'>Method</span>, <span class='ident'>Object</span>, <span class='ident'>Sel</span>, <span class='self'>self</span>};
@@ -271,53 +295,45 @@
  */</span>
 <span class='doccomment'>/// Types that may be sent Objective-C messages.</span>
 <span class='doccomment'>/// For example: objects, classes, and blocks.</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>Message</span>: <span class='ident'>Sized</span> { }
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>Message</span> : <span class='ident'>MarkerTrait</span> { }
 
 <span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Message</span> <span class='kw'>for</span> <span class='ident'>Object</span> { }
 
 <span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Message</span> <span class='kw'>for</span> <span class='ident'>Class</span> { }
 
-<span class='doccomment'>/// A trait for converting to a pointer to a type that may be sent Objective-C</span>
+<span class='doccomment'>/// A trait for converting to an `id` pointer that may be sent Objective-C</span>
 <span class='doccomment'>/// messages.</span>
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>ToMessage</span> {
-    <span class='kw'>type</span> <span class='ident'>Target</span>: <span class='ident'>Message</span>;
+    <span class='doccomment'>/// Returns self as an `id` pointer, a pointer to an `Object`.</span>
+    <span class='kw'>fn</span> <span class='ident'>as_id_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Self</span>::<span class='ident'>Target</span>;
-
+    <span class='doccomment'>/// Returns true if self is nil.</span>
     <span class='kw'>fn</span> <span class='ident'>is_nil</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='self'>self</span>.<span class='ident'>as_ptr</span>().<span class='ident'>is_null</span>()
+        <span class='self'>self</span>.<span class='ident'>as_id_ptr</span>().<span class='ident'>is_null</span>()
     }
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>ToMessage</span> <span class='kw'>for</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>T</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span> {
-    <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> <span class='ident'>T</span>;
-
-    <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span> {
-        <span class='op'>*</span><span class='self'>self</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>
+    <span class='kw'>fn</span> <span class='ident'>as_id_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> {
+        <span class='op'>*</span><span class='self'>self</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>
     }
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>ToMessage</span> <span class='kw'>for</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span> {
-    <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> <span class='ident'>T</span>;
-
-    <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span> {
-        <span class='op'>*</span><span class='self'>self</span>
+    <span class='kw'>fn</span> <span class='ident'>as_id_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> {
+        <span class='op'>*</span><span class='self'>self</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>
     }
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>ToMessage</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span> {
-    <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> <span class='ident'>T</span>;
-
-    <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span> {
-        <span class='op'>*</span><span class='self'>self</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>T</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>
+    <span class='kw'>fn</span> <span class='ident'>as_id_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> {
+        <span class='op'>*</span><span class='self'>self</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>T</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>
     }
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>ToMessage</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>T</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span> {
-    <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> <span class='ident'>T</span>;
-
-    <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span> {
-        <span class='op'>*</span><span class='self'>self</span>
+    <span class='kw'>fn</span> <span class='ident'>as_id_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> {
+        <span class='op'>*</span><span class='self'>self</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>
     }
 }
 
@@ -330,7 +346,13 @@
     }
 }
 
+<span class='doccomment'>/// Types that may be used as the arguments of an Objective-C message.</span>
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>MessageArguments</span> {
+    <span class='doccomment'>/// Sends a message to the given obj with the given selector and self as</span>
+    <span class='doccomment'>/// the arguments.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// It is recommended to use the `msg_send!` macro rather than calling this</span>
+    <span class='doccomment'>/// method directly.</span>
     <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>obj</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>ToMessage</span>;
 }
 
@@ -341,7 +363,7 @@
                 <span class='kw'>let</span> <span class='ident'>msg_send_fn</span> <span class='op'>=</span> <span class='ident'>msg_send_fn</span>::<span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>();
                 <span class='kw'>let</span> <span class='ident'>msg_send_fn</span>: <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>Sel</span> $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>)<span class='op'>*</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span> <span class='op'>=</span>
                     <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>msg_send_fn</span>);
-                <span class='kw'>let</span> <span class='ident'>obj_ptr</span> <span class='op'>=</span> <span class='ident'>obj</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>;
+                <span class='kw'>let</span> <span class='ident'>obj_ptr</span> <span class='op'>=</span> <span class='ident'>obj</span>.<span class='ident'>as_id_ptr</span>();
                 <span class='kw'>let</span> ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>,)<span class='op'>*</span>) <span class='op'>=</span> <span class='self'>self</span>;
                 <span class='ident'>msg_send_fn</span>(<span class='ident'>obj_ptr</span>, <span class='ident'>sel</span> $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>)<span class='op'>*</span>)
             }
@@ -389,16 +411,13 @@
 }
 
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
-<span class='kw'>fn</span> <span class='ident'>verify_message_signature</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>obj</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>, <span class='ident'>_args</span>: <span class='kw-2'>&amp;</span><span class='ident'>A</span>) <span class='op'>-&gt;</span>
-        <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>String</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span>, <span class='ident'>A</span>: <span class='ident'>MessageArguments</span>, <span class='ident'>R</span>: <span class='ident'>Encode</span> {
+<span class='kw'>fn</span> <span class='ident'>verify_message_signature</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>obj</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Object</span><span class='op'>&gt;</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>, <span class='ident'>_args</span>: <span class='kw-2'>&amp;</span><span class='ident'>A</span>) <span class='op'>-&gt;</span>
+        <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>String</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>A</span>: <span class='ident'>MessageArguments</span>, <span class='ident'>R</span>: <span class='ident'>Encode</span> {
     <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>obj</span> {
         <span class='prelude-val'>Some</span>(<span class='ident'>obj</span>) <span class='op'>=&gt;</span> <span class='ident'>obj</span>,
         <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Messaging {:?} to nil&quot;</span>, <span class='ident'>sel</span>)),
     };
-    <span class='kw'>let</span> <span class='ident'>cls</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-        <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='op'>*</span>(<span class='ident'>obj</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Object</span>);
-        <span class='ident'>obj</span>.<span class='ident'>class</span>()
-    };
+    <span class='kw'>let</span> <span class='ident'>cls</span> <span class='op'>=</span> <span class='ident'>obj</span>.<span class='ident'>class</span>();
     <span class='kw'>let</span> <span class='ident'>method</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>cls</span>.<span class='ident'>instance_method</span>(<span class='ident'>sel</span>) {
         <span class='prelude-val'>Some</span>(<span class='ident'>method</span>) <span class='op'>=&gt;</span> <span class='ident'>method</span>,
         <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Method {:?} not found on class {:?}&quot;</span>,
@@ -440,11 +459,38 @@
     <span class='ident'>args</span>.<span class='ident'>send</span>(<span class='ident'>obj</span>, <span class='ident'>sel</span>)
 }
 
+<span class='doccomment'>/**
+Sends a message to an object with selector `sel` and arguments `args`.
+This function will choose the correct version of `objc_msgSend` based on the
+return type. For more information, see Apple&#39;s documenation:
+https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778
+
+When the verify_message_encode feature is defined, at runtime in debug
+builds this function will verify that the encoding of the return type
+matches the encoding of the method.
+
+# Example
+``` no_run
+# #[macro_use] extern crate objc;
+# use objc::send_message;
+# use objc::runtime::Object;
+# fn main() {
+# unsafe {
+let dict: *mut Object;
+let key: *const Object;
+# let dict: *mut Object = 0 as *mut Object;
+# let key: *const Object = 0 as *const Object;
+let obj: *const Object = send_message(&amp;dict, sel!(objectForKey:), (key,));
+let _: () = send_message(&amp;dict, sel!(setObject:forKey:), (obj, key));
+# }
+# }
+```
+*/</span>
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>not</span>(<span class='ident'>ndebug</span>), <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;verify_message_encode&quot;</span>))]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send_message</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>obj</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>, <span class='ident'>args</span>: <span class='ident'>A</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>ToMessage</span>, <span class='ident'>A</span>: <span class='ident'>MessageArguments</span>, <span class='ident'>R</span>: <span class='ident'>Encode</span> {
-    <span class='kw'>let</span> <span class='ident'>obj_ref</span> <span class='op'>=</span> <span class='ident'>obj</span>.<span class='ident'>as_ptr</span>().<span class='ident'>as_ref</span>();
-    <span class='kw'>match</span> <span class='ident'>verify_message_signature</span>::<span class='op'>&lt;</span>_, _, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>obj_ref</span>, <span class='ident'>sel</span>, <span class='kw-2'>&amp;</span><span class='ident'>args</span>) {
+    <span class='kw'>let</span> <span class='ident'>obj_ref</span> <span class='op'>=</span> <span class='ident'>obj</span>.<span class='ident'>as_id_ptr</span>().<span class='ident'>as_ref</span>();
+    <span class='kw'>match</span> <span class='ident'>verify_message_signature</span>::<span class='op'>&lt;</span>_, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>obj_ref</span>, <span class='ident'>sel</span>, <span class='kw-2'>&amp;</span><span class='ident'>args</span>) {
         <span class='prelude-val'>Err</span>(<span class='ident'>s</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Verify message failed: {}&quot;</span>, <span class='ident'>s</span>),
         <span class='prelude-val'>Ok</span>(_) <span class='op'>=&gt;</span> <span class='ident'>args</span>.<span class='ident'>send</span>(<span class='ident'>obj</span>, <span class='ident'>sel</span>),
     }

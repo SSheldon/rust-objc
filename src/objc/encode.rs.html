@@ -192,16 +192,26 @@
 <span id="150">150</span>
 <span id="151">151</span>
 <span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
 </pre><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>MarkerTrait</span>;
 <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_char</span>, <span class='ident'>c_void</span>};
 
 <span class='kw'>use</span> <span class='ident'>runtime</span>::{<span class='ident'>Class</span>, <span class='ident'>Object</span>, <span class='ident'>Sel</span>};
 
-<span class='doccomment'>/// Types that have an Objective-C type encoding. For more information, see</span>
-<span class='doccomment'>/// Apple&#39;s documentation:</span>
+<span class='doccomment'>/// Types that have an Objective-C type encoding.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// For more information, see Apple&#39;s documentation:</span>
 <span class='doccomment'>/// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Encode</span> {
-    <span class='doccomment'>/// Return the Encoding for Self.</span>
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Encode</span> : <span class='ident'>MarkerTrait</span> {
+    <span class='doccomment'>/// Returns the encoding for Self.</span>
     <span class='kw'>fn</span> <span class='ident'>code</span>() <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>;
 }
 
@@ -289,7 +299,13 @@
     <span class='kw'>fn</span> <span class='ident'>code</span>() <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> { <span class='string'>&quot;:&quot;</span> }
 }
 
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>EncodePtr</span> {
+<span class='doccomment'>/// Types that pointers to have an Objective-C type encoding.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// This trait is largely for convenience, so that it can be implemnted once</span>
+<span class='doccomment'>/// to implement encode for the 6 pointer types: immutable/mutable references,</span>
+<span class='doccomment'>/// optional immutable/mutable references, and const/mutable pointers.</span>
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>EncodePtr</span> : <span class='ident'>MarkerTrait</span> {
+    <span class='doccomment'>/// Returns the encoding for pointers to Self.</span>
     <span class='kw'>fn</span> <span class='ident'>ptr_code</span>() <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>;
 }
 

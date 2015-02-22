@@ -42,15 +42,21 @@
 
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>objc</a><wbr></span><span class='out-of-band'><a href='stability.html'>[stability]</a> <span id='render-detail'>
-            <a id="collapse-all" href="#">[-]
-            </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-0' href='../src/objc/lib.rs.html#1-30'>[src]</a></span></h1>
+            <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
+        </span><a id='src-0' href='../src/objc/lib.rs.html#1-29'>[src]</a></span></h1>
 <h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='block/index.html'
                                title='objc::block'>block</a></td>
                         <td class='docblock short'><p>A Rust interface for Objective-C blocks.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='declare/index.html'
+                               title='objc::declare'>declare</a></td>
+                        <td class='docblock short'><p>Functionality for declaring Objective-C classes.</p>
 </td>
                     </tr>
                 
@@ -67,7 +73,7 @@
                                title='objc::msg_send!'>msg_send!</a></td>
                         <td class='docblock short'><p>Sends a message to an object. The first argument should implement the
 <code>ToMessage</code> trait, and the syntax is similar to the message syntax in
-Objective-C.</p>
+Objective-C. Variadic arguments are not currently supported.</p>
 </td>
                     </tr>
                 
@@ -80,26 +86,10 @@ Objective-C.</p>
                 </table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.ClassDecl.html'
-                               title='objc::ClassDecl'>ClassDecl</a></td>
-                        <td class='docblock short'><p>A type for declaring a new class and adding new methods and ivars to it
-before registering it.</p>
-</td>
-                    </tr>
-                
-                    <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Id.html'
                                title='objc::Id'>Id</a></td>
                         <td class='docblock short'><p>A pointer type for Objective-C&#39;s reference counted objects. The object of
 an <code>Id</code> is retained and sent a <code>release</code> message when the <code>Id</code> is dropped.</p>
-</td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.MethodDecl.html'
-                               title='objc::MethodDecl'>MethodDecl</a></td>
-                        <td class='docblock short'><p>A type for declaring a new method.
-<code>MethodDecl</code>s are usually created using the <code>method!</code> macro.</p>
 </td>
                     </tr>
                 
@@ -132,16 +122,15 @@ so there may be other references to them.</p>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.Encode.html'
                                title='objc::Encode'>Encode</a></td>
-                        <td class='docblock short'><p>Types that have an Objective-C type encoding. For more information, see
-Apple&#39;s documentation:
-<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html">https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html</a></p>
+                        <td class='docblock short'><p>Types that have an Objective-C type encoding.</p>
 </td>
                     </tr>
                 
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.EncodePtr.html'
                                title='objc::EncodePtr'>EncodePtr</a></td>
-                        <td class='docblock short'></td>
+                        <td class='docblock short'><p>Types that pointers to have an Objective-C type encoding.</p>
+</td>
                     </tr>
                 
                     <tr>
@@ -149,12 +138,6 @@ Apple&#39;s documentation:
                                title='objc::IdSlice'>IdSlice</a></td>
                         <td class='docblock short'><p>Extension methods for slices containing <code>Id</code>s.</p>
 </td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.IntoMethodDecl.html'
-                               title='objc::IntoMethodDecl'>IntoMethodDecl</a></td>
-                        <td class='docblock short'></td>
                     </tr>
                 
                     <tr>
@@ -168,7 +151,8 @@ For example: objects, classes, and blocks.</p>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.MessageArguments.html'
                                title='objc::MessageArguments'>MessageArguments</a></td>
-                        <td class='docblock short'></td>
+                        <td class='docblock short'><p>Types that may be used as the arguments of an Objective-C message.</p>
+</td>
                     </tr>
                 
                     <tr>
@@ -182,7 +166,7 @@ it contains; specifically, either <code>Owned</code> or <code>Shared</code>.</p>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.ToMessage.html'
                                title='objc::ToMessage'>ToMessage</a></td>
-                        <td class='docblock short'><p>A trait for converting to a pointer to a type that may be sent Objective-C
+                        <td class='docblock short'><p>A trait for converting to an <code>id</code> pointer that may be sent Objective-C
 messages.</p>
 </td>
                     </tr>
@@ -198,7 +182,11 @@ messages.</p>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.send_message.html'
                                title='objc::send_message'>send_message</a></td>
-                        <td class='docblock short'></td>
+                        <td class='docblock short'><p>Sends a message to an object with selector <code>sel</code> and arguments <code>args</code>.
+This function will choose the correct version of <code>objc_msgSend</code> based on the
+return type. For more information, see Apple&#39;s documenation:
+<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778">https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778</a></p>
+</td>
                     </tr>
                 </table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>

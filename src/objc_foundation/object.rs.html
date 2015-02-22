@@ -123,13 +123,25 @@
 <span id="81">81</span>
 <span id="82">82</span>
 <span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>objc</span>::<span class='ident'>runtime</span>::<span class='ident'>Class</span>;
 <span class='kw'>use</span> <span class='ident'>objc</span>::{<span class='ident'>EncodePtr</span>, <span class='ident'>Id</span>, <span class='ident'>Message</span>, <span class='ident'>ShareId</span>};
 
 <span class='kw'>use</span> <span class='ident'>NSString</span>;
 
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>INSObject</span> : <span class='ident'>Message</span> <span class='op'>+</span> <span class='ident'>EncodePtr</span> {
+<span class='comment'>/*
+ The Sized bound is unfortunate; ideally, objc objects would not be
+ treated as Sized. However, rust won&#39;t allow casting a dynamically-sized type
+ pointer to an Object pointer, because dynamically-sized types can have fat
+ pointers (two words) instead of real pointers.
+ */</span>
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>INSObject</span> : <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Message</span> <span class='op'>+</span> <span class='ident'>EncodePtr</span> {
     <span class='kw'>fn</span> <span class='ident'>class</span>() <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>Class</span>;
 
     <span class='kw'>fn</span> <span class='ident'>hash_code</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
@@ -159,11 +171,11 @@
         <span class='ident'>result</span> <span class='op'>!=</span> <span class='number'>0</span>
     }
 
-    <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>Id</span><span class='op'>&lt;</span><span class='ident'>Self</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>cls</span> <span class='op'>=</span> <span class='op'>&lt;</span><span class='ident'>Self</span> <span class='kw'>as</span> <span class='ident'>INSObject</span><span class='op'>&gt;</span>::<span class='ident'>class</span>();
+    <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>Id</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='ident'>cls</span> <span class='op'>=</span> <span class='op'>&lt;</span><span class='kw'>Self</span> <span class='kw'>as</span> <span class='ident'>INSObject</span><span class='op'>&gt;</span>::<span class='ident'>class</span>();
         <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Self</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>cls</span>, <span class='ident'>alloc</span>];
-            <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Self</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>init</span>];
+            <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='kw'>Self</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>cls</span>, <span class='ident'>alloc</span>];
+            <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='kw'>Self</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>init</span>];
             <span class='ident'>Id</span>::<span class='ident'>from_retained_ptr</span>(<span class='ident'>obj</span>)
         }
     }

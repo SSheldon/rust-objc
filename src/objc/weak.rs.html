@@ -117,6 +117,10 @@
 <span id="75">75</span>
 <span id="76">76</span>
 <span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>UnsafeCell</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
@@ -146,7 +150,7 @@
         <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>UnsafeCell</span>::<span class='ident'>new</span>(<span class='ident'>ptr</span>::<span class='ident'>null</span>()));
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='ident'>loc</span> <span class='op'>=</span> <span class='ident'>ptr</span>.<span class='ident'>get</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>;
-            <span class='ident'>objc_storeWeak</span>(<span class='ident'>loc</span>, <span class='ident'>obj</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>);
+            <span class='ident'>objc_storeWeak</span>(<span class='ident'>loc</span>, <span class='ident'>obj</span>.<span class='ident'>as_id_ptr</span>());
         }
         <span class='ident'>WeakId</span> { <span class='ident'>ptr</span>: <span class='ident'>ptr</span> }
     }
@@ -175,6 +179,10 @@
         }
     }
 }
+
+<span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Sync</span> <span class='kw'>for</span> <span class='ident'>WeakId</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Sync</span> { }
+
+<span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Send</span> <span class='kw'>for</span> <span class='ident'>WeakId</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Sync</span> { }
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {

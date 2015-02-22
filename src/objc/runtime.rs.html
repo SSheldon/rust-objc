@@ -459,38 +459,20 @@
 <span id="417">417</span>
 <span id="418">418</span>
 <span id="419">419</span>
-<span id="420">420</span>
-<span id="421">421</span>
-<span id="422">422</span>
-<span id="423">423</span>
-<span id="424">424</span>
-<span id="425">425</span>
-<span id="426">426</span>
-<span id="427">427</span>
-<span id="428">428</span>
-<span id="429">429</span>
-<span id="430">430</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! A Rust interface for the functionality of the Objective-C runtime.</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! For more information on foreign functions, see Apple&#39;s documentation:</span>
 <span class='doccomment'>//! https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::{<span class='ident'>CString</span>, <span class='self'>self</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::{<span class='ident'>CStr</span>, <span class='ident'>CString</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>;
 <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_char</span>, <span class='ident'>c_int</span>, <span class='ident'>c_uint</span>, <span class='ident'>c_void</span>, <span class='ident'>ptrdiff_t</span>, <span class='ident'>size_t</span>};
 <span class='kw'>use</span> <span class='ident'>malloc_buf</span>::{<span class='ident'>MallocBuffer</span>, <span class='ident'>MallocString</span>};
 
 <span class='kw'>use</span> {<span class='ident'>encode</span>, <span class='ident'>Encode</span>};
-
-<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_c_str</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span> {
-    <span class='kw'>let</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>c_str_to_bytes</span>(<span class='kw-2'>&amp;</span><span class='ident'>ptr</span>);
-    <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>bytes</span>).<span class='ident'>unwrap</span>();
-    <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>s</span>)
-}
 
 <span class='doccomment'>/// A type that represents a method selector.</span>
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
@@ -542,7 +524,7 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ivar_getTypeEncoding</span>(<span class='ident'>ivar</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Ivar</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>objc_msgSend</span>(<span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>op</span>: <span class='ident'>Sel</span>, ...) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>objc_msgSend_stret</span>(<span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>op</span>: <span class='ident'>Sel</span>, ...) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>objc_msgSend_stret</span>(<span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>op</span>: <span class='ident'>Sel</span>, ...);
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>method_getName</span>(<span class='ident'>method</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Method</span>) <span class='op'>-&gt;</span> <span class='ident'>Sel</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>method_getImplementation</span>(<span class='ident'>method</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Method</span>) <span class='op'>-&gt;</span> <span class='ident'>Imp</span>;
@@ -558,7 +540,7 @@
     <span class='doccomment'>/// Registers a method with the Objective-C runtime system,</span>
     <span class='doccomment'>/// maps the method name to a selector, and returns the selector value.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>register</span>(<span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>Sel</span> {
-        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>CString</span>::<span class='ident'>from_slice</span>(<span class='ident'>name</span>.<span class='ident'>as_bytes</span>());
+        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>name</span>).<span class='ident'>unwrap</span>();
         <span class='kw'>unsafe</span> {
             <span class='ident'>sel_registerName</span>(<span class='ident'>name</span>.<span class='ident'>as_ptr</span>())
         }
@@ -566,10 +548,10 @@
 
     <span class='doccomment'>/// Returns the name of the method specified by self.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>name</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>sel_getName</span>(<span class='op'>*</span><span class='self'>self</span>);
-            <span class='ident'>from_c_str</span>(<span class='ident'>name</span>)
-        }
+        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
+            <span class='ident'>CStr</span>::<span class='ident'>from_ptr</span>(<span class='ident'>sel_getName</span>(<span class='op'>*</span><span class='self'>self</span>))
+        };
+        <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>name</span>.<span class='ident'>to_bytes</span>()).<span class='ident'>unwrap</span>()
     }
 }
 
@@ -596,10 +578,10 @@
 <span class='kw'>impl</span> <span class='ident'>Ivar</span> {
     <span class='doccomment'>/// Returns the name of self.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>name</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>ivar_getName</span>(<span class='self'>self</span>);
-            <span class='ident'>from_c_str</span>(<span class='ident'>name</span>)
-        }
+        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
+            <span class='ident'>CStr</span>::<span class='ident'>from_ptr</span>(<span class='ident'>ivar_getName</span>(<span class='self'>self</span>))
+        };
+        <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>name</span>.<span class='ident'>to_bytes</span>()).<span class='ident'>unwrap</span>()
     }
 
     <span class='doccomment'>/// Returns the offset of self.</span>
@@ -612,10 +594,10 @@
 
     <span class='doccomment'>/// Returns the type string of self.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>type_encoding</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>encoding</span> <span class='op'>=</span> <span class='ident'>ivar_getTypeEncoding</span>(<span class='self'>self</span>);
-            <span class='ident'>from_c_str</span>(<span class='ident'>encoding</span>)
-        }
+        <span class='kw'>let</span> <span class='ident'>encoding</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
+            <span class='ident'>CStr</span>::<span class='ident'>from_ptr</span>(<span class='ident'>ivar_getTypeEncoding</span>(<span class='self'>self</span>))
+        };
+        <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>encoding</span>.<span class='ident'>to_bytes</span>()).<span class='ident'>unwrap</span>()
     }
 }
 
@@ -629,10 +611,10 @@
 
     <span class='doccomment'>/// Returns a string describing self&#39;s parameter and return types.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>type_encoding</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>encoding</span> <span class='op'>=</span> <span class='ident'>method_getTypeEncoding</span>(<span class='self'>self</span>);
-            <span class='ident'>from_c_str</span>(<span class='ident'>encoding</span>)
-        }
+        <span class='kw'>let</span> <span class='ident'>encoding</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
+            <span class='ident'>CStr</span>::<span class='ident'>from_ptr</span>(<span class='ident'>method_getTypeEncoding</span>(<span class='self'>self</span>))
+        };
+        <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>encoding</span>.<span class='ident'>to_bytes</span>()).<span class='ident'>unwrap</span>()
     }
 
     <span class='doccomment'>/// Returns a string describing self&#39;s return type.</span>
@@ -689,7 +671,7 @@
     <span class='doccomment'>/// Returns the class definition of a specified class, or `None` if the</span>
     <span class='doccomment'>/// class is not registered with the Objective-C runtime.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>Class</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>CString</span>::<span class='ident'>from_slice</span>(<span class='ident'>name</span>.<span class='ident'>as_bytes</span>());
+        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>name</span>).<span class='ident'>unwrap</span>();
         <span class='kw'>unsafe</span> {
             <span class='ident'>objc_getClass</span>(<span class='ident'>name</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>as_ref</span>()
         }
@@ -713,10 +695,10 @@
 
     <span class='doccomment'>/// Returns the name of self.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>name</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>class_getName</span>(<span class='self'>self</span>);
-            <span class='ident'>from_c_str</span>(<span class='ident'>name</span>)
-        }
+        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
+            <span class='ident'>CStr</span>::<span class='ident'>from_ptr</span>(<span class='ident'>class_getName</span>(<span class='self'>self</span>))
+        };
+        <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>name</span>.<span class='ident'>to_bytes</span>()).<span class='ident'>unwrap</span>()
     }
 
     <span class='doccomment'>/// Returns the size of instances of self.</span>
@@ -738,7 +720,7 @@
     <span class='doccomment'>/// Returns the ivar for a specified instance variable of self, or `None`</span>
     <span class='doccomment'>/// if self has no ivar with the given name.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>instance_variable</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Ivar</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>CString</span>::<span class='ident'>from_slice</span>(<span class='ident'>name</span>.<span class='ident'>as_bytes</span>());
+        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>name</span>).<span class='ident'>unwrap</span>();
         <span class='kw'>unsafe</span> {
             <span class='ident'>class_getInstanceVariable</span>(<span class='self'>self</span>, <span class='ident'>name</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>as_ref</span>()
         }
@@ -842,7 +824,8 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
-    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>Class</span>, <span class='ident'>Object</span>, <span class='ident'>Sel</span>};
+    <span class='kw'>use</span> <span class='ident'>test_utils</span>;
+    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>Class</span>, <span class='ident'>Sel</span>};
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_ivar</span>() {
@@ -890,15 +873,10 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_object</span>() {
         <span class='kw'>let</span> <span class='ident'>cls</span> <span class='op'>=</span> <span class='ident'>Class</span>::<span class='ident'>get</span>(<span class='string'>&quot;NSObject&quot;</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>cls</span>, <span class='ident'>alloc</span>];
-            <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>init</span>];
-            <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>obj</span>
-        };
+        <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>sample_object</span>();
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>obj</span>.<span class='ident'>class</span>() <span class='op'>==</span> <span class='ident'>cls</span>);
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> _: () <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>release</span>];
-        }
+        <span class='kw'>let</span> <span class='ident'>isa</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='op'>*</span><span class='ident'>obj</span>.<span class='ident'>get_ivar</span>(<span class='string'>&quot;isa&quot;</span>) };
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>isa</span> <span class='op'>==</span> <span class='ident'>cls</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Class</span>);
     }
 }
 </pre>

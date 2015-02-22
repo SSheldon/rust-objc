@@ -8,7 +8,6 @@ use {encode, Encode, EncodePtr, Message};
 use runtime::{Class, Imp, Sel, self};
 
 /// A type for declaring a new method.
-/// `MethodDecl`s are usually created using the `method!` macro.
 pub struct MethodDecl {
     sel: Sel,
     imp: Imp,
@@ -16,13 +15,24 @@ pub struct MethodDecl {
 }
 
 impl MethodDecl {
+    /// Constructs a `MethodDecl` with the given selector and function.
+    ///
+    /// Returns an error if the selector and the function take different
+    /// numbers of arguments.
     pub fn new<F>(sel: Sel, func: F) -> Result<MethodDecl, ()>
             where F: IntoMethodDecl {
         func.into_method_decl(sel)
     }
 }
 
+/// Types that can be used as the implementation of an Objective-C method to
+/// construct a `MethodDecl`.
 pub trait IntoMethodDecl {
+    /// Consumes self to declare a method for the given selector with self as
+    /// the implementation.
+    ///
+    /// Returns an error if self and the selector do not accept the same number
+    /// of arguments.
     fn into_method_decl(self, sel: Sel) -> Result<MethodDecl, ()>;
 }
 

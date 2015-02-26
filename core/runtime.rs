@@ -27,17 +27,34 @@ pub struct Sel {
     ptr: *const c_void,
 }
 
+/// A marker type to be embedded into other types just so that they cannot be
+/// constructed externally.
+#[repr(C)]
+struct PrivateMarker;
+
 /// A type that represents an instance variable.
-pub enum Ivar { }
+#[repr(C)]
+pub struct Ivar {
+    _priv: PrivateMarker,
+}
 
 /// A type that represents a method in a class definition.
-pub enum Method { }
+#[repr(C)]
+pub struct Method {
+    _priv: PrivateMarker,
+}
 
 /// A type that represents an Objective-C class.
-pub enum Class { }
+#[repr(C)]
+pub struct Class {
+    _priv: PrivateMarker,
+}
 
 /// A type that represents an instance of a class.
-pub enum Object { }
+#[repr(C)]
+pub struct Object {
+    _priv: PrivateMarker,
+}
 
 /// A pointer to the start of a method implementation.
 pub type Imp = extern fn(*mut Object, Sel, ...) -> *mut Object;

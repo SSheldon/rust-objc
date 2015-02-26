@@ -1,7 +1,10 @@
+//! Objective-C Runtime bindings and wrapper for Rust.
+
 #![crate_name = "objc"]
 #![crate_type = "lib"]
 
 #![feature(core, std_misc, unsafe_destructor, unsafe_no_drop_flag)]
+#![warn(missing_docs)]
 
 extern crate libc;
 extern crate malloc_buf;

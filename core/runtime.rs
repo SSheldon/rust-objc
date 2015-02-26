@@ -7,10 +7,19 @@ use std::ffi::{CStr, CString};
 use std::fmt;
 use std::ptr;
 use std::str;
-use libc::{c_char, c_int, c_uint, c_void, ptrdiff_t, size_t};
+use libc::{c_char, c_int, c_schar, c_uint, c_void, ptrdiff_t, size_t};
 use malloc_buf::{MallocBuffer, MallocString};
 
 use {encode, Encode};
+
+/// The Objective-C `BOOL` type.
+///
+/// To convert an Objective-C `BOOL` into a Rust `bool`, compare it with `NO`.
+pub type BOOL = c_schar;
+/// The equivalent of true for Objective-C's `BOOL` type.
+pub const YES: BOOL = 1;
+/// The equivalent of false for Objective-C's `BOOL` type.
+pub const NO: BOOL = 0;
 
 /// A type that represents a method selector.
 #[repr(C)]
@@ -44,8 +53,8 @@ extern {
     pub fn class_getInstanceVariable(cls: *const Class, name: *const c_char) -> *const Ivar;
     pub fn class_copyMethodList(cls: *const Class, outCount: *mut c_uint) -> *mut *const Method;
     pub fn class_copyIvarList(cls: *const Class, outCount: *mut c_uint) -> *mut *const Ivar;
-    pub fn class_addMethod(cls: *mut Class, name: Sel, imp: Imp, types: *const c_char) -> bool;
-    pub fn class_addIvar(cls: *mut Class, name: *const c_char, size: size_t, alignment: u8, types: *const c_char) -> bool;
+    pub fn class_addMethod(cls: *mut Class, name: Sel, imp: Imp, types: *const c_char) -> BOOL;
+    pub fn class_addIvar(cls: *mut Class, name: *const c_char, size: size_t, alignment: u8, types: *const c_char) -> BOOL;
 
     pub fn objc_allocateClassPair(superclass: *const Class, name: *const c_char, extraBytes: size_t) -> *mut Class;
     pub fn objc_disposeClassPair(cls: *mut Class);

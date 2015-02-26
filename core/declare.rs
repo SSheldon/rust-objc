@@ -38,7 +38,7 @@ use std::mem;
 use libc::size_t;
 
 use {encode, Encode, EncodePtr, Message};
-use runtime::{Class, Imp, Sel, self};
+use runtime::{Class, Imp, Sel, NO, self};
 
 /// A type for declaring a new method.
 pub struct MethodDecl {
@@ -143,7 +143,7 @@ impl ClassDecl {
         let MethodDecl { sel, imp, types } = method;
         let types = CString::new(types).unwrap();
         let success = unsafe {
-            runtime::class_addMethod(self.cls, sel, imp, types.as_ptr())
+            runtime::class_addMethod(self.cls, sel, imp, types.as_ptr()) != NO
         };
         assert!(success, "Failed to add method {:?}", sel);
     }
@@ -157,7 +157,7 @@ impl ClassDecl {
         let align = mem::align_of::<T>() as u8;
         let success = unsafe {
             runtime::class_addIvar(self.cls, c_name.as_ptr(), size, align,
-                types.as_ptr())
+                types.as_ptr()) != NO
         };
         assert!(success, "Failed to add ivar {}", name);
     }

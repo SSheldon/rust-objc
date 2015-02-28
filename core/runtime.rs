@@ -326,7 +326,7 @@ impl fmt::Debug for Class {
 
 impl Object {
     /// Returns the class of self.
-    pub fn class(&self) -> &'static Class {
+    pub fn class(&self) -> &Class {
         unsafe {
             &*object_getClass(self)
         }

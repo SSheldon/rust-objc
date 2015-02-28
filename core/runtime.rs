@@ -65,6 +65,7 @@ extern {
     pub fn sel_getName(sel: Sel) -> *const c_char;
 
     pub fn class_getName(cls: *const Class) -> *const c_char;
+    pub fn class_getSuperclass(cls: *const Class) -> *const Class;
     pub fn class_getInstanceSize(cls: *const Class) -> size_t;
     pub fn class_getInstanceMethod(cls: *const Class, sel: Sel) -> *const Method;
     pub fn class_getInstanceVariable(cls: *const Class, name: *const c_char) -> *const Ivar;
@@ -265,6 +266,21 @@ impl Class {
         str::from_utf8(name.to_bytes()).unwrap()
     }
 
+    /// Returns the superclass of self, or `None` if self is a root class.
+    pub fn superclass(&self) -> Option<&Class> {
+        unsafe {
+            class_getSuperclass(self).as_ref()
+        }
+    }
+
+    /// Returns the metaclass of self.
+    pub fn metaclass(&self) -> &Class {
+        unsafe {
+            let obj = self as *const Class as *const Object;
+            &*object_getClass(obj)
+        }
+    }
+
     /// Returns the size of instances of self.
     pub fn instance_size(&self) -> usize {
         unsafe {
@@ -423,6 +439,13 @@ mod tests {
         let cls = Class::get("NSObject").unwrap();
         assert!(cls.name() == "NSObject");
         assert!(cls.instance_size() == mem::size_of::<*const Class>());
+        assert!(cls.superclass().is_none());
+
+        let metaclass = cls.metaclass();
+        assert!(metaclass.instance_size() > 0);
+
+        let subclass = test_utils::custom_class();
+        assert!(subclass.superclass().unwrap() == cls);
     }
 
     #[test]

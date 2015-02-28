@@ -84,10 +84,13 @@ macro_rules! method_decl_impl {
                 if sel.name().chars().filter(|&c| c == ':').count() == num_args {
                     let imp: Imp = unsafe { mem::transmute(self) };
 
-                    let mut types = encode::<R>().to_string();
-                    types.push_str(encode::<$sp>());
-                    types.push_str(encode::<Sel>());
-                    $(types.push_str(encode::<$t>());)*
+                    let types = [
+                        encode::<R>(),
+                        encode::<$sp>(),
+                        encode::<Sel>(),
+                        $(encode::<$t>()),*
+                    ];
+                    let types = types.iter().cloned().collect();
 
                     Ok(MethodDecl { sel: sel, imp: imp, types: types })
                 } else {

@@ -152,13 +152,8 @@ fn verify_message_arguments(types: &[&str], method: &Method) -> Result<(), Strin
 }
 
 #[allow(dead_code)]
-fn verify_message_signature<A, R>(obj: Option<&Object>, sel: Sel, _args: &A) ->
-        Result<(), String> where A: MessageArguments, R: Encode {
-    let obj = match obj {
-        Some(obj) => obj,
-        None => return Err(format!("Messaging {:?} to nil", sel)),
-    };
-    let cls = obj.class();
+fn verify_message_signature<A, R>(cls: &Class, sel: Sel) -> Result<(), String>
+        where A: MessageArguments, R: Encode {
     let method = match cls.instance_method(sel) {
         Some(method) => method,
         None => return Err(format!("Method {:?} not found on class {:?}",
@@ -230,8 +225,11 @@ let _: () = send_message(&dict, sel!(setObject:forKey:), (obj, key));
 #[cfg(all(not(ndebug), feature = "verify_message_encode"))]
 pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
         where T: ToMessage, A: MessageArguments, R: Encode {
-    let obj_ref = obj.as_id_ptr().as_ref();
-    match verify_message_signature::<_, R>(obj_ref, sel, &args) {
+    let cls = match obj.as_id_ptr().as_ref() {
+        Some(obj) => obj.class(),
+        None => panic!("Messaging {:?} to nil", sel),
+    };
+    match verify_message_signature::<A, R>(cls, sel) {
         Err(s) => panic!("Verify message failed: {}", s),
         Ok(_) => args.send(obj, sel),
     }

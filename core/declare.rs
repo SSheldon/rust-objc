@@ -36,8 +36,8 @@ use std::ffi::CString;
 use std::mem;
 use libc::size_t;
 
-use {encode, Encode, EncodePtr, Message};
-use runtime::{Class, Imp, Sel, NO, self};
+use {encode, Encode, Message};
+use runtime::{Class, Imp, NO, Object, Sel, self};
 
 /// Types that can be used as the implementation of an Objective-C method.
 pub trait IntoMethodImp {
@@ -65,14 +65,14 @@ macro_rules! count_idents {
 macro_rules! method_decl_impl {
     (-$s:ident, $sp:ty, $($t:ident),*) => (
         impl<$s, R $(, $t)*> IntoMethodImp for extern fn($sp, Sel $(, $t)*) -> R
-                where $s: Message + EncodePtr, R: Encode $(, $t: Encode)* {
+                where $s: Message, R: Encode $(, $t: Encode)* {
             type Callee = $s;
             type Ret = R;
 
             fn method_encoding() -> String {
                 let types = [
                     encode::<R>(),
-                    encode::<$sp>(),
+                    encode::<*mut Object>(),
                     encode::<Sel>(),
                     $(encode::<$t>()),*
                 ];
@@ -142,6 +142,21 @@ impl ClassDecl {
         assert!(success != NO, "Failed to add method {:?}", sel);
     }
 
+    /// Adds a class method with the given name and implementation to self.
+    /// Panics if the method wasn't sucessfully added
+    /// or if the selector and function take different numbers of arguments.
+    pub fn add_class_method<F>(&mut self, sel: Sel, func: F)
+            where F: IntoMethodImp<Callee=Class> {
+        let types = CString::new(F::method_encoding()).unwrap();
+        let imp = func.into_imp(sel).unwrap();
+        let success = unsafe {
+            let cls_obj = self.cls as *const Object;
+            let metaclass = runtime::object_getClass(cls_obj) as *mut Class;
+            runtime::class_addMethod(metaclass, sel, imp, types.as_ptr())
+        };
+        assert!(success != NO, "Failed to add class method {:?}", sel);
+    }
+
     /// Adds an ivar with type `T` and the provided name to self.
     /// Panics if the ivar wasn't successfully added.
     pub fn add_ivar<T>(&mut self, name: &str) where T: Encode {
@@ -191,6 +206,15 @@ mod tests {
             let _: () = msg_send![obj, setFoo:13u32];
             let result: u32 = msg_send![obj, foo];
             assert!(result == 13);
+        }
+    }
+
+    #[test]
+    fn test_class_method() {
+        let cls = test_utils::custom_class();
+        unsafe {
+            let result: u32 = msg_send![cls, classFoo];
+            assert!(result == 7);
         }
     }
 

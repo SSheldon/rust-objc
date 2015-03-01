@@ -1,7 +1,7 @@
 use std::marker::MarkerTrait;
 use std::mem;
 
-use runtime::{Class, Method, Object, Sel, self};
+use runtime::{Class, Method, Object, Sel, Super, self};
 use {encode, Encode};
 
 /*
@@ -63,6 +63,15 @@ fn msg_send_fn<R>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
     }
 }
 
+#[cfg(target_arch = "x86_64")]
+fn msg_send_super_fn<R>() -> unsafe extern fn(*const Super, Sel, ...) -> R {
+    if mem::size_of::<R>() <= 16 {
+        unsafe { mem::transmute(runtime::objc_msgSendSuper) }
+    } else {
+        unsafe { mem::transmute(runtime::objc_msgSendSuper_stret) }
+    }
+}
+
 /// Types that may be used as the arguments of an Objective-C message.
 pub trait MessageArguments {
     /// Sends a message to the given obj with the given selector and self as
@@ -71,6 +80,11 @@ pub trait MessageArguments {
     /// It is recommended to use the `msg_send!` macro rather than calling this
     /// method directly.
     unsafe fn send<T, R>(self, obj: &T, sel: Sel) -> R where T: ToMessage;
+
+    /// Sends a message to the superclass of an instance of a class with self
+    /// as the arguments.
+    unsafe fn send_super<T, R>(self, obj: &T, superclass: &Class, sel: Sel) -> R
+            where T: ToMessage;
 }
 
 macro_rules! message_args_impl {
@@ -83,6 +97,16 @@ macro_rules! message_args_impl {
                 let obj_ptr = obj.as_id_ptr();
                 let ($($a,)*) = self;
                 msg_send_fn(obj_ptr, sel $(, $a)*)
+            }
+
+            unsafe fn send_super<T, R>(self, obj: &T, superclass: &Class, sel: Sel) -> R
+                    where T: ToMessage {
+                let msg_send_fn = msg_send_super_fn::<R>();
+                let msg_send_fn: unsafe extern fn(*const Super, Sel $(, $t)*) -> R =
+                    mem::transmute(msg_send_fn);
+                let sup = Super { receiver: obj.as_id_ptr(), superclass: superclass };
+                let ($($a,)*) = self;
+                msg_send_fn(&sup, sel $(, $a)*)
             }
         }
     );
@@ -211,6 +235,13 @@ pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
         Err(s) => panic!("Verify message failed: {}", s),
         Ok(_) => args.send(obj, sel),
     }
+}
+
+/// Sends a message to the superclass of an instance of a class.
+pub unsafe fn send_super_message<T, A, R>(
+        obj: &T, superclass: &Class, sel: Sel, args: A) -> R
+        where T: ToMessage, A: MessageArguments {
+    args.send_super(obj, superclass, sel)
 }
 
 #[cfg(test)]

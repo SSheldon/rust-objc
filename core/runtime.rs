@@ -56,6 +56,15 @@ pub struct Object {
     _priv: PrivateMarker,
 }
 
+/// Specifies the superclass of an instance.
+#[repr(C)]
+pub struct Super {
+    /// Specifies an instance of a class.
+    pub receiver: *mut Object,
+    /// Specifies the particular superclass of the instance to message.
+    pub superclass: *const Class,
+}
+
 /// A pointer to the start of a method implementation.
 pub type Imp = extern fn(*mut Object, Sel, ...) -> *mut Object;
 
@@ -90,6 +99,8 @@ extern {
 
     pub fn objc_msgSend(obj: *mut Object, op: Sel, ...) -> *mut Object;
     pub fn objc_msgSend_stret(obj: *mut Object, op: Sel, ...);
+    pub fn objc_msgSendSuper(sup: *const Super, op: Sel, ...) -> *mut Object;
+    pub fn objc_msgSendSuper_stret(sup: *const Super, op: Sel, ... );
 
     pub fn method_getName(method: *const Method) -> Sel;
     pub fn method_getImplementation(method: *const Method) -> Imp;

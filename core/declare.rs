@@ -41,6 +41,11 @@ use runtime::{Class, Imp, Sel, NO, self};
 
 /// Types that can be used as the implementation of an Objective-C method.
 pub trait IntoMethodImp {
+    /// The callee type of the method.
+    type Callee: Message;
+    /// The return type of the method.
+    type Ret;
+
     /// Returns the method type encoding for Self.
     fn method_encoding() -> String;
 
@@ -61,6 +66,9 @@ macro_rules! method_decl_impl {
     (-$s:ident, $sp:ty, $($t:ident),*) => (
         impl<$s, R $(, $t)*> IntoMethodImp for extern fn($sp, Sel $(, $t)*) -> R
                 where $s: Message + EncodePtr, R: Encode $(, $t: Encode)* {
+            type Callee = $s;
+            type Ret = R;
+
             fn method_encoding() -> String {
                 let types = [
                     encode::<R>(),

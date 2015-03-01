@@ -11,7 +11,7 @@ one ivar, a `u32` named `_number` and a `number` method that returns it:
 
 ```
 # #[macro_use] extern crate objc;
-# use objc::declare::{ClassDecl, MethodDecl};
+# use objc::declare::ClassDecl;
 # use objc::runtime::{Class, Object, Sel};
 # fn main() {
 let superclass = Class::get("NSObject").unwrap();
@@ -24,9 +24,8 @@ decl.add_ivar::<u32>("_number");
 extern fn my_number_get(this: &Object, _cmd: Sel) -> u32 {
     unsafe { *this.get_ivar("_number") }
 }
-let method = MethodDecl::new(sel!(number),
+decl.add_method(sel!(number),
     my_number_get as extern fn(&Object, Sel) -> u32);
-decl.add_method(method.unwrap());
 
 decl.register();
 # }
@@ -40,33 +39,16 @@ use libc::size_t;
 use {encode, Encode, EncodePtr, Message};
 use runtime::{Class, Imp, Sel, NO, self};
 
-/// A type for declaring a new method.
-pub struct MethodDecl {
-    sel: Sel,
-    imp: Imp,
-    types: String,
-}
+/// Types that can be used as the implementation of an Objective-C method.
+pub trait IntoMethodImp {
+    /// Returns the method type encoding for Self.
+    fn method_encoding() -> String;
 
-impl MethodDecl {
-    /// Constructs a `MethodDecl` with the given selector and function.
-    ///
-    /// Returns an error if the selector and the function take different
-    /// numbers of arguments.
-    pub fn new<F>(sel: Sel, func: F) -> Result<MethodDecl, ()>
-            where F: IntoMethodDecl {
-        func.into_method_decl(sel)
-    }
-}
-
-/// Types that can be used as the implementation of an Objective-C method to
-/// construct a `MethodDecl`.
-pub trait IntoMethodDecl {
-    /// Consumes self to declare a method for the given selector with self as
-    /// the implementation.
+    /// Consumes self to create a method implementation for the given selector.
     ///
     /// Returns an error if self and the selector do not accept the same number
     /// of arguments.
-    fn into_method_decl(self, sel: Sel) -> Result<MethodDecl, ()>;
+    fn into_imp(self, sel: Sel) -> Result<Imp, ()>;
 }
 
 macro_rules! count_idents {
@@ -77,22 +59,22 @@ macro_rules! count_idents {
 
 macro_rules! method_decl_impl {
     (-$s:ident, $sp:ty, $($t:ident),*) => (
-        impl<$s, R $(, $t)*> IntoMethodDecl for extern fn($sp, Sel $(, $t)*) -> R
+        impl<$s, R $(, $t)*> IntoMethodImp for extern fn($sp, Sel $(, $t)*) -> R
                 where $s: Message + EncodePtr, R: Encode $(, $t: Encode)* {
-            fn into_method_decl(self, sel: Sel) -> Result<MethodDecl, ()> {
+            fn method_encoding() -> String {
+                let types = [
+                    encode::<R>(),
+                    encode::<$sp>(),
+                    encode::<Sel>(),
+                    $(encode::<$t>()),*
+                ];
+                types.iter().cloned().collect()
+            }
+
+            fn into_imp(self, sel: Sel) -> Result<Imp, ()> {
                 let num_args = count_idents!($($t),*);
                 if sel.name().chars().filter(|&c| c == ':').count() == num_args {
-                    let imp: Imp = unsafe { mem::transmute(self) };
-
-                    let types = [
-                        encode::<R>(),
-                        encode::<$sp>(),
-                        encode::<Sel>(),
-                        $(encode::<$t>()),*
-                    ];
-                    let types = types.iter().cloned().collect();
-
-                    Ok(MethodDecl { sel: sel, imp: imp, types: types })
+                    unsafe { Ok(mem::transmute(self)) }
                 } else {
                     Err(())
                 }
@@ -140,15 +122,16 @@ impl ClassDecl {
         }
     }
 
-    /// Adds a method declared with the given `MethodDecl` to self.
-    /// Panics if the method wasn't sucessfully added.
-    pub fn add_method(&mut self, method: MethodDecl) {
-        let MethodDecl { sel, imp, types } = method;
-        let types = CString::new(types).unwrap();
+    /// Adds a method with the given name and implementation to self.
+    /// Panics if the method wasn't sucessfully added
+    /// or if the selector and function take different numbers of arguments.
+    pub fn add_method<F>(&mut self, sel: Sel, func: F) where F: IntoMethodImp {
+        let types = CString::new(F::method_encoding()).unwrap();
+        let imp = func.into_imp(sel).unwrap();
         let success = unsafe {
-            runtime::class_addMethod(self.cls, sel, imp, types.as_ptr()) != NO
+            runtime::class_addMethod(self.cls, sel, imp, types.as_ptr())
         };
-        assert!(success, "Failed to add method {:?}", sel);
+        assert!(success != NO, "Failed to add method {:?}", sel);
     }
 
     /// Adds an ivar with type `T` and the provided name to self.
@@ -160,9 +143,9 @@ impl ClassDecl {
         let align = mem::align_of::<T>() as u8;
         let success = unsafe {
             runtime::class_addIvar(self.cls, c_name.as_ptr(), size, align,
-                types.as_ptr()) != NO
+                types.as_ptr())
         };
-        assert!(success, "Failed to add ivar {}", name);
+        assert!(success != NO, "Failed to add ivar {}", name);
     }
 
     /// Registers self, consuming it and returning a reference to the
@@ -190,7 +173,7 @@ impl Drop for ClassDecl {
 mod tests {
     use runtime::{Object, Sel};
     use test_utils;
-    use super::MethodDecl;
+    use super::IntoMethodImp;
 
     #[test]
     fn test_custom_class() {
@@ -209,7 +192,7 @@ mod tests {
 
         let sel = sel!(doSomethingWithFoo:bar:);
         let f: extern fn(&Object, Sel, i32) = wrong_num_args_method;
-        let decl = MethodDecl::new(sel, f);
-        assert!(decl.is_err());
+        let imp = f.into_imp(sel);
+        assert!(imp.is_err());
     }
 }

@@ -2,7 +2,7 @@ use std::sync::{Once, ONCE_INIT};
 use objc_test_utils;
 
 use block::Block;
-use declare::{ClassDecl, MethodDecl};
+use declare::ClassDecl;
 use runtime::{Class, Object, Sel};
 use {Encode, Id};
 
@@ -67,23 +67,20 @@ pub fn custom_class() -> &'static Class {
         extern fn custom_obj_set_foo(this: &mut Object, _cmd: Sel, foo: u32) {
             unsafe { this.set_ivar::<u32>("_foo", foo); }
         }
-        let method = MethodDecl::new(sel!(setFoo:),
+        decl.add_method(sel!(setFoo:),
             custom_obj_set_foo as extern fn(&mut Object, Sel, u32));
-        decl.add_method(method.unwrap());
 
         extern fn custom_obj_get_foo(this: &Object, _cmd: Sel) -> u32 {
             unsafe { *this.get_ivar::<u32>("_foo") }
         }
-        let method = MethodDecl::new(sel!(foo),
+        decl.add_method(sel!(foo),
             custom_obj_get_foo as extern fn(&Object, Sel) -> u32);
-        decl.add_method(method.unwrap());
 
         extern fn custom_obj_get_struct(_this: &Object, _cmd: Sel) -> CustomStruct {
             CustomStruct { a: 1, b: 2, c: 3, d: 4 }
         }
-        let method = MethodDecl::new(sel!(customStruct),
+        decl.add_method(sel!(customStruct),
             custom_obj_get_struct as extern fn(&Object, Sel) -> CustomStruct);
-        decl.add_method(method.unwrap());
 
         decl.register();
     });

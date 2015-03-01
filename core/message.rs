@@ -235,11 +235,25 @@ pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
     }
 }
 
-/// Sends a message to the superclass of an instance of a class.
+#[cfg(any(ndebug, not(feature = "verify_message_encode")))]
 pub unsafe fn send_super_message<T, A, R>(
         obj: &T, superclass: &Class, sel: Sel, args: A) -> R
         where T: ToMessage, A: MessageArguments {
     args.send_super(obj, superclass, sel)
+}
+
+/// Sends a message to the superclass of an instance of a class.
+#[cfg(all(not(ndebug), feature = "verify_message_encode"))]
+pub unsafe fn send_super_message<T, A, R>(
+        obj: &T, superclass: &Class, sel: Sel, args: A) -> R
+        where T: ToMessage, A: MessageArguments, R: Encode {
+    if obj.is_nil() {
+        panic!("Messaging {:?} to nil", sel);
+    }
+    match verify_message_signature::<A, R>(superclass, sel) {
+        Err(s) => panic!("Verify message failed: {}", s),
+        Ok(_) => args.send_super(obj, superclass, sel),
+    }
 }
 
 #[cfg(test)]

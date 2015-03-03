@@ -260,7 +260,7 @@ pub unsafe fn send_super_message<T, A, R>(
 mod tests {
     use runtime::Object;
     use test_utils;
-    use super::send_message;
+    use super::{send_message, send_super_message};
 
     #[test]
     fn test_send_message() {
@@ -279,5 +279,17 @@ mod tests {
         };
         let expected = test_utils::CustomStruct { a: 1, b:2, c: 3, d: 4 };
         assert!(result == expected);
+    }
+
+    #[test]
+    fn test_send_message_super() {
+        let obj = test_utils::custom_subclass_object();
+        let superclass = test_utils::custom_class();
+        unsafe {
+            let _: () = send_message(&obj, sel!(setFoo:), (4u32,));
+            assert!(send_super_message(&obj, superclass, sel!(foo), ()) == 4u32);
+            // The subclass is overriden to return foo + 2
+            assert!(send_message(&obj, sel!(foo), ()) == 6u32);
+        }
     }
 }

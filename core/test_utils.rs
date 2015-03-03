@@ -4,7 +4,7 @@ use objc_test_utils;
 use block::Block;
 use declare::ClassDecl;
 use runtime::{Class, Object, Sel};
-use {Encode, Id};
+use {Encode, Id, send_super_message};
 
 pub fn sample_object() -> Id<Object> {
     let cls = Class::get("NSObject").unwrap();
@@ -96,6 +96,38 @@ pub fn custom_class() -> &'static Class {
 
 pub fn custom_object() -> Id<Object> {
     let cls = custom_class();
+    unsafe {
+        let obj: *mut Object = msg_send![cls, alloc];
+        let obj: *mut Object = msg_send![obj, init];
+        Id::from_retained_ptr(obj)
+    }
+}
+
+static REGISTER_CUSTOM_SUBCLASS: Once = ONCE_INIT;
+
+pub fn custom_subclass() -> &'static Class {
+    REGISTER_CUSTOM_SUBCLASS.call_once(|| {
+        let superclass = custom_class();
+        let mut decl = ClassDecl::new(superclass, "CustomSubclassObject").unwrap();
+
+        extern fn custom_subclass_get_foo(this: &Object, cmd: Sel) -> u32 {
+            let superclass = custom_class();
+            let foo = unsafe {
+                send_super_message(&this, superclass, cmd, ())
+            };
+            foo + 2
+        }
+        decl.add_method(sel!(foo),
+            custom_subclass_get_foo as extern fn(&Object, Sel) -> u32);
+
+        decl.register();
+    });
+
+    Class::get("CustomSubclassObject").unwrap()
+}
+
+pub fn custom_subclass_object() -> Id<Object> {
+    let cls = custom_subclass();
     unsafe {
         let obj: *mut Object = msg_send![cls, alloc];
         let obj: *mut Object = msg_send![obj, init];

@@ -4,7 +4,7 @@ use objc_test_utils;
 use block::Block;
 use declare::ClassDecl;
 use runtime::{Class, Object, Sel};
-use {Encode, Id, send_super_message};
+use {Encode, Id};
 
 pub fn sample_object() -> Id<Object> {
     let cls = Class::get("NSObject").unwrap();
@@ -110,10 +110,9 @@ pub fn custom_subclass() -> &'static Class {
         let superclass = custom_class();
         let mut decl = ClassDecl::new(superclass, "CustomSubclassObject").unwrap();
 
-        extern fn custom_subclass_get_foo(this: &Object, cmd: Sel) -> u32 {
-            let superclass = custom_class();
+        extern fn custom_subclass_get_foo(this: &Object, _cmd: Sel) -> u32 {
             let foo = unsafe {
-                send_super_message(&this, superclass, cmd, ())
+                msg_send![super(this, custom_class()), foo]
             };
             foo + 2
         }

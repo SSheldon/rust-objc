@@ -3,7 +3,7 @@
 #![crate_name = "objc"]
 #![crate_type = "lib"]
 
-#![feature(std_misc, unsafe_destructor, unsafe_no_drop_flag)]
+#![feature(std_misc, unsafe_destructor)]
 #![warn(missing_docs)]
 
 extern crate libc;

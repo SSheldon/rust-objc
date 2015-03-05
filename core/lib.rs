@@ -12,7 +12,7 @@ extern crate malloc_buf;
 #[cfg(test)]
 extern crate objc_test_utils;
 
-pub use id::{Id, IdSlice, Owned, Ownership, Shared, ShareId};
+pub use id::{Id, Owned, Ownership, Shared, ShareId};
 pub use encode::{encode, Encode, EncodePtr};
 pub use message::{send_message, send_super_message, Message, MessageArguments, ToMessage};
 pub use weak::WeakId;

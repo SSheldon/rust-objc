@@ -1,4 +1,4 @@
-use std::marker::MarkerTrait;
+use std::marker::PhantomFn;
 use libc::{c_char, c_void};
 
 use runtime::{Class, Object, Sel};
@@ -7,7 +7,7 @@ use runtime::{Class, Object, Sel};
 ///
 /// For more information, see Apple's documentation:
 /// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
-pub trait Encode : MarkerTrait {
+pub trait Encode : PhantomFn<Self> {
     /// Returns the encoding for Self.
     fn code() -> &'static str;
 }
@@ -101,7 +101,7 @@ impl Encode for Sel {
 /// This trait is largely for convenience, so that it can be implemnted once
 /// to implement encode for the 6 pointer types: immutable/mutable references,
 /// optional immutable/mutable references, and const/mutable pointers.
-pub trait EncodePtr : MarkerTrait {
+pub trait EncodePtr : PhantomFn<Self> {
     /// Returns the encoding for pointers to Self.
     fn ptr_code() -> &'static str;
 }

@@ -1,4 +1,4 @@
-use std::marker::MarkerTrait;
+use std::marker::PhantomFn;
 use std::mem;
 
 use runtime::{Class, Method, Object, Sel, Super, self};
@@ -12,7 +12,7 @@ use {encode, Encode};
  */
 /// Types that may be sent Objective-C messages.
 /// For example: objects, classes, and blocks.
-pub unsafe trait Message : MarkerTrait { }
+pub unsafe trait Message : PhantomFn<Self> { }
 
 unsafe impl Message for Object { }
 
@@ -225,9 +225,10 @@ let _: () = send_message(&dict, sel!(setObject:forKey:), (obj, key));
 #[cfg(all(not(ndebug), feature = "verify_message_encode"))]
 pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
         where T: ToMessage, A: MessageArguments, R: Encode {
-    let cls = match obj.as_id_ptr().as_ref() {
-        Some(obj) => obj.class(),
-        None => panic!("Messaging {:?} to nil", sel),
+    let cls = if obj.is_nil() {
+        panic!("Messaging {:?} to nil", sel)
+    } else {
+        (*obj.as_id_ptr()).class()
     };
     match verify_message_signature::<A, R>(cls, sel) {
         Err(s) => panic!("Verify message failed: {}", s),

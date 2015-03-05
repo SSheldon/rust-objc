@@ -249,7 +249,8 @@ impl Class {
     pub fn get(name: &str) -> Option<&'static Class> {
         let name = CString::new(name).unwrap();
         unsafe {
-            objc_getClass(name.as_ptr()).as_ref()
+            let cls = objc_getClass(name.as_ptr());
+            if cls.is_null() { None } else { Some(&*cls) }
         }
     }
 
@@ -280,7 +281,8 @@ impl Class {
     /// Returns the superclass of self, or `None` if self is a root class.
     pub fn superclass(&self) -> Option<&Class> {
         unsafe {
-            class_getSuperclass(self).as_ref()
+            let superclass = class_getSuperclass(self);
+            if superclass.is_null() { None } else { Some(&*superclass) }
         }
     }
 
@@ -304,7 +306,8 @@ impl Class {
     /// specified selector.
     pub fn instance_method(&self, sel: Sel) -> Option<&Method> {
         unsafe {
-            class_getInstanceMethod(self, sel).as_ref()
+            let method = class_getInstanceMethod(self, sel);
+            if method.is_null() { None } else { Some(&*method) }
         }
     }
 
@@ -313,7 +316,8 @@ impl Class {
     pub fn instance_variable(&self, name: &str) -> Option<&Ivar> {
         let name = CString::new(name).unwrap();
         unsafe {
-            class_getInstanceVariable(self, name.as_ptr()).as_ref()
+            let ivar = class_getInstanceVariable(self, name.as_ptr());
+            if ivar.is_null() { None } else { Some(&*ivar) }
         }
     }
 

@@ -17,42 +17,6 @@ unsafe impl Message for Object { }
 
 unsafe impl Message for Class { }
 
-/// A trait for converting to an `id` pointer that may be sent Objective-C
-/// messages.
-pub trait ToMessage {
-    /// Returns self as an `id` pointer, a pointer to an `Object`.
-    fn as_id_ptr(&self) -> *mut Object;
-
-    /// Returns true if self is nil.
-    fn is_nil(&self) -> bool {
-        self.as_id_ptr().is_null()
-    }
-}
-
-impl<T> ToMessage for *const T where T: Message {
-    fn as_id_ptr(&self) -> *mut Object {
-        *self as *mut Object
-    }
-}
-
-impl<T> ToMessage for *mut T where T: Message {
-    fn as_id_ptr(&self) -> *mut Object {
-        *self as *mut Object
-    }
-}
-
-impl<'a, T> ToMessage for &'a T where T: Message {
-    fn as_id_ptr(&self) -> *mut Object {
-        *self as *const T as *mut Object
-    }
-}
-
-impl<'a, T> ToMessage for &'a mut T where T: Message {
-    fn as_id_ptr(&self) -> *mut Object {
-        *self as *mut T as *mut Object
-    }
-}
-
 #[cfg(target_arch = "x86_64")]
 fn msg_send_fn<R>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
     if mem::size_of::<R>() <= 16 {
@@ -82,32 +46,31 @@ pub trait MessageArguments {
     ///
     /// It is recommended to use the `msg_send!` macro rather than calling this
     /// method directly.
-    unsafe fn send<T, R>(self, obj: &T, sel: Sel) -> R where T: ToMessage;
+    unsafe fn send<T, R>(self, obj: *mut T, sel: Sel) -> R where T: Message;
 
     /// Sends a message to the superclass of an instance of a class with self
     /// as the arguments.
-    unsafe fn send_super<T, R>(self, obj: &T, superclass: &Class, sel: Sel) -> R
-            where T: ToMessage;
+    unsafe fn send_super<T, R>(self, obj: *mut T, superclass: &Class, sel: Sel) -> R
+            where T: Message;
 }
 
 macro_rules! message_args_impl {
     ($($a:ident : $t:ident),*) => (
         impl<$($t),*> MessageArguments for ($($t,)*) {
-            unsafe fn send<T, R>(self, obj: &T, sel: Sel) -> R where T: ToMessage {
+            unsafe fn send<T, R>(self, obj: *mut T, sel: Sel) -> R where T: Message {
                 let msg_send_fn = msg_send_fn::<R>();
                 let msg_send_fn: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
                     mem::transmute(msg_send_fn);
-                let obj_ptr = obj.as_id_ptr();
                 let ($($a,)*) = self;
-                msg_send_fn(obj_ptr, sel $(, $a)*)
+                msg_send_fn(obj as *mut Object, sel $(, $a)*)
             }
 
-            unsafe fn send_super<T, R>(self, obj: &T, superclass: &Class, sel: Sel) -> R
-                    where T: ToMessage {
+            unsafe fn send_super<T, R>(self, obj: *mut T, superclass: &Class, sel: Sel) -> R
+                    where T: Message {
                 let msg_send_fn = msg_send_super_fn::<R>();
                 let msg_send_fn: unsafe extern fn(*const Super, Sel $(, $t)*) -> R =
                     mem::transmute(msg_send_fn);
-                let sup = Super { receiver: obj.as_id_ptr(), superclass: superclass };
+                let sup = Super { receiver: obj as *mut Object, superclass: superclass };
                 let ($($a,)*) = self;
                 msg_send_fn(&sup, sel $(, $a)*)
             }
@@ -133,13 +96,12 @@ message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k
 mod tests {
     use runtime::Object;
     use test_utils;
-    use super::MessageArguments;
 
     #[test]
     fn test_send_message() {
         let obj = test_utils::sample_object();
         let result: *const Object = unsafe {
-            ().send(&obj, sel!(self))
+            msg_send![obj, self]
         };
         assert!(&*obj as *const Object == result);
     }
@@ -148,7 +110,7 @@ mod tests {
     fn test_send_message_stret() {
         let obj = test_utils::custom_object();
         let result: test_utils::CustomStruct = unsafe {
-            ().send(&obj, sel!(customStruct))
+            msg_send![obj, customStruct]
         };
         let expected = test_utils::CustomStruct { a: 1, b:2, c: 3, d: 4 };
         assert!(result == expected);
@@ -159,10 +121,10 @@ mod tests {
         let obj = test_utils::custom_subclass_object();
         let superclass = test_utils::custom_class();
         unsafe {
-            let _: () = (4u32,).send(&obj, sel!(setFoo:));
-            assert!(().send_super(&obj, superclass, sel!(foo)) == 4u32);
+            let _: () = msg_send![obj, setFoo:4u32];
+            assert!(msg_send![super(obj, superclass), foo] == 4u32);
             // The subclass is overriden to return foo + 2
-            assert!(().send(&obj, sel!(foo)) == 6u32);
+            assert!(msg_send![obj, foo] == 6u32);
         }
     }
 }

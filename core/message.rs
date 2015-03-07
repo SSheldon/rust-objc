@@ -76,6 +76,10 @@ pub trait MessageArguments {
     /// Sends a message to the given obj with the given selector and self as
     /// the arguments.
     ///
+    /// The correct version of `objc_msgSend` will be chosen based on the
+    /// return type. For more information, see Apple's documenation:
+    /// https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778
+    ///
     /// It is recommended to use the `msg_send!` macro rather than calling this
     /// method directly.
     unsafe fn send<T, R>(self, obj: &T, sel: Sel) -> R where T: ToMessage;
@@ -125,52 +129,17 @@ message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K, l: L);
 
-/**
-Sends a message to an object with selector `sel` and arguments `args`.
-This function will choose the correct version of `objc_msgSend` based on the
-return type. For more information, see Apple's documenation:
-https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778
-
-# Example
-``` no_run
-# #[macro_use] extern crate objc;
-# use objc::send_message;
-# use objc::runtime::Object;
-# fn main() {
-# unsafe {
-let dict: *mut Object;
-let key: *const Object;
-# let dict: *mut Object = 0 as *mut Object;
-# let key: *const Object = 0 as *const Object;
-let obj: *const Object = send_message(&dict, sel!(objectForKey:), (key,));
-let _: () = send_message(&dict, sel!(setObject:forKey:), (obj, key));
-# }
-# }
-```
-*/
-pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
-        where T: ToMessage, A: MessageArguments {
-    args.send(obj, sel)
-}
-
-/// Sends a message to the superclass of an instance of a class.
-pub unsafe fn send_super_message<T, A, R>(
-        obj: &T, superclass: &Class, sel: Sel, args: A) -> R
-        where T: ToMessage, A: MessageArguments {
-    args.send_super(obj, superclass, sel)
-}
-
 #[cfg(test)]
 mod tests {
     use runtime::Object;
     use test_utils;
-    use super::{send_message, send_super_message};
+    use super::MessageArguments;
 
     #[test]
     fn test_send_message() {
         let obj = test_utils::sample_object();
         let result: *const Object = unsafe {
-            send_message(&obj, sel!(self), ())
+            ().send(&obj, sel!(self))
         };
         assert!(&*obj as *const Object == result);
     }
@@ -179,7 +148,7 @@ mod tests {
     fn test_send_message_stret() {
         let obj = test_utils::custom_object();
         let result: test_utils::CustomStruct = unsafe {
-            send_message(&obj, sel!(customStruct), ())
+            ().send(&obj, sel!(customStruct))
         };
         let expected = test_utils::CustomStruct { a: 1, b:2, c: 3, d: 4 };
         assert!(result == expected);
@@ -190,10 +159,10 @@ mod tests {
         let obj = test_utils::custom_subclass_object();
         let superclass = test_utils::custom_class();
         unsafe {
-            let _: () = send_message(&obj, sel!(setFoo:), (4u32,));
-            assert!(send_super_message(&obj, superclass, sel!(foo), ()) == 4u32);
+            let _: () = (4u32,).send(&obj, sel!(setFoo:));
+            assert!(().send_super(&obj, superclass, sel!(foo)) == 4u32);
             // The subclass is overriden to return foo + 2
-            assert!(send_message(&obj, sel!(foo), ()) == 6u32);
+            assert!(().send(&obj, sel!(foo)) == 6u32);
         }
     }
 }

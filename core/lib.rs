@@ -14,7 +14,7 @@ extern crate objc_test_utils;
 
 pub use id::{Id, Owned, Ownership, Shared, ShareId};
 pub use encode::{encode, Encode};
-pub use message::{send_message, send_super_message, Message, MessageArguments, ToMessage};
+pub use message::{Message, MessageArguments, ToMessage};
 pub use weak::WeakId;
 
 #[macro_use]

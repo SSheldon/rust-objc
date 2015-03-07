@@ -12,10 +12,6 @@ license = "MIT"
 name = "objc"
 path = "lib.rs"
 
-[features]
-verify_message_encode = []
-default = ["verify_message_encode"]
-
 [dependencies]
 libc = "0.1"
 malloc_buf = "0.0"

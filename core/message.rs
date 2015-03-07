@@ -1,8 +1,7 @@
 use std::marker::PhantomFn;
 use std::mem;
 
-use runtime::{Class, Method, Object, Sel, Super, self};
-use {encode, Encode};
+use runtime::{Class, Object, Sel, Super, self};
 
 /*
  The Sized bound on Message is unfortunate; ideally, objc objects would not be
@@ -126,84 +125,11 @@ message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K, l: L);
 
-#[allow(dead_code)]
-fn verify_message_arguments(types: &[&str], method: &Method) -> Result<(), String> {
-    let count = 2 + types.len();
-    let expected_count = method.arguments_count();
-    if count != expected_count {
-        return Err(format!("Method {:?} accepts {} arguments, but {} were given",
-            method.name(), expected_count, count));
-    }
-
-    let expected_types = (2..expected_count).map(|i| method.argument_type(i));
-    for (&arg, expected) in types.iter().zip(expected_types) {
-        let expected = match expected {
-            Some(s) => s,
-            None => return Err(format!("Method {:?} doesn't expect argument with type code {}",
-                method.name(), arg)),
-        };
-        if arg != &*expected {
-            return Err(format!("Method {:?} expected argument with type code {} but was given {}",
-                method.name(), &*expected, arg));
-        }
-    }
-
-    Ok(())
-}
-
-#[allow(dead_code)]
-fn verify_message_signature<A, R>(cls: &Class, sel: Sel) -> Result<(), String>
-        where A: MessageArguments, R: Encode {
-    let method = match cls.instance_method(sel) {
-        Some(method) => method,
-        None => return Err(format!("Method {:?} not found on class {:?}",
-            sel, cls)),
-    };
-
-    let ret = encode::<R>();
-    let expected_ret = method.return_type();
-    // Allow encoding "oneway void" (Vv) as "void" (v)
-    if &*expected_ret != ret && !(&*expected_ret == "Vv" && ret == "v") {
-        return Err(format!("Return type code {} does not match expected {} for method {:?} on class {:?}",
-            ret, &*expected_ret, sel, cls));
-    }
-
-    // I don't think either of these can happen, but just to be safe...
-    let accepts_self_arg = match method.argument_type(0) {
-        Some(s) => &*s == "@",
-        None => false,
-    };
-    if !accepts_self_arg {
-        return Err(format!("Method {:?} of class {:?} doesn't accept an argument for self",
-            sel, cls));
-    }
-    let accepts_cmd_arg = match method.argument_type(1) {
-        Some(s) => &*s == ":",
-        None => false,
-    };
-    if !accepts_cmd_arg {
-        return Err(format!("Method {:?} of class {:?} doesn't accept an argument for the selector",
-            sel, cls));
-    }
-
-    Ok(())
-}
-
-#[cfg(any(ndebug, not(feature = "verify_message_encode")))]
-pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
-        where T: ToMessage, A: MessageArguments {
-    args.send(obj, sel)
-}
-
 /**
 Sends a message to an object with selector `sel` and arguments `args`.
 This function will choose the correct version of `objc_msgSend` based on the
 return type. For more information, see Apple's documenation:
 https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778
-
-When the verify_message_encode feature is defined, at runtime in debug
-builds this function will verify that the encoding of the return type
-matches the encoding of the method.
 
 # Example
 ``` no_run
@@ -222,39 +148,16 @@ let _: () = send_message(&dict, sel!(setObject:forKey:), (obj, key));
 # }
 ```
 */
-#[cfg(all(not(ndebug), feature = "verify_message_encode"))]
 pub unsafe fn send_message<T, A, R>(obj: &T, sel: Sel, args: A) -> R
-        where T: ToMessage, A: MessageArguments, R: Encode {
-    let cls = if obj.is_nil() {
-        panic!("Messaging {:?} to nil", sel)
-    } else {
-        (*obj.as_id_ptr()).class()
-    };
-    match verify_message_signature::<A, R>(cls, sel) {
-        Err(s) => panic!("Verify message failed: {}", s),
-        Ok(_) => args.send(obj, sel),
-    }
+        where T: ToMessage, A: MessageArguments {
+    args.send(obj, sel)
 }
 
-#[cfg(any(ndebug, not(feature = "verify_message_encode")))]
+/// Sends a message to the superclass of an instance of a class.
 pub unsafe fn send_super_message<T, A, R>(
         obj: &T, superclass: &Class, sel: Sel, args: A) -> R
         where T: ToMessage, A: MessageArguments {
     args.send_super(obj, superclass, sel)
-}
-
-/// Sends a message to the superclass of an instance of a class.
-#[cfg(all(not(ndebug), feature = "verify_message_encode"))]
-pub unsafe fn send_super_message<T, A, R>(
-        obj: &T, superclass: &Class, sel: Sel, args: A) -> R
-        where T: ToMessage, A: MessageArguments, R: Encode {
-    if obj.is_nil() {
-        panic!("Messaging {:?} to nil", sel);
-    }
-    match verify_message_signature::<A, R>(superclass, sel) {
-        Err(s) => panic!("Verify message failed: {}", s),
-        Ok(_) => args.send_super(obj, superclass, sel),
-    }
 }
 
 #[cfg(test)]

@@ -76,7 +76,7 @@ macro_rules! method_decl_impl {
                     encode::<Sel>(),
                     $(encode::<$t>()),*
                 ];
-                types.iter().cloned().collect()
+                types.iter().map(|&s| s).collect()
             }
 
             fn into_imp(self, sel: Sel) -> Result<Imp, ()> {

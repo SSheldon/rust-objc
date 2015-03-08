@@ -12,88 +12,48 @@ pub trait Encode : PhantomFn<Self> {
     fn code() -> &'static str;
 }
 
-impl Encode for i8 {
-    fn code() -> &'static str { "c" }
+macro_rules! encode_impls {
+    ($($t:ty : $s:expr,)*) => ($(
+        impl Encode for $t {
+            fn code() -> &'static str { $s }
+        }
+    )*);
 }
 
-impl Encode for i16 {
-    fn code() -> &'static str { "s" }
-}
-
-impl Encode for i32 {
-    fn code() -> &'static str { "i" }
-}
-
-impl Encode for i64 {
-    fn code() -> &'static str { "q" }
-}
+encode_impls!(
+    i8: "c",
+    i16: "s",
+    i32: "i",
+    i64: "q",
+    u8: "C",
+    u16: "S",
+    u32: "I",
+    u64: "Q",
+    f32: "f",
+    f64: "d",
+    bool: "B",
+    (): "v",
+    *mut c_char: "*",
+    *const c_char: "r*",
+    *mut c_void: "^v",
+    *const c_void: "r^v",
+    Sel: ":",
+);
 
 impl Encode for isize {
     #[cfg(target_pointer_width = "32")]
-    fn code() -> &'static str { "i" }
+    fn code() -> &'static str { i32::code() }
 
     #[cfg(target_pointer_width = "64")]
-    fn code() -> &'static str { "q" }
-}
-
-impl Encode for u8 {
-    fn code() -> &'static str { "C" }
-}
-
-impl Encode for u16 {
-    fn code() -> &'static str { "S" }
-}
-
-impl Encode for u32 {
-    fn code() -> &'static str { "I" }
-}
-
-impl Encode for u64 {
-    fn code() -> &'static str { "Q" }
+    fn code() -> &'static str { i64::code() }
 }
 
 impl Encode for usize {
     #[cfg(target_pointer_width = "32")]
-    fn code() -> &'static str { "I" }
+    fn code() -> &'static str { u32::code() }
 
     #[cfg(target_pointer_width = "64")]
-    fn code() -> &'static str { "Q" }
-}
-
-impl Encode for f32 {
-    fn code() -> &'static str { "f" }
-}
-
-impl Encode for f64 {
-    fn code() -> &'static str { "d" }
-}
-
-impl Encode for bool {
-    fn code() -> &'static str { "B" }
-}
-
-impl Encode for () {
-    fn code() -> &'static str { "v" }
-}
-
-impl Encode for *mut c_char {
-    fn code() -> &'static str { "*" }
-}
-
-impl Encode for *const c_char {
-    fn code() -> &'static str { "r*" }
-}
-
-impl Encode for *mut c_void {
-    fn code() -> &'static str { "^v" }
-}
-
-impl Encode for *const c_void {
-    fn code() -> &'static str { "r^v" }
-}
-
-impl Encode for Sel {
-    fn code() -> &'static str { ":" }
+    fn code() -> &'static str { u64::code() }
 }
 
 encode_message_impl!("@", Object);

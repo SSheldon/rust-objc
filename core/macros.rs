@@ -17,16 +17,15 @@ macro_rules! sel {
     ($name:ident) => ({
         #[inline(always)]
         fn register_sel(name_with_nul: &str) -> $crate::runtime::Sel {
-            let ptr = name_with_nul.as_ptr() as *const i8;
+            let ptr = name_with_nul.as_ptr() as *const _;
             unsafe { $crate::runtime::sel_registerName(ptr) }
         }
         register_sel(concat!(stringify!($name), '\0'))
-
     });
     ($($name:ident :)+) => ({
         #[inline(always)]
         fn register_sel(name_with_nul: &str) -> $crate::runtime::Sel {
-            let ptr = name_with_nul.as_ptr() as *const i8;
+            let ptr = name_with_nul.as_ptr() as *const _;
             unsafe { $crate::runtime::sel_registerName(ptr) }
         }
         register_sel(concat!($(stringify!($name), ':'),+, '\0'))

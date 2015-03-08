@@ -1,6 +1,7 @@
 use std::marker::PhantomFn;
 use libc::{c_char, c_void};
 
+use block::Block;
 use runtime::{Class, Object, Sel};
 
 /// Types that have an Objective-C type encoding.
@@ -56,9 +57,42 @@ impl Encode for usize {
     fn code() -> &'static str { u64::code() }
 }
 
+macro_rules! encode_message_impl {
+    ($code:expr, $name:ident) => (
+        encode_message_impl!($code, $name,);
+    );
+    ($code:expr, $name:ident, $($t:ident),*) => (
+        impl<'a $(, $t)*> $crate::Encode for &'a $name<$($t),*> {
+            fn code() -> &'static str { $code }
+        }
+
+        impl<'a $(, $t)*> $crate::Encode for &'a mut $name<$($t),*> {
+            fn code() -> &'static str { $code }
+        }
+
+        impl<'a $(, $t)*> $crate::Encode for Option<&'a $name<$($t),*>> {
+            fn code() -> &'static str { $code }
+        }
+
+        impl<'a $(, $t)*> $crate::Encode for Option<&'a mut $name<$($t),*>> {
+            fn code() -> &'static str { $code }
+        }
+
+        impl<$($t),*> $crate::Encode for *const $name<$($t),*> {
+            fn code() -> &'static str { $code }
+        }
+
+        impl<$($t),*> $crate::Encode for *mut $name<$($t),*> {
+            fn code() -> &'static str { $code }
+        }
+    );
+}
+
 encode_message_impl!("@", Object);
 
 encode_message_impl!("#", Class);
+
+encode_message_impl!("@?", Block, A, R);
 
 /// Returns the Objective-C type encoding for a type.
 pub fn encode<T>() -> &'static str where T: Encode {

@@ -1,6 +1,7 @@
 use std::marker::PhantomFn;
 use std::mem;
 
+use block::Block;
 use runtime::{Class, Object, Sel, Super, self};
 
 /*
@@ -16,6 +17,8 @@ pub unsafe trait Message : PhantomFn<Self> { }
 unsafe impl Message for Object { }
 
 unsafe impl Message for Class { }
+
+unsafe impl<A, R> Message for Block<A, R> { }
 
 #[cfg(target_arch = "x86_64")]
 fn msg_send_fn<R>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {

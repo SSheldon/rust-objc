@@ -4,7 +4,7 @@ use objc_test_utils;
 use block::Block;
 use declare::ClassDecl;
 use runtime::{Class, Object, Sel};
-use {Encode, Id};
+use {Encode, Encoding, Id};
 
 pub fn sample_object() -> Id<Object> {
     let cls = Class::get("NSObject").unwrap();
@@ -52,7 +52,7 @@ pub struct CustomStruct {
 }
 
 impl Encode for CustomStruct {
-    fn code() -> &'static str { "{CustomStruct=QQQQ}" }
+    fn code() -> Encoding { Encoding::unknown() }
 }
 
 static REGISTER_CUSTOM_CLASS: Once = ONCE_INIT;

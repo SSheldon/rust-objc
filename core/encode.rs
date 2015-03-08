@@ -13,7 +13,23 @@ impl Encoding {
         Encoding { code: code }
     }
 
+    pub fn as_str(&self) -> &str {
+        self.code
+    }
+
     pub fn unknown() -> Encoding { Encoding::from_str("?") }
+}
+
+impl PartialEq for Encoding {
+    fn eq(&self, other: &Encoding) -> bool {
+        self.as_str() == other.as_str()
+    }
+}
+
+impl<'a> PartialEq<&'a str> for Encoding {
+    fn eq(&self, other: &&'a str) -> bool {
+        self.as_str() == *other
+    }
 }
 
 /// Types that have an Objective-C type encoding.
@@ -107,8 +123,8 @@ encode_message_impl!("#", Class);
 encode_message_impl!("@?", Block, A, R);
 
 /// Returns the Objective-C type encoding for a type.
-pub fn encode<T>() -> &'static str where T: Encode {
-    T::code().code
+pub fn encode<T>() -> Encoding where T: Encode {
+    T::code()
 }
 
 #[cfg(test)]

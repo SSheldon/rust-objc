@@ -5,24 +5,33 @@ use libc::{c_char, c_void};
 use block::Block;
 use runtime::{Class, Object, Sel};
 
+enum Code {
+    Slice(&'static str),
+}
+
 /// An Objective-C type encoding.
 ///
 /// For more information, see Apple's documentation:
 /// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
 pub struct Encoding {
-    code: &'static str,
+    code: Code,
 }
 
 impl Encoding {
     /// Returns self as a `str`.
     pub fn as_str(&self) -> &str {
-        self.code
+        match self.code {
+            Code::Slice(code) => code,
+        }
     }
 }
 
 impl Clone for Encoding {
     fn clone(&self) -> Encoding {
-        Encoding { code: self.code }
+        let code = match self.code {
+            Code::Slice(code) => Code::Slice(code),
+        };
+        Encoding { code: code }
     }
 }
 
@@ -39,7 +48,7 @@ impl fmt::Debug for Encoding {
 }
 
 pub fn from_static_str(code: &'static str) -> Encoding {
-    Encoding { code: code }
+    Encoding { code: Code::Slice(code) }
 }
 
 /// Types that have an Objective-C type encoding.

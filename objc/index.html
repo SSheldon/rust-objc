@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'></p>
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'objc', ty: 'mod', relpath: '../'};</script>
     </section>
 
     <nav class="sub">
@@ -43,8 +43,9 @@
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>objc</a><wbr></span><span class='out-of-band'><a href='stability.html'>[stability]</a> <span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-0' href='../src/objc/lib.rs.html#1-29'>[src]</a></span></h1>
-<h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+        </span><a id='src-0' href='../src/objc/lib.rs.html#1-32'>[src]</a></span></h1>
+<div class='docblock'><p>Objective-C Runtime bindings and wrapper for Rust.</p>
+</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='block/index.html'
@@ -85,6 +86,13 @@ Objective-C. Variadic arguments are not currently supported.</p>
                     </tr>
                 </table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Encoding.html'
+                               title='objc::Encoding'>Encoding</a></td>
+                        <td class='docblock short'><p>An Objective-C type encoding.</p>
+</td>
+                    </tr>
+                
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Id.html'
                                title='objc::Id'>Id</a></td>
@@ -127,20 +135,6 @@ so there may be other references to them.</p>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.EncodePtr.html'
-                               title='objc::EncodePtr'>EncodePtr</a></td>
-                        <td class='docblock short'><p>Types that pointers to have an Objective-C type encoding.</p>
-</td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.IdSlice.html'
-                               title='objc::IdSlice'>IdSlice</a></td>
-                        <td class='docblock short'><p>Extension methods for slices containing <code>Id</code>s.</p>
-</td>
-                    </tr>
-                
-                    <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.Message.html'
                                title='objc::Message'>Message</a></td>
                         <td class='docblock short'><p>Types that may be sent Objective-C messages.
@@ -160,32 +154,6 @@ For example: objects, classes, and blocks.</p>
                                title='objc::Ownership'>Ownership</a></td>
                         <td class='docblock short'><p>A type that marks what type of ownership a struct has over the object(s)
 it contains; specifically, either <code>Owned</code> or <code>Shared</code>.</p>
-</td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.ToMessage.html'
-                               title='objc::ToMessage'>ToMessage</a></td>
-                        <td class='docblock short'><p>A trait for converting to an <code>id</code> pointer that may be sent Objective-C
-messages.</p>
-</td>
-                    </tr>
-                </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
-<table>
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.encode.html'
-                               title='objc::encode'>encode</a></td>
-                        <td class='docblock short'><p>Returns the Objective-C type encoding for a type.</p>
-</td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.send_message.html'
-                               title='objc::send_message'>send_message</a></td>
-                        <td class='docblock short'><p>Sends a message to an object with selector <code>sel</code> and arguments <code>args</code>.
-This function will choose the correct version of <code>objc_msgSend</code> based on the
-return type. For more information, see Apple&#39;s documenation:
-<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778">https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778</a></p>
 </td>
                     </tr>
                 </table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>

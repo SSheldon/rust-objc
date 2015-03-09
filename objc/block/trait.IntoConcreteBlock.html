@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../index.html'>objc</a>::<wbr><a href='index.html'>block</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Block.html' title='An Objective-C block that takes arguments of `A` when called and returns a value of `R`.'>Block</a><a class='struct ' href='struct.ConcreteBlock.html' title='An Objective-C block whose size is known at compile time and may be constructed on the stack.'>ConcreteBlock</a></div><div class='block trait'><h2>Traits</h2><a class='trait ' href='trait.BlockArguments.html' title='Types that may be used as the arguments to an Objective-C block.'>BlockArguments</a><a class='trait current' href='trait.IntoConcreteBlock.html' title='Types that may be converted into a `ConcreteBlock`.'>IntoConcreteBlock</a></div>
+        <p class='location'><a href='../index.html'>objc</a>::<wbr><a href='index.html'>block</a></p><script>window.sidebarCurrent = {name: 'IntoConcreteBlock', ty: 'trait', relpath: ''};</script><script async src="sidebar-items.js"></script>
     </section>
 
     <nav class="sub">
@@ -43,11 +43,11 @@
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>objc</a>::<wbr><a href='index.html'>block</a>::<wbr><a class='trait' href=''>IntoConcreteBlock</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-4067' href='../../src/objc/block.rs.html#122-128'>[src]</a></span></h1>
+        </span><a id='src-3658' href='../../src/objc/block.rs.html#123-129'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait IntoConcreteBlock&lt;A&gt; <span class='where'>where A: <a class='trait' href='../../objc/block/trait.BlockArguments.html' title='objc::block::BlockArguments'>BlockArguments</a></span> {
     type Ret;
 
-    fn <a href='#tymethod.into_concrete_block' class='fnname'>into_concrete_block</a>(self) -&gt; <a class='struct' href='../../objc/block/struct.ConcreteBlock.html' title='objc::block::ConcreteBlock'>ConcreteBlock</a>&lt;A, Self::<a class='trait' href='../../objc/block/trait.IntoConcreteBlock.html' title='objc::block::IntoConcreteBlock'>Ret</a>, Self&gt;;
+    fn <a href='#tymethod.into_concrete_block' class='fnname'>into_concrete_block</a>(self) -&gt; <a class='struct' href='../../objc/block/struct.ConcreteBlock.html' title='objc::block::ConcreteBlock'>ConcreteBlock</a>&lt;A, Self::Ret, Self&gt;;
 }</pre><div class='docblock'><p>Types that may be converted into a <code>ConcreteBlock</code>.</p>
 </div>
             <h2 id='associated-types'>Associated Types</h2>
@@ -56,7 +56,7 @@
 </div></div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.into_concrete_block' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.into_concrete_block' class='fnname'>into_concrete_block</a>(self) -&gt; <a class='struct' href='../../objc/block/struct.ConcreteBlock.html' title='objc::block::ConcreteBlock'>ConcreteBlock</a>&lt;A, Self::<a class='trait' href='../../objc/block/trait.IntoConcreteBlock.html' title='objc::block::IntoConcreteBlock'>Ret</a>, Self&gt;</code></h3><div class='docblock'><p>Consumes self to create a <code>ConcreteBlock</code>.</p>
+        <h3 id='tymethod.into_concrete_block' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.into_concrete_block' class='fnname'>into_concrete_block</a>(self) -&gt; <a class='struct' href='../../objc/block/struct.ConcreteBlock.html' title='objc::block::ConcreteBlock'>ConcreteBlock</a>&lt;A, Self::Ret, Self&gt;</code></h3><div class='docblock'><p>Consumes self to create a <code>ConcreteBlock</code>.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>

@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../index.html'>objc</a></p><div class='block mod'><h2>Modules</h2><a class='mod ' href='../block/index.html' title='A Rust interface for Objective-C blocks.'>block</a><a class='mod ' href='../declare/index.html' title='Functionality for declaring Objective-C classes.'>declare</a><a class='mod current' href='../runtime/index.html' title='A Rust interface for the functionality of the Objective-C runtime.'>runtime</a></div><div class='block struct'><h2>Structs</h2><a class='struct ' href='../struct.Id.html' title='A pointer type for Objective-C&#39;s reference counted objects. The object of an `Id` is retained and sent a `release` message when the `Id` is dropped.'>Id</a><a class='struct ' href='../struct.WeakId.html' title='A pointer type for a weak reference to an Objective-C reference counted object.'>WeakId</a></div><div class='block enum'><h2>Enums</h2><a class='enum ' href='../enum.Owned.html' title='A type used to mark that a struct owns the object(s) it contains, so it has the sole references to them.'>Owned</a><a class='enum ' href='../enum.Shared.html' title='A type used to mark that the object(s) a struct contains are shared, so there may be other references to them.'>Shared</a></div><div class='block trait'><h2>Traits</h2><a class='trait ' href='../trait.Encode.html' title='Types that have an Objective-C type encoding.'>Encode</a><a class='trait ' href='../trait.EncodePtr.html' title='Types that pointers to have an Objective-C type encoding.'>EncodePtr</a><a class='trait ' href='../trait.IdSlice.html' title='Extension methods for slices containing `Id`s.'>IdSlice</a><a class='trait ' href='../trait.Message.html' title='Types that may be sent Objective-C messages. For example: objects, classes, and blocks.'>Message</a><a class='trait ' href='../trait.MessageArguments.html' title='Types that may be used as the arguments of an Objective-C message.'>MessageArguments</a><a class='trait ' href='../trait.Ownership.html' title='A type that marks what type of ownership a struct has over the object(s) it contains; specifically, either `Owned` or `Shared`.'>Ownership</a><a class='trait ' href='../trait.ToMessage.html' title='A trait for converting to an `id` pointer that may be sent Objective-C messages.'>ToMessage</a></div><div class='block fn'><h2>Functions</h2><a class='fn ' href='../fn.encode.html' title='Returns the Objective-C type encoding for a type.'>encode</a><a class='fn ' href='../fn.send_message.html' title='Sends a message to an object with selector `sel` and arguments `args`. This function will choose the correct version of `objc_msgSend` based on the return type. For more information, see Apple&#39;s documenation: https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778'>send_message</a></div><div class='block macro'><h2>Macros</h2><a class='macro ' href='../macro.msg_send!.html' title='Sends a message to an object. The first argument should implement the `ToMessage` trait, and the syntax is similar to the message syntax in Objective-C. Variadic arguments are not currently supported.'>msg_send!</a><a class='macro ' href='../macro.sel!.html' title='Registers a selector, returning an `Sel`.'>sel!</a></div>
+        <p class='location'><a href='../index.html'>objc</a></p><script>window.sidebarCurrent = {name: 'runtime', ty: 'mod', relpath: '../'};</script><script async src="../sidebar-items.js"></script>
     </section>
 
     <nav class="sub">
@@ -43,7 +43,7 @@
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>objc</a>::<wbr><a class='mod' href=''>runtime</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-25' href='../../src/objc/runtime.rs.html#1-419'>[src]</a></span></h1>
+        </span><a id='src-21' href='../../src/objc/runtime.rs.html#1-481'>[src]</a></span></h1>
 <div class='docblock'><p>A Rust interface for the functionality of the Objective-C runtime.</p>
 
 <p>For more information on foreign functions, see Apple&#39;s documentation:
@@ -51,38 +51,59 @@
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Sel.html'
-                               title='objc::runtime::Sel'>Sel</a></td>
-                        <td class='docblock short'><p>A type that represents a method selector.</p>
-</td>
-                    </tr>
-                </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
-<table>
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.Class.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Class.html'
                                title='objc::runtime::Class'>Class</a></td>
                         <td class='docblock short'><p>A type that represents an Objective-C class.</p>
 </td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.Ivar.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Ivar.html'
                                title='objc::runtime::Ivar'>Ivar</a></td>
                         <td class='docblock short'><p>A type that represents an instance variable.</p>
 </td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.Method.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Method.html'
                                title='objc::runtime::Method'>Method</a></td>
                         <td class='docblock short'><p>A type that represents a method in a class definition.</p>
 </td>
                     </tr>
                 
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.Object.html'
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Object.html'
                                title='objc::runtime::Object'>Object</a></td>
                         <td class='docblock short'><p>A type that represents an instance of a class.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Sel.html'
+                               title='objc::runtime::Sel'>Sel</a></td>
+                        <td class='docblock short'><p>A type that represents a method selector.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Super.html'
+                               title='objc::runtime::Super'>Super</a></td>
+                        <td class='docblock short'><p>Specifies the superclass of an instance.</p>
+</td>
+                    </tr>
+                </table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='constant' href='constant.NO.html'
+                               title='objc::runtime::NO'>NO</a></td>
+                        <td class='docblock short'><p>The equivalent of false for Objective-C&#39;s <code>BOOL</code> type.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='constant' href='constant.YES.html'
+                               title='objc::runtime::YES'>YES</a></td>
+                        <td class='docblock short'><p>The equivalent of true for Objective-C&#39;s <code>BOOL</code> type.</p>
 </td>
                     </tr>
                 </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
@@ -132,6 +153,12 @@
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.class_getName.html'
                                title='objc::runtime::class_getName'>class_getName</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.class_getSuperclass.html'
+                               title='objc::runtime::class_getSuperclass'>class_getSuperclass</a></td>
                         <td class='docblock short'></td>
                     </tr>
                 
@@ -238,6 +265,18 @@
                     </tr>
                 
                     <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.objc_msgSendSuper.html'
+                               title='objc::runtime::objc_msgSendSuper'>objc_msgSendSuper</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.objc_msgSendSuper_stret.html'
+                               title='objc::runtime::objc_msgSendSuper_stret'>objc_msgSendSuper_stret</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.objc_msgSend_stret.html'
                                title='objc::runtime::objc_msgSend_stret'>objc_msgSend_stret</a></td>
                         <td class='docblock short'></td>
@@ -268,6 +307,13 @@
                     </tr>
                 </table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='type' href='type.BOOL.html'
+                               title='objc::runtime::BOOL'>BOOL</a></td>
+                        <td class='docblock short'><p>The Objective-C <code>BOOL</code> type.</p>
+</td>
+                    </tr>
+                
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='type' href='type.Imp.html'
                                title='objc::runtime::Imp'>Imp</a></td>

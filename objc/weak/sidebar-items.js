@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["WeakId","A pointer type for a weak reference to an Objective-C reference counted object."]]});

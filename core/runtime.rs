@@ -10,7 +10,7 @@ use std::str;
 use libc::{c_char, c_int, c_schar, c_uint, c_void, ptrdiff_t, size_t};
 use malloc_buf::{MallocBuffer, MallocString};
 
-use {encode, Encode};
+use Encode;
 
 /// The Objective-C `BOOL` type.
 ///
@@ -371,7 +371,7 @@ impl Object {
         let cls = self.class();
         let ptr = match cls.instance_variable(name) {
             Some(ivar) => {
-                assert!(encode::<T>() == ivar.type_encoding());
+                assert!(T::encode() == ivar.type_encoding());
                 let offset = ivar.offset();
                 let self_ptr = self as *const Object;
                 (self_ptr as *const u8).offset(offset) as *const T
@@ -390,7 +390,7 @@ impl Object {
         let cls = self.class();
         let ptr = match cls.instance_variable(name) {
             Some(ivar) => {
-                assert!(encode::<T>() == ivar.type_encoding());
+                assert!(T::encode() == ivar.type_encoding());
                 let offset = ivar.offset();
                 let self_ptr = self as *mut Object;
                 (self_ptr as *mut u8).offset(offset) as *mut T

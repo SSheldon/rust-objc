@@ -41,7 +41,7 @@ impl<'a> PartialEq<&'a str> for Encoding {
 /// For more information, see Apple's documentation:
 /// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
 pub trait Encode : PhantomFn<Self> {
-    /// Returns the encoding for Self.
+    /// Returns the Objective-C type encoding for Self.
     fn encode() -> Encoding;
 }
 
@@ -126,23 +126,18 @@ encode_message_impl!("#", Class);
 
 encode_message_impl!("@?", Block, A, R);
 
-/// Returns the Objective-C type encoding for a type.
-pub fn encode<T>() -> Encoding where T: Encode {
-    T::encode()
-}
-
 #[cfg(test)]
 mod tests {
     use runtime::{Class, Object, Sel};
-    use super::encode;
+    use super::Encode;
 
     #[test]
     fn test_encode() {
-        assert!(encode::<u32>() == "I");
-        assert!(encode::<()>() == "v");
-        assert!(encode::<&Object>() == "@");
-        assert!(encode::<*mut Object>() == "@");
-        assert!(encode::<&Class>() == "#");
-        assert!(encode::<Sel>() == ":");
+        assert!(u32::encode() == "I");
+        assert!(<()>::encode() == "v");
+        assert!(<&Object>::encode() == "@");
+        assert!(<*mut Object>::encode() == "@");
+        assert!(<&Class>::encode() == "#");
+        assert!(Sel::encode() == ":");
     }
 }

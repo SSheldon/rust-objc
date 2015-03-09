@@ -36,7 +36,7 @@ use std::ffi::CString;
 use std::mem;
 use libc::size_t;
 
-use {encode, Encode, Message};
+use {Encode, Message};
 use runtime::{Class, Imp, NO, Object, Sel, self};
 
 /// Types that can be used as the implementation of an Objective-C method.
@@ -71,10 +71,10 @@ macro_rules! method_decl_impl {
 
             fn method_encoding() -> String {
                 let types = [
-                    encode::<R>(),
-                    encode::<*mut Object>(),
-                    encode::<Sel>(),
-                    $(encode::<$t>()),*
+                    R::encode(),
+                    <*mut Object>::encode(),
+                    Sel::encode(),
+                    $($t::encode()),*
                 ];
                 types.iter().map(|s| s.as_str()).collect()
             }
@@ -161,7 +161,7 @@ impl ClassDecl {
     /// Panics if the ivar wasn't successfully added.
     pub fn add_ivar<T>(&mut self, name: &str) where T: Encode {
         let c_name = CString::new(name).unwrap();
-        let encoding = encode::<T>();
+        let encoding = T::encode();
         let size = mem::size_of::<T>() as size_t;
         let align = mem::align_of::<T>() as u8;
         let success = unsafe {

@@ -5,6 +5,10 @@ use libc::{c_char, c_void};
 use block::Block;
 use runtime::{Class, Object, Sel};
 
+/// An Objective-C type encoding.
+///
+/// For more information, see Apple's documentation:
+/// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
 pub struct Encoding {
     code: &'static str,
 }
@@ -14,14 +18,17 @@ macro_rules! static_encoding {
 }
 
 impl Encoding {
+    /// Returns self as a `str`.
     pub fn as_str(&self) -> &str {
         &self.code[..self.code.len() - 1]
     }
 
+    /// Returns self as a pointer to a nul-terminated C string.
     pub fn as_ptr(&self) -> *const c_char {
         self.as_str().as_ptr() as *const c_char
     }
 
+    /// Returns the `Encoding` for an unknown type.
     pub fn unknown() -> Encoding { static_encoding!("?") }
 }
 
@@ -50,9 +57,6 @@ impl fmt::Debug for Encoding {
 }
 
 /// Types that have an Objective-C type encoding.
-///
-/// For more information, see Apple's documentation:
-/// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
 pub trait Encode : PhantomFn<Self> {
     /// Returns the Objective-C type encoding for Self.
     fn encode() -> Encoding;

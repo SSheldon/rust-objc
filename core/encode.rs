@@ -1,3 +1,4 @@
+use std::fmt;
 use std::marker::PhantomFn;
 use libc::{c_char, c_void};
 
@@ -24,6 +25,12 @@ impl Encoding {
     pub fn unknown() -> Encoding { static_encoding!("?") }
 }
 
+impl Clone for Encoding {
+    fn clone(&self) -> Encoding {
+        Encoding { code: self.code }
+    }
+}
+
 impl PartialEq for Encoding {
     fn eq(&self, other: &Encoding) -> bool {
         self.as_str() == other.as_str()
@@ -33,6 +40,12 @@ impl PartialEq for Encoding {
 impl<'a> PartialEq<&'a str> for Encoding {
     fn eq(&self, other: &&'a str) -> bool {
         self.as_str() == *other
+    }
+}
+
+impl fmt::Debug for Encoding {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.as_str())
     }
 }
 

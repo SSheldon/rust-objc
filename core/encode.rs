@@ -42,13 +42,13 @@ impl<'a> PartialEq<&'a str> for Encoding {
 /// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
 pub trait Encode : PhantomFn<Self> {
     /// Returns the encoding for Self.
-    fn code() -> Encoding;
+    fn encode() -> Encoding;
 }
 
 macro_rules! encode_impls {
     ($($t:ty : $s:expr,)*) => ($(
         impl Encode for $t {
-            fn code() -> Encoding { static_encoding!($s) }
+            fn encode() -> Encoding { static_encoding!($s) }
         }
     )*);
 }
@@ -75,18 +75,18 @@ encode_impls!(
 
 impl Encode for isize {
     #[cfg(target_pointer_width = "32")]
-    fn code() -> Encoding { i32::code() }
+    fn encode() -> Encoding { i32::encode() }
 
     #[cfg(target_pointer_width = "64")]
-    fn code() -> Encoding { i64::code() }
+    fn encode() -> Encoding { i64::encode() }
 }
 
 impl Encode for usize {
     #[cfg(target_pointer_width = "32")]
-    fn code() -> Encoding { u32::code() }
+    fn encode() -> Encoding { u32::encode() }
 
     #[cfg(target_pointer_width = "64")]
-    fn code() -> Encoding { u64::code() }
+    fn encode() -> Encoding { u64::encode() }
 }
 
 macro_rules! encode_message_impl {
@@ -95,27 +95,27 @@ macro_rules! encode_message_impl {
     );
     ($code:expr, $name:ident, $($t:ident),*) => (
         impl<'a $(, $t)*> $crate::Encode for &'a $name<$($t),*> {
-            fn code() -> Encoding { static_encoding!($code) }
+            fn encode() -> Encoding { static_encoding!($code) }
         }
 
         impl<'a $(, $t)*> $crate::Encode for &'a mut $name<$($t),*> {
-            fn code() -> Encoding { static_encoding!($code) }
+            fn encode() -> Encoding { static_encoding!($code) }
         }
 
         impl<'a $(, $t)*> $crate::Encode for Option<&'a $name<$($t),*>> {
-            fn code() -> Encoding { static_encoding!($code) }
+            fn encode() -> Encoding { static_encoding!($code) }
         }
 
         impl<'a $(, $t)*> $crate::Encode for Option<&'a mut $name<$($t),*>> {
-            fn code() -> Encoding { static_encoding!($code) }
+            fn encode() -> Encoding { static_encoding!($code) }
         }
 
         impl<$($t),*> $crate::Encode for *const $name<$($t),*> {
-            fn code() -> Encoding { static_encoding!($code) }
+            fn encode() -> Encoding { static_encoding!($code) }
         }
 
         impl<$($t),*> $crate::Encode for *mut $name<$($t),*> {
-            fn code() -> Encoding { static_encoding!($code) }
+            fn encode() -> Encoding { static_encoding!($code) }
         }
     );
 }
@@ -128,7 +128,7 @@ encode_message_impl!("@?", Block, A, R);
 
 /// Returns the Objective-C type encoding for a type.
 pub fn encode<T>() -> Encoding where T: Encode {
-    T::code()
+    T::encode()
 }
 
 #[cfg(test)]

@@ -52,7 +52,7 @@ pub struct CustomStruct {
 }
 
 impl Encode for CustomStruct {
-    fn code() -> Encoding { Encoding::unknown() }
+    fn encode() -> Encoding { Encoding::unknown() }
 }
 
 static REGISTER_CUSTOM_CLASS: Once = ONCE_INIT;

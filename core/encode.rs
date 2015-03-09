@@ -7,6 +7,7 @@ use runtime::{Class, Object, Sel};
 
 enum Code {
     Slice(&'static str),
+    Owned(String),
 }
 
 /// An Objective-C type encoding.
@@ -22,6 +23,7 @@ impl Encoding {
     pub fn as_str(&self) -> &str {
         match self.code {
             Code::Slice(code) => code,
+            Code::Owned(ref code) => code,
         }
     }
 }
@@ -30,6 +32,7 @@ impl Clone for Encoding {
     fn clone(&self) -> Encoding {
         let code = match self.code {
             Code::Slice(code) => Code::Slice(code),
+            Code::Owned(ref code) => Code::Owned(code.clone()),
         };
         Encoding { code: code }
     }

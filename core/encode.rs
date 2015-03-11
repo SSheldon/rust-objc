@@ -13,23 +13,18 @@ pub struct Encoding {
     code: &'static str,
 }
 
-macro_rules! static_encoding {
-    ($s:expr) => (Encoding { code: concat!($s, "\0") });
-}
-
 impl Encoding {
-    /// Returns self as a `str`.
-    pub fn as_str(&self) -> &str {
-        &self.code[..self.code.len() - 1]
+    fn from_str(code: &'static str) -> Encoding {
+        Encoding { code: code }
     }
 
-    /// Returns self as a pointer to a nul-terminated C string.
-    pub fn as_ptr(&self) -> *const c_char {
-        self.as_str().as_ptr() as *const c_char
+    /// Returns self as a `str`.
+    pub fn as_str(&self) -> &str {
+        self.code
     }
 
     /// Returns the `Encoding` for an unknown type.
-    pub fn unknown() -> Encoding { static_encoding!("?") }
+    pub fn unknown() -> Encoding { Encoding::from_str("?") }
 }
 
 impl Clone for Encoding {
@@ -65,7 +60,7 @@ pub trait Encode : PhantomFn<Self> {
 macro_rules! encode_impls {
     ($($t:ty : $s:expr,)*) => ($(
         impl Encode for $t {
-            fn encode() -> Encoding { static_encoding!($s) }
+            fn encode() -> Encoding { Encoding::from_str($s) }
         }
     )*);
 }
@@ -112,27 +107,27 @@ macro_rules! encode_message_impl {
     );
     ($code:expr, $name:ident, $($t:ident),*) => (
         impl<'a $(, $t)*> $crate::Encode for &'a $name<$($t),*> {
-            fn encode() -> Encoding { static_encoding!($code) }
+            fn encode() -> Encoding { Encoding::from_str($code) }
         }
 
         impl<'a $(, $t)*> $crate::Encode for &'a mut $name<$($t),*> {
-            fn encode() -> Encoding { static_encoding!($code) }
+            fn encode() -> Encoding { Encoding::from_str($code) }
         }
 
         impl<'a $(, $t)*> $crate::Encode for Option<&'a $name<$($t),*>> {
-            fn encode() -> Encoding { static_encoding!($code) }
+            fn encode() -> Encoding { Encoding::from_str($code) }
         }
 
         impl<'a $(, $t)*> $crate::Encode for Option<&'a mut $name<$($t),*>> {
-            fn encode() -> Encoding { static_encoding!($code) }
+            fn encode() -> Encoding { Encoding::from_str($code) }
         }
 
         impl<$($t),*> $crate::Encode for *const $name<$($t),*> {
-            fn encode() -> Encoding { static_encoding!($code) }
+            fn encode() -> Encoding { Encoding::from_str($code) }
         }
 
         impl<$($t),*> $crate::Encode for *mut $name<$($t),*> {
-            fn encode() -> Encoding { static_encoding!($code) }
+            fn encode() -> Encoding { Encoding::from_str($code) }
         }
     );
 }

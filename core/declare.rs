@@ -161,7 +161,7 @@ impl ClassDecl {
     /// Panics if the ivar wasn't successfully added.
     pub fn add_ivar<T>(&mut self, name: &str) where T: Encode {
         let c_name = CString::new(name).unwrap();
-        let encoding = T::encode();
+        let encoding = CString::new(T::encode().as_str()).unwrap();
         let size = mem::size_of::<T>() as size_t;
         let align = mem::align_of::<T>() as u8;
         let success = unsafe {

@@ -14,7 +14,7 @@ pub struct Encoding {
 }
 
 impl Encoding {
-    fn from_str(code: &'static str) -> Encoding {
+    pub fn from_str(code: &'static str) -> Encoding {
         Encoding { code: code }
     }
 
@@ -22,9 +22,6 @@ impl Encoding {
     pub fn as_str(&self) -> &str {
         self.code
     }
-
-    /// Returns the `Encoding` for an unknown type.
-    pub fn unknown() -> Encoding { Encoding::from_str("?") }
 }
 
 impl Clone for Encoding {

@@ -78,3 +78,24 @@ macro_rules! msg_send {
         $crate::MessageArguments::send(($($arg,)*), to_mut(&*$obj), sel)
     });
 }
+
+macro_rules! encode {
+    () => ("");
+    (i8 $($x:tt)*) => (concat!("c", encode!($($x)*)));
+    (i16 $($x:tt)*) => (concat!("s", encode!($($x)*)));
+    (i32 $($x:tt)*) => (concat!("i", encode!($($x)*)));
+    (i64 $($x:tt)*) => (concat!("q", encode!($($x)*)));
+    (u8 $($x:tt)*) => (concat!("C", encode!($($x)*)));
+    (u16 $($x:tt)*) => (concat!("S", encode!($($x)*)));
+    (u32 $($x:tt)*) => (concat!("I", encode!($($x)*)));
+    (u64 $($x:tt)*) => (concat!("Q", encode!($($x)*)));
+    (f32 $($x:tt)*) => (concat!("f", encode!($($x)*)));
+    (f64 $($x:tt)*) => (concat!("d", encode!($($x)*)));
+    (bool $($x:tt)*) => (concat!("B", encode!($($x)*)));
+    (Sel $($x:tt)*) => (concat!(":", encode!($($x)*)));
+    (struct $i:ident {$($x:tt)+}) => (
+        concat!('{', stringify!($i), '=', encode!($($x)*), '}')
+    );
+    // Just eat a leading comma and continue
+    (, $($x:tt)*) => (encode!($($x)*));
+}

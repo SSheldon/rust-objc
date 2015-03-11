@@ -150,11 +150,11 @@ mod tests {
 
     #[test]
     fn test_encode() {
-        assert!(u32::encode() == "I");
+        assert!(u32::encode() == encode!(u32));
         assert!(<()>::encode() == "v");
         assert!(<&Object>::encode() == "@");
         assert!(<*mut Object>::encode() == "@");
         assert!(<&Class>::encode() == "#");
-        assert!(Sel::encode() == ":");
+        assert!(Sel::encode() == encode!(Sel));
     }
 }

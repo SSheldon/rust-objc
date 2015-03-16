@@ -14,7 +14,9 @@ pub struct Encoding {
 }
 
 impl Encoding {
-    pub fn from_str(code: &'static str) -> Encoding {
+    /// Constructs an `Encoding` from its string representation.
+    /// Unsafe because the caller must ensure the string is a valid encoding.
+    pub unsafe fn from_str(code: &'static str) -> Encoding {
         Encoding { code: code }
     }
 
@@ -61,7 +63,7 @@ pub unsafe trait Encode : PhantomFn<Self> {
 macro_rules! encode_impls {
     ($($t:ty : $s:expr,)*) => ($(
         unsafe impl Encode for $t {
-            fn encode() -> Encoding { Encoding::from_str($s) }
+            fn encode() -> Encoding { unsafe { Encoding::from_str($s) } }
         }
     )*);
 }
@@ -108,27 +110,27 @@ macro_rules! encode_message_impl {
     );
     ($code:expr, $name:ident, $($t:ident),*) => (
         unsafe impl<'a $(, $t)*> $crate::Encode for &'a $name<$($t),*> {
-            fn encode() -> Encoding { Encoding::from_str($code) }
+            fn encode() -> Encoding { unsafe { Encoding::from_str($code) } }
         }
 
         unsafe impl<'a $(, $t)*> $crate::Encode for &'a mut $name<$($t),*> {
-            fn encode() -> Encoding { Encoding::from_str($code) }
+            fn encode() -> Encoding { unsafe { Encoding::from_str($code) } }
         }
 
         unsafe impl<'a $(, $t)*> $crate::Encode for Option<&'a $name<$($t),*>> {
-            fn encode() -> Encoding { Encoding::from_str($code) }
+            fn encode() -> Encoding { unsafe { Encoding::from_str($code) } }
         }
 
         unsafe impl<'a $(, $t)*> $crate::Encode for Option<&'a mut $name<$($t),*>> {
-            fn encode() -> Encoding { Encoding::from_str($code) }
+            fn encode() -> Encoding { unsafe { Encoding::from_str($code) } }
         }
 
         unsafe impl<$($t),*> $crate::Encode for *const $name<$($t),*> {
-            fn encode() -> Encoding { Encoding::from_str($code) }
+            fn encode() -> Encoding { unsafe { Encoding::from_str($code) } }
         }
 
         unsafe impl<$($t),*> $crate::Encode for *mut $name<$($t),*> {
-            fn encode() -> Encoding { Encoding::from_str($code) }
+            fn encode() -> Encoding { unsafe { Encoding::from_str($code) } }
         }
     );
 }

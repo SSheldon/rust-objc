@@ -53,7 +53,8 @@ pub struct CustomStruct {
 
 unsafe impl Encode for CustomStruct {
     fn encode() -> Encoding {
-        Encoding::from_str(encode!(struct CustomStruct { u64, u64, u64, u64 }))
+        let code = encode!(struct CustomStruct { u64, u64, u64, u64 });
+        unsafe { Encoding::from_str(code) }
     }
 }
 

@@ -33,9 +33,11 @@ macro_rules! sel {
 }
 
 /**
-Sends a message to an object. The first argument should implement the
-`ToMessage` trait, and the syntax is similar to the message syntax in
-Objective-C. Variadic arguments are not currently supported.
+Sends a message to an object.
+
+The first argument should implement the `ToMessage` trait, and the syntax is
+similar to the message syntax in Objective-C.
+Variadic arguments are not currently supported.
 
 # Example
 ``` no_run

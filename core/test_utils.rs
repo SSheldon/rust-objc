@@ -51,7 +51,7 @@ pub struct CustomStruct {
     pub d: u64,
 }
 
-impl Encode for CustomStruct {
+unsafe impl Encode for CustomStruct {
     fn encode() -> Encoding {
         Encoding::from_str(encode!(struct CustomStruct { u64, u64, u64, u64 }))
     }

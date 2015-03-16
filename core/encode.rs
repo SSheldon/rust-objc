@@ -49,14 +49,18 @@ impl fmt::Debug for Encoding {
 }
 
 /// Types that have an Objective-C type encoding.
-pub trait Encode : PhantomFn<Self> {
+///
+/// Unsafe because Objective-C will make assumptions about the type (like its
+/// size and alignment) from its encoding, so the implementer must verify that
+/// the encoding is accurate.
+pub unsafe trait Encode : PhantomFn<Self> {
     /// Returns the Objective-C type encoding for Self.
     fn encode() -> Encoding;
 }
 
 macro_rules! encode_impls {
     ($($t:ty : $s:expr,)*) => ($(
-        impl Encode for $t {
+        unsafe impl Encode for $t {
             fn encode() -> Encoding { Encoding::from_str($s) }
         }
     )*);
@@ -82,7 +86,7 @@ encode_impls!(
     Sel: ":",
 );
 
-impl Encode for isize {
+unsafe impl Encode for isize {
     #[cfg(target_pointer_width = "32")]
     fn encode() -> Encoding { i32::encode() }
 
@@ -90,7 +94,7 @@ impl Encode for isize {
     fn encode() -> Encoding { i64::encode() }
 }
 
-impl Encode for usize {
+unsafe impl Encode for usize {
     #[cfg(target_pointer_width = "32")]
     fn encode() -> Encoding { u32::encode() }
 
@@ -103,27 +107,27 @@ macro_rules! encode_message_impl {
         encode_message_impl!($code, $name,);
     );
     ($code:expr, $name:ident, $($t:ident),*) => (
-        impl<'a $(, $t)*> $crate::Encode for &'a $name<$($t),*> {
+        unsafe impl<'a $(, $t)*> $crate::Encode for &'a $name<$($t),*> {
             fn encode() -> Encoding { Encoding::from_str($code) }
         }
 
-        impl<'a $(, $t)*> $crate::Encode for &'a mut $name<$($t),*> {
+        unsafe impl<'a $(, $t)*> $crate::Encode for &'a mut $name<$($t),*> {
             fn encode() -> Encoding { Encoding::from_str($code) }
         }
 
-        impl<'a $(, $t)*> $crate::Encode for Option<&'a $name<$($t),*>> {
+        unsafe impl<'a $(, $t)*> $crate::Encode for Option<&'a $name<$($t),*>> {
             fn encode() -> Encoding { Encoding::from_str($code) }
         }
 
-        impl<'a $(, $t)*> $crate::Encode for Option<&'a mut $name<$($t),*>> {
+        unsafe impl<'a $(, $t)*> $crate::Encode for Option<&'a mut $name<$($t),*>> {
             fn encode() -> Encoding { Encoding::from_str($code) }
         }
 
-        impl<$($t),*> $crate::Encode for *const $name<$($t),*> {
+        unsafe impl<$($t),*> $crate::Encode for *const $name<$($t),*> {
             fn encode() -> Encoding { Encoding::from_str($code) }
         }
 
-        impl<$($t),*> $crate::Encode for *mut $name<$($t),*> {
+        unsafe impl<$($t),*> $crate::Encode for *mut $name<$($t),*> {
             fn encode() -> Encoding { Encoding::from_str($code) }
         }
     );

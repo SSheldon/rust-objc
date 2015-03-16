@@ -34,7 +34,7 @@ fn main() {
     let hash_method = cls.instance_method(hash_sel).unwrap();
     let hash_return = hash_method.return_type();
     println!("-[NSObject hash] return type: {}", &*hash_return);
-    assert!(usize::encode() == &*hash_return);
+    assert!(usize::encode().as_str() == &*hash_return);
 
     // Invoke a method on the object
     let hash: usize = unsafe {

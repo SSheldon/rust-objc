@@ -38,12 +38,6 @@ impl PartialEq for Encoding {
     }
 }
 
-impl<'a> PartialEq<&'a str> for Encoding {
-    fn eq(&self, other: &&'a str) -> bool {
-        self.as_str() == *other
-    }
-}
-
 impl fmt::Debug for Encoding {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.as_str())
@@ -148,11 +142,11 @@ mod tests {
 
     #[test]
     fn test_encode() {
-        assert!(u32::encode() == encode!(u32));
-        assert!(<()>::encode() == "v");
-        assert!(<&Object>::encode() == "@");
-        assert!(<*mut Object>::encode() == "@");
-        assert!(<&Class>::encode() == "#");
-        assert!(Sel::encode() == encode!(Sel));
+        assert!(u32::encode().as_str() == "I");
+        assert!(<()>::encode().as_str() == "v");
+        assert!(<&Object>::encode().as_str() == "@");
+        assert!(<*mut Object>::encode().as_str() == "@");
+        assert!(<&Class>::encode().as_str() == "#");
+        assert!(Sel::encode().as_str() == ":");
     }
 }

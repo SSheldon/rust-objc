@@ -371,7 +371,7 @@ impl Object {
         let cls = self.class();
         let ptr = match cls.instance_variable(name) {
             Some(ivar) => {
-                assert!(T::encode() == ivar.type_encoding());
+                assert!(T::encode().as_str() == ivar.type_encoding());
                 let offset = ivar.offset();
                 let self_ptr = self as *const Object;
                 (self_ptr as *const u8).offset(offset) as *const T
@@ -390,7 +390,7 @@ impl Object {
         let cls = self.class();
         let ptr = match cls.instance_variable(name) {
             Some(ivar) => {
-                assert!(T::encode() == ivar.type_encoding());
+                assert!(T::encode().as_str() == ivar.type_encoding());
                 let offset = ivar.offset();
                 let self_ptr = self as *mut Object;
                 (self_ptr as *mut u8).offset(offset) as *mut T

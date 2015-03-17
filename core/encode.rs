@@ -1,13 +1,21 @@
 use std::fmt;
 use std::marker::PhantomFn;
+use std::str;
 use libc::{c_char, c_void};
 
 use block::Block;
 use runtime::{Class, Object, Sel};
 
+#[cfg(target_pointer_width = "64")]
+const CODE_INLINE_CAP: usize = 30;
+
+#[cfg(target_pointer_width = "32")]
+const CODE_INLINE_CAP: usize = 14;
+
 enum Code {
     Slice(&'static str),
     Owned(String),
+    Inline(u8, [u8; CODE_INLINE_CAP]),
 }
 
 /// An Objective-C type encoding.
@@ -24,6 +32,9 @@ impl Encoding {
         match self.code {
             Code::Slice(code) => code,
             Code::Owned(ref code) => code,
+            Code::Inline(len, ref bytes) => unsafe {
+                str::from_utf8_unchecked(&bytes[..len as usize])
+            }
         }
     }
 }
@@ -33,6 +44,7 @@ impl Clone for Encoding {
         let code = match self.code {
             Code::Slice(code) => Code::Slice(code),
             Code::Owned(ref code) => Code::Owned(code.clone()),
+            Code::Inline(len, bytes) => Code::Inline(len, bytes),
         };
         Encoding { code: code }
     }

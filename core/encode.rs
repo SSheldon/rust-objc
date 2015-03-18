@@ -14,12 +14,6 @@ pub struct Encoding {
 }
 
 impl Encoding {
-    /// Constructs an `Encoding` from its string representation.
-    /// Unsafe because the caller must ensure the string is a valid encoding.
-    pub unsafe fn from_str(code: &'static str) -> Encoding {
-        Encoding { code: code }
-    }
-
     /// Returns self as a `str`.
     pub fn as_str(&self) -> &str {
         self.code
@@ -44,6 +38,10 @@ impl fmt::Debug for Encoding {
     }
 }
 
+pub fn from_static_str(code: &'static str) -> Encoding {
+    Encoding { code: code }
+}
+
 /// Types that have an Objective-C type encoding.
 ///
 /// Unsafe because Objective-C will make assumptions about the type (like its
@@ -57,7 +55,7 @@ pub unsafe trait Encode : PhantomFn<Self> {
 macro_rules! encode_impls {
     ($($t:ty : $s:expr,)*) => ($(
         unsafe impl Encode for $t {
-            fn encode() -> Encoding { unsafe { Encoding::from_str($s) } }
+            fn encode() -> Encoding { from_static_str($s) }
         }
     )*);
 }
@@ -104,27 +102,27 @@ macro_rules! encode_message_impl {
     );
     ($code:expr, $name:ident, $($t:ident),*) => (
         unsafe impl<'a $(, $t)*> $crate::Encode for &'a $name<$($t),*> {
-            fn encode() -> Encoding { unsafe { Encoding::from_str($code) } }
+            fn encode() -> Encoding { from_static_str($code) }
         }
 
         unsafe impl<'a $(, $t)*> $crate::Encode for &'a mut $name<$($t),*> {
-            fn encode() -> Encoding { unsafe { Encoding::from_str($code) } }
+            fn encode() -> Encoding { from_static_str($code) }
         }
 
         unsafe impl<'a $(, $t)*> $crate::Encode for Option<&'a $name<$($t),*>> {
-            fn encode() -> Encoding { unsafe { Encoding::from_str($code) } }
+            fn encode() -> Encoding { from_static_str($code) }
         }
 
         unsafe impl<'a $(, $t)*> $crate::Encode for Option<&'a mut $name<$($t),*>> {
-            fn encode() -> Encoding { unsafe { Encoding::from_str($code) } }
+            fn encode() -> Encoding { from_static_str($code) }
         }
 
         unsafe impl<$($t),*> $crate::Encode for *const $name<$($t),*> {
-            fn encode() -> Encoding { unsafe { Encoding::from_str($code) } }
+            fn encode() -> Encoding { from_static_str($code) }
         }
 
         unsafe impl<$($t),*> $crate::Encode for *mut $name<$($t),*> {
-            fn encode() -> Encoding { unsafe { Encoding::from_str($code) } }
+            fn encode() -> Encoding { from_static_str($code) }
         }
     );
 }

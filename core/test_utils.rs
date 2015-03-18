@@ -3,6 +3,7 @@ use objc_test_utils;
 
 use block::Block;
 use declare::ClassDecl;
+use encode;
 use runtime::{Class, Object, Sel};
 use {Encode, Encoding, Id};
 
@@ -54,7 +55,7 @@ pub struct CustomStruct {
 unsafe impl Encode for CustomStruct {
     fn encode() -> Encoding {
         let code = encode!(struct CustomStruct { u64, u64, u64, u64 });
-        unsafe { Encoding::from_str(code) }
+        encode::from_static_str(code)
     }
 }
 

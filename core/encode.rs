@@ -41,12 +41,11 @@ impl Encoding {
 
 impl Clone for Encoding {
     fn clone(&self) -> Encoding {
-        let code = match self.code {
-            Code::Slice(code) => Code::Slice(code),
-            Code::Owned(ref code) => Code::Owned(code.clone()),
-            Code::Inline(len, bytes) => Code::Inline(len, bytes),
-        };
-        Encoding { code: code }
+        if let Code::Slice(code) = self.code {
+            from_static_str(code)
+        } else {
+            from_str(self.as_str())
+        }
     }
 }
 
@@ -64,6 +63,18 @@ impl fmt::Debug for Encoding {
 
 pub fn from_static_str(code: &'static str) -> Encoding {
     Encoding { code: Code::Slice(code) }
+}
+
+pub fn from_str(code: &str) -> Encoding {
+    if code.len() > CODE_INLINE_CAP {
+        Encoding { code: Code::Owned(code.to_string()) }
+    } else {
+        let mut bytes = [0; CODE_INLINE_CAP];
+        for (dst, byte) in bytes.iter_mut().zip(code.bytes()) {
+            *dst = byte;
+        }
+        Encoding { code: Code::Inline(code.len() as u8, bytes) }
+    }
 }
 
 /// Types that have an Objective-C type encoding.

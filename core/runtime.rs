@@ -105,7 +105,6 @@ extern {
 
     pub fn method_getName(method: *const Method) -> Sel;
     pub fn method_getImplementation(method: *const Method) -> Imp;
-    pub fn method_getTypeEncoding(method: *const Method) -> *const c_char;
     pub fn method_copyReturnType(method: *const Method) -> *mut c_char;
     pub fn method_copyArgumentType(method: *const Method, index: c_uint) -> *mut c_char;
     pub fn method_getNumberOfArguments(method: *const Method) -> c_uint;
@@ -185,14 +184,6 @@ impl Method {
         unsafe {
             method_getName(self)
         }
-    }
-
-    /// Returns a string describing self's parameter and return types.
-    pub fn type_encoding(&self) -> &str {
-        let encoding = unsafe {
-            CStr::from_ptr(method_getTypeEncoding(self))
-        };
-        str::from_utf8(encoding.to_bytes()).unwrap()
     }
 
     /// Returns the `Encoding` of self's return type.
@@ -443,7 +434,6 @@ mod tests {
         let sel = Sel::register("description");
         let method = cls.instance_method(sel).unwrap();
         assert!(method.name().name() == "description");
-        assert!(method.type_encoding() != "");
         assert!(method.arguments_count() == 2);
         assert!(method.return_type() == <*mut Object>::encode());
         assert!(method.argument_type(1).unwrap() == Sel::encode());

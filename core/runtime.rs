@@ -8,9 +8,10 @@ use std::fmt;
 use std::ptr;
 use std::str;
 use libc::{c_char, c_int, c_schar, c_uint, c_void, ptrdiff_t, size_t};
-use malloc_buf::{MallocBuffer, MallocString};
+use malloc_buf::MallocBuffer;
 
-use Encode;
+use encode;
+use {Encode, Encoding};
 
 /// The Objective-C `BOOL` type.
 ///
@@ -168,12 +169,13 @@ impl Ivar {
         offset as isize
     }
 
-    /// Returns the type string of self.
-    pub fn type_encoding(&self) -> &str {
+    /// Returns the `Encoding` of self.
+    pub fn type_encoding(&self) -> Encoding {
         let encoding = unsafe {
             CStr::from_ptr(ivar_getTypeEncoding(self))
         };
-        str::from_utf8(encoding.to_bytes()).unwrap()
+        let s = str::from_utf8(encoding.to_bytes()).unwrap();
+        encode::from_str(s)
     }
 }
 
@@ -193,23 +195,23 @@ impl Method {
         str::from_utf8(encoding.to_bytes()).unwrap()
     }
 
-    /// Returns a string describing self's return type.
-    pub fn return_type(&self) -> MallocString {
+    /// Returns the `Encoding` of self's return type.
+    pub fn return_type(&self) -> Encoding {
         unsafe {
             let encoding = method_copyReturnType(self);
-            MallocString::new(encoding).unwrap()
+            encode::from_malloc_str(encoding)
         }
     }
 
-    /// Returns a string describing a single parameter type of self, or
+    /// Returns the `Encoding` of a single parameter type of self, or
     /// `None` if self has no parameter at the given index.
-    pub fn argument_type(&self, index: usize) -> Option<MallocString> {
+    pub fn argument_type(&self, index: usize) -> Option<Encoding> {
         unsafe {
             let encoding = method_copyArgumentType(self, index as c_uint);
             if encoding.is_null() {
                 None
             } else {
-                Some(MallocString::new(encoding).unwrap())
+                Some(encode::from_malloc_str(encoding))
             }
         }
     }
@@ -371,7 +373,7 @@ impl Object {
         let cls = self.class();
         let ptr = match cls.instance_variable(name) {
             Some(ivar) => {
-                assert!(T::encode().as_str() == ivar.type_encoding());
+                assert!(ivar.type_encoding() == T::encode());
                 let offset = ivar.offset();
                 let self_ptr = self as *const Object;
                 (self_ptr as *const u8).offset(offset) as *const T
@@ -390,7 +392,7 @@ impl Object {
         let cls = self.class();
         let ptr = match cls.instance_variable(name) {
             Some(ivar) => {
-                assert!(T::encode().as_str() == ivar.type_encoding());
+                assert!(ivar.type_encoding() == T::encode());
                 let offset = ivar.offset();
                 let self_ptr = self as *mut Object;
                 (self_ptr as *mut u8).offset(offset) as *mut T
@@ -420,14 +422,15 @@ impl fmt::Debug for Object {
 mod tests {
     use std::mem;
     use test_utils;
-    use super::{Class, Sel};
+    use Encode;
+    use super::{Class, Object, Sel};
 
     #[test]
     fn test_ivar() {
         let cls = Class::get("NSObject").unwrap();
         let ivar = cls.instance_variable("isa").unwrap();
         assert!(ivar.name() == "isa");
-        assert!(ivar.type_encoding() == "#");
+        assert!(ivar.type_encoding() == <*const Class>::encode());
         assert!(ivar.offset() == 0);
 
         let ivars = cls.instance_variables();
@@ -442,8 +445,8 @@ mod tests {
         assert!(method.name().name() == "description");
         assert!(method.type_encoding() != "");
         assert!(method.arguments_count() == 2);
-        assert!(&*method.return_type() == "@");
-        assert!(&*method.argument_type(1).unwrap() == ":");
+        assert!(method.return_type() == <*mut Object>::encode());
+        assert!(method.argument_type(1).unwrap() == Sel::encode());
 
         let methods = cls.instance_methods();
         assert!(methods.len() > 0);

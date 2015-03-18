@@ -1,7 +1,9 @@
+use std::ffi::CStr;
 use std::fmt;
 use std::marker::PhantomFn;
 use std::str;
 use libc::{c_char, c_void};
+use malloc_buf::MallocBuffer;
 
 use block::Block;
 use runtime::{Class, Object, Sel};
@@ -16,6 +18,7 @@ enum Code {
     Slice(&'static str),
     Owned(String),
     Inline(u8, [u8; CODE_INLINE_CAP]),
+    Malloc(MallocBuffer<u8>)
 }
 
 /// An Objective-C type encoding.
@@ -34,7 +37,10 @@ impl Encoding {
             Code::Owned(ref code) => code,
             Code::Inline(len, ref bytes) => unsafe {
                 str::from_utf8_unchecked(&bytes[..len as usize])
-            }
+            },
+            Code::Malloc(ref buf) => unsafe {
+                str::from_utf8_unchecked(&buf[..buf.len() - 1])
+            },
         }
     }
 }
@@ -75,6 +81,14 @@ pub fn from_str(code: &str) -> Encoding {
         }
         Encoding { code: Code::Inline(code.len() as u8, bytes) }
     }
+}
+
+pub unsafe fn from_malloc_str(ptr: *mut c_char) -> Encoding {
+    let s = CStr::from_ptr(ptr as *const c_char);
+    let bytes = s.to_bytes_with_nul();
+    assert!(str::from_utf8(bytes).is_ok());
+    let buf = MallocBuffer::new(ptr as *mut u8, bytes.len()).unwrap();
+    Encoding { code: Code::Malloc(buf) }
 }
 
 /// Types that have an Objective-C type encoding.

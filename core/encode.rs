@@ -196,4 +196,25 @@ mod tests {
         assert!(<&Class>::encode().as_str() == "#");
         assert!(Sel::encode().as_str() == ":");
     }
+
+    #[test]
+    fn test_inline_encoding() {
+        let enc = super::from_str("C");
+        assert!(enc.as_str() == "C");
+
+        let enc2 = enc.clone();
+        assert!(enc2 == enc);
+        assert!(enc2.as_str() == "C");
+    }
+
+    #[test]
+    fn test_owned_encoding() {
+        let s = "{Test=CCCCCCCCCCCCCCCCCCCCCCCCC}";
+        let enc = super::from_str(s);
+        assert!(enc.as_str() == s);
+
+        let enc2 = enc.clone();
+        assert!(enc2 == enc);
+        assert!(enc2.as_str() == s);
+    }
 }

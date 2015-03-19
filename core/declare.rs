@@ -37,7 +37,7 @@ use std::fmt;
 use std::mem;
 use libc::size_t;
 
-use {Encode, Message};
+use {Encode, Encoding, Message};
 use runtime::{Class, Imp, NO, Object, Sel, self};
 
 /// An error returned from `IntoMethodImp::into_imp` to indicate that a
@@ -60,10 +60,10 @@ pub trait IntoMethodImp {
     /// The callee type of the method.
     type Callee: Message;
     /// The return type of the method.
-    type Ret;
+    type Ret: Encode;
 
-    /// Returns the method type encoding for Self.
-    fn method_encoding() -> String;
+    /// Returns the type encodings of Self's arguments.
+    fn argument_encodings() -> Box<[Encoding]>;
 
     /// Consumes self to create a method implementation for the given selector.
     ///
@@ -85,14 +85,12 @@ macro_rules! method_decl_impl {
             type Callee = $s;
             type Ret = R;
 
-            fn method_encoding() -> String {
-                let types = [
-                    R::encode(),
+            fn argument_encodings() -> Box<[Encoding]> {
+                Box::new([
                     <*mut Object>::encode(),
                     Sel::encode(),
                     $($t::encode()),*
-                ];
-                types.iter().map(|s| s.as_str()).collect()
+                ])
             }
 
             fn into_imp(self, sel: Sel) -> Result<Imp, UnequalArgsError> {
@@ -127,6 +125,12 @@ method_decl_impl!(A, B, C, D, E, F, G, H, I, J);
 method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K);
 method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K, L);
 
+fn method_type_encoding<F>() -> CString where F: IntoMethodImp {
+    let mut types = F::Ret::encode().as_str().to_string();
+    types.extend(F::argument_encodings().iter().map(|e| e.as_str()));
+    CString::new(types).unwrap()
+}
+
 /// A type for declaring a new class and adding new methods and ivars to it
 /// before registering it.
 pub struct ClassDecl {
@@ -152,7 +156,7 @@ impl ClassDecl {
     /// Panics if the method wasn't sucessfully added
     /// or if the selector and function take different numbers of arguments.
     pub fn add_method<F>(&mut self, sel: Sel, func: F) where F: IntoMethodImp {
-        let types = CString::new(F::method_encoding()).unwrap();
+        let types = method_type_encoding::<F>();
         let imp = match func.into_imp(sel) {
             Ok(imp) => imp,
             Err(err) => panic!("{}", err),
@@ -168,7 +172,7 @@ impl ClassDecl {
     /// or if the selector and function take different numbers of arguments.
     pub fn add_class_method<F>(&mut self, sel: Sel, func: F)
             where F: IntoMethodImp<Callee=Class> {
-        let types = CString::new(F::method_encoding()).unwrap();
+        let types = method_type_encoding::<F>();
         let imp = match func.into_imp(sel) {
             Ok(imp) => imp,
             Err(err) => panic!("{}", err),

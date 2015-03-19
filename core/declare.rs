@@ -33,11 +33,27 @@ decl.register();
 */
 
 use std::ffi::CString;
+use std::fmt;
 use std::mem;
 use libc::size_t;
 
 use {Encode, Message};
 use runtime::{Class, Imp, NO, Object, Sel, self};
+
+/// An error returned from `IntoMethodImp::into_imp` to indicate that a
+/// selector and function accept unequal numbers of arguments.
+#[derive(Clone, PartialEq, Debug)]
+pub struct UnequalArgsError {
+    sel_args: usize,
+    fn_args: usize,
+}
+
+impl fmt::Display for UnequalArgsError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Selector accepts {} arguments, but function accepts {}",
+            self.sel_args, self.fn_args)
+    }
+}
 
 /// Types that can be used as the implementation of an Objective-C method.
 pub trait IntoMethodImp {
@@ -53,7 +69,7 @@ pub trait IntoMethodImp {
     ///
     /// Returns an error if self and the selector do not accept the same number
     /// of arguments.
-    fn into_imp(self, sel: Sel) -> Result<Imp, ()>;
+    fn into_imp(self, sel: Sel) -> Result<Imp, UnequalArgsError>;
 }
 
 macro_rules! count_idents {
@@ -79,12 +95,14 @@ macro_rules! method_decl_impl {
                 types.iter().map(|s| s.as_str()).collect()
             }
 
-            fn into_imp(self, sel: Sel) -> Result<Imp, ()> {
-                let num_args = count_idents!($($t),*);
-                if sel.name().chars().filter(|&c| c == ':').count() == num_args {
+            fn into_imp(self, sel: Sel) -> Result<Imp, UnequalArgsError> {
+                // Add 2 to the arguments for self and _cmd
+                let fn_args = 2 + count_idents!($($t),*);
+                let sel_args = 2 + sel.name().chars().filter(|&c| c == ':').count();
+                if sel_args == fn_args {
                     unsafe { Ok(mem::transmute(self)) }
                 } else {
-                    Err(())
+                    Err(UnequalArgsError { sel_args: sel_args, fn_args: fn_args })
                 }
             }
         }
@@ -135,7 +153,10 @@ impl ClassDecl {
     /// or if the selector and function take different numbers of arguments.
     pub fn add_method<F>(&mut self, sel: Sel, func: F) where F: IntoMethodImp {
         let types = CString::new(F::method_encoding()).unwrap();
-        let imp = func.into_imp(sel).unwrap();
+        let imp = match func.into_imp(sel) {
+            Ok(imp) => imp,
+            Err(err) => panic!("{}", err),
+        };
         let success = unsafe {
             runtime::class_addMethod(self.cls, sel, imp, types.as_ptr())
         };
@@ -148,7 +169,10 @@ impl ClassDecl {
     pub fn add_class_method<F>(&mut self, sel: Sel, func: F)
             where F: IntoMethodImp<Callee=Class> {
         let types = CString::new(F::method_encoding()).unwrap();
-        let imp = func.into_imp(sel).unwrap();
+        let imp = match func.into_imp(sel) {
+            Ok(imp) => imp,
+            Err(err) => panic!("{}", err),
+        };
         let success = unsafe {
             let cls_obj = self.cls as *const Object;
             let metaclass = runtime::object_getClass(cls_obj) as *mut Class;

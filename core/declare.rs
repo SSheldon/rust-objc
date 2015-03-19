@@ -24,8 +24,10 @@ decl.add_ivar::<u32>("_number");
 extern fn my_number_get(this: &Object, _cmd: Sel) -> u32 {
     unsafe { *this.get_ivar("_number") }
 }
-decl.add_method(sel!(number),
-    my_number_get as extern fn(&Object, Sel) -> u32);
+unsafe {
+    decl.add_method(sel!(number),
+        my_number_get as extern fn(&Object, Sel) -> u32);
+}
 
 decl.register();
 # }
@@ -155,33 +157,38 @@ impl ClassDecl {
     /// Adds a method with the given name and implementation to self.
     /// Panics if the method wasn't sucessfully added
     /// or if the selector and function take different numbers of arguments.
-    pub fn add_method<F>(&mut self, sel: Sel, func: F) where F: IntoMethodImp {
+    /// Unsafe because the caller must ensure that the types match those that
+    /// are expected when the method is invoked from Objective-C.
+    pub unsafe fn add_method<F>(&mut self, sel: Sel, func: F)
+            where F: IntoMethodImp<Callee=Object> {
         let types = method_type_encoding::<F>();
         let imp = match func.into_imp(sel) {
             Ok(imp) => imp,
             Err(err) => panic!("{}", err),
         };
-        let success = unsafe {
-            runtime::class_addMethod(self.cls, sel, imp, types.as_ptr())
-        };
+
+        let success = runtime::class_addMethod(self.cls, sel, imp,
+            types.as_ptr());
         assert!(success != NO, "Failed to add method {:?}", sel);
     }
 
     /// Adds a class method with the given name and implementation to self.
     /// Panics if the method wasn't sucessfully added
     /// or if the selector and function take different numbers of arguments.
-    pub fn add_class_method<F>(&mut self, sel: Sel, func: F)
+    /// Unsafe because the caller must ensure that the types match those that
+    /// are expected when the method is invoked from Objective-C.
+    pub unsafe fn add_class_method<F>(&mut self, sel: Sel, func: F)
             where F: IntoMethodImp<Callee=Class> {
         let types = method_type_encoding::<F>();
         let imp = match func.into_imp(sel) {
             Ok(imp) => imp,
             Err(err) => panic!("{}", err),
         };
-        let success = unsafe {
-            let cls_obj = self.cls as *const Object;
-            let metaclass = runtime::object_getClass(cls_obj) as *mut Class;
-            runtime::class_addMethod(metaclass, sel, imp, types.as_ptr())
-        };
+
+        let cls_obj = self.cls as *const Object;
+        let metaclass = runtime::object_getClass(cls_obj) as *mut Class;
+        let success = runtime::class_addMethod(metaclass, sel, imp,
+            types.as_ptr());
         assert!(success != NO, "Failed to add class method {:?}", sel);
     }
 

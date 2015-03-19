@@ -71,26 +71,29 @@ pub fn custom_class() -> &'static Class {
         extern fn custom_obj_set_foo(this: &mut Object, _cmd: Sel, foo: u32) {
             unsafe { this.set_ivar::<u32>("_foo", foo); }
         }
-        decl.add_method(sel!(setFoo:),
-            custom_obj_set_foo as extern fn(&mut Object, Sel, u32));
 
         extern fn custom_obj_get_foo(this: &Object, _cmd: Sel) -> u32 {
             unsafe { *this.get_ivar::<u32>("_foo") }
         }
-        decl.add_method(sel!(foo),
-            custom_obj_get_foo as extern fn(&Object, Sel) -> u32);
 
         extern fn custom_obj_get_struct(_this: &Object, _cmd: Sel) -> CustomStruct {
             CustomStruct { a: 1, b: 2, c: 3, d: 4 }
         }
-        decl.add_method(sel!(customStruct),
-            custom_obj_get_struct as extern fn(&Object, Sel) -> CustomStruct);
 
         extern fn custom_obj_class_method(_this: &Class, _cmd: Sel) -> u32 {
             7
         }
-        decl.add_class_method(sel!(classFoo),
-            custom_obj_class_method as extern fn(&Class, Sel) -> u32);
+
+        unsafe {
+            decl.add_method(sel!(setFoo:),
+                custom_obj_set_foo as extern fn(&mut Object, Sel, u32));
+            decl.add_method(sel!(foo),
+                custom_obj_get_foo as extern fn(&Object, Sel) -> u32);
+            decl.add_method(sel!(customStruct),
+                custom_obj_get_struct as extern fn(&Object, Sel) -> CustomStruct);
+            decl.add_class_method(sel!(classFoo),
+                custom_obj_class_method as extern fn(&Class, Sel) -> u32);
+        }
 
         decl.register();
     });
@@ -120,8 +123,11 @@ pub fn custom_subclass() -> &'static Class {
             };
             foo + 2
         }
-        decl.add_method(sel!(foo),
-            custom_subclass_get_foo as extern fn(&Object, Sel) -> u32);
+
+        unsafe {
+            decl.add_method(sel!(foo),
+                custom_subclass_get_foo as extern fn(&Object, Sel) -> u32);
+        }
 
         decl.register();
     });

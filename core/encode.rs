@@ -30,6 +30,12 @@ pub struct Encoding {
 }
 
 impl Encoding {
+    /// Constructs an `Encoding` from its string representation.
+    /// Unsafe because the caller must ensure the string is a valid encoding.
+    pub unsafe fn from_str(code: &str) -> Encoding {
+        from_str(code)
+    }
+
     /// Returns self as a `str`.
     pub fn as_str(&self) -> &str {
         match self.code {

@@ -1,5 +1,5 @@
 /**
-Registers a selector, returning an `Sel`.
+Registers a selector, returning a `Sel`.
 
 # Example
 ```
@@ -35,8 +35,9 @@ macro_rules! sel {
 /**
 Sends a message to an object.
 
-The first argument should implement the `ToMessage` trait, and the syntax is
-similar to the message syntax in Objective-C.
+The first argument can be any type that dereferences to a type that implements
+`Message`, like a reference, pointer, or an `Id`.
+The syntax is similar to the message syntax in Objective-C.
 Variadic arguments are not currently supported.
 
 # Example

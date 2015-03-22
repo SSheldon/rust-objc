@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../index.html'>objc</a></p><script>window.sidebarCurrent = {name: 'declare', ty: 'mod', relpath: '../'};</script><script async src="../sidebar-items.js"></script>
+        <p class='location'><a href='../index.html'>objc</a></p><script>window.sidebarCurrent = {name: 'declare', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
     </section>
 
     <nav class="sub">
@@ -43,7 +43,7 @@
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>objc</a>::<wbr><a class='mod' href=''>declare</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-5751' href='../../src/objc/declare.rs.html#1-230'>[src]</a></span></h1>
+        </span><a id='src-5700' href='../../src/objc/declare.rs.html#1-265'>[src]</a></span></h1>
 <div class='docblock'><p>Functionality for declaring Objective-C classes.</p>
 
 <p>Classes can be declared using the <code>ClassDecl</code> struct. Instance variables and
@@ -64,8 +64,10 @@ one ivar, a <code>u32</code> named <code>_number</code> and a <code>number</code
 <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>my_number_get</span>(<span class='ident'>this</span>: <span class='kw-2'>&amp;</span><span class='ident'>Object</span>, <span class='ident'>_cmd</span>: <span class='ident'>Sel</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
     <span class='kw'>unsafe</span> { <span class='op'>*</span><span class='ident'>this</span>.<span class='ident'>get_ivar</span>(<span class='string'>&quot;_number&quot;</span>) }
 }
-<span class='ident'>decl</span>.<span class='ident'>add_method</span>(<span class='macro'>sel</span><span class='macro'>!</span>(<span class='ident'>number</span>),
-    <span class='ident'>my_number_get</span> <span class='kw'>as</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>Object</span>, <span class='ident'>Sel</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span>);
+<span class='kw'>unsafe</span> {
+    <span class='ident'>decl</span>.<span class='ident'>add_method</span>(<span class='macro'>sel</span><span class='macro'>!</span>(<span class='ident'>number</span>),
+        <span class='ident'>my_number_get</span> <span class='kw'>as</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>Object</span>, <span class='ident'>Sel</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span>);
+}
 
 <span class='ident'>decl</span>.<span class='ident'>register</span>();
 </pre>
@@ -76,6 +78,14 @@ one ivar, a <code>u32</code> named <code>_number</code> and a <code>number</code
                                title='objc::declare::ClassDecl'>ClassDecl</a></td>
                         <td class='docblock short'><p>A type for declaring a new class and adding new methods and ivars to it
 before registering it.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.UnequalArgsError.html'
+                               title='objc::declare::UnequalArgsError'>UnequalArgsError</a></td>
+                        <td class='docblock short'><p>An error returned from <code>IntoMethodImp::into_imp</code> to indicate that a
+selector and function accept unequal numbers of arguments.</p>
 </td>
                     </tr>
                 </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>

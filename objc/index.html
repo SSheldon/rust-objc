@@ -43,8 +43,61 @@
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>objc</a><wbr></span><span class='out-of-band'><a href='stability.html'>[stability]</a> <span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-0' href='../src/objc/lib.rs.html#1-32'>[src]</a></span></h1>
+        </span><a id='src-0' href='../src/objc/lib.rs.html#1-99'>[src]</a></span></h1>
 <div class='docblock'><p>Objective-C Runtime bindings and wrapper for Rust.</p>
+
+<h1 id="messaging-objects" class='section-header'><a
+                           href="#messaging-objects">Messaging objects</a></h1>
+<p>Objective-C objects can be messaged using the <a href="macro.msg_send!.html"><code>msg_send!</code></a> macro:</p>
+<pre id='rust-example-rendered' class='rust '>
+<span class='kw'>let</span> <span class='ident'>cls</span> <span class='op'>=</span> <span class='ident'>Class</span>::<span class='ident'>get</span>(<span class='string'>&quot;NSObject&quot;</span>).<span class='ident'>unwrap</span>();
+<span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>cls</span>, <span class='ident'>new</span>];
+<span class='kw'>let</span> <span class='ident'>hash</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>hash</span>];
+<span class='kw'>let</span> <span class='ident'>is_kind</span>: <span class='ident'>BOOL</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>isKindOfClass</span>:<span class='ident'>cls</span>];
+<span class='comment'>// Even void methods must have their return type annotated</span>
+<span class='kw'>let</span> _: () <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>release</span>];
+</pre>
+
+<h1 id="reference-counting" class='section-header'><a
+                           href="#reference-counting">Reference counting</a></h1>
+<p>Objective-C objects are reference counted; to ensure that they are retained and
+released at the proper times, we can use the <a href="struct.Id.html"><code>Id</code></a> struct.</p>
+
+<p>To enforce aliasing rules, an <code>Id</code> can be either owned or shared; if it is
+owned, meaning the <code>Id</code> is the only reference to the object, it can be mutably
+dereferenced. An owned <code>Id</code> can be downgraded to a <a href="type.ShareId.html"><code>ShareId</code></a>
+which can be cloned to allow multiple references.</p>
+
+<p>Weak references may be created using the <a href="struct.WeakId.html"><code>WeakId</code></a> struct.</p>
+<pre id='rust-example-rendered' class='rust '>
+<span class='kw'>let</span> <span class='ident'>cls</span> <span class='op'>=</span> <span class='ident'>Class</span>::<span class='ident'>get</span>(<span class='string'>&quot;NSObject&quot;</span>).<span class='ident'>unwrap</span>();
+<span class='kw'>let</span> <span class='ident'>obj</span>: <span class='ident'>Id</span><span class='op'>&lt;</span><span class='ident'>Object</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
+    <span class='ident'>Id</span>::<span class='ident'>from_retained_ptr</span>(<span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>cls</span>, <span class='ident'>new</span>])
+};
+<span class='comment'>// obj will be released when it goes out of scope</span>
+
+<span class='comment'>// share the object so we can clone it</span>
+<span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='ident'>obj</span>.<span class='ident'>share</span>();
+<span class='kw'>let</span> <span class='ident'>another_ref</span> <span class='op'>=</span> <span class='ident'>obj</span>.<span class='ident'>clone</span>();
+<span class='comment'>// dropping our other reference will decrement the retain count</span>
+<span class='ident'>drop</span>(<span class='ident'>another_ref</span>);
+
+<span class='kw'>let</span> <span class='ident'>weak</span> <span class='op'>=</span> <span class='ident'>WeakId</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='ident'>obj</span>);
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>weak</span>.<span class='ident'>load</span>().<span class='ident'>is_some</span>());
+<span class='comment'>// After the object is deallocated, our weak pointer returns none</span>
+<span class='ident'>drop</span>(<span class='ident'>obj</span>);
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>weak</span>.<span class='ident'>load</span>().<span class='ident'>is_none</span>());
+</pre>
+
+<h1 id="calling-and-creating-blocks" class='section-header'><a
+                           href="#calling-and-creating-blocks">Calling and creating Blocks</a></h1>
+<p>Objective-C blocks can be called and created using the functionality of the
+<a href="block/index.html"><code>block</code></a> module.</p>
+
+<h1 id="declaring-classes" class='section-header'><a
+                           href="#declaring-classes">Declaring classes</a></h1>
+<p>Objective-C classes can even be declared from Rust using the functionality of
+the <a href="declare/index.html"><code>declare</code></a> module.</p>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                     <tr>
@@ -72,16 +125,14 @@
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='macro' href='macro.msg_send!.html'
                                title='objc::msg_send!'>msg_send!</a></td>
-                        <td class='docblock short'><p>Sends a message to an object. The first argument should implement the
-<code>ToMessage</code> trait, and the syntax is similar to the message syntax in
-Objective-C. Variadic arguments are not currently supported.</p>
+                        <td class='docblock short'><p>Sends a message to an object.</p>
 </td>
                     </tr>
                 
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='macro' href='macro.sel!.html'
                                title='objc::sel!'>sel!</a></td>
-                        <td class='docblock short'><p>Registers a selector, returning an <code>Sel</code>.</p>
+                        <td class='docblock short'><p>Registers a selector, returning a <code>Sel</code>.</p>
 </td>
                     </tr>
                 </table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
@@ -96,8 +147,7 @@ Objective-C. Variadic arguments are not currently supported.</p>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Id.html'
                                title='objc::Id'>Id</a></td>
-                        <td class='docblock short'><p>A pointer type for Objective-C&#39;s reference counted objects. The object of
-an <code>Id</code> is retained and sent a <code>release</code> message when the <code>Id</code> is dropped.</p>
+                        <td class='docblock short'><p>A pointer type for Objective-C&#39;s reference counted objects.</p>
 </td>
                     </tr>
                 

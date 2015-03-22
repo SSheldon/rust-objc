@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='index.html'>objc</a></p><script>window.sidebarCurrent = {name: 'Id', ty: 'struct', relpath: ''};</script><script async src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>objc</a></p><script>window.sidebarCurrent = {name: 'Id', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </section>
 
     <nav class="sub">
@@ -43,11 +43,13 @@
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>objc</a>::<wbr><a class='struct' href=''>Id</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-1634' href='../src/objc/id.rs.html#47-50'>[src]</a></span></h1>
+        </span><a id='src-1593' href='../src/objc/id.rs.html#50-54'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Id&lt;T, O = <a class='enum' href='../objc/enum.Owned.html' title='objc::Owned'>Owned</a>&gt; {
     // some fields omitted
-}</pre><div class='docblock'><p>A pointer type for Objective-C&#39;s reference counted objects. The object of
-an <code>Id</code> is retained and sent a <code>release</code> message when the <code>Id</code> is dropped.</p>
+}</pre><div class='docblock'><p>A pointer type for Objective-C&#39;s reference counted objects.</p>
+
+<p>The object of an <code>Id</code> is retained and sent a <code>release</code> message when
+the <code>Id</code> is dropped.</p>
 
 <p>An <code>Id</code> may be either <code>Owned</code> or <code>Shared</code>, represented by the types <code>Id</code>
 and <code>ShareId</code>, respectively. If owned, there are no other references to the
@@ -71,7 +73,6 @@ the caller must ensure the ownership is correct.</p>
 <div class='docblock'><p>&quot;Downgrade&quot; an owned <code>Id</code> to a <code>ShareId</code>, allowing it to be cloned.</p>
 </div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../objc/struct.Id.html' title='objc::Id'>Id</a>&lt;T, <a class='enum' href='../objc/enum.Shared.html' title='objc::Shared'>Shared</a>&gt; <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a></span></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='type' href='../objc/type.ShareId.html' title='objc::ShareId'>ShareId</a>&lt;T&gt;</code></h4>
 <h4 id='method.clone_from' class='tymethod'><a class='stability Unstable' title='Unstable: this function is rarely used'></a><code>fn <a href='#tymethod.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
-</div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T, O&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../objc/struct.Id.html' title='objc::Id'>Id</a>&lt;T, O&gt; <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a></span></code></h3><div class='impl-items'><h4 id='method.drop' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
 </div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T, O&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> for <a class='struct' href='../objc/struct.Id.html' title='objc::Id'>Id</a>&lt;T, O&gt; <span class='where'>where T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a></span></code></h3><div class='impl-items'></div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../objc/struct.Id.html' title='objc::Id'>Id</a>&lt;T, <a class='enum' href='../objc/enum.Owned.html' title='objc::Owned'>Owned</a>&gt; <span class='where'>where T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a></span></code></h3><div class='impl-items'></div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../objc/struct.Id.html' title='objc::Id'>Id</a>&lt;T, <a class='enum' href='../objc/enum.Shared.html' title='objc::Shared'>Shared</a>&gt; <span class='where'>where T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a></span></code></h3><div class='impl-items'></div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T, O&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a> for <a class='struct' href='../objc/struct.Id.html' title='objc::Id'>Id</a>&lt;T, O&gt;</code></h3><div class='impl-items'><h4 id='assoc_type.Target' class='type'><a class='stability Unmarked' title='No stability level'></a><code>type Target = T</code></h4>
 <h4 id='method.deref' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.deref' class='fnname'>deref</a>(&amp;self) -&gt; &amp;T</code></h4>
 </div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html' title='core::ops::DerefMut'>DerefMut</a> for <a class='struct' href='../objc/struct.Id.html' title='objc::Id'>Id</a>&lt;T, <a class='enum' href='../objc/enum.Owned.html' title='objc::Owned'>Owned</a>&gt;</code></h3><div class='impl-items'><h4 id='method.deref_mut' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.deref_mut' class='fnname'>deref_mut</a>(&amp;mut self) -&gt; &amp;mut T</code></h4>

@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='../index.html'>objc</a>::<wbr><a href='index.html'>declare</a></p><script>window.sidebarCurrent = {name: 'IntoMethodImp', ty: 'trait', relpath: ''};</script><script async src="sidebar-items.js"></script>
+        <p class='location'><a href='../index.html'>objc</a>::<wbr><a href='index.html'>declare</a></p><script>window.sidebarCurrent = {name: 'IntoMethodImp', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </section>
 
     <nav class="sub">
@@ -43,24 +43,24 @@
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>objc</a>::<wbr><a href='index.html'>declare</a>::<wbr><a class='trait' href=''>IntoMethodImp</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-5766' href='../../src/objc/declare.rs.html#43-57'>[src]</a></span></h1>
+        </span><a id='src-5932' href='../../src/objc/declare.rs.html#61-75'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait IntoMethodImp {
     type Callee: <a class='trait' href='../../objc/trait.Message.html' title='objc::Message'>Message</a>;
-    type Ret;
+    type Ret: <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a>;
 
-    fn <a href='#tymethod.method_encoding' class='fnname'>method_encoding</a>() -&gt; <a class='struct' href='http://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>;
-    fn <a href='#tymethod.into_imp' class='fnname'>into_imp</a>(self, sel: <a class='struct' href='../../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='type' href='../../objc/runtime/type.Imp.html' title='objc::runtime::Imp'>Imp</a>, <a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;;
+    fn <a href='#tymethod.argument_encodings' class='fnname'>argument_encodings</a>() -&gt; <a class='struct' href='http://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>[<a class='struct' href='../../objc/struct.Encoding.html' title='objc::Encoding'>Encoding</a>]</a>&gt;;
+    fn <a href='#tymethod.into_imp' class='fnname'>into_imp</a>(self, sel: <a class='struct' href='../../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='type' href='../../objc/runtime/type.Imp.html' title='objc::runtime::Imp'>Imp</a>, <a class='struct' href='../../objc/declare/struct.UnequalArgsError.html' title='objc::declare::UnequalArgsError'>UnequalArgsError</a>&gt;;
 }</pre><div class='docblock'><p>Types that can be used as the implementation of an Objective-C method.</p>
 </div>
             <h2 id='associated-types'>Associated Types</h2>
             <div class='methods'>
         <h3 id='associatedtype.Callee' class='method'><a class='stability Unmarked' title='No stability level'></a><code>type Callee: <a class='trait' href='../../objc/trait.Message.html' title='objc::Message'>Message</a></code></h3><div class='docblock'><p>The callee type of the method.</p>
-</div><h3 id='associatedtype.Ret' class='method'><a class='stability Unmarked' title='No stability level'></a><code>type Ret</code></h3><div class='docblock'><p>The return type of the method.</p>
+</div><h3 id='associatedtype.Ret' class='method'><a class='stability Unmarked' title='No stability level'></a><code>type Ret: <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a></code></h3><div class='docblock'><p>The return type of the method.</p>
 </div></div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.method_encoding' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.method_encoding' class='fnname'>method_encoding</a>() -&gt; <a class='struct' href='http://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h3><div class='docblock'><p>Returns the method type encoding for Self.</p>
-</div><h3 id='tymethod.into_imp' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.into_imp' class='fnname'>into_imp</a>(self, sel: <a class='struct' href='../../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='type' href='../../objc/runtime/type.Imp.html' title='objc::runtime::Imp'>Imp</a>, <a href='http://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h3><div class='docblock'><p>Consumes self to create a method implementation for the given selector.</p>
+        <h3 id='tymethod.argument_encodings' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.argument_encodings' class='fnname'>argument_encodings</a>() -&gt; <a class='struct' href='http://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>[<a class='struct' href='../../objc/struct.Encoding.html' title='objc::Encoding'>Encoding</a>]</a>&gt;</code></h3><div class='docblock'><p>Returns the type encodings of Self&#39;s arguments.</p>
+</div><h3 id='tymethod.into_imp' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.into_imp' class='fnname'>into_imp</a>(self, sel: <a class='struct' href='../../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='type' href='../../objc/runtime/type.Imp.html' title='objc::runtime::Imp'>Imp</a>, <a class='struct' href='../../objc/declare/struct.UnequalArgsError.html' title='objc::declare::UnequalArgsError'>UnequalArgsError</a>&gt;</code></h3><div class='docblock'><p>Consumes self to create a method implementation for the given selector.</p>
 
 <p>Returns an error if self and the selector do not accept the same number
 of arguments.</p>

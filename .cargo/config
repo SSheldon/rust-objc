@@ -1,5 +1,4 @@
 paths = [
  "core",
  "test_utils",
- "foundation",
 ]

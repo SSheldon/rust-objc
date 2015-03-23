@@ -1,4 +1,1 @@
-paths = [
- "core",
- "test_utils",
-]
+paths = ["test_utils"]

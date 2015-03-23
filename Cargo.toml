@@ -8,9 +8,10 @@ repository = "http://github.com/SSheldon/rust-objc"
 documentation = "http://ssheldon.github.io/rust-objc/objc/"
 license = "MIT"
 
+exclude = [".gitignore", ".cargo/config"]
+
 [lib]
 name = "objc"
-path = "lib.rs"
 
 [dependencies]
 libc = "0.1"

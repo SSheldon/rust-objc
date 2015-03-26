@@ -97,6 +97,7 @@ message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k
 
 #[cfg(test)]
 mod tests {
+    use std::ptr;
     use runtime::Object;
     use test_utils;
 
@@ -117,6 +118,25 @@ mod tests {
         };
         let expected = test_utils::CustomStruct { a: 1, b:2, c: 3, d: 4 };
         assert!(result == expected);
+    }
+
+    #[test]
+    fn test_send_message_nil() {
+        let nil: *mut Object = ptr::null_mut();
+        let result: usize = unsafe {
+            msg_send![nil, hash]
+        };
+        assert!(result == 0);
+
+        let result: *mut Object = unsafe {
+            msg_send![nil, description]
+        };
+        assert!(result.is_null());
+
+        let result: f64 = unsafe {
+            msg_send![nil, doubleValue]
+        };
+        assert!(result == 0.0);
     }
 
     #[test]

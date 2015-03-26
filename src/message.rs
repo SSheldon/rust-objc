@@ -107,7 +107,8 @@ mod tests {
         let result: *const Object = unsafe {
             msg_send![obj, self]
         };
-        assert!(&*obj as *const Object == result);
+        let obj_ptr: *const Object = &*obj;
+        assert!(result == obj_ptr);
     }
 
     #[test]

@@ -58,25 +58,25 @@ let _: () = msg_send![obj, setArg1:1 arg2:2];
 macro_rules! msg_send {
     (super($obj:expr, $superclass:expr), $name:ident) => ({
         #[inline(always)]
-        unsafe fn to_mut<T>(ptr: &T) -> *mut T { ptr as *const T as *mut T }
+        unsafe fn to_mut<T>(ptr: *const T) -> *mut T { ptr as *mut T }
         let sel = sel!($name);
         $crate::MessageArguments::send_super((), to_mut(&*$obj), $superclass, sel)
     });
     (super($obj:expr, $superclass:expr), $($name:ident : $arg:expr)+) => ({
         #[inline(always)]
-        unsafe fn to_mut<T>(ptr: &T) -> *mut T { ptr as *const T as *mut T }
+        unsafe fn to_mut<T>(ptr: *const T) -> *mut T { ptr as *mut T }
         let sel = sel!($($name:)+);
         $crate::MessageArguments::send_super(($($arg,)*), to_mut(&*$obj), $superclass, sel)
     });
     ($obj:expr, $name:ident) => ({
         #[inline(always)]
-        unsafe fn to_mut<T>(ptr: &T) -> *mut T { ptr as *const T as *mut T }
+        unsafe fn to_mut<T>(ptr: *const T) -> *mut T { ptr as *mut T }
         let sel = sel!($name);
         $crate::MessageArguments::send((), to_mut(&*$obj), sel)
     });
     ($obj:expr, $($name:ident : $arg:expr)+) => ({
         #[inline(always)]
-        unsafe fn to_mut<T>(ptr: &T) -> *mut T { ptr as *const T as *mut T }
+        unsafe fn to_mut<T>(ptr: *const T) -> *mut T { ptr as *mut T }
         let sel = sel!($($name:)+);
         $crate::MessageArguments::send(($($arg,)*), to_mut(&*$obj), sel)
     });

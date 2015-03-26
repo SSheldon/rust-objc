@@ -85,14 +85,14 @@ pub fn custom_class() -> &'static Class {
         }
 
         unsafe {
-            decl.add_method(sel!(setFoo:),
-                custom_obj_set_foo as extern fn(&mut Object, Sel, u32));
-            decl.add_method(sel!(foo),
-                custom_obj_get_foo as extern fn(&Object, Sel) -> u32);
-            decl.add_method(sel!(customStruct),
-                custom_obj_get_struct as extern fn(&Object, Sel) -> CustomStruct);
-            decl.add_class_method(sel!(classFoo),
-                custom_obj_class_method as extern fn(&Class, Sel) -> u32);
+            let set_foo: extern fn(&mut Object, Sel, u32) = custom_obj_set_foo;
+            decl.add_method(sel!(setFoo:), set_foo);
+            let get_foo: extern fn(&Object, Sel) -> u32 = custom_obj_get_foo;
+            decl.add_method(sel!(foo), get_foo);
+            let get_struct: extern fn(&Object, Sel) -> CustomStruct = custom_obj_get_struct;
+            decl.add_method(sel!(customStruct), get_struct);
+            let class_method: extern fn(&Class, Sel) -> u32 = custom_obj_class_method;
+            decl.add_class_method(sel!(classFoo), class_method);
         }
 
         decl.register();
@@ -125,8 +125,8 @@ pub fn custom_subclass() -> &'static Class {
         }
 
         unsafe {
-            decl.add_method(sel!(foo),
-                custom_subclass_get_foo as extern fn(&Object, Sel) -> u32);
+            let get_foo: extern fn(&Object, Sel) -> u32 = custom_subclass_get_foo;
+            decl.add_method(sel!(foo), get_foo);
         }
 
         decl.register();

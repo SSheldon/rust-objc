@@ -21,7 +21,7 @@ fn main() {
         let obj: *mut Object = msg_send![obj, init];
         Id::from_retained_ptr(obj)
     };
-    println!("NSObject address: {:?}", &*obj as *const Object);
+    println!("NSObject address: {:p}", &*obj);
 
     // Access an ivar of the object
     let isa: *const Class = unsafe {

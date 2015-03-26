@@ -282,8 +282,8 @@ impl Class {
     /// Returns the metaclass of self.
     pub fn metaclass(&self) -> &Class {
         unsafe {
-            let obj = self as *const Class as *const Object;
-            &*object_getClass(obj)
+            let self_ptr: *const Class = self;
+            &*object_getClass(self_ptr as *const Object)
         }
     }
 
@@ -336,7 +336,9 @@ impl Class {
 
 impl PartialEq for Class {
     fn eq(&self, other: &Class) -> bool {
-        self as *const Class == other as *const Class
+        let self_ptr: *const Class = self;
+        let other_ptr: *const Class = other;
+        self_ptr == other_ptr
     }
 }
 
@@ -366,7 +368,7 @@ impl Object {
             Some(ivar) => {
                 assert!(ivar.type_encoding() == T::encode());
                 let offset = ivar.offset();
-                let self_ptr = self as *const Object;
+                let self_ptr: *const Object = self;
                 (self_ptr as *const u8).offset(offset) as *const T
             }
             None => panic!("Ivar {} not found on class {}", name, cls.name()),
@@ -385,7 +387,7 @@ impl Object {
             Some(ivar) => {
                 assert!(ivar.type_encoding() == T::encode());
                 let offset = ivar.offset();
-                let self_ptr = self as *mut Object;
+                let self_ptr: *mut Object = self;
                 (self_ptr as *mut u8).offset(offset) as *mut T
             }
             None => panic!("Ivar {} not found on class {}", name, cls.name()),
@@ -405,7 +407,7 @@ impl Object {
 
 impl fmt::Debug for Object {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "<{:?}: {:?}>", self.class(), self as *const Object)
+        write!(f, "<{:?}: {:p}>", self.class(), self)
     }
 }
 
@@ -469,6 +471,7 @@ mod tests {
         let obj = test_utils::sample_object();
         assert!(obj.class() == cls);
         let isa = unsafe { *obj.get_ivar("isa") };
-        assert!(isa == cls as *const Class);
+        let cls_ptr: *const Class = cls;
+        assert!(isa == cls_ptr);
     }
 }

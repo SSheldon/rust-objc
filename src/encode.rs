@@ -90,7 +90,7 @@ pub fn from_str(code: &str) -> Encoding {
 }
 
 pub unsafe fn from_malloc_str(ptr: *mut c_char) -> Encoding {
-    let s = CStr::from_ptr(ptr as *const c_char);
+    let s = CStr::from_ptr(ptr);
     let bytes = s.to_bytes_with_nul();
     assert!(str::from_utf8(bytes).is_ok());
     let buf = MallocBuffer::new(ptr as *mut u8, bytes.len()).unwrap();

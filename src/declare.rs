@@ -34,6 +34,7 @@ decl.register();
 ```
 */
 
+use std::error::Error;
 use std::ffi::CString;
 use std::fmt;
 use std::mem;
@@ -54,6 +55,12 @@ impl fmt::Display for UnequalArgsError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Selector accepts {} arguments, but function accepts {}",
             self.sel_args, self.fn_args)
+    }
+}
+
+impl Error for UnequalArgsError {
+    fn description(&self) -> &str {
+        "Selector and function accept unequal numbers of arguments"
     }
 }
 

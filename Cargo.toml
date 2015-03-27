@@ -17,5 +17,6 @@ name = "objc"
 libc = "0.1"
 malloc_buf = "0.0"
 
-[dev-dependencies]
-objc_test_utils = "0.0"
+[dev-dependencies.objc_test_utils]
+path = "test_utils"
+version = "0.0"

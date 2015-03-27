@@ -10,13 +10,10 @@ license = "MIT"
 
 exclude = [".gitignore"]
 
-[lib]
-name = "objc"
-
 [dependencies]
 libc = "0.1"
 malloc_buf = "0.0"
 
 [dev-dependencies.objc_test_utils]
-path = "test_utils"
 version = "0.0"
+path = "test_utils"

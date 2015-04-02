@@ -107,8 +107,7 @@ mod tests {
         let result: *const Object = unsafe {
             msg_send![obj, self]
         };
-        let obj_ptr: *const Object = &*obj;
-        assert!(result == obj_ptr);
+        assert!(result == &*obj);
     }
 
     #[test]
@@ -146,9 +145,12 @@ mod tests {
         let superclass = test_utils::custom_class();
         unsafe {
             let _: () = msg_send![obj, setFoo:4u32];
-            assert!(msg_send![super(obj, superclass), foo] == 4u32);
+            let foo: u32 = msg_send![super(obj, superclass), foo];
+            assert!(foo == 4);
+
             // The subclass is overriden to return foo + 2
-            assert!(msg_send![obj, foo] == 6u32);
+            let foo: u32 = msg_send![obj, foo];
+            assert!(foo == 6);
         }
     }
 }

@@ -118,7 +118,7 @@ pub fn custom_subclass() -> &'static Class {
         let mut decl = ClassDecl::new(superclass, "CustomSubclassObject").unwrap();
 
         extern fn custom_subclass_get_foo(this: &Object, _cmd: Sel) -> u32 {
-            let foo = unsafe {
+            let foo: u32 = unsafe {
                 msg_send![super(this, custom_class()), foo]
             };
             foo + 2

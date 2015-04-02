@@ -470,8 +470,7 @@ mod tests {
         let cls = Class::get("NSObject").unwrap();
         let obj = test_utils::sample_object();
         assert!(obj.class() == cls);
-        let isa = unsafe { *obj.get_ivar("isa") };
-        let cls_ptr: *const Class = cls;
-        assert!(isa == cls_ptr);
+        let isa: *const Class = unsafe { *obj.get_ivar("isa") };
+        assert!(isa == cls);
     }
 }

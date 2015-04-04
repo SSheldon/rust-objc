@@ -4,6 +4,8 @@ version = "0.1.2"
 authors = ["Steven Sheldon"]
 
 description = "Objective-C Runtime bindings and wrapper for Rust."
+keywords = ["objective-c", "osx", "ios", "cocoa", "uikit"]
+readme = "README.md"
 repository = "http://github.com/SSheldon/rust-objc"
 documentation = "http://ssheldon.github.io/rust-objc/objc/"
 license = "MIT"

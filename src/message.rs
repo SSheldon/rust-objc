@@ -1,18 +1,11 @@
-use std::marker::PhantomFn;
 use std::mem;
 
 use block::Block;
 use runtime::{Class, Object, Sel, Super, self};
 
-/*
- The Sized bound on Message is unfortunate; ideally, objc objects would not be
- treated as Sized. However, rust won't allow casting a dynamically-sized type
- pointer to an Object pointer, because dynamically-sized types can have fat
- pointers (two words) instead of real pointers.
- */
 /// Types that may be sent Objective-C messages.
 /// For example: objects, classes, and blocks.
-pub unsafe trait Message : PhantomFn<Self> { }
+pub unsafe trait Message : Sized { }
 
 unsafe impl Message for Object { }
 

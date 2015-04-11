@@ -382,15 +382,17 @@ impl Object {
     /// of type `T`.
     pub unsafe fn get_mut_ivar<T>(&mut self, name: &str) -> &mut T
             where T: Encode {
-        let cls = self.class();
-        let ptr = match cls.instance_variable(name) {
+        let offset = match self.class().instance_variable(name) {
             Some(ivar) => {
                 assert!(ivar.type_encoding() == T::encode());
                 let offset = ivar.offset();
-                let self_ptr: *mut Object = self;
-                (self_ptr as *mut u8).offset(offset) as *mut T
+                offset
             }
-            None => panic!("Ivar {} not found on class {}", name, cls.name()),
+            None => panic!("Ivar {} not found on class {}", name, self.class().name()),
+        };
+        let ptr = {
+            let self_ptr: *mut Object = self;
+            (self_ptr as *mut u8).offset(offset) as *mut T
         };
         &mut *ptr
     }

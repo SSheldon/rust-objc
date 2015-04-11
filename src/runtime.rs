@@ -363,15 +363,19 @@ impl Object {
     /// Unsafe because the caller must ensure that the ivar is actually
     /// of type `T`.
     pub unsafe fn get_ivar<T>(&self, name: &str) -> &T where T: Encode {
-        let cls = self.class();
-        let ptr = match cls.instance_variable(name) {
-            Some(ivar) => {
-                assert!(ivar.type_encoding() == T::encode());
-                let offset = ivar.offset();
-                let self_ptr: *const Object = self;
-                (self_ptr as *const u8).offset(offset) as *const T
+        let offset = {
+            let cls = self.class();
+            match cls.instance_variable(name) {
+                Some(ivar) => {
+                    assert!(ivar.type_encoding() == T::encode());
+                    ivar.offset()
+                }
+                None => panic!("Ivar {} not found on class {:?}", name, cls),
             }
-            None => panic!("Ivar {} not found on class {}", name, cls.name()),
+        };
+        let ptr = {
+            let self_ptr: *const Object = self;
+            (self_ptr as *const u8).offset(offset) as *const T
         };
         &*ptr
     }
@@ -382,13 +386,15 @@ impl Object {
     /// of type `T`.
     pub unsafe fn get_mut_ivar<T>(&mut self, name: &str) -> &mut T
             where T: Encode {
-        let offset = match self.class().instance_variable(name) {
-            Some(ivar) => {
-                assert!(ivar.type_encoding() == T::encode());
-                let offset = ivar.offset();
-                offset
+        let offset = {
+            let cls = self.class();
+            match cls.instance_variable(name) {
+                Some(ivar) => {
+                    assert!(ivar.type_encoding() == T::encode());
+                    ivar.offset()
+                }
+                None => panic!("Ivar {} not found on class {:?}", name, cls),
             }
-            None => panic!("Ivar {} not found on class {}", name, self.class().name()),
         };
         let ptr = {
             let self_ptr: *mut Object = self;

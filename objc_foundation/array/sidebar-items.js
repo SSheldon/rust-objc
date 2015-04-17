@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["NSComparisonResult",""]],"struct":[["NSArray",""],["NSMutableArray",""],["NSRange",""]],"trait":[["INSArray",""],["INSMutableArray",""],["INSOwnedArray",""],["INSSharedArray",""]],"type":[["NSMutableSharedArray",""],["NSSharedArray",""]]});
+initSidebarItems({"type":[["NSMutableSharedArray",""],["NSSharedArray",""]],"trait":[["INSArray",""],["INSMutableArray",""]],"enum":[["NSComparisonResult",""]],"struct":[["NSArray",""],["NSMutableArray",""],["NSRange",""]]});

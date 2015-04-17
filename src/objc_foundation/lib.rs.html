@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `lib.rs`.">
+    <meta name="description" content="Source to the Rust file `src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -73,19 +73,17 @@
 <span id="31">31</span>
 <span id="32">32</span>
 <span id="33">33</span>
-<span id="34">34</span>
 </pre><pre class='rust '>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_name</span> <span class='op'>=</span> <span class='string'>&quot;objc_foundation&quot;</span>]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span> <span class='op'>=</span> <span class='string'>&quot;lib&quot;</span>]</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>core</span>)]</span>
-
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>objc</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>block</span>;
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>array</span>::{
-    <span class='ident'>INSArray</span>, <span class='ident'>INSMutableArray</span>, <span class='ident'>INSOwnedArray</span>, <span class='ident'>INSSharedArray</span>,
+    <span class='ident'>INSArray</span>, <span class='ident'>INSMutableArray</span>,
     <span class='ident'>NSArray</span>, <span class='ident'>NSComparisonResult</span>, <span class='ident'>NSMutableArray</span>, <span class='ident'>NSRange</span>,
     <span class='ident'>NSMutableSharedArray</span>, <span class='ident'>NSSharedArray</span>,
 };

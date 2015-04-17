@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/ssheldon/projects/rust-objc/core/encode.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-1ecc6299db9ec823/objc-0.1.4/src/encode.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>encode.rs.html -- source</title>
@@ -262,19 +262,13 @@
 <span id="220">220</span>
 <span id="221">221</span>
 <span id="222">222</span>
-<span id="223">223</span>
-<span id="224">224</span>
-<span id="225">225</span>
-<span id="226">226</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>CStr</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomFn</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>;
 <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_char</span>, <span class='ident'>c_void</span>};
 <span class='kw'>use</span> <span class='ident'>malloc_buf</span>::<span class='ident'>MallocBuffer</span>;
 
-<span class='kw'>use</span> <span class='ident'>block</span>::<span class='ident'>Block</span>;
 <span class='kw'>use</span> <span class='ident'>runtime</span>::{<span class='ident'>Class</span>, <span class='ident'>Object</span>, <span class='ident'>Sel</span>};
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_pointer_width</span> <span class='op'>=</span> <span class='string'>&quot;64&quot;</span>)]</span>
@@ -359,7 +353,7 @@
 }
 
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_malloc_str</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>Encoding</span> {
-    <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>CStr</span>::<span class='ident'>from_ptr</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>);
+    <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>CStr</span>::<span class='ident'>from_ptr</span>(<span class='ident'>ptr</span>);
     <span class='kw'>let</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>to_bytes_with_nul</span>();
     <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>bytes</span>).<span class='ident'>is_ok</span>());
     <span class='kw'>let</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='ident'>MallocBuffer</span>::<span class='ident'>new</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>bytes</span>.<span class='ident'>len</span>()).<span class='ident'>unwrap</span>();
@@ -371,7 +365,7 @@
 <span class='doccomment'>/// Unsafe because Objective-C will make assumptions about the type (like its</span>
 <span class='doccomment'>/// size and alignment) from its encoding, so the implementer must verify that</span>
 <span class='doccomment'>/// the encoding is accurate.</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>Encode</span> : <span class='ident'>PhantomFn</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>Encode</span> : <span class='ident'>Sized</span> {
     <span class='doccomment'>/// Returns the Objective-C type encoding for Self.</span>
     <span class='kw'>fn</span> <span class='ident'>encode</span>() <span class='op'>-&gt;</span> <span class='ident'>Encoding</span>;
 }
@@ -454,8 +448,6 @@
 <span class='macro'>encode_message_impl</span><span class='macro'>!</span>(<span class='string'>&quot;@&quot;</span>, <span class='ident'>Object</span>);
 
 <span class='macro'>encode_message_impl</span><span class='macro'>!</span>(<span class='string'>&quot;#&quot;</span>, <span class='ident'>Class</span>);
-
-<span class='macro'>encode_message_impl</span><span class='macro'>!</span>(<span class='string'>&quot;@?&quot;</span>, <span class='ident'>Block</span>, <span class='ident'>A</span>, <span class='ident'>R</span>);
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `block` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, block">
+
+    <title>block - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <section class="sidebar">
+        
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'block', ty: 'mod', relpath: '../'};</script>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>block</a><wbr></span><span class='out-of-band'><a href='stability.html'>[stability]</a> <span id='render-detail'>
+            <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
+        </span><a id='src-0' href='../src/block/lib.rs.html#1-369'>[src]</a></span></h1>
+<div class='docblock'><p>A Rust interface for Objective-C blocks.</p>
+
+<p>For more information on the specifics of the block implementation, see
+Clang&#39;s documentation: <a href="http://clang.llvm.org/docs/Block-ABI-Apple.html">http://clang.llvm.org/docs/Block-ABI-Apple.html</a></p>
+
+<h1 id="invoking-blocks" class='section-header'><a
+                           href="#invoking-blocks">Invoking blocks</a></h1>
+<p>The <code>Block</code> struct is used for invoking blocks from Objective-C. For example,
+consider this Objective-C function:</p>
+
+<pre><code class="language-objc">int32_t sum(int32_t (^block)(int32_t, int32_t)) {
+    return block(5, 8);
+}
+</code></pre>
+
+<p>We could write it in Rust as the following:</p>
+<pre id='rust-example-rendered' class='rust '>
+<span class='kw'>fn</span> <span class='ident'>sum</span>(<span class='ident'>block</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Block</span><span class='op'>&lt;</span>(<span class='ident'>i32</span>, <span class='ident'>i32</span>), <span class='ident'>i32</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>block</span>.<span class='ident'>call</span>((<span class='number'>5</span>, <span class='number'>8</span>))
+}
+</pre>
+
+<p>Note the extra parentheses in the <code>call</code> method, since the arguments must be
+passed as a tuple.</p>
+
+<h1 id="creating-blocks" class='section-header'><a
+                           href="#creating-blocks">Creating blocks</a></h1>
+<p>Creating a block to pass to Objective-C can be done with the <code>ConcreteBlock</code>
+struct. For example, to create a block that adds two <code>i32</code>s, we could write:</p>
+<pre id='rust-example-rendered' class='rust '>
+<span class='kw'>let</span> <span class='ident'>block</span> <span class='op'>=</span> <span class='ident'>ConcreteBlock</span>::<span class='ident'>new</span>(<span class='op'>|</span><span class='ident'>a</span>: <span class='ident'>i32</span>, <span class='ident'>b</span>: <span class='ident'>i32</span><span class='op'>|</span> <span class='ident'>a</span> <span class='op'>+</span> <span class='ident'>b</span>);
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>block</span> <span class='op'>=</span> <span class='ident'>block</span>.<span class='ident'>copy</span>();
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>block</span>.<span class='ident'>call</span>((<span class='number'>5</span>, <span class='number'>8</span>)) <span class='op'>==</span> <span class='number'>13</span>);
+</pre>
+
+<p>It is important to copy your block to the heap (with the <code>copy</code> method) before
+passing it to Objective-C; this is because our <code>ConcreteBlock</code> is only meant
+to be copied once, and we can enforce this in Rust, but if Objective-C code
+were to copy it twice we could have a double free.</p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Block.html'
+                               title='block::Block'>Block</a></td>
+                        <td class='docblock short'><p>An Objective-C block that takes arguments of <code>A</code> when called and
+returns a value of <code>R</code>.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.ConcreteBlock.html'
+                               title='block::ConcreteBlock'>ConcreteBlock</a></td>
+                        <td class='docblock short'><p>An Objective-C block whose size is known at compile time and may be
+constructed on the stack.</p>
+</td>
+                    </tr>
+                </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.BlockArguments.html'
+                               title='block::BlockArguments'>BlockArguments</a></td>
+                        <td class='docblock short'><p>Types that may be used as the arguments to an Objective-C block.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.IntoConcreteBlock.html'
+                               title='block::IntoConcreteBlock'>IntoConcreteBlock</a></td>
+                        <td class='docblock short'><p>Types that may be converted into a <code>ConcreteBlock</code>.</p>
+</td>
+                    </tr>
+                </table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code>, <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "block";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script async src="../search-index.js"></script>
+</body>
+</html>

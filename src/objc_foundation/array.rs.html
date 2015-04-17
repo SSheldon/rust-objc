@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `array.rs`.">
+    <meta name="description" content="Source to the Rust file `src/array.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>array.rs.html -- source</title>
@@ -479,12 +479,6 @@
 <span id="437">437</span>
 <span id="438">438</span>
 <span id="439">439</span>
-<span id="440">440</span>
-<span id="441">441</span>
-<span id="442">442</span>
-<span id="443">443</span>
-<span id="444">444</span>
-<span id="445">445</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span>;
@@ -496,7 +490,7 @@
 <span class='kw'>use</span> {<span class='ident'>INSCopying</span>, <span class='ident'>INSFastEnumeration</span>, <span class='ident'>INSMutableCopying</span>, <span class='ident'>INSObject</span>, <span class='ident'>NSEnumerator</span>};
 
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>isize</span>)]</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>NSComparisonResult</span> {
     <span class='ident'>Ascending</span>  <span class='op'>=</span> <span class='op'>-</span><span class='number'>1</span>,
     <span class='ident'>Same</span>       <span class='op'>=</span> <span class='number'>0</span>,
@@ -522,7 +516,7 @@
 }
 
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>NSRange</span> {
     <span class='kw'>pub</span> <span class='ident'>location</span>: <span class='ident'>usize</span>,
     <span class='kw'>pub</span> <span class='ident'>length</span>: <span class='ident'>usize</span>,
@@ -559,14 +553,14 @@
     <span class='kw'>fn</span> <span class='ident'>first_object</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Self</span>::<span class='ident'>Item</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>firstObject</span>];
-            <span class='ident'>obj</span>.<span class='ident'>as_ref</span>()
+            <span class='kw'>if</span> <span class='ident'>obj</span>.<span class='ident'>is_null</span>() { <span class='prelude-val'>None</span> } <span class='kw'>else</span> { <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>obj</span>) }
         }
     }
 
     <span class='kw'>fn</span> <span class='ident'>last_object</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Self</span>::<span class='ident'>Item</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>lastObject</span>];
-            <span class='ident'>obj</span>.<span class='ident'>as_ref</span>()
+            <span class='kw'>if</span> <span class='ident'>obj</span>.<span class='ident'>is_null</span>() { <span class='prelude-val'>None</span> } <span class='kw'>else</span> { <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>obj</span>) }
         }
     }
 
@@ -608,38 +602,40 @@
 
     <span class='kw'>fn</span> <span class='ident'>into_vec</span>(<span class='ident'>array</span>: <span class='ident'>Id</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Id</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span>, <span class='ident'>Self</span>::<span class='ident'>Own</span><span class='op'>&gt;&gt;</span> {
         <span class='ident'>array</span>.<span class='ident'>to_vec</span>().<span class='ident'>into_iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>obj</span><span class='op'>|</span> <span class='kw'>unsafe</span> {
-            <span class='ident'>Id</span>::<span class='ident'>from_ptr</span>(<span class='ident'>obj</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Self</span>::<span class='ident'>Item</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Self</span>::<span class='ident'>Item</span>)
+            <span class='kw'>let</span> <span class='ident'>obj_ptr</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Self</span>::<span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>obj</span>;
+            <span class='ident'>Id</span>::<span class='ident'>from_ptr</span>(<span class='ident'>obj_ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Self</span>::<span class='ident'>Item</span>)
         }).<span class='ident'>collect</span>()
     }
-}
 
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>INSOwnedArray</span> : <span class='ident'>INSArray</span><span class='op'>&lt;</span><span class='ident'>Own</span><span class='op'>=</span><span class='ident'>Owned</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>mut_object_at</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>index</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Self</span>::<span class='ident'>Item</span> {
+    <span class='kw'>fn</span> <span class='ident'>mut_object_at</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>index</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Self</span>::<span class='ident'>Item</span>
+            <span class='kw'>where</span> <span class='kw'>Self</span>: <span class='ident'>INSArray</span><span class='op'>&lt;</span><span class='ident'>Own</span><span class='op'>=</span><span class='ident'>Owned</span><span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='ident'>result</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Self</span>::<span class='ident'>Item</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>objectAtIndex</span>:<span class='ident'>index</span>];
             <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='ident'>result</span>
         }
     }
-}
 
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>INSSharedArray</span> : <span class='ident'>INSArray</span><span class='op'>&lt;</span><span class='ident'>Own</span><span class='op'>=</span><span class='ident'>Shared</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>shared_object_at</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>ShareId</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>shared_object_at</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>ShareId</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>
+            <span class='kw'>where</span> <span class='kw'>Self</span>: <span class='ident'>INSArray</span><span class='op'>&lt;</span><span class='ident'>Own</span><span class='op'>=</span><span class='ident'>Shared</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>object_at</span>(<span class='ident'>index</span>);
         <span class='kw'>unsafe</span> {
             <span class='ident'>Id</span>::<span class='ident'>from_ptr</span>(<span class='ident'>obj</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Self</span>::<span class='ident'>Item</span>)
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>from_slice</span>(<span class='ident'>slice</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>ShareId</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>]) <span class='op'>-&gt;</span> <span class='ident'>Id</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_slice</span>(<span class='ident'>slice</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>ShareId</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>]) <span class='op'>-&gt;</span> <span class='ident'>Id</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>
+            <span class='kw'>where</span> <span class='kw'>Self</span>: <span class='ident'>INSArray</span><span class='op'>&lt;</span><span class='ident'>Own</span><span class='op'>=</span><span class='ident'>Shared</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>refs</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>slice</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>obj</span><span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='op'>*</span><span class='ident'>obj</span>).<span class='ident'>collect</span>();
         <span class='kw'>unsafe</span> {
             <span class='ident'>INSArray</span>::<span class='ident'>from_refs</span>(<span class='kw-2'>&amp;</span><span class='ident'>refs</span>)
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>to_shared_vec</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>ShareId</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>to_shared_vec</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>ShareId</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;&gt;</span>
+            <span class='kw'>where</span> <span class='kw'>Self</span>: <span class='ident'>INSArray</span><span class='op'>&lt;</span><span class='ident'>Own</span><span class='op'>=</span><span class='ident'>Shared</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>to_vec</span>().<span class='ident'>into_iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>obj</span><span class='op'>|</span> <span class='kw'>unsafe</span> {
-            <span class='ident'>Id</span>::<span class='ident'>from_ptr</span>(<span class='ident'>obj</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Self</span>::<span class='ident'>Item</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Self</span>::<span class='ident'>Item</span>)
+            <span class='kw'>let</span> <span class='ident'>obj_ptr</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Self</span>::<span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>obj</span>;
+            <span class='ident'>Id</span>::<span class='ident'>from_ptr</span>(<span class='ident'>obj_ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Self</span>::<span class='ident'>Item</span>)
         }).<span class='ident'>collect</span>()
     }
 }
@@ -661,10 +657,6 @@
     <span class='kw'>type</span> <span class='ident'>Own</span> <span class='op'>=</span> <span class='ident'>O</span>;
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>INSOwnedArray</span> <span class='kw'>for</span> <span class='ident'>NSArray</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Owned</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>INSObject</span> { }
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>INSSharedArray</span> <span class='kw'>for</span> <span class='ident'>NSArray</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Shared</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>INSObject</span> { }
-
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>INSCopying</span> <span class='kw'>for</span> <span class='ident'>NSArray</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Shared</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>INSObject</span> {
     <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>NSSharedArray</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>;
 }
@@ -681,8 +673,8 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>O</span><span class='op'>&gt;</span> <span class='ident'>Index</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>NSArray</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>O</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>INSObject</span>, <span class='ident'>O</span>: <span class='ident'>Ownership</span> {
     <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>T</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>index</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index</span>: <span class='kw-2'>&amp;</span><span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>T</span> {
-        <span class='self'>self</span>.<span class='ident'>object_at</span>(<span class='op'>*</span><span class='ident'>index</span>)
+    <span class='kw'>fn</span> <span class='ident'>index</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>T</span> {
+        <span class='self'>self</span>.<span class='ident'>object_at</span>(<span class='ident'>index</span>)
     }
 }
 
@@ -776,10 +768,6 @@
     <span class='kw'>type</span> <span class='ident'>Own</span> <span class='op'>=</span> <span class='ident'>O</span>;
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>INSOwnedArray</span> <span class='kw'>for</span> <span class='ident'>NSMutableArray</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Owned</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>INSObject</span> { }
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>INSSharedArray</span> <span class='kw'>for</span> <span class='ident'>NSMutableArray</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Shared</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>INSObject</span> { }
-
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>O</span><span class='op'>&gt;</span> <span class='ident'>INSMutableArray</span> <span class='kw'>for</span> <span class='ident'>NSMutableArray</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>O</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>INSObject</span>, <span class='ident'>O</span>: <span class='ident'>Ownership</span> { }
 
@@ -800,8 +788,8 @@
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>INSObject</span>, <span class='ident'>O</span>: <span class='ident'>Ownership</span> {
     <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>T</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>index</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index</span>: <span class='kw-2'>&amp;</span><span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>T</span> {
-        <span class='self'>self</span>.<span class='ident'>object_at</span>(<span class='op'>*</span><span class='ident'>index</span>)
+    <span class='kw'>fn</span> <span class='ident'>index</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>T</span> {
+        <span class='self'>self</span>.<span class='ident'>object_at</span>(<span class='ident'>index</span>)
     }
 }
 

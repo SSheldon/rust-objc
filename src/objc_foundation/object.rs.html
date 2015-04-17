@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `object.rs`.">
+    <meta name="description" content="Source to the Rust file `src/object.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>object.rs.html -- source</title>
@@ -206,8 +206,8 @@
     <span class='kw'>fn</span> <span class='ident'>test_description</span>() {
         <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='ident'>NSObject</span>::<span class='ident'>new</span>();
         <span class='kw'>let</span> <span class='ident'>description</span> <span class='op'>=</span> <span class='ident'>obj</span>.<span class='ident'>description</span>();
-        <span class='kw'>let</span> <span class='ident'>expected</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;&lt;NSObject: {:?}&gt;&quot;</span>, <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>obj</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>NSObject</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>description</span>.<span class='ident'>as_str</span>() <span class='op'>==</span> <span class='ident'>expected</span>.<span class='ident'>as_slice</span>());
+        <span class='kw'>let</span> <span class='ident'>expected</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;&lt;NSObject: {:p}&gt;&quot;</span>, <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>obj</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>description</span>.<span class='ident'>as_str</span>() <span class='op'>==</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>expected</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>

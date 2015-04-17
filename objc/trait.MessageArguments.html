@@ -43,15 +43,15 @@
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>objc</a>::<wbr><a class='trait' href=''>MessageArguments</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-11372' href='../src/objc/message.rs.html#42-58'>[src]</a></span></h1>
+        </span><a id='src-7552' href='../src/objc/message.rs.html#32-48'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait MessageArguments {
-    unsafe fn <a href='#tymethod.send' class='fnname'>send</a>&lt;T, R&gt;(self, obj: *mut T, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; R <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a></span>;
-    unsafe fn <a href='#tymethod.send_super' class='fnname'>send_super</a>&lt;T, R&gt;(self, obj: *mut T, superclass: &amp;<a class='struct' href='../objc/runtime/struct.Class.html' title='objc::runtime::Class'>Class</a>, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; R <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a></span>;
+    unsafe fn <a href='#tymethod.send' class='fnname'>send</a>&lt;T, R&gt;(self, obj: <a href='http://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut T</a>, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; R <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a></span>;
+    unsafe fn <a href='#tymethod.send_super' class='fnname'>send_super</a>&lt;T, R&gt;(self, obj: <a href='http://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut T</a>, superclass: &amp;<a class='struct' href='../objc/runtime/struct.Class.html' title='objc::runtime::Class'>Class</a>, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; R <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a></span>;
 }</pre><div class='docblock'><p>Types that may be used as the arguments of an Objective-C message.</p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.send' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#tymethod.send' class='fnname'>send</a>&lt;T, R&gt;(self, obj: *mut T, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; R <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a></span></code></h3><div class='docblock'><p>Sends a message to the given obj with the given selector and self as
+        <h3 id='tymethod.send' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#tymethod.send' class='fnname'>send</a>&lt;T, R&gt;(self, obj: <a href='http://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut T</a>, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; R <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a></span></code></h3><div class='docblock'><p>Sends a message to the given obj with the given selector and self as
 the arguments.</p>
 
 <p>The correct version of <code>objc_msgSend</code> will be chosen based on the
@@ -60,7 +60,7 @@ return type. For more information, see Apple&#39;s documenation:
 
 <p>It is recommended to use the <code>msg_send!</code> macro rather than calling this
 method directly.</p>
-</div><h3 id='tymethod.send_super' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#tymethod.send_super' class='fnname'>send_super</a>&lt;T, R&gt;(self, obj: *mut T, superclass: &amp;<a class='struct' href='../objc/runtime/struct.Class.html' title='objc::runtime::Class'>Class</a>, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; R <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a></span></code></h3><div class='docblock'><p>Sends a message to the superclass of an instance of a class with self
+</div><h3 id='tymethod.send_super' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#tymethod.send_super' class='fnname'>send_super</a>&lt;T, R&gt;(self, obj: <a href='http://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut T</a>, superclass: &amp;<a class='struct' href='../objc/runtime/struct.Class.html' title='objc::runtime::Class'>Class</a>, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; R <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a></span></code></h3><div class='docblock'><p>Sends a message to the superclass of an instance of a class with self
 as the arguments.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>

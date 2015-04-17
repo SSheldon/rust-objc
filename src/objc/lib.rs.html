@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/ssheldon/projects/rust-objc/core/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-1ecc6299db9ec823/objc-0.1.4/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -130,15 +130,6 @@
 <span id="88">88</span>
 <span id="89">89</span>
 <span id="90">90</span>
-<span id="91">91</span>
-<span id="92">92</span>
-<span id="93">93</span>
-<span id="94">94</span>
-<span id="95">95</span>
-<span id="96">96</span>
-<span id="97">97</span>
-<span id="98">98</span>
-<span id="99">99</span>
 </pre><pre class='rust '>
 <span class='doccomment'>/*!
 Objective-C Runtime bindings and wrapper for Rust.
@@ -199,11 +190,6 @@ assert!(weak.load().is_none());
 # }
 ```
 
-# Calling and creating Blocks
-
-Objective-C blocks can be called and created using the functionality of the
-[`block`](block/index.html) module.
-
 # Declaring classes
 
 Objective-C classes can even be declared from Rust using the functionality of
@@ -218,9 +204,6 @@ the [`declare`](declare/index.html) module.
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>malloc_buf</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>objc_test_utils</span>;
-
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>id</span>::{<span class='ident'>Id</span>, <span class='ident'>Owned</span>, <span class='ident'>Ownership</span>, <span class='ident'>Shared</span>, <span class='ident'>ShareId</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>encode</span>::{<span class='ident'>Encode</span>, <span class='ident'>Encoding</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>message</span>::{<span class='ident'>Message</span>, <span class='ident'>MessageArguments</span>};
@@ -231,7 +214,6 @@ the [`declare`](declare/index.html) module.
 
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>runtime</span>;
 <span class='kw'>mod</span> <span class='ident'>id</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>block</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>declare</span>;
 <span class='kw'>mod</span> <span class='ident'>encode</span>;
 <span class='kw'>mod</span> <span class='ident'>message</span>;

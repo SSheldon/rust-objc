@@ -43,11 +43,11 @@
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>malloc_buf</a>::<wbr><a class='struct' href=''>MallocBuffer</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-36' href='../src/malloc_buf/lib.rs.html#21-25'>[src]</a></span></h1>
+        </span><a id='src-32' href='../src/malloc_buf/lib.rs.html#19-23'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct MallocBuffer&lt;T&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>A type that represents a <code>malloc</code>&#39;d chunk of memory.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a>&gt; <a class='struct' href='../malloc_buf/struct.MallocBuffer.html' title='malloc_buf::MallocBuffer'>MallocBuffer</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#method.new' class='fnname'>new</a>(ptr: *mut T, len: <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../malloc_buf/struct.MallocBuffer.html' title='malloc_buf::MallocBuffer'>MallocBuffer</a>&lt;T&gt;&gt;</code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a>&gt; <a class='struct' href='../malloc_buf/struct.MallocBuffer.html' title='malloc_buf::MallocBuffer'>MallocBuffer</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#method.new' class='fnname'>new</a>(ptr: <a href='http://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut T</a>, len: <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../malloc_buf/struct.MallocBuffer.html' title='malloc_buf::MallocBuffer'>MallocBuffer</a>&lt;T&gt;&gt;</code></h4>
 <div class='docblock'><p>Constructs a new <code>MallocBuffer</code> for a <code>malloc</code>&#39;d buffer
 with the given length at the given pointer.
 Returns <code>None</code> if the given pointer is null and the length is not 0.</p>
@@ -57,7 +57,7 @@ Returns <code>None</code> if the given pointer is null and the length is not 0.<
 <p>Unsafe because there must be <code>len</code> contiguous, valid instances of <code>T</code>
 at <code>ptr</code>.</p>
 </div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a> for <a class='struct' href='../malloc_buf/struct.MallocBuffer.html' title='malloc_buf::MallocBuffer'>MallocBuffer</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='assoc_type.Target' class='type'><a class='stability Unmarked' title='No stability level'></a><code>type Target = <a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>[T]</a></code></h4>
-<h4 id='method.deref' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='#method.deref' class='fnname'>deref</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[T]</a></code></h4>
+<h4 id='method.deref' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='http://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#method.deref' class='fnname'>deref</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[T]</a></code></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 

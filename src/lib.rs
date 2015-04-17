@@ -57,11 +57,6 @@ assert!(weak.load().is_none());
 # }
 ```
 
-# Calling and creating Blocks
-
-Objective-C blocks can be called and created using the functionality of the
-[`block`](block/index.html) module.
-
 # Declaring classes
 
 Objective-C classes can even be declared from Rust using the functionality of
@@ -76,9 +71,6 @@ the [`declare`](declare/index.html) module.
 extern crate libc;
 extern crate malloc_buf;
 
-#[cfg(test)]
-extern crate objc_test_utils;
-
 pub use id::{Id, Owned, Ownership, Shared, ShareId};
 pub use encode::{Encode, Encoding};
 pub use message::{Message, MessageArguments};
@@ -89,7 +81,6 @@ mod macros;
 
 pub mod runtime;
 mod id;
-pub mod block;
 pub mod declare;
 mod encode;
 mod message;

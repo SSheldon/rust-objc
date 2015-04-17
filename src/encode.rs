@@ -4,7 +4,6 @@ use std::str;
 use libc::{c_char, c_void};
 use malloc_buf::MallocBuffer;
 
-use block::Block;
 use runtime::{Class, Object, Sel};
 
 #[cfg(target_pointer_width = "64")]
@@ -184,8 +183,6 @@ macro_rules! encode_message_impl {
 encode_message_impl!("@", Object);
 
 encode_message_impl!("#", Class);
-
-encode_message_impl!("@?", Block, A, R);
 
 #[cfg(test)]
 mod tests {

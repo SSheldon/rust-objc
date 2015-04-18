@@ -100,7 +100,7 @@ pub unsafe fn from_malloc_str(ptr: *mut c_char) -> Encoding {
 /// Unsafe because Objective-C will make assumptions about the type (like its
 /// size and alignment) from its encoding, so the implementer must verify that
 /// the encoding is accurate.
-pub unsafe trait Encode : Sized {
+pub unsafe trait Encode {
     /// Returns the Objective-C type encoding for Self.
     fn encode() -> Encoding;
 }

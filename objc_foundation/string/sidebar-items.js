@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["NSString",""]],"trait":[["INSCopying",""],["INSMutableCopying",""],["INSString",""]]});
+initSidebarItems({"trait":[["INSCopying",""],["INSMutableCopying",""],["INSString",""]],"enum":[["NSString",""]]});

@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["INSData",""],["INSMutableData",""]],"enum":[["NSData",""],["NSMutableData",""]]});
+initSidebarItems({"enum":[["NSData",""],["NSMutableData",""]],"trait":[["INSData",""],["INSMutableData",""]]});

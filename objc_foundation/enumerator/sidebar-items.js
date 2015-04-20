@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["INSFastEnumeration",""]],"struct":[["NSEnumerator",""],["NSFastEnumerator",""]]});
+initSidebarItems({"struct":[["NSEnumerator",""],["NSFastEnumerator",""]],"trait":[["INSFastEnumeration",""]]});

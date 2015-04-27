@@ -220,20 +220,6 @@ impl Method {
             method_getImplementation(self)
         }
     }
-
-    /// Sets the implementation of self.
-    /// Unsafe because the caller must ensure the implementation has the
-    /// correct self, return, and argument types for the method.
-    pub unsafe fn set_implementation(&mut self, imp: Imp) -> Imp {
-        method_setImplementation(self, imp)
-    }
-
-    /// Exchanges the implementations of self with another `Method`.
-    /// Unsafe because the caller must ensure the two methods have the same
-    /// self, return, and argument types.
-    pub unsafe fn exchange_implementation(&mut self, other: &mut Method) {
-        method_exchangeImplementations(self, other);
-    }
 }
 
 impl Class {

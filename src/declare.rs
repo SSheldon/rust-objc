@@ -43,7 +43,7 @@ use libc::size_t;
 use {Encode, Encoding, Message};
 use runtime::{Class, Imp, NO, Object, Sel, self};
 
-/// An error returned from `MethodImplementation::into_imp` to indicate that a
+/// An error returned from `MethodImplementation::imp_for` to indicate that a
 /// selector and function accept unequal numbers of arguments.
 #[derive(Clone, PartialEq, Debug)]
 pub struct UnequalArgsError {
@@ -74,11 +74,11 @@ pub trait MethodImplementation {
     /// Returns the type encodings of Self's arguments.
     fn argument_encodings() -> Box<[Encoding]>;
 
-    /// Consumes self to create a method implementation for the given selector.
+    /// Returns self as an `Imp` of a method for the given selector.
     ///
     /// Returns an error if self and the selector do not accept the same number
     /// of arguments.
-    fn into_imp(self, sel: Sel) -> Result<Imp, UnequalArgsError>;
+    fn imp_for(self, sel: Sel) -> Result<Imp, UnequalArgsError>;
 }
 
 macro_rules! count_idents {
@@ -102,7 +102,7 @@ macro_rules! method_decl_impl {
                 ])
             }
 
-            fn into_imp(self, sel: Sel) -> Result<Imp, UnequalArgsError> {
+            fn imp_for(self, sel: Sel) -> Result<Imp, UnequalArgsError> {
                 // Add 2 to the arguments for self and _cmd
                 let fn_args = 2 + count_idents!($($t),*);
                 let sel_args = 2 + sel.name().chars().filter(|&c| c == ':').count();
@@ -169,7 +169,7 @@ impl ClassDecl {
     pub unsafe fn add_method<F>(&mut self, sel: Sel, func: F)
             where F: MethodImplementation<Callee=Object> {
         let types = method_type_encoding::<F>();
-        let imp = match func.into_imp(sel) {
+        let imp = match func.imp_for(sel) {
             Ok(imp) => imp,
             Err(err) => panic!("{}", err),
         };
@@ -187,7 +187,7 @@ impl ClassDecl {
     pub unsafe fn add_class_method<F>(&mut self, sel: Sel, func: F)
             where F: MethodImplementation<Callee=Class> {
         let types = method_type_encoding::<F>();
-        let imp = match func.into_imp(sel) {
+        let imp = match func.imp_for(sel) {
             Ok(imp) => imp,
             Err(err) => panic!("{}", err),
         };
@@ -266,7 +266,7 @@ mod tests {
 
         let sel = sel!(doSomethingWithFoo:bar:);
         let f: extern fn(&Object, Sel, i32) = wrong_num_args_method;
-        let imp = f.into_imp(sel);
+        let imp = f.imp_for(sel);
         assert!(imp.is_err());
     }
 }

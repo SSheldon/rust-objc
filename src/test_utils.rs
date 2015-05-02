@@ -1,16 +1,33 @@
+use std::ops::Deref;
 use std::sync::{Once, ONCE_INIT};
 
 use declare::ClassDecl;
 use encode;
 use runtime::{Class, Object, Sel};
-use {Encode, Encoding, Id};
+use {Encode, Encoding};
 
-pub fn sample_object() -> Id<Object> {
+pub struct StrongPtr(*mut Object);
+
+impl Deref for StrongPtr {
+    type Target = Object;
+
+    fn deref(&self) -> &Object {
+        unsafe { &*self.0 }
+    }
+}
+
+impl Drop for StrongPtr {
+    fn drop(&mut self) {
+        let _: () = unsafe { msg_send![self.0, release] };
+    }
+}
+
+pub fn sample_object() -> StrongPtr {
     let cls = Class::get("NSObject").unwrap();
     unsafe {
         let obj: *mut Object = msg_send![cls, alloc];
         let obj: *mut Object = msg_send![obj, init];
-        Id::from_retained_ptr(obj)
+        StrongPtr(obj)
     }
 }
 
@@ -71,12 +88,12 @@ pub fn custom_class() -> &'static Class {
     Class::get("CustomObject").unwrap()
 }
 
-pub fn custom_object() -> Id<Object> {
+pub fn custom_object() -> StrongPtr {
     let cls = custom_class();
     unsafe {
         let obj: *mut Object = msg_send![cls, alloc];
         let obj: *mut Object = msg_send![obj, init];
-        Id::from_retained_ptr(obj)
+        StrongPtr(obj)
     }
 }
 
@@ -105,11 +122,11 @@ pub fn custom_subclass() -> &'static Class {
     Class::get("CustomSubclassObject").unwrap()
 }
 
-pub fn custom_subclass_object() -> Id<Object> {
+pub fn custom_subclass_object() -> StrongPtr {
     let cls = custom_subclass();
     unsafe {
         let obj: *mut Object = msg_send![cls, alloc];
         let obj: *mut Object = msg_send![obj, init];
-        Id::from_retained_ptr(obj)
+        StrongPtr(obj)
     }
 }

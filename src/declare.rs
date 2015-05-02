@@ -43,7 +43,7 @@ use libc::size_t;
 use {Encode, Encoding, Message};
 use runtime::{Class, Imp, NO, Object, Sel, self};
 
-/// An error returned from `IntoMethodImp::into_imp` to indicate that a
+/// An error returned from `MethodImplementation::into_imp` to indicate that a
 /// selector and function accept unequal numbers of arguments.
 #[derive(Clone, PartialEq, Debug)]
 pub struct UnequalArgsError {
@@ -65,7 +65,7 @@ impl Error for UnequalArgsError {
 }
 
 /// Types that can be used as the implementation of an Objective-C method.
-pub trait IntoMethodImp {
+pub trait MethodImplementation {
     /// The callee type of the method.
     type Callee: Message;
     /// The return type of the method.
@@ -89,7 +89,7 @@ macro_rules! count_idents {
 
 macro_rules! method_decl_impl {
     (-$s:ident, $sp:ty, $($t:ident),*) => (
-        impl<$s, R $(, $t)*> IntoMethodImp for extern fn($sp, Sel $(, $t)*) -> R
+        impl<$s, R $(, $t)*> MethodImplementation for extern fn($sp, Sel $(, $t)*) -> R
                 where $s: Message, R: Encode $(, $t: Encode)* {
             type Callee = $s;
             type Ret = R;
@@ -134,7 +134,7 @@ method_decl_impl!(A, B, C, D, E, F, G, H, I, J);
 method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K);
 method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K, L);
 
-fn method_type_encoding<F>() -> CString where F: IntoMethodImp {
+fn method_type_encoding<F>() -> CString where F: MethodImplementation {
     let mut types = F::Ret::encode().as_str().to_string();
     types.extend(F::argument_encodings().iter().map(|e| e.as_str()));
     CString::new(types).unwrap()
@@ -167,7 +167,7 @@ impl ClassDecl {
     /// Unsafe because the caller must ensure that the types match those that
     /// are expected when the method is invoked from Objective-C.
     pub unsafe fn add_method<F>(&mut self, sel: Sel, func: F)
-            where F: IntoMethodImp<Callee=Object> {
+            where F: MethodImplementation<Callee=Object> {
         let types = method_type_encoding::<F>();
         let imp = match func.into_imp(sel) {
             Ok(imp) => imp,
@@ -185,7 +185,7 @@ impl ClassDecl {
     /// Unsafe because the caller must ensure that the types match those that
     /// are expected when the method is invoked from Objective-C.
     pub unsafe fn add_class_method<F>(&mut self, sel: Sel, func: F)
-            where F: IntoMethodImp<Callee=Class> {
+            where F: MethodImplementation<Callee=Class> {
         let types = method_type_encoding::<F>();
         let imp = match func.into_imp(sel) {
             Ok(imp) => imp,
@@ -238,7 +238,7 @@ impl Drop for ClassDecl {
 mod tests {
     use runtime::{Object, Sel};
     use test_utils;
-    use super::IntoMethodImp;
+    use super::MethodImplementation;
 
     #[test]
     fn test_custom_class() {

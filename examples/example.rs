@@ -1,8 +1,25 @@
 #[macro_use]
 extern crate objc;
 
-use objc::{Encode, Id, WeakId};
+use objc::Encode;
 use objc::runtime::{Class, Object};
+
+/// Wrapper around an `Object` pointer that will release it when dropped.
+struct StrongPtr(*mut Object);
+
+impl std::ops::Deref for StrongPtr {
+    type Target = Object;
+
+    fn deref(&self) -> &Object {
+        unsafe { &*self.0 }
+    }
+}
+
+impl Drop for StrongPtr {
+    fn drop(&mut self) {
+        let _: () = unsafe { msg_send![self.0, release] };
+    }
+}
 
 fn main() {
     // Get a class
@@ -16,12 +33,12 @@ fn main() {
     }
 
     // Allocate an instance
-    let obj: Id<Object> = unsafe {
+    let obj = unsafe {
         let obj: *mut Object = msg_send![cls, alloc];
         let obj: *mut Object = msg_send![obj, init];
-        Id::from_retained_ptr(obj)
+        StrongPtr(obj)
     };
-    println!("NSObject address: {:p}", obj);
+    println!("NSObject address: {:p}", &*obj);
 
     // Access an ivar of the object
     let isa: *const Class = unsafe {
@@ -41,13 +58,4 @@ fn main() {
         msg_send![obj, hash]
     };
     println!("NSObject hash: {}", hash);
-
-    // Take a weak reference to the object
-    let obj = obj.share();
-    let weak = WeakId::new(&obj);
-    println!("Weak reference is nil? {}", weak.load().is_none());
-
-    println!("Releasing object");
-    drop(obj);
-    println!("Weak reference is nil? {}", weak.load().is_none());
 }

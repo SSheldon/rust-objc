@@ -1,1 +1,1 @@
-initSidebarItems({"type":[["mach_timebase_info_data_t",""]],"struct":[["mach_timebase_info",""]]});
+initSidebarItems({"struct":[["mach_timebase_info",""]],"type":[["mach_timebase_info_data_t",""]]});

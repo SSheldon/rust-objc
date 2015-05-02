@@ -43,7 +43,7 @@
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>block</a>::<wbr><a class='struct' href=''>ConcreteBlock</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-3130' href='../src/block/lib.rs.html#184-188'>[src]</a></span></h1>
+        </span><a id='src-3130' href='../src/block/lib.rs.html#186-190'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct ConcreteBlock&lt;A, R, F&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>An Objective-C block whose size is known at compile time and may be
@@ -52,7 +52,7 @@ constructed on the stack.</p>
 <div class='docblock'><p>Constructs a <code>ConcreteBlock</code> with the given closure.
 When the block is called, it will return the value that results from
 calling the closure.</p>
-</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;A, R, F&gt; <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, R, F&gt; <span class='where'>where F: 'static</span></code></h3><div class='impl-items'><h4 id='method.copy' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.copy' class='fnname'>copy</a>(self) -&gt; <a class='struct' href='../objc/id/struct.Id.html' title='objc::id::Id'>Id</a>&lt;<a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;&gt;</code></h4>
+</div></div><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;A, R, F&gt; <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, R, F&gt; <span class='where'>where F: 'static</span></code></h3><div class='impl-items'><h4 id='method.copy' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.copy' class='fnname'>copy</a>(self) -&gt; <a class='struct' href='../objc_id/id/struct.Id.html' title='objc_id::id::Id'>Id</a>&lt;<a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;&gt;</code></h4>
 <div class='docblock'><p>Copy self onto the heap.</p>
 </div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;A, R, F&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, R, F&gt; <span class='where'>where F: <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a></span></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; Self</code></h4>
 <h4 id='method.clone_from' class='method'><a class='stability Stable' title='Stable'></a><code>fn <a href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>

@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `Shared` enum in crate `objc`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, Shared">
+    <meta name="description" content="API documentation for the Rust `ShareId` type in crate `objc_id`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, ShareId">
 
-    <title>objc::Shared - Rust</title>
+    <title>objc_id::ShareId - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../main.css">
 
@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='index.html'>objc</a></p><script>window.sidebarCurrent = {name: 'Shared', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>objc_id</a></p><script>window.sidebarCurrent = {name: 'ShareId', ty: 'type', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </section>
 
     <nav class="sub">
@@ -40,13 +40,12 @@
         </form>
     </nav>
 
-    <section id='main' class="content enum">
-<h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>objc</a>::<wbr><a class='enum' href=''>Shared</a><wbr></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content type">
+<h1 class='fqn'><span class='in-band'><a href='index.html'>objc_id</a>::<wbr><a class='type' href=''>ShareId</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-1565' href='../src/objc/id.rs.html#30'>[src]</a></span></h1>
-<pre class='rust enum'>pub enum Shared {}</pre><div class='docblock'><p>A type used to mark that the object(s) a struct contains are shared,
-so there may be other references to them.</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='trait' href='../objc/trait.Ownership.html' title='objc::Ownership'>Ownership</a> for <a class='enum' href='../objc/enum.Shared.html' title='objc::Shared'>Shared</a></code></h3><div class='impl-items'></div></section>
+        </span><a id='src-473' href='../src/objc_id/id.rs.html#148'>[src]</a></span></h1>
+<pre class='rust typedef'>type ShareId&lt;T&gt; = <a class='struct' href='../objc_id/struct.Id.html' title='objc_id::Id'>Id</a>&lt;T, <a class='enum' href='../objc_id/enum.Shared.html' title='objc_id::Shared'>Shared</a>&gt;;</pre><div class='docblock'><p>A convenient alias for a shared <code>Id</code>.</p>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -86,7 +85,7 @@ so there may be other references to them.</p>
 
     <script>
         window.rootPath = "../";
-        window.currentCrate = "objc";
+        window.currentCrate = "objc_id";
         window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>

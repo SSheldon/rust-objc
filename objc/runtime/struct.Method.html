@@ -43,7 +43,7 @@
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a>::<wbr><a class='struct' href=''>Method</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-63' href='../../src/objc/runtime.rs.html#44-46'>[src]</a></span></h1>
+        </span><a id='src-56' href='../../src/objc/runtime.rs.html#44-46'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Method {
     // some fields omitted
 }</pre><div class='docblock'><p>A type that represents a method in a class definition.</p>
@@ -58,14 +58,6 @@
 <div class='docblock'><p>Returns the number of arguments accepted by self.</p>
 </div><h4 id='method.implementation' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.implementation' class='fnname'>implementation</a>(&amp;self) -&gt; <a class='type' href='../../objc/runtime/type.Imp.html' title='objc::runtime::Imp'>Imp</a></code></h4>
 <div class='docblock'><p>Returns the implementation of self.</p>
-</div><h4 id='method.set_implementation' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#method.set_implementation' class='fnname'>set_implementation</a>(&amp;mut self, imp: <a class='type' href='../../objc/runtime/type.Imp.html' title='objc::runtime::Imp'>Imp</a>) -&gt; <a class='type' href='../../objc/runtime/type.Imp.html' title='objc::runtime::Imp'>Imp</a></code></h4>
-<div class='docblock'><p>Sets the implementation of self.
-Unsafe because the caller must ensure the implementation has the
-correct self, return, and argument types for the method.</p>
-</div><h4 id='method.exchange_implementation' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#method.exchange_implementation' class='fnname'>exchange_implementation</a>(&amp;mut self, other: &amp;mut <a class='struct' href='../../objc/runtime/struct.Method.html' title='objc::runtime::Method'>Method</a>)</code></h4>
-<div class='docblock'><p>Exchanges the implementations of self with another <code>Method</code>.
-Unsafe because the caller must ensure the two methods have the same
-self, return, and argument types.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
 

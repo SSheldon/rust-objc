@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-1ecc6299db9ec823/objc-0.1.4/src/encode.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-1ecc6299db9ec823/objc-0.1.5/src/encode.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>encode.rs.html -- source</title>
@@ -365,7 +365,7 @@
 <span class='doccomment'>/// Unsafe because Objective-C will make assumptions about the type (like its</span>
 <span class='doccomment'>/// size and alignment) from its encoding, so the implementer must verify that</span>
 <span class='doccomment'>/// the encoding is accurate.</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>Encode</span> : <span class='ident'>Sized</span> {
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>Encode</span> {
     <span class='doccomment'>/// Returns the Objective-C type encoding for Self.</span>
     <span class='kw'>fn</span> <span class='ident'>encode</span>() <span class='op'>-&gt;</span> <span class='ident'>Encoding</span>;
 }

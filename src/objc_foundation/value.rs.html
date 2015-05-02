@@ -115,6 +115,7 @@
 <span id="73">73</span>
 <span id="74">74</span>
 <span id="75">75</span>
+<span id="76">76</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::{<span class='ident'>CStr</span>, <span class='ident'>CString</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span>;
@@ -122,8 +123,9 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>;
 <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_char</span>;
 
-<span class='kw'>use</span> <span class='ident'>objc</span>::{<span class='ident'>Encode</span>, <span class='ident'>Id</span>};
+<span class='kw'>use</span> <span class='ident'>objc</span>::<span class='ident'>Encode</span>;
 <span class='kw'>use</span> <span class='ident'>objc</span>::<span class='ident'>runtime</span>::<span class='ident'>Class</span>;
+<span class='kw'>use</span> <span class='ident'>objc_id</span>::<span class='ident'>Id</span>;
 
 <span class='kw'>use</span> {<span class='ident'>INSCopying</span>, <span class='ident'>INSObject</span>};
 

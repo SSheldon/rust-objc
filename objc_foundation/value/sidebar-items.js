@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["NSValue",""]],"trait":[["INSValue",""]]});
+initSidebarItems({"trait":[["INSValue",""]],"struct":[["NSValue",""]]});

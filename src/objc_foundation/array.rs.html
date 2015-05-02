@@ -484,8 +484,8 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::{<span class='ident'>Index</span>, <span class='ident'>Range</span>};
 
-<span class='kw'>use</span> <span class='ident'>objc</span>::{<span class='ident'>Id</span>, <span class='ident'>Owned</span>, <span class='ident'>Ownership</span>, <span class='ident'>Shared</span>, <span class='ident'>ShareId</span>};
 <span class='kw'>use</span> <span class='ident'>objc</span>::<span class='ident'>runtime</span>::{<span class='ident'>Class</span>, <span class='ident'>Object</span>};
+<span class='kw'>use</span> <span class='ident'>objc_id</span>::{<span class='ident'>Id</span>, <span class='ident'>Owned</span>, <span class='ident'>Ownership</span>, <span class='ident'>Shared</span>, <span class='ident'>ShareId</span>};
 
 <span class='kw'>use</span> {<span class='ident'>INSCopying</span>, <span class='ident'>INSFastEnumeration</span>, <span class='ident'>INSMutableCopying</span>, <span class='ident'>INSObject</span>, <span class='ident'>NSEnumerator</span>};
 
@@ -797,7 +797,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='ident'>objc</span>::{<span class='ident'>Id</span>};
+    <span class='kw'>use</span> <span class='ident'>objc_id</span>::<span class='ident'>Id</span>;
     <span class='kw'>use</span> {<span class='ident'>INSObject</span>, <span class='ident'>INSString</span>, <span class='ident'>NSObject</span>, <span class='ident'>NSString</span>};
     <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>INSArray</span>, <span class='ident'>INSMutableArray</span>, <span class='ident'>NSArray</span>, <span class='ident'>NSMutableArray</span>};
 

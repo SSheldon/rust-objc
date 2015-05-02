@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `WeakId` struct in crate `objc`.">
+    <meta name="description" content="API documentation for the Rust `WeakId` struct in crate `objc_id`.">
     <meta name="keywords" content="rust, rustlang, rust-lang, WeakId">
 
-    <title>objc::WeakId - Rust</title>
+    <title>objc_id::WeakId - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../main.css">
 
@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='index.html'>objc</a></p><script>window.sidebarCurrent = {name: 'WeakId', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>objc_id</a></p><script>window.sidebarCurrent = {name: 'WeakId', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </section>
 
     <nav class="sub">
@@ -41,19 +41,19 @@
     </nav>
 
     <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>objc</a>::<wbr><a class='struct' href=''>WeakId</a><wbr></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>objc_id</a>::<wbr><a class='struct' href=''>WeakId</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-10112' href='../src/objc/weak.rs.html#46-49'>[src]</a></span></h1>
+        </span><a id='src-592' href='../src/objc_id/weak.rs.html#48-51'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct WeakId&lt;T&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>A pointer type for a weak reference to an Objective-C reference counted
 object.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T&gt; <a class='struct' href='../objc/struct.WeakId.html' title='objc::WeakId'>WeakId</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a></span></code></h3><div class='impl-items'><h4 id='method.new' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.new' class='fnname'>new</a>(obj: &amp;<a class='type' href='../objc/type.ShareId.html' title='objc::ShareId'>ShareId</a>&lt;T&gt;) -&gt; <a class='struct' href='../objc/struct.WeakId.html' title='objc::WeakId'>WeakId</a>&lt;T&gt;</code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;T&gt; <a class='struct' href='../objc_id/struct.WeakId.html' title='objc_id::WeakId'>WeakId</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='../objc/message/trait.Message.html' title='objc::message::Message'>Message</a></span></code></h3><div class='impl-items'><h4 id='method.new' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.new' class='fnname'>new</a>(obj: &amp;<a class='type' href='../objc_id/type.ShareId.html' title='objc_id::ShareId'>ShareId</a>&lt;T&gt;) -&gt; <a class='struct' href='../objc_id/struct.WeakId.html' title='objc_id::WeakId'>WeakId</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Construct a new <code>WeakId</code> referencing the given <code>ShareId</code>.</p>
-</div><h4 id='method.load' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.load' class='fnname'>load</a>(&amp;self) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../objc/type.ShareId.html' title='objc::ShareId'>ShareId</a>&lt;T&gt;&gt;</code></h4>
+</div><h4 id='method.load' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.load' class='fnname'>load</a>(&amp;self) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../objc_id/type.ShareId.html' title='objc_id::ShareId'>ShareId</a>&lt;T&gt;&gt;</code></h4>
 <div class='docblock'><p>Load a <code>ShareId</code> from the <code>WeakId</code> if the object still exists.
 Returns <code>None</code> if the object has been deallocated.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> for <a class='struct' href='../objc/struct.WeakId.html' title='objc::WeakId'>WeakId</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a></span></code></h3><div class='impl-items'></div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../objc/struct.WeakId.html' title='objc::WeakId'>WeakId</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a></span></code></h3><div class='impl-items'></div></section>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> for <a class='struct' href='../objc_id/struct.WeakId.html' title='objc_id::WeakId'>WeakId</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a></span></code></h3><div class='impl-items'></div><h3 class='impl'><a class='stability Stable' title='Stable'></a><code>impl&lt;T&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../objc_id/struct.WeakId.html' title='objc_id::WeakId'>WeakId</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='http://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a></span></code></h3><div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -93,7 +93,7 @@ Returns <code>None</code> if the object has been deallocated.</p>
 
     <script>
         window.rootPath = "../";
-        window.currentCrate = "objc";
+        window.currentCrate = "objc_id";
         window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>

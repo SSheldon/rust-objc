@@ -43,7 +43,7 @@
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>objc</a>::<wbr><a class='trait' href=''>MessageArguments</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-7528' href='../src/objc/message.rs.html#32-48'>[src]</a></span></h1>
+        </span><a id='src-7022' href='../src/objc/message.rs.html#32-48'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait MessageArguments {
     unsafe fn <a href='#tymethod.send' class='fnname'>send</a>&lt;T, R&gt;(self, obj: <a href='http://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut T</a>, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; R <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a></span>;
     unsafe fn <a href='#tymethod.send_super' class='fnname'>send_super</a>&lt;T, R&gt;(self, obj: <a href='http://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut T</a>, superclass: &amp;<a class='struct' href='../objc/runtime/struct.Class.html' title='objc::runtime::Class'>Class</a>, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; R <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a></span>;

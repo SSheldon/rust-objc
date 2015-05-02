@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `ShareId` type in crate `objc`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, ShareId">
+    <meta name="description" content="API documentation for the Rust `Ownership` trait in crate `objc_id`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Ownership">
 
-    <title>objc::ShareId - Rust</title>
+    <title>objc_id::Ownership - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../main.css">
 
@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='index.html'>objc</a></p><script>window.sidebarCurrent = {name: 'ShareId', ty: 'type', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>objc_id</a></p><script>window.sidebarCurrent = {name: 'Ownership', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </section>
 
     <nav class="sub">
@@ -40,12 +40,20 @@
         </form>
     </nav>
 
-    <section id='main' class="content type">
-<h1 class='fqn'><span class='in-band'><a href='index.html'>objc</a>::<wbr><a class='type' href=''>ShareId</a><wbr></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content trait">
+<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>objc_id</a>::<wbr><a class='trait' href=''>Ownership</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-1977' href='../src/objc/id.rs.html#148'>[src]</a></span></h1>
-<pre class='rust typedef'>type ShareId&lt;T&gt; = <a class='struct' href='../objc/struct.Id.html' title='objc::Id'>Id</a>&lt;T, <a class='enum' href='../objc/enum.Shared.html' title='objc::Shared'>Shared</a>&gt;;</pre><div class='docblock'><p>A convenient alias for a shared <code>Id</code>.</p>
-</div></section>
+        </span><a id='src-64' href='../src/objc_id/id.rs.html#34'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait Ownership: 'static { }</pre><div class='docblock'><p>A type that marks what type of ownership a struct has over the object(s)
+it contains; specifically, either <code>Owned</code> or <code>Shared</code>.</p>
+</div>
+        <h2 id='implementors'>Implementors</h2>
+        <ul class='item-list' id='implementors-list'>
+    <li><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='trait' href='../objc_id/trait.Ownership.html' title='objc_id::Ownership'>Ownership</a> for <a class='enum' href='../objc_id/enum.Owned.html' title='objc_id::Owned'>Owned</a></code></li>
+<li><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='trait' href='../objc_id/trait.Ownership.html' title='objc_id::Ownership'>Ownership</a> for <a class='enum' href='../objc_id/enum.Shared.html' title='objc_id::Shared'>Shared</a></code></li>
+</ul><script type="text/javascript" async
+                              src="../implementors/objc_id/trait.Ownership.js">
+                      </script></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -85,7 +93,7 @@
 
     <script>
         window.rootPath = "../";
-        window.currentCrate = "objc";
+        window.currentCrate = "objc_id";
         window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>

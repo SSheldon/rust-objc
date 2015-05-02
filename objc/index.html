@@ -43,7 +43,7 @@
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>objc</a><wbr></span><span class='out-of-band'><a href='stability.html'>[stability]</a> <span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-0' href='../src/objc/lib.rs.html#1-90'>[src]</a></span></h1>
+        </span><a id='src-0' href='../src/objc/lib.rs.html#1-49'>[src]</a></span></h1>
 <div class='docblock'><p>Objective-C Runtime bindings and wrapper for Rust.</p>
 
 <h1 id="messaging-objects" class='section-header'><a
@@ -56,37 +56,6 @@
 <span class='kw'>let</span> <span class='ident'>is_kind</span>: <span class='ident'>BOOL</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>isKindOfClass</span>:<span class='ident'>cls</span>];
 <span class='comment'>// Even void methods must have their return type annotated</span>
 <span class='kw'>let</span> _: () <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>release</span>];
-</pre>
-
-<h1 id="reference-counting" class='section-header'><a
-                           href="#reference-counting">Reference counting</a></h1>
-<p>Objective-C objects are reference counted; to ensure that they are retained and
-released at the proper times, we can use the <a href="struct.Id.html"><code>Id</code></a> struct.</p>
-
-<p>To enforce aliasing rules, an <code>Id</code> can be either owned or shared; if it is
-owned, meaning the <code>Id</code> is the only reference to the object, it can be mutably
-dereferenced. An owned <code>Id</code> can be downgraded to a <a href="type.ShareId.html"><code>ShareId</code></a>
-which can be cloned to allow multiple references.</p>
-
-<p>Weak references may be created using the <a href="struct.WeakId.html"><code>WeakId</code></a> struct.</p>
-<pre id='rust-example-rendered' class='rust '>
-<span class='kw'>let</span> <span class='ident'>cls</span> <span class='op'>=</span> <span class='ident'>Class</span>::<span class='ident'>get</span>(<span class='string'>&quot;NSObject&quot;</span>).<span class='ident'>unwrap</span>();
-<span class='kw'>let</span> <span class='ident'>obj</span>: <span class='ident'>Id</span><span class='op'>&lt;</span><span class='ident'>Object</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-    <span class='ident'>Id</span>::<span class='ident'>from_retained_ptr</span>(<span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>cls</span>, <span class='ident'>new</span>])
-};
-<span class='comment'>// obj will be released when it goes out of scope</span>
-
-<span class='comment'>// share the object so we can clone it</span>
-<span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='ident'>obj</span>.<span class='ident'>share</span>();
-<span class='kw'>let</span> <span class='ident'>another_ref</span> <span class='op'>=</span> <span class='ident'>obj</span>.<span class='ident'>clone</span>();
-<span class='comment'>// dropping our other reference will decrement the retain count</span>
-<span class='ident'>drop</span>(<span class='ident'>another_ref</span>);
-
-<span class='kw'>let</span> <span class='ident'>weak</span> <span class='op'>=</span> <span class='ident'>WeakId</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='ident'>obj</span>);
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>weak</span>.<span class='ident'>load</span>().<span class='ident'>is_some</span>());
-<span class='comment'>// After the object is deallocated, our weak pointer returns none</span>
-<span class='ident'>drop</span>(<span class='ident'>obj</span>);
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>weak</span>.<span class='ident'>load</span>().<span class='ident'>is_none</span>());
 </pre>
 
 <h1 id="declaring-classes" class='section-header'><a
@@ -131,38 +100,6 @@ the <a href="declare/index.html"><code>declare</code></a> module.</p>
                         <td class='docblock short'><p>An Objective-C type encoding.</p>
 </td>
                     </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Id.html'
-                               title='objc::Id'>Id</a></td>
-                        <td class='docblock short'><p>A pointer type for Objective-C&#39;s reference counted objects.</p>
-</td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.WeakId.html'
-                               title='objc::WeakId'>WeakId</a></td>
-                        <td class='docblock short'><p>A pointer type for a weak reference to an Objective-C reference counted
-object.</p>
-</td>
-                    </tr>
-                </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
-<table>
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.Owned.html'
-                               title='objc::Owned'>Owned</a></td>
-                        <td class='docblock short'><p>A type used to mark that a struct owns the object(s) it contains,
-so it has the sole references to them.</p>
-</td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.Shared.html'
-                               title='objc::Shared'>Shared</a></td>
-                        <td class='docblock short'><p>A type used to mark that the object(s) a struct contains are shared,
-so there may be other references to them.</p>
-</td>
-                    </tr>
                 </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
                     <tr>
@@ -184,22 +121,6 @@ For example: objects, classes, and blocks.</p>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.MessageArguments.html'
                                title='objc::MessageArguments'>MessageArguments</a></td>
                         <td class='docblock short'><p>Types that may be used as the arguments of an Objective-C message.</p>
-</td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.Ownership.html'
-                               title='objc::Ownership'>Ownership</a></td>
-                        <td class='docblock short'><p>A type that marks what type of ownership a struct has over the object(s)
-it contains; specifically, either <code>Owned</code> or <code>Shared</code>.</p>
-</td>
-                    </tr>
-                </table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
-<table>
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='type' href='type.ShareId.html'
-                               title='objc::ShareId'>ShareId</a></td>
-                        <td class='docblock short'><p>A convenient alias for a shared <code>Id</code>.</p>
 </td>
                     </tr>
                 </table></section>

@@ -88,11 +88,11 @@ macro_rules! count_idents {
 }
 
 macro_rules! method_decl_impl {
-    (-$s:ident, $sp:ty, $($t:ident),*) => (
-        impl<$s, R $(, $t)*> MethodImplementation for extern fn($sp, Sel $(, $t)*) -> R
-                where $s: Message, R: Encode $(, $t: Encode)* {
+    (-$s:ident, $r:ident, $f:ty, $($t:ident),*) => (
+        impl<$s, $r $(, $t)*> MethodImplementation for $f
+                where $s: Message, $r: Encode $(, $t: Encode)* {
             type Callee = $s;
-            type Ret = R;
+            type Ret = $r;
 
             fn argument_encodings() -> Box<[Encoding]> {
                 Box::new([
@@ -115,8 +115,8 @@ macro_rules! method_decl_impl {
         }
     );
     ($($t:ident),*) => (
-        method_decl_impl!(-T, &T, $($t),*);
-        method_decl_impl!(-T, &mut T, $($t),*);
+        method_decl_impl!(-T, R, extern fn(&T, Sel $(, $t)*) -> R, $($t),*);
+        method_decl_impl!(-T, R, extern fn(&mut T, Sel $(, $t)*) -> R, $($t),*);
     );
 }
 

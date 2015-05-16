@@ -33,6 +33,8 @@ the [`declare`](declare/index.html) module.
 
 extern crate libc;
 extern crate malloc_buf;
+#[cfg(feature = "exception")]
+extern crate objc_exception;
 
 pub use encode::{Encode, Encoding};
 pub use message::{Message, MessageArguments};
@@ -43,6 +45,9 @@ mod macros;
 pub mod runtime;
 pub mod declare;
 mod encode;
+#[cfg(feature = "exception")]
+mod exception;
+#[cfg(any(test, feature = "exception"))]
 mod id;
 mod message;
 

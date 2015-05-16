@@ -82,6 +82,22 @@ macro_rules! msg_send {
     });
 }
 
+#[cfg(feature = "exception")]
+macro_rules! objc_try {
+    ($b:block) => (
+        match $crate::exception::try(|| $b) {
+            Ok(result) => result,
+            Err(Some(exception)) => panic!("Uncaught exception {:?}", &*exception),
+            Err(None) => panic!("Uncaught exception nil"),
+        }
+    )
+}
+
+#[cfg(not(feature = "exception"))]
+macro_rules! objc_try {
+    ($b:block) => ($b)
+}
+
 macro_rules! encode {
     () => ("");
     (i8 $($x:tt)*) => (concat!("c", encode!($($x)*)));

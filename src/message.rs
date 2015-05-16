@@ -55,7 +55,9 @@ macro_rules! message_args_impl {
                 let msg_send_fn: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
                     mem::transmute(msg_send_fn);
                 let ($($a,)*) = self;
-                msg_send_fn(obj as *mut Object, sel $(, $a)*)
+                objc_try!({
+                    msg_send_fn(obj as *mut Object, sel $(, $a)*)
+                })
             }
 
             unsafe fn send_super<T, R>(self, obj: *mut T, superclass: &Class, sel: Sel) -> R
@@ -65,7 +67,9 @@ macro_rules! message_args_impl {
                     mem::transmute(msg_send_fn);
                 let sup = Super { receiver: obj as *mut Object, superclass: superclass };
                 let ($($a,)*) = self;
-                msg_send_fn(&sup, sel $(, $a)*)
+                objc_try!({
+                    msg_send_fn(&sup, sel $(, $a)*)
+                })
             }
         }
     );

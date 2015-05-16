@@ -43,6 +43,7 @@ mod macros;
 pub mod runtime;
 pub mod declare;
 mod encode;
+mod id;
 mod message;
 
 #[cfg(test)]

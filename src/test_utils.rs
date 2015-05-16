@@ -1,26 +1,10 @@
-use std::ops::Deref;
 use std::sync::{Once, ONCE_INIT};
 
 use declare::ClassDecl;
 use encode;
+use id::StrongPtr;
 use runtime::{Class, Object, Sel};
 use {Encode, Encoding};
-
-pub struct StrongPtr(*mut Object);
-
-impl Deref for StrongPtr {
-    type Target = Object;
-
-    fn deref(&self) -> &Object {
-        unsafe { &*self.0 }
-    }
-}
-
-impl Drop for StrongPtr {
-    fn drop(&mut self) {
-        let _: () = unsafe { msg_send![self.0, release] };
-    }
-}
 
 pub fn sample_object() -> StrongPtr {
     let cls = Class::get("NSObject").unwrap();

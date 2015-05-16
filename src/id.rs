@@ -2,7 +2,13 @@ use std::ops::Deref;
 
 use runtime::Object;
 
-pub struct StrongPtr(pub *mut Object);
+pub struct StrongPtr(*mut Object);
+
+impl StrongPtr {
+    pub unsafe fn new(ptr: *mut Object) -> StrongPtr {
+        StrongPtr(ptr)
+    }
+}
 
 impl Deref for StrongPtr {
     type Target = Object;

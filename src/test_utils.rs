@@ -11,7 +11,7 @@ pub fn sample_object() -> StrongPtr {
     unsafe {
         let obj: *mut Object = msg_send![cls, alloc];
         let obj: *mut Object = msg_send![obj, init];
-        StrongPtr(obj)
+        StrongPtr::new(obj)
     }
 }
 
@@ -77,7 +77,7 @@ pub fn custom_object() -> StrongPtr {
     unsafe {
         let obj: *mut Object = msg_send![cls, alloc];
         let obj: *mut Object = msg_send![obj, init];
-        StrongPtr(obj)
+        StrongPtr::new(obj)
     }
 }
 
@@ -111,6 +111,6 @@ pub fn custom_subclass_object() -> StrongPtr {
     unsafe {
         let obj: *mut Object = msg_send![cls, alloc];
         let obj: *mut Object = msg_send![obj, init];
-        StrongPtr(obj)
+        StrongPtr::new(obj)
     }
 }

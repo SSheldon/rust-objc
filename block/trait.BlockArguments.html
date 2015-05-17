@@ -43,14 +43,17 @@
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>block</a>::<wbr><a class='trait' href=''>BlockArguments</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-24' href='../src/block/lib.rs.html#72-75'>[src]</a></span></h1>
+        </span><a id='src-32' href='../src/block/lib.rs.html#68-74'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait BlockArguments {
-    fn <a href='#tymethod.call_block' class='fnname'>call_block</a>&lt;R&gt;(self, block: &amp;mut <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;Self, R&gt;) -&gt; R;
+    unsafe fn <a href='#tymethod.call_block' class='fnname'>call_block</a>&lt;R&gt;(self, block: <a href='http://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;Self, R&gt;</a>) -&gt; R;
 }</pre><div class='docblock'><p>Types that may be used as the arguments to an Objective-C block.</p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.call_block' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.call_block' class='fnname'>call_block</a>&lt;R&gt;(self, block: &amp;mut <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;Self, R&gt;) -&gt; R</code></h3><div class='docblock'><p>Calls the given <code>Block</code> with self as the arguments.</p>
+        <h3 id='tymethod.call_block' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#tymethod.call_block' class='fnname'>call_block</a>&lt;R&gt;(self, block: <a href='http://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;Self, R&gt;</a>) -&gt; R</code></h3><div class='docblock'><p>Calls the given <code>Block</code> with self as the arguments.</p>
+
+<p>Unsafe because <code>block</code> must point to a valid <code>Block</code> and this invokes
+foreign code whose safety the compiler cannot verify.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>

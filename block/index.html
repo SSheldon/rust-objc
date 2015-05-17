@@ -43,7 +43,7 @@
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>block</a><wbr></span><span class='out-of-band'><a href='stability.html'>[stability]</a> <span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-0' href='../src/block/lib.rs.html#1-371'>[src]</a></span></h1>
+        </span><a id='src-0' href='../src/block/lib.rs.html#1-421'>[src]</a></span></h1>
 <div class='docblock'><p>A Rust interface for Objective-C blocks.</p>
 
 <p>For more information on the specifics of the block implementation, see
@@ -61,7 +61,7 @@ consider this Objective-C function:</p>
 
 <p>We could write it in Rust as the following:</p>
 <pre id='rust-example-rendered' class='rust '>
-<span class='kw'>fn</span> <span class='ident'>sum</span>(<span class='ident'>block</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Block</span><span class='op'>&lt;</span>(<span class='ident'>i32</span>, <span class='ident'>i32</span>), <span class='ident'>i32</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>sum</span>(<span class='ident'>block</span>: <span class='kw-2'>&amp;</span><span class='ident'>Block</span><span class='op'>&lt;</span>(<span class='ident'>i32</span>, <span class='ident'>i32</span>), <span class='ident'>i32</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
     <span class='ident'>block</span>.<span class='ident'>call</span>((<span class='number'>5</span>, <span class='number'>8</span>))
 }
 </pre>
@@ -75,8 +75,8 @@ passed as a tuple.</p>
 struct. For example, to create a block that adds two <code>i32</code>s, we could write:</p>
 <pre id='rust-example-rendered' class='rust '>
 <span class='kw'>let</span> <span class='ident'>block</span> <span class='op'>=</span> <span class='ident'>ConcreteBlock</span>::<span class='ident'>new</span>(<span class='op'>|</span><span class='ident'>a</span>: <span class='ident'>i32</span>, <span class='ident'>b</span>: <span class='ident'>i32</span><span class='op'>|</span> <span class='ident'>a</span> <span class='op'>+</span> <span class='ident'>b</span>);
-<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>block</span> <span class='op'>=</span> <span class='ident'>block</span>.<span class='ident'>copy</span>();
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>block</span>.<span class='ident'>call</span>((<span class='number'>5</span>, <span class='number'>8</span>)) <span class='op'>==</span> <span class='number'>13</span>);
+<span class='kw'>let</span> <span class='ident'>block</span> <span class='op'>=</span> <span class='ident'>block</span>.<span class='ident'>copy</span>();
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>block</span>.<span class='ident'>call</span>((<span class='number'>5</span>, <span class='number'>8</span>)) } <span class='op'>==</span> <span class='number'>13</span>);
 </pre>
 
 <p>It is important to copy your block to the heap (with the <code>copy</code> method) before
@@ -98,6 +98,13 @@ returns a value of <code>R</code>.</p>
                                title='block::ConcreteBlock'>ConcreteBlock</a></td>
                         <td class='docblock short'><p>An Objective-C block whose size is known at compile time and may be
 constructed on the stack.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.RcBlock.html'
+                               title='block::RcBlock'>RcBlock</a></td>
+                        <td class='docblock short'><p>A reference-counted Objective-C block.</p>
 </td>
                     </tr>
                 </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>

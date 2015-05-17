@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Queue","A Grand Central Dispatch queue."]],"enum":[["QueueAttribute","The type of a dispatch queue."],["QueuePriority","The priority of a global concurrent queue."]],"mod":[["ffi","Raw foreign function interface for libdispatch."]]});
+initSidebarItems({"struct":[["Queue","A Grand Central Dispatch queue."]],"mod":[["ffi","Raw foreign function interface for libdispatch."]],"enum":[["QueueAttribute","The type of a dispatch queue."],["QueuePriority","The priority of a global concurrent queue."]]});

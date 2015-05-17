@@ -43,14 +43,19 @@
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>block</a>::<wbr><a class='struct' href=''>Block</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-1372' href='../src/block/lib.rs.html#119-121'>[src]</a></span></h1>
+        </span><a id='src-1302' href='../src/block/lib.rs.html#116-118'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Block&lt;A, R&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>An Objective-C block that takes arguments of <code>A</code> when called and
 returns a value of <code>R</code>.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;A: <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a>, R&gt; <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt; <span class='where'>where A: <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a></span></code></h3><div class='impl-items'><h4 id='method.call' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.call' class='fnname'>call</a>(&amp;mut self, args: A) -&gt; R</code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;A: <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a>, R&gt; <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt; <span class='where'>where A: <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a></span></code></h3><div class='impl-items'><h4 id='method.call' class='method'><a class='stability Unmarked' title='No stability level'></a><code>unsafe fn <a href='#method.call' class='fnname'>call</a>(&amp;self, args: A) -&gt; R</code></h4>
 <div class='docblock'><p>Call self with the given arguments.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;A, R&gt; <a class='trait' href='../objc/message/trait.Message.html' title='objc::message::Message'>Message</a> for <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;</code></h3><div class='impl-items'></div></section>
+
+<p>Unsafe because this invokes foreign code that the caller must verify
+doesn&#39;t violate any of Rust&#39;s safety rules. For example, if this block
+is shared with multiple references, the caller must ensure that calling
+it will not cause a data race.</p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

@@ -116,6 +116,7 @@
 <span id="74">74</span>
 <span id="75">75</span>
 <span id="76">76</span>
+<span id="77">77</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::{<span class='ident'>CStr</span>, <span class='ident'>CString</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span>;
@@ -123,7 +124,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>;
 <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_char</span>;
 
-<span class='kw'>use</span> <span class='ident'>objc</span>::<span class='ident'>Encode</span>;
+<span class='kw'>use</span> <span class='ident'>objc</span>::{<span class='ident'>Encode</span>, <span class='ident'>Encoding</span>};
 <span class='kw'>use</span> <span class='ident'>objc</span>::<span class='ident'>runtime</span>::<span class='ident'>Class</span>;
 <span class='kw'>use</span> <span class='ident'>objc_id</span>::<span class='ident'>Id</span>;
 
@@ -133,7 +134,7 @@
     <span class='kw'>type</span> <span class='ident'>Value</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Copy</span> <span class='op'>+</span> <span class='ident'>Encode</span>;
 
     <span class='kw'>fn</span> <span class='ident'>value</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span>::<span class='ident'>Value</span> {
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>Self</span>::<span class='ident'>Value</span>::<span class='ident'>encode</span>().<span class='ident'>as_str</span>() <span class='op'>==</span> <span class='self'>self</span>.<span class='ident'>encoding</span>());
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>Self</span>::<span class='ident'>Value</span>::<span class='ident'>encode</span>() <span class='op'>==</span> <span class='self'>self</span>.<span class='ident'>encoding</span>());
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>value</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>::<span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Value</span><span class='op'>&gt;</span>();
             <span class='kw'>let</span> _: () <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>getValue</span>:<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>value</span>];
@@ -141,11 +142,12 @@
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>encoding</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
+    <span class='kw'>fn</span> <span class='ident'>encoding</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Encoding</span> {
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='ident'>result</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>objCType</span>];
             <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>CStr</span>::<span class='ident'>from_ptr</span>(<span class='ident'>result</span>);
-            <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>s</span>.<span class='ident'>to_bytes</span>()).<span class='ident'>unwrap</span>()
+            <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>s</span>.<span class='ident'>to_bytes</span>()).<span class='ident'>unwrap</span>();
+            <span class='ident'>Encoding</span>::<span class='ident'>from_str</span>(<span class='ident'>s</span>)
         }
     }
 
@@ -190,7 +192,7 @@
     <span class='kw'>fn</span> <span class='ident'>test_value</span>() {
         <span class='kw'>let</span> <span class='ident'>val</span> <span class='op'>=</span> <span class='ident'>NSValue</span>::<span class='ident'>from_value</span>(<span class='number'>13u32</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>val</span>.<span class='ident'>value</span>() <span class='op'>==</span> <span class='number'>13</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>u32</span>::<span class='ident'>encode</span>().<span class='ident'>as_str</span>() <span class='op'>==</span> <span class='ident'>val</span>.<span class='ident'>encoding</span>());
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>u32</span>::<span class='ident'>encode</span>() <span class='op'>==</span> <span class='ident'>val</span>.<span class='ident'>encoding</span>());
     }
 }
 </pre>

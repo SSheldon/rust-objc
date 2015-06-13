@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["INSDictionary",""]],"struct":[["NSDictionary",""]]});
+initSidebarItems({"struct":[["NSDictionary",""]],"trait":[["INSDictionary",""]]});

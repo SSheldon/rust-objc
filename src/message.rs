@@ -28,6 +28,16 @@ fn msg_send_super_fn<R>() -> unsafe extern fn(*const Super, Sel, ...) -> R {
     }
 }
 
+#[cfg(target_arch = "aarch64")]
+fn msg_send_fn<R>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
+    unsafe { mem::transmute(runtime::objc_msgSend) }
+}
+
+#[cfg(target_arch = "aarch64")]
+fn msg_send_super_fn<R>() -> unsafe extern fn(*const Super, Sel, ...) -> R {
+    unsafe { mem::transmute(runtime::objc_msgSendSuper) }
+}
+
 /// Types that may be used as the arguments of an Objective-C message.
 pub trait MessageArguments {
     /// Sends a message to the given obj with the given selector and self as

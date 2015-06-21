@@ -7,7 +7,7 @@ use std::ffi::{CStr, CString};
 use std::fmt;
 use std::ptr;
 use std::str;
-use libc::{c_char, c_int, c_schar, c_uint, c_void, ptrdiff_t, size_t};
+use libc::{c_char, c_int, c_uint, c_void, ptrdiff_t, size_t};
 use malloc_buf::MallocBuffer;
 
 use encode;
@@ -16,11 +16,21 @@ use {Encode, Encoding};
 /// The Objective-C `BOOL` type.
 ///
 /// To convert an Objective-C `BOOL` into a Rust `bool`, compare it with `NO`.
-pub type BOOL = c_schar;
+#[cfg(not(target_arch = "aarch64"))]
+pub type BOOL = ::libc::c_schar;
 /// The equivalent of true for Objective-C's `BOOL` type.
+#[cfg(not(target_arch = "aarch64"))]
 pub const YES: BOOL = 1;
 /// The equivalent of false for Objective-C's `BOOL` type.
+#[cfg(not(target_arch = "aarch64"))]
 pub const NO: BOOL = 0;
+
+#[cfg(target_arch = "aarch64")]
+pub type BOOL = bool;
+#[cfg(target_arch = "aarch64")]
+pub const YES: BOOL = true;
+#[cfg(target_arch = "aarch64")]
+pub const NO: BOOL = false;
 
 /// A type that represents a method selector.
 #[repr(C)]
@@ -99,8 +109,10 @@ extern {
     pub fn ivar_getTypeEncoding(ivar: *const Ivar) -> *const c_char;
 
     pub fn objc_msgSend(obj: *mut Object, op: Sel, ...) -> *mut Object;
+    #[cfg(not(target_arch = "aarch64"))]
     pub fn objc_msgSend_stret(obj: *mut Object, op: Sel, ...);
     pub fn objc_msgSendSuper(sup: *const Super, op: Sel, ...) -> *mut Object;
+    #[cfg(not(target_arch = "aarch64"))]
     pub fn objc_msgSendSuper_stret(sup: *const Super, op: Sel, ... );
 
     pub fn method_getName(method: *const Method) -> Sel;

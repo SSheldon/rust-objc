@@ -13,6 +13,11 @@ unsafe impl Message for Class { }
 
 #[cfg(target_arch = "x86")]
 fn msg_send_fn<R: Any>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
+    // Structures 1 or 2 bytes in size are placed in EAX.
+    // Structures 4 or 8 bytes in size are placed in: EAX and EDX.
+    // Structures of other sizes are placed at the address supplied by the caller.
+    // https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/LowLevelABI/130-IA-32_Function_Calling_Conventions/IA32.html
+
     use std::any::TypeId;
 
     let type_id = TypeId::of::<R>();
@@ -38,6 +43,11 @@ fn msg_send_super_fn<R: Any>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
 
 #[cfg(target_arch = "x86_64")]
 fn msg_send_fn<R>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
+    // If the size of an object is larger than two eightbytes, it has class MEMORY.
+    // If the type has class MEMORY, then the caller provides space for the return
+    // value and passes the address of this storage.
+    // http://people.freebsd.org/~obrien/amd64-elf-abi.pdf
+
     if mem::size_of::<R>() <= 16 {
         unsafe { mem::transmute(runtime::objc_msgSend) }
     } else {
@@ -56,6 +66,10 @@ fn msg_send_super_fn<R>() -> unsafe extern fn(*const Super, Sel, ...) -> R {
 
 #[cfg(target_arch = "arm")]
 fn msg_send_fn<R: Any>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
+    // Double-word sized fundamental data types don't use stret,
+    // but any composite type larger than 4 bytes does.
+    // http://infocenter.arm.com/help/topic/com.arm.doc.ihi0042e/IHI0042E_aapcs.pdf
+
     use std::any::TypeId;
 
     let type_id = TypeId::of::<R>();
@@ -86,6 +100,9 @@ fn msg_send_super_fn<R: Any>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
 
 #[cfg(target_arch = "aarch64")]
 fn msg_send_fn<R>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
+    // stret is not even available in arm64.
+    // https://twitter.com/gparker/status/378079715824660480
+
     unsafe { mem::transmute(runtime::objc_msgSend) }
 }
 

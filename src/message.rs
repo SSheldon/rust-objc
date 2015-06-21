@@ -54,6 +54,36 @@ fn msg_send_super_fn<R>() -> unsafe extern fn(*const Super, Sel, ...) -> R {
     }
 }
 
+#[cfg(target_arch = "arm")]
+fn msg_send_fn<R: Any>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
+    use std::any::TypeId;
+
+    let type_id = TypeId::of::<R>();
+    if mem::size_of::<R>() <= 4 ||
+            type_id == TypeId::of::<i64>() ||
+            type_id == TypeId::of::<u64>() ||
+            type_id == TypeId::of::<f64>() {
+        unsafe { mem::transmute(runtime::objc_msgSend) }
+    } else {
+        unsafe { mem::transmute(runtime::objc_msgSend_stret) }
+    }
+}
+
+#[cfg(target_arch = "arm")]
+fn msg_send_super_fn<R: Any>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
+    use std::any::TypeId;
+
+    let type_id = TypeId::of::<R>();
+    if mem::size_of::<R>() <= 4 ||
+            type_id == TypeId::of::<i64>() ||
+            type_id == TypeId::of::<u64>() ||
+            type_id == TypeId::of::<f64>() {
+        unsafe { mem::transmute(runtime::objc_msgSendSuper) }
+    } else {
+        unsafe { mem::transmute(runtime::objc_msgSendSuper_stret) }
+    }
+}
+
 #[cfg(target_arch = "aarch64")]
 fn msg_send_fn<R>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
     unsafe { mem::transmute(runtime::objc_msgSend) }

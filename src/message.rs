@@ -176,7 +176,6 @@ message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k
 
 #[cfg(test)]
 mod tests {
-    use std::ptr;
     use runtime::Object;
     use test_utils;
 
@@ -201,7 +200,7 @@ mod tests {
 
     #[test]
     fn test_send_message_nil() {
-        let nil: *mut Object = ptr::null_mut();
+        let nil: *mut Object = ::std::ptr::null_mut();
         let result: usize = unsafe {
             msg_send![nil, hash]
         };

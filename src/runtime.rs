@@ -421,7 +421,6 @@ impl fmt::Debug for Object {
 
 #[cfg(test)]
 mod tests {
-    use std::mem;
     use test_utils;
     use Encode;
     use super::{Class, Object, Sel};
@@ -456,7 +455,7 @@ mod tests {
     fn test_class() {
         let cls = Class::get("NSObject").unwrap();
         assert!(cls.name() == "NSObject");
-        assert!(cls.instance_size() == mem::size_of::<*const Class>());
+        assert!(cls.instance_size() == ::std::mem::size_of::<*const Class>());
         assert!(cls.superclass().is_none());
 
         let metaclass = cls.metaclass();

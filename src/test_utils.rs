@@ -1,7 +1,6 @@
 use std::sync::{Once, ONCE_INIT};
 
 use declare::ClassDecl;
-use encode;
 use id::StrongPtr;
 use runtime::{Class, Object, Sel};
 use {Encode, Encoding};
@@ -25,14 +24,20 @@ pub struct CustomStruct {
 
 unsafe impl Encode for CustomStruct {
     fn encode() -> Encoding {
-        let code = encode!(struct CustomStruct { u64, u64, u64, u64 });
-        encode::from_static_str(code)
+        let mut code = "{CustomStruct=".to_string();
+        for _ in 0..4 {
+            code.push_str(u64::encode().as_str());
+        }
+        code.push_str("}");
+        unsafe {
+            Encoding::from_str(&code)
+        }
     }
 }
 
-static REGISTER_CUSTOM_CLASS: Once = ONCE_INIT;
-
 pub fn custom_class() -> &'static Class {
+    static REGISTER_CUSTOM_CLASS: Once = ONCE_INIT;
+
     REGISTER_CUSTOM_CLASS.call_once(|| {
         let superclass = Class::get("NSObject").unwrap();
         let mut decl = ClassDecl::new(superclass, "CustomObject").unwrap();
@@ -81,9 +86,9 @@ pub fn custom_object() -> StrongPtr {
     }
 }
 
-static REGISTER_CUSTOM_SUBCLASS: Once = ONCE_INIT;
-
 pub fn custom_subclass() -> &'static Class {
+    static REGISTER_CUSTOM_SUBCLASS: Once = ONCE_INIT;
+
     REGISTER_CUSTOM_SUBCLASS.call_once(|| {
         let superclass = custom_class();
         let mut decl = ClassDecl::new(superclass, "CustomSubclassObject").unwrap();

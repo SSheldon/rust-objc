@@ -14,8 +14,6 @@ use objc::declare::*;
 use objc::runtime::*;
 
 mod id {{
-    use objc::*;
-    use objc::declare::*;
     use objc::runtime::*;
 
     {0}
@@ -30,6 +28,10 @@ mod test_utils {{
 }}
 
 {2}
+
+pub const TESTS: &'static [(&'static str, fn())] = &[
+    {3}
+];
 """
 
 def read_module(filename):
@@ -55,7 +57,8 @@ if __name__ == '__main__':
     test_utils_mod = read_module(os.path.join(SRC_DIR, 'test_utils.rs'))
     tests = read_all_tests(SRC_DIR)
     test_fns = '\n'.join(tests.itervalues())
-    output = TEMPLATE.format(id_mod, test_utils_mod, test_fns)
+    test_names = ',\n'.join('("{0}", {0})'.format(n) for n in tests.iterkeys())
+    output = TEMPLATE.format(id_mod, test_utils_mod, test_fns, test_names)
 
     with open(os.path.join(TEST_DIR, 'lib.rs'), 'w') as f:
         f.write(output)

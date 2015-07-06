@@ -14,7 +14,7 @@ use test_utils;
 
 {0}
 
-pub const TESTS: &'static [(&'static str, fn())] = &[
+pub static TESTS: &'static [(&'static str, fn())] = &[
     {1}
 ];
 """

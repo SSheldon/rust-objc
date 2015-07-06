@@ -9,5 +9,8 @@ build = "build.rs"
 name = "objc_tests"
 path = "lib.rs"
 
+[dependencies]
+libc = "*"
+
 [dependencies.objc]
 path = ".."

@@ -6,38 +6,18 @@ SRC_DIR = os.path.join(TEST_DIR, os.pardir, 'src')
 TEST_REGEX = '#\[test\]\n(    fn ([^{]*)\(\) {(?:(?!#\[test\]).)*\n    }\n)'
 
 TEMPLATE = """
-#[macro_use]
-extern crate objc;
-
 use objc::*;
 use objc::declare::*;
 use objc::runtime::*;
 
-mod id {{
-    use objc::runtime::*;
+use test_utils;
 
-    {0}
-}}
-
-mod test_utils {{
-    use objc::*;
-    use objc::declare::*;
-    use objc::runtime::*;
-
-    {1}
-}}
-
-{2}
+{0}
 
 pub const TESTS: &'static [(&'static str, fn())] = &[
-    {3}
+    {1}
 ];
 """
-
-def read_module(filename):
-    internal_use = ('use {', 'use runtime::', 'use declare::')
-    with open(filename) as f:
-        return ''.join(l for l in f if not l.startswith(internal_use))
 
 def read_tests(filename):
     with open(filename) as f:
@@ -53,12 +33,10 @@ def read_all_tests(src_dir):
     return tests
 
 if __name__ == '__main__':
-    id_mod = read_module(os.path.join(SRC_DIR, 'id.rs'))
-    test_utils_mod = read_module(os.path.join(SRC_DIR, 'test_utils.rs'))
     tests = read_all_tests(SRC_DIR)
     test_fns = '\n'.join(tests.itervalues())
     test_names = ',\n'.join('("{0}", {0})'.format(n) for n in tests.iterkeys())
-    output = TEMPLATE.format(id_mod, test_utils_mod, test_fns, test_names)
+    output = TEMPLATE.format(test_fns, test_names)
 
-    with open(os.path.join(TEST_DIR, 'lib.rs'), 'w') as f:
+    with open(os.path.join(TEST_DIR, 'tests.rs'), 'w') as f:
         f.write(output)

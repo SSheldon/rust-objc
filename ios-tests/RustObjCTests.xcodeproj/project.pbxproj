@@ -6,20 +6,97 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		13E8B3EC1B4A4B6F000FAD36 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8B3EB1B4A4B6F000FAD36 /* main.m */; };
+		13E8B3EF1B4A4B6F000FAD36 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8B3EE1B4A4B6F000FAD36 /* AppDelegate.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		13E8B3E61B4A4B6F000FAD36 /* RustObjCTests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RustObjCTests.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13E8B3EA1B4A4B6F000FAD36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		13E8B3EB1B4A4B6F000FAD36 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		13E8B3ED1B4A4B6F000FAD36 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		13E8B3EE1B4A4B6F000FAD36 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		13E8B3E31B4A4B6F000FAD36 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXGroup section */
 		13E8B3A01B4A49D7000FAD36 = {
 			isa = PBXGroup;
 			children = (
+				13E8B3E81B4A4B6F000FAD36 /* RustObjCTests */,
+				13E8B3E71B4A4B6F000FAD36 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
+		13E8B3E71B4A4B6F000FAD36 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				13E8B3E61B4A4B6F000FAD36 /* RustObjCTests.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		13E8B3E81B4A4B6F000FAD36 /* RustObjCTests */ = {
+			isa = PBXGroup;
+			children = (
+				13E8B3ED1B4A4B6F000FAD36 /* AppDelegate.h */,
+				13E8B3EE1B4A4B6F000FAD36 /* AppDelegate.m */,
+				13E8B3E91B4A4B6F000FAD36 /* Supporting Files */,
+			);
+			path = RustObjCTests;
+			sourceTree = "<group>";
+		};
+		13E8B3E91B4A4B6F000FAD36 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				13E8B3EA1B4A4B6F000FAD36 /* Info.plist */,
+				13E8B3EB1B4A4B6F000FAD36 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		13E8B3E51B4A4B6F000FAD36 /* RustObjCTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 13E8B40B1B4A4B6F000FAD36 /* Build configuration list for PBXNativeTarget "RustObjCTests" */;
+			buildPhases = (
+				13E8B3E21B4A4B6F000FAD36 /* Sources */,
+				13E8B3E31B4A4B6F000FAD36 /* Frameworks */,
+				13E8B3E41B4A4B6F000FAD36 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RustObjCTests;
+			productName = RustObjCTests;
+			productReference = 13E8B3E61B4A4B6F000FAD36 /* RustObjCTests.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		13E8B3A11B4A49D7000FAD36 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0640;
+				TargetAttributes = {
+					13E8B3E51B4A4B6F000FAD36 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
 			};
 			buildConfigurationList = 13E8B3A41B4A49D7000FAD36 /* Build configuration list for PBXProject "RustObjCTests" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -27,14 +104,39 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 13E8B3A01B4A49D7000FAD36;
+			productRefGroup = 13E8B3E71B4A4B6F000FAD36 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				13E8B3E51B4A4B6F000FAD36 /* RustObjCTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		13E8B3E41B4A4B6F000FAD36 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		13E8B3E21B4A4B6F000FAD36 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				13E8B3EF1B4A4B6F000FAD36 /* AppDelegate.m in Sources */,
+				13E8B3EC1B4A4B6F000FAD36 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
 		13E8B3A51B4A49D7000FAD36 /* Debug */ = {
@@ -49,6 +151,96 @@
 			};
 			name = Release;
 		};
+		13E8B4071B4A4B6F000FAD36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = RustObjCTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		13E8B4081B4A4B6F000FAD36 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = RustObjCTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -57,6 +249,15 @@
 			buildConfigurations = (
 				13E8B3A51B4A49D7000FAD36 /* Debug */,
 				13E8B3A61B4A49D7000FAD36 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		13E8B40B1B4A4B6F000FAD36 /* Build configuration list for PBXNativeTarget "RustObjCTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				13E8B4071B4A4B6F000FAD36 /* Debug */,
+				13E8B4081B4A4B6F000FAD36 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

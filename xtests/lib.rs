@@ -14,16 +14,19 @@ mod tests;
 use libc::{c_char, size_t};
 use tests::TESTS;
 
+#[no_mangle]
 pub extern fn tests_count() -> size_t {
     TESTS.len() as size_t
 }
 
+#[no_mangle]
 pub extern fn test_name(i: size_t, len: &mut size_t) -> *const c_char {
     let (name, _) = TESTS[i as usize];
     *len = name.len() as size_t;
     name.as_ptr() as *const c_char
 }
 
+#[no_mangle]
 pub extern fn run_test(i: size_t) {
     let (_, test_fn) = TESTS[i as usize];
     test_fn();

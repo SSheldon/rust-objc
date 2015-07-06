@@ -7,11 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		13CB968B1B4A50DD0091BEB9 /* libobjc_tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13CB968A1B4A50DD0091BEB9 /* libobjc_tests.a */; };
 		13E8B3EC1B4A4B6F000FAD36 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8B3EB1B4A4B6F000FAD36 /* main.m */; };
 		13E8B3EF1B4A4B6F000FAD36 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8B3EE1B4A4B6F000FAD36 /* AppDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		13CB96891B4A50CD0091BEB9 /* objc_tests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = objc_tests.h; path = ../xtests/objc_tests.h; sourceTree = "<group>"; };
+		13CB968A1B4A50DD0091BEB9 /* libobjc_tests.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libobjc_tests.a; path = ../xtests/libobjc_tests.a; sourceTree = "<group>"; };
 		13E8B3E61B4A4B6F000FAD36 /* RustObjCTests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RustObjCTests.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13E8B3EA1B4A4B6F000FAD36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		13E8B3EB1B4A4B6F000FAD36 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -24,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13CB968B1B4A50DD0091BEB9 /* libobjc_tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -34,6 +38,8 @@
 			isa = PBXGroup;
 			children = (
 				13E8B3E81B4A4B6F000FAD36 /* RustObjCTests */,
+				13CB96891B4A50CD0091BEB9 /* objc_tests.h */,
+				13CB968A1B4A50DD0091BEB9 /* libobjc_tests.a */,
 				13E8B3E71B4A4B6F000FAD36 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -191,6 +197,10 @@
 				INFOPLIST_FILE = RustObjCTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/ssheldon/projects/rust/objc/xtests,
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -233,6 +243,10 @@
 				INFOPLIST_FILE = RustObjCTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/ssheldon/projects/rust/objc/xtests,
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

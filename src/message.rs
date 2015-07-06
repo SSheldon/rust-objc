@@ -35,9 +35,9 @@ fn msg_send_fn<R: Any>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
 fn msg_send_super_fn<R: Any>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
     let size = mem::size_of::<R>();
     if size == 0 || size == 1 || size == 2 || size == 4 || size == 8 {
-        unsafe { mem::transmute(runtime::objc_msgSend) }
+        unsafe { mem::transmute(runtime::objc_msgSendSuper) }
     } else {
-        unsafe { mem::transmute(runtime::objc_msgSend_stret) }
+        unsafe { mem::transmute(runtime::objc_msgSendSuper_stret) }
     }
 }
 

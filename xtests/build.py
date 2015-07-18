@@ -26,14 +26,14 @@ def read_tests(filename):
         for test, name in matches:
             yield name, test
 
-def read_all_tests(src_dir):
-    tests = {}
-    for filename in os.listdir(src_dir):
-        tests.update(read_tests(os.path.join(src_dir, filename)))
-    return tests
+def read_all_tests(src_files):
+    for filename in src_files:
+        for name, test in read_tests(filename):
+            yield name, test
 
 if __name__ == '__main__':
-    tests = read_all_tests(SRC_DIR)
+    src_files = [os.path.join(SRC_DIR, f) for f in os.listdir(SRC_DIR)]
+    tests = dict(read_all_tests(src_files))
     test_fns = '\n'.join(tests.itervalues())
     test_names = ',\n'.join('("{0}", {0})'.format(n) for n in tests.iterkeys())
     output = TEMPLATE.format(test_fns, test_names)

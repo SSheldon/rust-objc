@@ -33,10 +33,12 @@ def read_all_tests(src_files):
 
 if __name__ == '__main__':
     src_files = [os.path.join(SRC_DIR, f) for f in os.listdir(SRC_DIR)]
-    tests = dict(read_all_tests(src_files))
-    test_fns = '\n'.join(tests.itervalues())
-    test_names = ',\n'.join('("{0}", {0})'.format(n) for n in tests.iterkeys())
-    output = TEMPLATE.format(test_fns, test_names)
+    # The ol' zip* trick to unzip an iterator of pairs
+    test_names, test_fns = zip(*read_all_tests(src_files))
+    output = TEMPLATE.format(
+        '\n'.join(test_fns),
+        ',\n'.join('("{0}", {0})'.format(n) for n in test_names),
+    )
 
     with open(os.path.join(TEST_DIR, 'tests.rs'), 'w') as f:
         f.write(output)

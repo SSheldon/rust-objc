@@ -19,6 +19,15 @@ pub static TESTS: &'static [(&'static str, fn())] = &[
 ];
 """
 
+def should_build(output_file, src_files):
+    # Reimplement make!
+    # Only build if the src files were modified after the output file
+    try:
+        output_mtime = os.path.getmtime(output_file)
+    except os.error:
+        return True
+    return output_mtime < max(os.path.getmtime(f) for f in src_files)
+
 def read_tests(filename):
     with open(filename) as f:
         code = f.read()
@@ -33,12 +42,15 @@ def read_all_tests(src_files):
 
 if __name__ == '__main__':
     src_files = [os.path.join(SRC_DIR, f) for f in os.listdir(SRC_DIR)]
-    # The ol' zip* trick to unzip an iterator of pairs
-    test_names, test_fns = zip(*read_all_tests(src_files))
-    output = TEMPLATE.format(
-        '\n'.join(test_fns),
-        ',\n'.join('("{0}", {0})'.format(n) for n in test_names),
-    )
+    output_file = os.path.join(TEST_DIR, 'tests.rs')
 
-    with open(os.path.join(TEST_DIR, 'tests.rs'), 'w') as f:
-        f.write(output)
+    if should_build(output_file, src_files):
+        # The ol' zip* trick to unzip an iterator of pairs
+        test_names, test_fns = zip(*read_all_tests(src_files))
+        output = TEMPLATE.format(
+            '\n'.join(test_fns),
+            ',\n'.join('("{0}", {0})'.format(n) for n in test_names),
+        )
+
+        with open(output_file, 'w') as f:
+            f.write(output)

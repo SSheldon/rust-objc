@@ -10,7 +10,7 @@ repository = "http://github.com/SSheldon/rust-objc"
 documentation = "http://ssheldon.github.io/rust-objc/objc/"
 license = "MIT"
 
-exclude = [".gitignore"]
+exclude = [".gitignore", "ios-tests/**", "xtests/**"]
 
 [features]
 exception = ["objc_exception"]

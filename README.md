@@ -42,3 +42,11 @@ unsafe {
 
 decl.register();
 ```
+
+## Exceptions
+
+By default, if the `msg_send!` macro causes an exception to be thrown, this
+will unwind into Rust resulting in unsafe, undefined behavior.
+However, this crate has an `"exception"` feature which, when enabled, wraps
+each `msg_send!` in a `@try`/`@catch` and panics if an exception is caught,
+preventing Objective-C from unwinding into Rust.

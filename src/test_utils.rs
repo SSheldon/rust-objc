@@ -5,6 +5,15 @@ use id::StrongPtr;
 use runtime::{Class, Object, Sel};
 use {Encode, Encoding};
 
+
+
+
+#[cfg(feature="gnustep")]
+#[link(name = "NSObject", kind = "static")]
+extern {
+}
+
+
 pub fn sample_object() -> StrongPtr {
     let cls = Class::get("NSObject").unwrap();
     unsafe {

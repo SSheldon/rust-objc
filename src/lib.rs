@@ -5,7 +5,7 @@ Objective-C Runtime bindings and wrapper for Rust.
 
 Objective-C objects can be messaged using the [`msg_send!`](macro.msg_send!.html) macro:
 
-```
+```no_run
 # #[macro_use] extern crate objc;
 # use objc::runtime::{BOOL, Class, Object};
 # fn main() {

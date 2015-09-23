@@ -15,3 +15,4 @@ libc = "*"
 
 [dependencies.objc]
 path = ".."
+features = ["exception"]

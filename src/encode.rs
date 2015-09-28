@@ -77,7 +77,7 @@ pub fn from_static_str(code: &'static str) -> Encoding {
 
 pub fn from_str(code: &str) -> Encoding {
     if code.len() > CODE_INLINE_CAP {
-        Encoding { code: Code::Owned(code.to_string()) }
+        Encoding { code: Code::Owned(code.to_owned()) }
     } else {
         let mut bytes = [0; CODE_INLINE_CAP];
         for (dst, byte) in bytes.iter_mut().zip(code.bytes()) {

@@ -24,7 +24,7 @@ pub struct CustomStruct {
 
 unsafe impl Encode for CustomStruct {
     fn encode() -> Encoding {
-        let mut code = "{CustomStruct=".to_string();
+        let mut code = "{CustomStruct=".to_owned();
         for _ in 0..4 {
             code.push_str(u64::encode().as_str());
         }

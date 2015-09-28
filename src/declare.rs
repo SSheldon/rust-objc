@@ -135,7 +135,7 @@ method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K);
 method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K, L);
 
 fn method_type_encoding<F>() -> CString where F: MethodImplementation {
-    let mut types = F::Ret::encode().as_str().to_string();
+    let mut types = F::Ret::encode().as_str().to_owned();
     types.extend(F::argument_encodings().iter().map(|e| e.as_str()));
     CString::new(types).unwrap()
 }

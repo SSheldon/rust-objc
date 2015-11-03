@@ -1,6 +1,6 @@
 [package]
 name = "objc"
-version = "0.1.7"
+version = "0.2.0"
 authors = ["Steven Sheldon"]
 
 description = "Objective-C Runtime bindings and wrapper for Rust."
@@ -16,9 +16,9 @@ exclude = [".gitignore", ".travis.yml", "ios-tests/**", "xtests/**"]
 exception = ["objc_exception"]
 
 [dependencies]
-libc = "0.1"
-malloc_buf = "0.0"
+libc = "0.2"
+malloc_buf = "0.1"
 
 [dependencies.objc_exception]
-version = "0.0"
+version = "0.1"
 optional = true

@@ -16,7 +16,7 @@ exclude = [".gitignore", ".travis.yml", "ios-tests/**", "xtests/**"]
 exception = ["objc_exception"]
 
 [dependencies]
-libc = "0.1"
+libc = ">= 0.1, < 0.3"
 malloc_buf = "0.0"
 
 [dependencies.objc_exception]

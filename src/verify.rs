@@ -1,3 +1,5 @@
+#![cfg_attr(not(feature = "verify_message"), allow(dead_code))]
+
 use runtime::{Class, Object, Sel};
 use {Encode, Encoding};
 

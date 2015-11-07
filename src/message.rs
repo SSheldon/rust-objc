@@ -176,6 +176,7 @@ message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k
 
 #[doc(hidden)]
 #[inline(always)]
+#[cfg(not(feature = "verify_message"))]
 pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
         -> Result<R, String>
         where T: Message, A: MessageArguments, R: Any {
@@ -184,10 +185,49 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
 
 #[doc(hidden)]
 #[inline(always)]
+#[cfg(feature = "verify_message")]
+pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
+        -> Result<R, String>
+        where T: Message, A: MessageArguments + ::verify::EncodeArguments,
+        R: Any + ::Encode {
+    use verify::verify_message_signature;
+
+    let cls = if obj.is_null() {
+        return Err(format!("Messaging {:?} to nil", sel));
+    } else {
+        (*(obj as *const Object)).class()
+    };
+
+    verify_message_signature::<A, R>(cls, sel).map(|_| {
+        args.send(obj as *mut T, sel)
+    })
+}
+
+#[doc(hidden)]
+#[inline(always)]
+#[cfg(not(feature = "verify_message"))]
 pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
         sel: Sel, args: A) -> Result<R, String>
         where T: Message, A: MessageArguments, R: Any {
     Ok(args.send_super(obj as *mut T, superclass, sel))
+}
+
+#[doc(hidden)]
+#[inline(always)]
+#[cfg(feature = "verify_message")]
+pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
+        sel: Sel, args: A) -> Result<R, String>
+        where T: Message, A: MessageArguments + ::verify::EncodeArguments,
+        R: Any + ::Encode {
+    use verify::verify_message_signature;
+
+    if obj.is_null() {
+        return Err(format!("Messaging {:?} to nil", sel));
+    }
+
+    verify_message_signature::<A, R>(superclass, sel).map(|_| {
+        args.send_super(obj as *mut T, superclass, sel)
+    })
 }
 
 #[cfg(test)]

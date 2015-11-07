@@ -61,6 +61,7 @@ mod exception;
 #[cfg(any(test, feature = "exception"))]
 mod id;
 mod message;
+mod verify;
 
 #[cfg(test)]
 mod test_utils;

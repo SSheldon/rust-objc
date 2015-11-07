@@ -58,7 +58,6 @@ pub mod declare;
 mod encode;
 #[cfg(feature = "exception")]
 mod exception;
-#[cfg(any(test, feature = "exception"))]
 mod id;
 mod message;
 mod verify;

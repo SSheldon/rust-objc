@@ -1,3 +1,5 @@
+#![cfg_attr(not(any(test, feature = "exception")), allow(dead_code))]
+
 use std::ops::Deref;
 
 use runtime::Object;

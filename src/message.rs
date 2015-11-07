@@ -174,6 +174,22 @@ message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K, l: L);
 
+#[doc(hidden)]
+#[inline(always)]
+pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
+        -> Result<R, String>
+        where T: Message, A: MessageArguments, R: Any {
+    Ok(args.send(obj as *mut T, sel))
+}
+
+#[doc(hidden)]
+#[inline(always)]
+pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
+        sel: Sel, args: A) -> Result<R, String>
+        where T: Message, A: MessageArguments, R: Any {
+    Ok(args.send_super(obj as *mut T, superclass, sel))
+}
+
 #[cfg(test)]
 mod tests {
     use runtime::Object;

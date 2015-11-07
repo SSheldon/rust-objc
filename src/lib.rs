@@ -47,6 +47,9 @@ extern crate objc_exception;
 pub use encode::{Encode, Encoding};
 pub use message::{Message, MessageArguments};
 
+pub use message::send_message as __send_message;
+pub use message::send_super_message as __send_super_message;
+
 #[macro_use]
 mod macros;
 

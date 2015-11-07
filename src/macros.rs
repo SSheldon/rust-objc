@@ -57,28 +57,32 @@ let _: () = msg_send![obj, setArg1:1 arg2:2];
 #[macro_export]
 macro_rules! msg_send {
     (super($obj:expr, $superclass:expr), $name:ident) => ({
-        #[inline(always)]
-        unsafe fn to_mut<T>(ptr: *const T) -> *mut T { ptr as *mut T }
         let sel = sel!($name);
-        $crate::MessageArguments::send_super((), to_mut(&*$obj), $superclass, sel)
+        match $crate::__send_super_message(&*$obj, $superclass, sel, ()) {
+            Err(s) => panic!("{}", s),
+            Ok(r) => r,
+        }
     });
     (super($obj:expr, $superclass:expr), $($name:ident : $arg:expr)+) => ({
-        #[inline(always)]
-        unsafe fn to_mut<T>(ptr: *const T) -> *mut T { ptr as *mut T }
         let sel = sel!($($name:)+);
-        $crate::MessageArguments::send_super(($($arg,)*), to_mut(&*$obj), $superclass, sel)
+        match $crate::__send_super_message(&*$obj, $superclass, sel, ($($arg,)*)) {
+            Err(s) => panic!("{}", s),
+            Ok(r) => r,
+        }
     });
     ($obj:expr, $name:ident) => ({
-        #[inline(always)]
-        unsafe fn to_mut<T>(ptr: *const T) -> *mut T { ptr as *mut T }
         let sel = sel!($name);
-        $crate::MessageArguments::send((), to_mut(&*$obj), sel)
+        match $crate::__send_message(&*$obj, sel, ()) {
+            Err(s) => panic!("{}", s),
+            Ok(r) => r,
+        }
     });
     ($obj:expr, $($name:ident : $arg:expr)+) => ({
-        #[inline(always)]
-        unsafe fn to_mut<T>(ptr: *const T) -> *mut T { ptr as *mut T }
         let sel = sel!($($name:)+);
-        $crate::MessageArguments::send(($($arg,)*), to_mut(&*$obj), sel)
+        match $crate::__send_message(&*$obj, sel, ($($arg,)*)) {
+            Err(s) => panic!("{}", s),
+            Ok(r) => r,
+        }
     });
 }
 

@@ -20,5 +20,5 @@ verify_message = []
 malloc_buf = "0.0"
 
 [dependencies.objc_exception]
-version = "0.0"
+version = "0.1"
 optional = true

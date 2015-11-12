@@ -39,7 +39,6 @@ preventing Objective-C from unwinding into Rust.
 
 #![warn(missing_docs)]
 
-extern crate libc;
 extern crate malloc_buf;
 #[cfg(feature = "exception")]
 extern crate objc_exception;

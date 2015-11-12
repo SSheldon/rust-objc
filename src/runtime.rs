@@ -5,9 +5,9 @@
 
 use std::ffi::{CStr, CString};
 use std::fmt;
+use std::os::raw::{c_char, c_int, c_uint, c_void};
 use std::ptr;
 use std::str;
-use libc::{c_char, c_int, c_uint, c_void, ptrdiff_t, size_t};
 use malloc_buf::MallocBuffer;
 
 use encode;
@@ -17,7 +17,7 @@ use {Encode, Encoding};
 ///
 /// To convert an Objective-C `BOOL` into a Rust `bool`, compare it with `NO`.
 #[cfg(not(target_arch = "aarch64"))]
-pub type BOOL = ::libc::c_schar;
+pub type BOOL = ::std::os::raw::c_schar;
 /// The equivalent of true for Objective-C's `BOOL` type.
 #[cfg(not(target_arch = "aarch64"))]
 pub const YES: BOOL = 1;
@@ -85,15 +85,15 @@ extern {
 
     pub fn class_getName(cls: *const Class) -> *const c_char;
     pub fn class_getSuperclass(cls: *const Class) -> *const Class;
-    pub fn class_getInstanceSize(cls: *const Class) -> size_t;
+    pub fn class_getInstanceSize(cls: *const Class) -> usize;
     pub fn class_getInstanceMethod(cls: *const Class, sel: Sel) -> *const Method;
     pub fn class_getInstanceVariable(cls: *const Class, name: *const c_char) -> *const Ivar;
     pub fn class_copyMethodList(cls: *const Class, outCount: *mut c_uint) -> *mut *const Method;
     pub fn class_copyIvarList(cls: *const Class, outCount: *mut c_uint) -> *mut *const Ivar;
     pub fn class_addMethod(cls: *mut Class, name: Sel, imp: Imp, types: *const c_char) -> BOOL;
-    pub fn class_addIvar(cls: *mut Class, name: *const c_char, size: size_t, alignment: u8, types: *const c_char) -> BOOL;
+    pub fn class_addIvar(cls: *mut Class, name: *const c_char, size: usize, alignment: u8, types: *const c_char) -> BOOL;
 
-    pub fn objc_allocateClassPair(superclass: *const Class, name: *const c_char, extraBytes: size_t) -> *mut Class;
+    pub fn objc_allocateClassPair(superclass: *const Class, name: *const c_char, extraBytes: usize) -> *mut Class;
     pub fn objc_disposeClassPair(cls: *mut Class);
     pub fn objc_registerClassPair(cls: *mut Class);
 
@@ -104,7 +104,7 @@ extern {
     pub fn objc_getClass(name: *const c_char) -> *const Class;
 
     pub fn ivar_getName(ivar: *const Ivar) -> *const c_char;
-    pub fn ivar_getOffset(ivar: *const Ivar) -> ptrdiff_t;
+    pub fn ivar_getOffset(ivar: *const Ivar) -> isize;
     pub fn ivar_getTypeEncoding(ivar: *const Ivar) -> *const c_char;
 
     pub fn objc_msgSend(obj: *mut Object, op: Sel, ...) -> *mut Object;

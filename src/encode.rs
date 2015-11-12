@@ -1,7 +1,7 @@
 use std::ffi::CStr;
 use std::fmt;
+use std::os::raw::{c_char, c_void};
 use std::str;
-use libc::{c_char, c_void};
 use malloc_buf::MallocBuffer;
 
 use runtime::{Class, Object, Sel};

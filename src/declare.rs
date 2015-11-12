@@ -39,8 +39,9 @@ use std::ffi::CString;
 use std::fmt;
 use std::mem;
 
-use {Encode, Encoding, Message};
+use {Encode, Message};
 use runtime::{Class, Imp, NO, Object, Sel, self};
+use verify::EncodeArguments;
 
 /// An error returned from `MethodImplementation::imp_for` to indicate that a
 /// selector and function accept unequal numbers of arguments.
@@ -70,8 +71,7 @@ pub trait MethodImplementation {
     /// The return type of the method.
     type Ret: Encode;
 
-    /// Returns the type encodings of Self's arguments.
-    fn argument_encodings() -> Box<[Encoding]>;
+    type Args: EncodeArguments;
 
     /// Returns self as an `Imp` of a method for the given selector.
     ///
@@ -92,14 +92,7 @@ macro_rules! method_decl_impl {
                 where $s: Message, $r: Encode $(, $t: Encode)* {
             type Callee = $s;
             type Ret = $r;
-
-            fn argument_encodings() -> Box<[Encoding]> {
-                Box::new([
-                    <*mut Object>::encode(),
-                    Sel::encode(),
-                    $($t::encode()),*
-                ])
-            }
+            type Args = ($($t,)*);
 
             fn imp_for(self, sel: Sel) -> Result<Imp, UnequalArgsError> {
                 // Add 2 to the arguments for self and _cmd
@@ -135,7 +128,7 @@ method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K, L);
 
 fn method_type_encoding<F>() -> CString where F: MethodImplementation {
     let mut types = F::Ret::encode().as_str().to_owned();
-    types.extend(F::argument_encodings().iter().map(|e| e.as_str()));
+    types.extend(F::Args::encodings().iter().map(|e| e.as_str()));
     CString::new(types).unwrap()
 }
 

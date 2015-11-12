@@ -10,9 +10,6 @@ name = "objc_tests"
 path = "lib.rs"
 crate-type = ["staticlib"]
 
-[dependencies]
-libc = "*"
-
 [dependencies.objc]
 path = ".."
 features = ["exception"]

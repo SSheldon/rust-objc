@@ -80,12 +80,6 @@ pub trait MethodImplementation {
     fn imp_for(self, sel: Sel) -> Result<Imp, UnequalArgsError>;
 }
 
-macro_rules! count_idents {
-    () => (0);
-    ($a:ident) => (1);
-    ($a:ident, $($b:ident),+) => (1 + count_idents!($($b),*));
-}
-
 macro_rules! method_decl_impl {
     (-$s:ident, $r:ident, $f:ty, $($t:ident),*) => (
         impl<$s, $r $(, $t)*> MethodImplementation for $f
@@ -128,7 +122,7 @@ method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K, L);
 
 fn method_type_encoding<F>() -> CString where F: MethodImplementation {
     let mut types = F::Ret::encode().as_str().to_owned();
-    types.extend(F::Args::encodings().iter().map(|e| e.as_str()));
+    types.extend(F::Args::encodings().as_ref().iter().map(|e| e.as_str()));
     CString::new(types).unwrap()
 }
 

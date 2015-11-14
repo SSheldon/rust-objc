@@ -4,18 +4,22 @@ use runtime::{Class, Object, Sel};
 use {Encode, Encoding};
 
 pub trait EncodeArguments {
-    fn encodings() -> Box<[Encoding]>;
+    type Encs: AsRef<[Encoding]>;
+
+    fn encodings() -> Self::Encs;
 }
 
 macro_rules! encode_args_impl {
     ($($t:ident),*) => (
         impl<$($t: Encode),*> EncodeArguments for ($($t,)*) {
-            fn encodings() -> Box<[Encoding]> {
-                Box::new([
+            type Encs = [Encoding; 2 + count_idents!($($t),*)];
+
+            fn encodings() -> Self::Encs {
+                [
                     <*mut Object>::encode(),
                     Sel::encode(),
                     $($t::encode()),*
-                ])
+                ]
             }
         }
     );
@@ -51,6 +55,7 @@ pub fn verify_message_signature<A, R>(cls: &Class, sel: Sel) -> Result<(), Strin
     }
 
     let args = A::encodings();
+    let args = args.as_ref();
     let count = args.len();
     let expected_count = method.arguments_count();
     if count != expected_count {

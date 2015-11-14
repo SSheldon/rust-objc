@@ -102,6 +102,12 @@ macro_rules! objc_try {
     ($b:block) => ($b)
 }
 
+macro_rules! count_idents {
+    () => (0);
+    ($a:ident) => (1);
+    ($a:ident, $($b:ident),+) => (1 + count_idents!($($b),*));
+}
+
 macro_rules! encode {
     () => ("");
     (i8 $($x:tt)*) => (concat!("c", encode!($($x)*)));

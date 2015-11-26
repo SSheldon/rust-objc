@@ -274,11 +274,12 @@ mod tests {
 
     #[test]
     fn test_send_message() {
-        let obj = test_utils::sample_object();
-        let result: *const Object = unsafe {
-            msg_send![obj, self]
+        let obj = test_utils::custom_object();
+        let result: u32 = unsafe {
+            let _: () = msg_send![obj, setFoo:4u32];
+            msg_send![obj, foo]
         };
-        assert!(result == &*obj);
+        assert!(result == 4);
     }
 
     #[test]

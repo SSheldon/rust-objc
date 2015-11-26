@@ -9,15 +9,6 @@ use {Encode, Encoding};
 #[link(name = "NSObject", kind = "static")]
 extern { }
 
-pub fn sample_object() -> StrongPtr {
-    let cls = Class::get("NSObject").unwrap();
-    unsafe {
-        let obj: *mut Object = msg_send![cls, alloc];
-        let obj: *mut Object = msg_send![obj, init];
-        StrongPtr::new(obj)
-    }
-}
-
 #[derive(Eq, PartialEq)]
 pub struct CustomStruct {
     pub a: u64,

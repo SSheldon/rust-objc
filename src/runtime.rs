@@ -447,15 +447,15 @@ impl fmt::Debug for Object {
 mod tests {
     use test_utils;
     use Encode;
-    use super::{Class, Object, Sel};
+    use super::{Class, Sel};
 
     #[test]
     fn test_ivar() {
-        let cls = Class::get("NSObject").unwrap();
-        let ivar = cls.instance_variable("isa").unwrap();
-        assert!(ivar.name() == "isa");
-        assert!(ivar.type_encoding() == <*const Class>::encode());
-        assert!(ivar.offset() == 0);
+        let cls = test_utils::custom_class();
+        let ivar = cls.instance_variable("_foo").unwrap();
+        assert!(ivar.name() == "_foo");
+        assert!(ivar.type_encoding() == <u32>::encode());
+        assert!(ivar.offset() > 0);
 
         let ivars = cls.instance_variables();
         assert!(ivars.len() > 0);
@@ -463,12 +463,12 @@ mod tests {
 
     #[test]
     fn test_method() {
-        let cls = Class::get("NSObject").unwrap();
-        let sel = Sel::register("description");
+        let cls = test_utils::custom_class();
+        let sel = Sel::register("foo");
         let method = cls.instance_method(sel).unwrap();
-        assert!(method.name().name() == "description");
+        assert!(method.name().name() == "foo");
         assert!(method.arguments_count() == 2);
-        assert!(method.return_type() == <*mut Object>::encode());
+        assert!(method.return_type() == <u32>::encode());
         assert!(method.argument_type(1).unwrap() == Sel::encode());
 
         let methods = cls.instance_methods();
@@ -477,15 +477,15 @@ mod tests {
 
     #[test]
     fn test_class() {
-        let cls = Class::get("NSObject").unwrap();
-        assert!(cls.name() == "NSObject");
-        assert!(cls.instance_size() == ::std::mem::size_of::<*const Class>());
-        assert!(cls.superclass().is_none());
+        let cls = test_utils::custom_class();
+        assert!(cls.name() == "CustomObject");
+        assert!(cls.instance_size() > 0);
+        assert!(cls.superclass().is_some());
 
         let metaclass = cls.metaclass();
         assert!(metaclass.instance_size() > 0);
 
-        let subclass = test_utils::custom_class();
+        let subclass = test_utils::custom_subclass();
         assert!(subclass.superclass().unwrap() == cls);
     }
 
@@ -498,10 +498,10 @@ mod tests {
 
     #[test]
     fn test_object() {
-        let cls = Class::get("NSObject").unwrap();
-        let obj = test_utils::sample_object();
-        assert!(obj.class() == cls);
-        let isa: *const Class = unsafe { *obj.get_ivar("isa") };
-        assert!(!isa.is_null());
+        let obj = test_utils::custom_object();
+        assert!(obj.class() == test_utils::custom_class());
+        let _: u32 = unsafe {
+            *obj.get_ivar("_foo")
+        };
     }
 }

@@ -15,7 +15,7 @@ one ivar, a `u32` named `_number` and a `number` method that returns it:
 # use objc::runtime::{Class, Object, Sel};
 # fn main() {
 let superclass = Class::get("NSObject").unwrap();
-let mut decl = ClassDecl::new(superclass, "MyNumber").unwrap();
+let mut decl = ClassDecl::new("MyNumber", Some(superclass)).unwrap();
 
 // Add an instance variable
 decl.add_ivar::<u32>("_number");
@@ -38,6 +38,7 @@ use std::error::Error;
 use std::ffi::CString;
 use std::fmt;
 use std::mem;
+use std::ptr;
 
 use {Encode, Message};
 use runtime::{Class, Imp, NO, Object, Sel, self};
@@ -135,10 +136,11 @@ pub struct ClassDecl {
 impl ClassDecl {
     /// Constructs a `ClassDecl` with the given superclass and name.
     /// Returns `None` if the class couldn't be allocated.
-    pub fn new(superclass: &Class, name: &str) -> Option<ClassDecl> {
+    pub fn new(name: &str, superclass: Option<&Class>) -> Option<ClassDecl> {
         let name = CString::new(name).unwrap();
+        let super_ptr = superclass.map_or(ptr::null(), |c| c);
         let cls = unsafe {
-            runtime::objc_allocateClassPair(superclass, name.as_ptr(), 0)
+            runtime::objc_allocateClassPair(super_ptr, name.as_ptr(), 0)
         };
         if cls.is_null() {
             None

@@ -44,7 +44,7 @@ pub fn custom_class() -> &'static Class {
 
     REGISTER_CUSTOM_CLASS.call_once(|| {
         let superclass = Class::get("NSObject").unwrap();
-        let mut decl = ClassDecl::new(superclass, "CustomObject").unwrap();
+        let mut decl = ClassDecl::new("CustomObject", Some(superclass)).unwrap();
 
         decl.add_ivar::<u32>("_foo");
 
@@ -95,7 +95,7 @@ pub fn custom_subclass() -> &'static Class {
 
     REGISTER_CUSTOM_SUBCLASS.call_once(|| {
         let superclass = custom_class();
-        let mut decl = ClassDecl::new(superclass, "CustomSubclassObject").unwrap();
+        let mut decl = ClassDecl::new("CustomSubclassObject", Some(superclass)).unwrap();
 
         extern fn custom_subclass_get_foo(this: &Object, _cmd: Sel) -> u32 {
             let foo: u32 = unsafe {

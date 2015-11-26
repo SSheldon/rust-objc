@@ -117,6 +117,8 @@ extern {
     pub fn objc_disposeClassPair(cls: *mut Class);
     pub fn objc_registerClassPair(cls: *mut Class);
 
+    pub fn class_createInstance(cls: *const Class, extraBytes: usize) -> *mut Object;
+    pub fn object_dispose(obj: *mut Object) -> *mut Object;
     pub fn object_getClass(obj: *const Object) -> *const Class;
 
     pub fn objc_getClassList(buffer: *mut *const Class, bufferLen: c_int) -> c_int;

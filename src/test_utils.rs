@@ -1,13 +1,49 @@
+use std::ops::{Deref, DerefMut};
 use std::sync::{Once, ONCE_INIT};
 
 use declare::ClassDecl;
 use id::StrongPtr;
-use runtime::{Class, Object, Sel};
+use runtime::{Class, Object, Sel, self};
 use {Encode, Encoding};
 
 #[cfg(feature="gnustep")]
 #[link(name = "NSObject", kind = "static")]
 extern { }
+
+pub struct CustomObject {
+    obj: *mut Object,
+}
+
+impl CustomObject {
+    fn new(class: &Class) -> Self {
+        let obj = unsafe {
+            runtime::class_createInstance(class, 0)
+        };
+        CustomObject { obj: obj }
+    }
+}
+
+impl Deref for CustomObject {
+    type Target = Object;
+
+    fn deref(&self) -> &Object {
+        unsafe { &*self.obj }
+    }
+}
+
+impl DerefMut for CustomObject {
+    fn deref_mut(&mut self) -> &mut Object {
+        unsafe { &mut *self.obj }
+    }
+}
+
+impl Drop for CustomObject {
+    fn drop(&mut self) {
+        unsafe {
+            runtime::object_dispose(self.obj);
+        }
+    }
+}
 
 #[derive(Eq, PartialEq)]
 pub struct CustomStruct {

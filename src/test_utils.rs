@@ -5,10 +5,6 @@ use declare::ClassDecl;
 use runtime::{Class, Object, Sel, self};
 use {Encode, Encoding};
 
-#[cfg(feature="gnustep")]
-#[link(name = "NSObject", kind = "static")]
-extern { }
-
 pub struct CustomObject {
     obj: *mut Object,
 }

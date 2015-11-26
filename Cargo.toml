@@ -21,7 +21,7 @@ exclude = [
 [features]
 exception = ["objc_exception"]
 verify_message = []
-gnustep = [ "test_ns_object/gnustep" ]
+gnustep = []
 
 [dependencies]
 malloc_buf = "0.0"
@@ -29,7 +29,3 @@ malloc_buf = "0.0"
 [dependencies.objc_exception]
 version = "0.1"
 optional = true
-
-[dev-dependencies.test_ns_object]
-version = "0.0"
-path = "test_utils"

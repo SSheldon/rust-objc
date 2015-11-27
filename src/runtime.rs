@@ -3,6 +3,7 @@
 //! For more information on foreign functions, see Apple's documentation:
 //! https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html
 
+use std::cmp::min;
 use std::ffi::{CStr, CString};
 use std::fmt;
 use std::os::raw::{c_char, c_int, c_uint, c_void};
@@ -264,12 +265,15 @@ impl Class {
     }
 
     /// Obtains the list of registered class definitions.
-    pub fn classes() -> MallocBuffer<&'static Class> {
+    pub fn classes() -> Vec<&'static Class> {
+        let len = Class::classes_count();
+        let mut buf = Vec::with_capacity(len);
         unsafe {
-            let mut count: c_uint = 0;
-            let classes = objc_copyClassList(&mut count);
-            MallocBuffer::new(classes as *mut _, count as usize).unwrap()
+            let buf_ptr = buf.as_mut_ptr() as *mut _;
+            let out = objc_getClassList(buf_ptr, len as c_int);
+            buf.set_len(min(len, out as usize));
         }
+        buf
     }
 
     /// Returns the total number of registered classes.

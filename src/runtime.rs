@@ -99,9 +99,11 @@ extern {
 
     pub fn class_createInstance(cls: *const Class, extraBytes: usize) -> *mut Object;
     pub fn object_dispose(obj: *mut Object) -> *mut Object;
+    #[cfg(any(target_os = "macos", target_os = "ios"))]
     pub fn object_getClass(obj: *const Object) -> *const Class;
 
     pub fn objc_getClassList(buffer: *mut *const Class, bufferLen: c_int) -> c_int;
+    #[cfg(any(target_os = "macos", target_os = "ios"))]
     pub fn objc_copyClassList(outCount: *mut c_uint) -> *mut *const Class;
     pub fn objc_getClass(name: *const c_char) -> *const Class;
     pub fn objc_getProtocol(name: *const c_char) -> *const Protocol;

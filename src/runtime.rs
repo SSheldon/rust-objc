@@ -132,6 +132,16 @@ extern {
     pub fn method_exchangeImplementations(m1: *mut Method, m2: *mut Method);
 }
 
+#[cfg(not(any(target_os = "macos", target_os = "ios")))]
+pub unsafe fn object_getClass(obj: *const Object) -> *const Class {
+    // This is defined as an inline function, so reproduce it here
+    if !obj.is_null() {
+        *(obj as *const *const Class)
+    } else {
+        ptr::null()
+    }
+}
+
 impl Sel {
     /// Registers a method with the Objective-C runtime system,
     /// maps the method name to a selector, and returns the selector value.

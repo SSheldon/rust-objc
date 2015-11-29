@@ -5,14 +5,15 @@ rust:
   - nightly
 sudo: false
 install:
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then export FEATURE="gnustep"; export CC="clang"; export CXX="clang++"; else export FEATURE=""; fi
-  - if [[ "$FEATURE" == *"gnustep"* ]]; then git clone https://github.com/gnustep/libobjc2.git; fi
-  - if [[ "$FEATURE" == *"gnustep"* ]]; then mkdir libobjc2/build; pushd libobjc2/build; fi
-  - if [[ "$FEATURE" == *"gnustep"* ]]; then cmake -DCMAKE_INSTALL_PREFIX:PATH=$HOME/libobjc2_staging ../; fi
-  - if [[ "$FEATURE" == *"gnustep"* ]]; then make install; fi
-  - if [[ "$FEATURE" == *"gnustep"* ]]; then export CPATH=$HOME/libobjc2_staging/include:$CPATH; export LIBRARY_PATH=$HOME/libobjc2_staging/lib:$LIBRARY_PATH; LD_LIBRARY_PATH=$HOME/libobjc2_staging/lib:$LD_LIBRARY_PATH; fi
-  - if [[ "$FEATURE" == *"gnustep"* ]]; then popd; fi
-  - if [ -n "$FEATURE" ]; then export FEATURES="--features $FEATURE"; else export FEATURES=""; fi;
+  - >
+    if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+      export CC="clang";
+      export CXX="clang++";
+      . gnustep_install.sh;
+      export FEATURES="--features gnustep";
+    else
+      export FEATURES="";
+    fi
 script:
   - cargo build $FEATURES
   - cargo test $FEATURES

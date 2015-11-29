@@ -1,26 +1,28 @@
 language: rust
 rust:
   - stable 
-  - beta
   - nightly
-sudo: false
-install:
-  - >
-    if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-      export CC="clang";
-      export CXX="clang++";
-      . gnustep_install.sh;
-      export FEATURES="--features gnustep";
-    else
-      export FEATURES="";
-    fi
-script:
-  - cargo build $FEATURES
-  - cargo test $FEATURES
-  - cargo doc $FEATURES
 os:
-  - linux
   - osx
+  - linux
+env:
+  - FEATURES=""
+  - FEATURES="exception"
+matrix:
+  exclude:
+    - os: linux
+      env: FEATURES="exception"
+sudo: false
+install: >
+  if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+    export FEATURES="gnustep $FEATURES";
+    export CC="clang";
+    export CXX="clang++";
+    . gnustep_install.sh;
+  fi
+script:
+  - cargo build --verbose --features "$FEATURES"
+  - cargo test --verbose --features "$FEATURES"
 addons:
   apt:
     packages:

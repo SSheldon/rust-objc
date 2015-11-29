@@ -38,25 +38,24 @@ pub struct Sel {
     ptr: *const c_void,
 }
 
-
 /// A structure describing a safely cacheable method implementation
 /// in the GNUstep Objective-C runtime.
 #[cfg(feature="gnustep")]
 #[repr(C)]
 pub struct Slot  {
-  /// The class to which the slot is attached
-  pub owner: *const Class,
-  /// The class for which this slot was cached.
-  pub cached_for: *mut Class,
-  /// The type signature of the method
-  pub types: *const c_char,
-  /// The version of the method. Will change if overriden, invalidating
-  /// the cache
-  pub version: c_int,
-  /// The implementation of the method
-  pub method: Imp,
-  /// The associated selector
-  pub selector: Sel
+    /// The class to which the slot is attached
+    pub owner: *const Class,
+    /// The class for which this slot was cached.
+    pub cached_for: *mut Class,
+    /// The type signature of the method
+    pub types: *const c_char,
+    /// The version of the method. Will change if overriden, invalidating
+    /// the cache
+    pub version: c_int,
+    /// The implementation of the method
+    pub method: Imp,
+    /// The associated selector
+    pub selector: Sel,
 }
 
 /// A marker type to be embedded into other types just so that they cannot be
@@ -100,7 +99,7 @@ pub struct Super {
 pub type Imp = extern fn(*mut Object, Sel, ...) -> *mut Object;
 
 #[link(name = "objc", kind = "dylib")]
-extern "C" {
+extern {
     pub fn sel_registerName(name: *const c_char) -> Sel;
     pub fn sel_getName(sel: Sel) -> *const c_char;
 
@@ -470,7 +469,7 @@ mod tests {
         assert!(method.name().name() == "description");
         assert!(method.arguments_count() == 2);
         assert!(method.return_type() == <*mut Object>::encode());
-        assert_eq!(method.argument_type(1).unwrap(), Sel::encode());
+        assert!(method.argument_type(1).unwrap() == Sel::encode());
 
         let methods = cls.instance_methods();
         assert!(methods.len() > 0);

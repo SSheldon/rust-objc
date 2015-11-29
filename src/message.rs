@@ -1,5 +1,6 @@
 use std::any::Any;
 use std::mem;
+
 use runtime::{Class, Object, Sel, Super, self};
 
 /// Types that may be sent Objective-C messages.
@@ -153,17 +154,17 @@ macro_rules! message_args_impl {
                               target_arch = "x86",
                               target_arch = "x86_64"))))]
             unsafe fn send<T, R>(self, obj: *mut T, sel: Sel) -> R
-                   where T: Message, R: Any {
-                    let mut receiver = obj as *mut Object;
-                    let nil: *mut Object = ::std::ptr::null_mut();
-                    let ref slot = *runtime::objc_msg_lookup_sender(&mut receiver as *mut *mut Object, sel, nil);
-                    let imp_fn = slot.method;
-                    let imp_fn: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
-                        mem::transmute(imp_fn);
-                    let ($($a,)*) = self;
-                    objc_try!({
-                      imp_fn(receiver as *mut Object, sel $(, $a)*)
-                    })
+                    where T: Message, R: Any {
+                let mut receiver = obj as *mut Object;
+                let nil: *mut Object = ::std::ptr::null_mut();
+                let ref slot = *runtime::objc_msg_lookup_sender(&mut receiver as *mut *mut Object, sel, nil);
+                let imp_fn = slot.method;
+                let imp_fn: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
+                    mem::transmute(imp_fn);
+                let ($($a,)*) = self;
+                objc_try!({
+                    imp_fn(receiver as *mut Object, sel $(, $a)*)
+                })
             }
 
             #[cfg(not(feature="gnustep"))]

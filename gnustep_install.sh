@@ -1,3 +1,7 @@
+#! /usr/bin/env sh
+
+set -ev
+
 git clone https://github.com/gnustep/libobjc2.git
 mkdir libobjc2/build
 pushd libobjc2/build

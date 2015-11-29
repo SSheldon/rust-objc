@@ -2,7 +2,6 @@ use std::ops::{Deref, DerefMut};
 use std::sync::{Once, ONCE_INIT};
 
 use declare::ClassDecl;
-use id::StrongPtr;
 use runtime::{Class, Object, Sel, self};
 use {Encode, Encoding};
 
@@ -70,8 +69,7 @@ pub fn custom_class() -> &'static Class {
     static REGISTER_CUSTOM_CLASS: Once = ONCE_INIT;
 
     REGISTER_CUSTOM_CLASS.call_once(|| {
-        let superclass = Class::get("NSObject").unwrap();
-        let mut decl = ClassDecl::new("CustomObject", Some(superclass)).unwrap();
+        let mut decl = ClassDecl::new("CustomObject", None).unwrap();
 
         decl.add_ivar::<u32>("_foo");
 
@@ -91,6 +89,9 @@ pub fn custom_class() -> &'static Class {
             7
         }
 
+        // The runtime will call this method, so it has to be implemented
+        extern fn custom_obj_class_initialize(_this: &Class, _cmd: Sel) { }
+
         unsafe {
             let set_foo: extern fn(&mut Object, Sel, u32) = custom_obj_set_foo;
             decl.add_method(sel!(setFoo:), set_foo);
@@ -100,6 +101,8 @@ pub fn custom_class() -> &'static Class {
             decl.add_method(sel!(customStruct), get_struct);
             let class_method: extern fn(&Class, Sel) -> u32 = custom_obj_class_method;
             decl.add_class_method(sel!(classFoo), class_method);
+            let class_initialize: extern fn(&Class, Sel) = custom_obj_class_initialize;
+            decl.add_class_method(sel!(initialize), class_initialize);
         }
 
         decl.register();
@@ -108,13 +111,8 @@ pub fn custom_class() -> &'static Class {
     Class::get("CustomObject").unwrap()
 }
 
-pub fn custom_object() -> StrongPtr {
-    let cls = custom_class();
-    unsafe {
-        let obj: *mut Object = msg_send![cls, alloc];
-        let obj: *mut Object = msg_send![obj, init];
-        StrongPtr::new(obj)
-    }
+pub fn custom_object() -> CustomObject {
+    CustomObject::new(custom_class())
 }
 
 pub fn custom_subclass() -> &'static Class {
@@ -142,11 +140,6 @@ pub fn custom_subclass() -> &'static Class {
     Class::get("CustomSubclassObject").unwrap()
 }
 
-pub fn custom_subclass_object() -> StrongPtr {
-    let cls = custom_subclass();
-    unsafe {
-        let obj: *mut Object = msg_send![cls, alloc];
-        let obj: *mut Object = msg_send![obj, init];
-        StrongPtr::new(obj)
-    }
+pub fn custom_subclass_object() -> CustomObject {
+    CustomObject::new(custom_subclass())
 }

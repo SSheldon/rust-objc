@@ -57,6 +57,7 @@ pub mod declare;
 mod encode;
 #[cfg(feature = "exception")]
 mod exception;
+#[cfg(feature = "exception")]
 mod id;
 mod message;
 mod verify;

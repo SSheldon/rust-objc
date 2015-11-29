@@ -482,10 +482,11 @@ mod tests {
         let cls = test_utils::custom_class();
         assert!(cls.name() == "CustomObject");
         assert!(cls.instance_size() > 0);
-        assert!(cls.superclass().is_some());
+        assert!(cls.superclass().is_none());
 
         let metaclass = cls.metaclass();
-        assert!(metaclass.instance_size() > 0);
+        // The metaclass of a root class is a subclass of the root class
+        assert!(metaclass.superclass().unwrap() == cls);
 
         let subclass = test_utils::custom_subclass();
         assert!(subclass.superclass().unwrap() == cls);
@@ -500,10 +501,12 @@ mod tests {
 
     #[test]
     fn test_object() {
-        let obj = test_utils::custom_object();
+        let mut obj = test_utils::custom_object();
         assert!(obj.class() == test_utils::custom_class());
-        let _: u32 = unsafe {
+        let result: u32 = unsafe {
+            obj.set_ivar("_foo", 4u32);
             *obj.get_ivar("_foo")
         };
+        assert!(result == 4);
     }
 }

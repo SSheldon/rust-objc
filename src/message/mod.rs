@@ -12,104 +12,19 @@ unsafe impl Message for Object { }
 unsafe impl Message for Class { }
 
 #[cfg(target_arch = "x86")]
-fn msg_send_fn<R: Any>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
-    // Structures 1 or 2 bytes in size are placed in EAX.
-    // Structures 4 or 8 bytes in size are placed in: EAX and EDX.
-    // Structures of other sizes are placed at the address supplied by the caller.
-    // https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/LowLevelABI/130-IA-32_Function_Calling_Conventions/IA32.html
-
-    use std::any::TypeId;
-
-    let type_id = TypeId::of::<R>();
-    let size = mem::size_of::<R>();
-    if type_id == TypeId::of::<f32>() || type_id == TypeId::of::<f64>() {
-        unsafe { mem::transmute(runtime::objc_msgSend_fpret) }
-    } else if size == 0 || size == 1 || size == 2 || size == 4 || size == 8 {
-        unsafe { mem::transmute(runtime::objc_msgSend) }
-    } else {
-        unsafe { mem::transmute(runtime::objc_msgSend_stret) }
-    }
-}
-
-#[cfg(all(target_arch = "x86", not(feature = "gnustep")))]
-fn msg_send_super_fn<R: Any>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
-    let size = mem::size_of::<R>();
-    if size == 0 || size == 1 || size == 2 || size == 4 || size == 8 {
-        unsafe { mem::transmute(runtime::objc_msgSendSuper) }
-    } else {
-        unsafe { mem::transmute(runtime::objc_msgSendSuper_stret) }
-    }
-}
-
+#[path = "x86.rs"]
+mod platform;
 #[cfg(target_arch = "x86_64")]
-fn msg_send_fn<R>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
-    // If the size of an object is larger than two eightbytes, it has class MEMORY.
-    // If the type has class MEMORY, then the caller provides space for the return
-    // value and passes the address of this storage.
-    // http://people.freebsd.org/~obrien/amd64-elf-abi.pdf
-
-    if mem::size_of::<R>() <= 16 {
-        unsafe { mem::transmute(runtime::objc_msgSend) }
-    } else {
-        unsafe { mem::transmute(runtime::objc_msgSend_stret) }
-    }
-}
-
-#[cfg(all(target_arch = "x86_64", not(feature = "gnustep")))]
-fn msg_send_super_fn<R>() -> unsafe extern fn(*const Super, Sel, ...) -> R {
-    if mem::size_of::<R>() <= 16 {
-        unsafe { mem::transmute(runtime::objc_msgSendSuper) }
-    } else {
-        unsafe { mem::transmute(runtime::objc_msgSendSuper_stret) }
-    }
-}
-
+#[path = "x86_64.rs"]
+mod platform;
 #[cfg(target_arch = "arm")]
-fn msg_send_fn<R: Any>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
-    // Double-word sized fundamental data types don't use stret,
-    // but any composite type larger than 4 bytes does.
-    // http://infocenter.arm.com/help/topic/com.arm.doc.ihi0042e/IHI0042E_aapcs.pdf
-
-    use std::any::TypeId;
-
-    let type_id = TypeId::of::<R>();
-    if mem::size_of::<R>() <= 4 ||
-            type_id == TypeId::of::<i64>() ||
-            type_id == TypeId::of::<u64>() ||
-            type_id == TypeId::of::<f64>() {
-        unsafe { mem::transmute(runtime::objc_msgSend) }
-    } else {
-        unsafe { mem::transmute(runtime::objc_msgSend_stret) }
-    }
-}
-
-#[cfg(all(target_arch = "arm", not(feature = "gnustep")))]
-fn msg_send_super_fn<R: Any>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
-    use std::any::TypeId;
-
-    let type_id = TypeId::of::<R>();
-    if mem::size_of::<R>() <= 4 ||
-            type_id == TypeId::of::<i64>() ||
-            type_id == TypeId::of::<u64>() ||
-            type_id == TypeId::of::<f64>() {
-        unsafe { mem::transmute(runtime::objc_msgSendSuper) }
-    } else {
-        unsafe { mem::transmute(runtime::objc_msgSendSuper_stret) }
-    }
-}
-
+#[path = "arm.rs"]
+mod platform;
 #[cfg(all(target_arch = "aarch64", not(feature = "gnustep")))]
-fn msg_send_fn<R>() -> unsafe extern fn(*mut Object, Sel, ...) -> R {
-    // stret is not even available in arm64.
-    // https://twitter.com/gparker/status/378079715824660480
+#[path = "arm64.rs"]
+mod platform;
 
-    unsafe { mem::transmute(runtime::objc_msgSend) }
-}
-
-#[cfg(all(target_arch = "aarch64", not(feature ="gnustep")))]
-fn msg_send_super_fn<R>() -> unsafe extern fn(*const Super, Sel, ...) -> R {
-    unsafe { mem::transmute(runtime::objc_msgSendSuper) }
-}
+use self::platform::{msg_send_fn, msg_send_super_fn};
 
 /// Types that may be used as the arguments of an Objective-C message.
 pub trait MessageArguments {

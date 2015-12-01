@@ -27,20 +27,10 @@ mod platform;
 #[cfg(feature= "gnustep")]
 mod gnustep;
 
-#[cfg(any(not(feature = "gnustep"),
-          target_arch = "arm",
-          target_arch = "x86",
-          target_arch = "x86_64"))]
-use self::platform::msg_send_fn;
 #[cfg(not(feature = "gnustep"))]
-use self::platform::msg_send_super_fn;
-#[cfg(all(feature="gnustep",
-          not(any(target_arch = "arm",
-                  target_arch = "x86",
-                  target_arch = "x86_64"))))]
-use self::gnustep::msg_send_fn;
+use self::platform::{msg_send_fn, msg_send_super_fn};
 #[cfg(feature = "gnustep")]
-use self::gnustep::msg_send_super_fn;
+use self::gnustep::{msg_send_fn, msg_send_super_fn};
 
 /// Types that may be used as the arguments of an Objective-C message.
 pub trait MessageArguments {

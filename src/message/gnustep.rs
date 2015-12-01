@@ -1,10 +1,16 @@
-use std::ptr;
-
 use runtime::{Object, Imp, Sel, Super, self};
 
+#[cfg(any(target_arch = "arm",
+          target_arch = "x86",
+          target_arch = "x86_64"))]
+pub use super::platform::msg_send_fn;
+
+#[cfg(not(any(target_arch = "arm",
+              target_arch = "x86",
+              target_arch = "x86_64")))]
 pub fn msg_send_fn<R>(obj: *mut Object, sel: Sel) -> (Imp, *mut Object) {
     let mut receiver = obj;
-    let sender = ptr::null_mut();
+    let sender = ::std::ptr::null_mut();
     let slot = unsafe {
         &*runtime::objc_msg_lookup_sender(&mut receiver, sel, sender)
     };

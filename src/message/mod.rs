@@ -1,7 +1,7 @@
 use std::any::Any;
 use std::mem;
 
-use runtime::{Class, Object, Sel, Super, self};
+use runtime::{Class, Object, Sel, Super};
 
 /// Types that may be sent Objective-C messages.
 /// For example: objects, classes, and blocks.
@@ -24,7 +24,23 @@ mod platform;
 #[path = "arm64.rs"]
 mod platform;
 
-use self::platform::{msg_send_fn, msg_send_super_fn};
+#[cfg(feature= "gnustep")]
+mod gnustep;
+
+#[cfg(any(not(feature = "gnustep"),
+          target_arch = "arm",
+          target_arch = "x86",
+          target_arch = "x86_64"))]
+use self::platform::msg_send_fn;
+#[cfg(not(feature = "gnustep"))]
+use self::platform::msg_send_super_fn;
+#[cfg(all(feature="gnustep",
+          not(any(target_arch = "arm",
+                  target_arch = "x86",
+                  target_arch = "x86_64"))))]
+use self::gnustep::msg_send_fn;
+#[cfg(feature = "gnustep")]
+use self::gnustep::msg_send_super_fn;
 
 /// Types that may be used as the arguments of an Objective-C message.
 pub trait MessageArguments {
@@ -49,63 +65,26 @@ pub trait MessageArguments {
 macro_rules! message_args_impl {
     ($($a:ident : $t:ident),*) => (
         impl<$($t),*> MessageArguments for ($($t,)*) {
-            #[cfg(any(not(feature="gnustep"),
-                      any(target_arch = "arm",
-                          target_arch = "x86",
-                          target_arch = "x86_64")))]
             unsafe fn send<T, R>(self, obj: *mut T, sel: Sel) -> R
                     where T: Message, R: Any {
-                let msg_send_fn = msg_send_fn::<R>();
+                let (msg_send_fn, receiver) = msg_send_fn::<R>(obj as *mut Object, sel);
                 let msg_send_fn: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
                     mem::transmute(msg_send_fn);
                 let ($($a,)*) = self;
                 objc_try!({
-                    msg_send_fn(obj as *mut Object, sel $(, $a)*)
+                    msg_send_fn(receiver, sel $(, $a)*)
                 })
             }
 
-            #[cfg(all(feature="gnustep",
-                      not(any(target_arch = "arm",
-                              target_arch = "x86",
-                              target_arch = "x86_64"))))]
-            unsafe fn send<T, R>(self, obj: *mut T, sel: Sel) -> R
-                    where T: Message, R: Any {
-                let mut receiver = obj as *mut Object;
-                let nil: *mut Object = ::std::ptr::null_mut();
-                let ref slot = *runtime::objc_msg_lookup_sender(&mut receiver as *mut *mut Object, sel, nil);
-                let imp_fn = slot.method;
-                let imp_fn: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
-                    mem::transmute(imp_fn);
-                let ($($a,)*) = self;
-                objc_try!({
-                    imp_fn(receiver as *mut Object, sel $(, $a)*)
-                })
-            }
-
-            #[cfg(not(feature="gnustep"))]
             unsafe fn send_super<T, R>(self, obj: *mut T, superclass: &Class, sel: Sel) -> R
                     where T: Message, R: Any {
-                let msg_send_fn = msg_send_super_fn::<R>();
-                let msg_send_fn: unsafe extern fn(*const Super, Sel $(, $t)*) -> R =
+                let sup = Super { receiver: obj as *mut Object, superclass: superclass };
+                let (msg_send_fn, receiver) = msg_send_super_fn::<R>(&sup, sel);
+                let msg_send_fn: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
                     mem::transmute(msg_send_fn);
-                let sup = Super { receiver: obj as *mut Object, superclass: superclass };
                 let ($($a,)*) = self;
                 objc_try!({
-                    msg_send_fn(&sup, sel $(, $a)*)
-                })
-            }
-
-            #[cfg(feature="gnustep")]
-            unsafe fn send_super<T, R>(self, obj: *mut T, superclass: &Class, sel: Sel) -> R
-                    where T: Message, R: Any {
-                let sup = Super { receiver: obj as *mut Object, superclass: superclass };
-                let ref slot = *runtime::objc_slot_lookup_super(&sup, sel);
-                let imp_fn = slot.method;
-                let imp_fn: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
-                    mem::transmute(imp_fn);
-                let ($($a,)*) = self;
-                objc_try!({
-                    imp_fn(obj as *mut Object, sel $(, $a)*)
+                    msg_send_fn(receiver, sel $(, $a)*)
                 })
             }
         }

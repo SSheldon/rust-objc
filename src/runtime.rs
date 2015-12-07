@@ -457,7 +457,8 @@ mod tests {
         let ivar = cls.instance_variable("_foo").unwrap();
         assert!(ivar.name() == "_foo");
         assert!(ivar.type_encoding() == <u32>::encode());
-        assert!(ivar.offset() > 0);
+        // This ivar should come right after the isa pointer
+        assert!(ivar.offset() == ::std::mem::size_of::<*mut Class>() as isize);
 
         let ivars = cls.instance_variables();
         assert!(ivars.len() > 0);

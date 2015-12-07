@@ -127,6 +127,14 @@ fn method_type_encoding<F>() -> CString where F: MethodImplementation {
     CString::new(types).unwrap()
 }
 
+fn log2_align_of<T>() -> u8 {
+    let align = mem::align_of::<T>();
+    // Alignments are required to be powers of 2
+    debug_assert!(align.count_ones() == 1);
+    // log2 of a power of 2 is the number of trailing zeros
+    align.trailing_zeros() as u8
+}
+
 /// A type for declaring a new class and adding new methods and ivars to it
 /// before registering it.
 pub struct ClassDecl {
@@ -193,7 +201,7 @@ impl ClassDecl {
         let c_name = CString::new(name).unwrap();
         let encoding = CString::new(T::encode().as_str()).unwrap();
         let size = mem::size_of::<T>();
-        let align = mem::align_of::<T>() as u8;
+        let align = log2_align_of::<T>();
         let success = unsafe {
             runtime::class_addIvar(self.cls, c_name.as_ptr(), size, align,
                 encoding.as_ptr())

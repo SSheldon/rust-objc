@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-1ecc6299db9ec823/objc-0.1.5/src/message.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.multirust/toolchains/1.4.0/cargo/registry/src/github.com-0a35038f75765ae4/objc-0.1.8/src/message.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>message.rs.html -- source</title>
@@ -24,17 +24,17 @@
 
     
 
-    <section class="sidebar">
+    <nav class="sidebar">
         
         
-    </section>
+    </nav>
 
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
                 <input class="search-input" name="search"
                        autocomplete="off"
-                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
                        type="search">
             </div>
         </form>
@@ -186,7 +186,96 @@
 <span id="144">144</span>
 <span id="145">145</span>
 <span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
 </pre><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>any</span>::<span class='ident'>Any</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 
 <span class='kw'>use</span> <span class='ident'>runtime</span>::{<span class='ident'>Class</span>, <span class='ident'>Object</span>, <span class='ident'>Sel</span>, <span class='ident'>Super</span>, <span class='self'>self</span>};
@@ -199,8 +288,43 @@
 
 <span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Message</span> <span class='kw'>for</span> <span class='ident'>Class</span> { }
 
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;x86&quot;</span>)]</span>
+<span class='kw'>fn</span> <span class='ident'>msg_send_fn</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Any</span><span class='op'>&gt;</span>() <span class='op'>-&gt;</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>Sel</span>, ...) <span class='op'>-&gt;</span> <span class='ident'>R</span> {
+    <span class='comment'>// Structures 1 or 2 bytes in size are placed in EAX.</span>
+    <span class='comment'>// Structures 4 or 8 bytes in size are placed in: EAX and EDX.</span>
+    <span class='comment'>// Structures of other sizes are placed at the address supplied by the caller.</span>
+    <span class='comment'>// https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/LowLevelABI/130-IA-32_Function_Calling_Conventions/IA32.html</span>
+
+    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>any</span>::<span class='ident'>TypeId</span>;
+
+    <span class='kw'>let</span> <span class='ident'>type_id</span> <span class='op'>=</span> <span class='ident'>TypeId</span>::<span class='ident'>of</span>::<span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>();
+    <span class='kw'>let</span> <span class='ident'>size</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>();
+    <span class='kw'>if</span> <span class='ident'>type_id</span> <span class='op'>==</span> <span class='ident'>TypeId</span>::<span class='ident'>of</span>::<span class='op'>&lt;</span><span class='ident'>f32</span><span class='op'>&gt;</span>() <span class='op'>||</span> <span class='ident'>type_id</span> <span class='op'>==</span> <span class='ident'>TypeId</span>::<span class='ident'>of</span>::<span class='op'>&lt;</span><span class='ident'>f64</span><span class='op'>&gt;</span>() {
+        <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>runtime</span>::<span class='ident'>objc_msgSend_fpret</span>) }
+    } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>size</span> <span class='op'>==</span> <span class='number'>0</span> <span class='op'>||</span> <span class='ident'>size</span> <span class='op'>==</span> <span class='number'>1</span> <span class='op'>||</span> <span class='ident'>size</span> <span class='op'>==</span> <span class='number'>2</span> <span class='op'>||</span> <span class='ident'>size</span> <span class='op'>==</span> <span class='number'>4</span> <span class='op'>||</span> <span class='ident'>size</span> <span class='op'>==</span> <span class='number'>8</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>runtime</span>::<span class='ident'>objc_msgSend</span>) }
+    } <span class='kw'>else</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>runtime</span>::<span class='ident'>objc_msgSend_stret</span>) }
+    }
+}
+
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;x86&quot;</span>)]</span>
+<span class='kw'>fn</span> <span class='ident'>msg_send_super_fn</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Any</span><span class='op'>&gt;</span>() <span class='op'>-&gt;</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>Sel</span>, ...) <span class='op'>-&gt;</span> <span class='ident'>R</span> {
+    <span class='kw'>let</span> <span class='ident'>size</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>();
+    <span class='kw'>if</span> <span class='ident'>size</span> <span class='op'>==</span> <span class='number'>0</span> <span class='op'>||</span> <span class='ident'>size</span> <span class='op'>==</span> <span class='number'>1</span> <span class='op'>||</span> <span class='ident'>size</span> <span class='op'>==</span> <span class='number'>2</span> <span class='op'>||</span> <span class='ident'>size</span> <span class='op'>==</span> <span class='number'>4</span> <span class='op'>||</span> <span class='ident'>size</span> <span class='op'>==</span> <span class='number'>8</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>runtime</span>::<span class='ident'>objc_msgSendSuper</span>) }
+    } <span class='kw'>else</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>runtime</span>::<span class='ident'>objc_msgSendSuper_stret</span>) }
+    }
+}
+
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;x86_64&quot;</span>)]</span>
 <span class='kw'>fn</span> <span class='ident'>msg_send_fn</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>() <span class='op'>-&gt;</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>Sel</span>, ...) <span class='op'>-&gt;</span> <span class='ident'>R</span> {
+    <span class='comment'>// If the size of an object is larger than two eightbytes, it has class MEMORY.</span>
+    <span class='comment'>// If the type has class MEMORY, then the caller provides space for the return</span>
+    <span class='comment'>// value and passes the address of this storage.</span>
+    <span class='comment'>// http://people.freebsd.org/~obrien/amd64-elf-abi.pdf</span>
+
     <span class='kw'>if</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>() <span class='op'>&lt;=</span> <span class='number'>16</span> {
         <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>runtime</span>::<span class='ident'>objc_msgSend</span>) }
     } <span class='kw'>else</span> {
@@ -217,6 +341,53 @@
     }
 }
 
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;arm&quot;</span>)]</span>
+<span class='kw'>fn</span> <span class='ident'>msg_send_fn</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Any</span><span class='op'>&gt;</span>() <span class='op'>-&gt;</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>Sel</span>, ...) <span class='op'>-&gt;</span> <span class='ident'>R</span> {
+    <span class='comment'>// Double-word sized fundamental data types don&#39;t use stret,</span>
+    <span class='comment'>// but any composite type larger than 4 bytes does.</span>
+    <span class='comment'>// http://infocenter.arm.com/help/topic/com.arm.doc.ihi0042e/IHI0042E_aapcs.pdf</span>
+
+    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>any</span>::<span class='ident'>TypeId</span>;
+
+    <span class='kw'>let</span> <span class='ident'>type_id</span> <span class='op'>=</span> <span class='ident'>TypeId</span>::<span class='ident'>of</span>::<span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>();
+    <span class='kw'>if</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>() <span class='op'>&lt;=</span> <span class='number'>4</span> <span class='op'>||</span>
+            <span class='ident'>type_id</span> <span class='op'>==</span> <span class='ident'>TypeId</span>::<span class='ident'>of</span>::<span class='op'>&lt;</span><span class='ident'>i64</span><span class='op'>&gt;</span>() <span class='op'>||</span>
+            <span class='ident'>type_id</span> <span class='op'>==</span> <span class='ident'>TypeId</span>::<span class='ident'>of</span>::<span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span>() <span class='op'>||</span>
+            <span class='ident'>type_id</span> <span class='op'>==</span> <span class='ident'>TypeId</span>::<span class='ident'>of</span>::<span class='op'>&lt;</span><span class='ident'>f64</span><span class='op'>&gt;</span>() {
+        <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>runtime</span>::<span class='ident'>objc_msgSend</span>) }
+    } <span class='kw'>else</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>runtime</span>::<span class='ident'>objc_msgSend_stret</span>) }
+    }
+}
+
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;arm&quot;</span>)]</span>
+<span class='kw'>fn</span> <span class='ident'>msg_send_super_fn</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Any</span><span class='op'>&gt;</span>() <span class='op'>-&gt;</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>Sel</span>, ...) <span class='op'>-&gt;</span> <span class='ident'>R</span> {
+    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>any</span>::<span class='ident'>TypeId</span>;
+
+    <span class='kw'>let</span> <span class='ident'>type_id</span> <span class='op'>=</span> <span class='ident'>TypeId</span>::<span class='ident'>of</span>::<span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>();
+    <span class='kw'>if</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>() <span class='op'>&lt;=</span> <span class='number'>4</span> <span class='op'>||</span>
+            <span class='ident'>type_id</span> <span class='op'>==</span> <span class='ident'>TypeId</span>::<span class='ident'>of</span>::<span class='op'>&lt;</span><span class='ident'>i64</span><span class='op'>&gt;</span>() <span class='op'>||</span>
+            <span class='ident'>type_id</span> <span class='op'>==</span> <span class='ident'>TypeId</span>::<span class='ident'>of</span>::<span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span>() <span class='op'>||</span>
+            <span class='ident'>type_id</span> <span class='op'>==</span> <span class='ident'>TypeId</span>::<span class='ident'>of</span>::<span class='op'>&lt;</span><span class='ident'>f64</span><span class='op'>&gt;</span>() {
+        <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>runtime</span>::<span class='ident'>objc_msgSendSuper</span>) }
+    } <span class='kw'>else</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>runtime</span>::<span class='ident'>objc_msgSendSuper_stret</span>) }
+    }
+}
+
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;aarch64&quot;</span>)]</span>
+<span class='kw'>fn</span> <span class='ident'>msg_send_fn</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>() <span class='op'>-&gt;</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>Sel</span>, ...) <span class='op'>-&gt;</span> <span class='ident'>R</span> {
+    <span class='comment'>// stret is not even available in arm64.</span>
+    <span class='comment'>// https://twitter.com/gparker/status/378079715824660480</span>
+
+    <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>runtime</span>::<span class='ident'>objc_msgSend</span>) }
+}
+
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;aarch64&quot;</span>)]</span>
+<span class='kw'>fn</span> <span class='ident'>msg_send_super_fn</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>() <span class='op'>-&gt;</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Super</span>, <span class='ident'>Sel</span>, ...) <span class='op'>-&gt;</span> <span class='ident'>R</span> {
+    <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>runtime</span>::<span class='ident'>objc_msgSendSuper</span>) }
+}
+
 <span class='doccomment'>/// Types that may be used as the arguments of an Objective-C message.</span>
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>MessageArguments</span> {
     <span class='doccomment'>/// Sends a message to the given obj with the given selector and self as</span>
@@ -228,33 +399,39 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// It is recommended to use the `msg_send!` macro rather than calling this</span>
     <span class='doccomment'>/// method directly.</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span>;
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span>
+            <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span>, <span class='ident'>R</span>: <span class='ident'>Any</span>;
 
     <span class='doccomment'>/// Sends a message to the superclass of an instance of a class with self</span>
     <span class='doccomment'>/// as the arguments.</span>
     <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send_super</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='ident'>superclass</span>: <span class='kw-2'>&amp;</span><span class='ident'>Class</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span>
-            <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span>;
+            <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span>, <span class='ident'>R</span>: <span class='ident'>Any</span>;
 }
 
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>message_args_impl</span> {
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>:<span class='ident'>ident</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> (
         <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>),<span class='op'>*</span><span class='op'>&gt;</span> <span class='ident'>MessageArguments</span> <span class='kw'>for</span> ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>,)<span class='op'>*</span>) {
-            <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span> {
+            <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span>
+                    <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span>, <span class='ident'>R</span>: <span class='ident'>Any</span> {
                 <span class='kw'>let</span> <span class='ident'>msg_send_fn</span> <span class='op'>=</span> <span class='ident'>msg_send_fn</span>::<span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>();
                 <span class='kw'>let</span> <span class='ident'>msg_send_fn</span>: <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>Sel</span> $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>)<span class='op'>*</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span> <span class='op'>=</span>
                     <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>msg_send_fn</span>);
                 <span class='kw'>let</span> ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>,)<span class='op'>*</span>) <span class='op'>=</span> <span class='self'>self</span>;
-                <span class='ident'>msg_send_fn</span>(<span class='ident'>obj</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>sel</span> $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>)<span class='op'>*</span>)
+                <span class='macro'>objc_try</span><span class='macro'>!</span>({
+                    <span class='ident'>msg_send_fn</span>(<span class='ident'>obj</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>sel</span> $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>)<span class='op'>*</span>)
+                })
             }
 
             <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send_super</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='ident'>superclass</span>: <span class='kw-2'>&amp;</span><span class='ident'>Class</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span>
-                    <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span> {
+                    <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span>, <span class='ident'>R</span>: <span class='ident'>Any</span> {
                 <span class='kw'>let</span> <span class='ident'>msg_send_fn</span> <span class='op'>=</span> <span class='ident'>msg_send_super_fn</span>::<span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>();
                 <span class='kw'>let</span> <span class='ident'>msg_send_fn</span>: <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Super</span>, <span class='ident'>Sel</span> $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>)<span class='op'>*</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span> <span class='op'>=</span>
                     <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>msg_send_fn</span>);
                 <span class='kw'>let</span> <span class='ident'>sup</span> <span class='op'>=</span> <span class='ident'>Super</span> { <span class='ident'>receiver</span>: <span class='ident'>obj</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>superclass</span>: <span class='ident'>superclass</span> };
                 <span class='kw'>let</span> ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>,)<span class='op'>*</span>) <span class='op'>=</span> <span class='self'>self</span>;
-                <span class='ident'>msg_send_fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>sup</span>, <span class='ident'>sel</span> $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>)<span class='op'>*</span>)
+                <span class='macro'>objc_try</span><span class='macro'>!</span>({
+                    <span class='ident'>msg_send_fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>sup</span>, <span class='ident'>sel</span> $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>)<span class='op'>*</span>)
+                })
             }
         }
     );
@@ -276,7 +453,6 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
     <span class='kw'>use</span> <span class='ident'>runtime</span>::<span class='ident'>Object</span>;
     <span class='kw'>use</span> <span class='ident'>test_utils</span>;
 
@@ -301,7 +477,7 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_send_message_nil</span>() {
-        <span class='kw'>let</span> <span class='ident'>nil</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>();
+        <span class='kw'>let</span> <span class='ident'>nil</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> <span class='op'>=</span> ::<span class='ident'>std</span>::<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>();
         <span class='kw'>let</span> <span class='ident'>result</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
             <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>nil</span>, <span class='ident'>hash</span>]
         };
@@ -339,36 +515,49 @@
 
     <section class="footer"></section>
 
-    <div id="help" class="hidden">
-        <div class="shortcuts">
-            <h1>Keyboard shortcuts</h1>
-            <dl>
-                <dt>?</dt>
-                <dd>Show this help dialog</dd>
-                <dt>S</dt>
-                <dd>Focus the search field</dd>
-                <dt>&larrb;</dt>
-                <dd>Move up in search results</dd>
-                <dt>&rarrb;</dt>
-                <dd>Move down in search results</dd>
-                <dt>&#9166;</dt>
-                <dd>Go to active search result</dd>
-            </dl>
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code>)
+                </p>
+            </div>
         </div>
-        <div class="infos">
-            <h1>Search tricks</h1>
-            <p>
-                Prefix searches with a type followed by a colon (e.g.
-                <code>fn:</code>) to restrict the search to a given type.
-            </p>
-            <p>
-                Accepted types are: <code>fn</code>, <code>mod</code>,
-                <code>struct</code>, <code>enum</code>,
-                <code>trait</code>, <code>typedef</code> (or
-                <code>tdef</code>).
-            </p>
-        </div>
-    </div>
+    </aside>
 
     
 

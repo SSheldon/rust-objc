@@ -24,140 +24,178 @@
 
     
 
-    <section class="sidebar">
+    <nav class="sidebar">
         
         <p class='location'></p><script>window.sidebarCurrent = {name: 'objc', ty: 'mod', relpath: '../'};</script>
-    </section>
+    </nav>
 
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
                 <input class="search-input" name="search"
                        autocomplete="off"
-                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
                        type="search">
             </div>
         </form>
     </nav>
 
     <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>objc</a><wbr></span><span class='out-of-band'><a href='stability.html'>[stability]</a> <span id='render-detail'>
-            <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-0' href='../src/objc/lib.rs.html#1-49'>[src]</a></span></h1>
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>objc</a></span><span class='out-of-band'><span id='render-detail'>
+            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                [<span class='inner'>&#x2212;</span>]
+            </a>
+        </span><a id='src-0' class='srclink' href='../src/objc/lib.rs.html#1-63' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Objective-C Runtime bindings and wrapper for Rust.</p>
 
 <h1 id="messaging-objects" class='section-header'><a
                            href="#messaging-objects">Messaging objects</a></h1>
 <p>Objective-C objects can be messaged using the <a href="macro.msg_send!.html"><code>msg_send!</code></a> macro:</p>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>cls</span> <span class='op'>=</span> <span class='ident'>Class</span>::<span class='ident'>get</span>(<span class='string'>&quot;NSObject&quot;</span>).<span class='ident'>unwrap</span>();
 <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>cls</span>, <span class='ident'>new</span>];
 <span class='kw'>let</span> <span class='ident'>hash</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>hash</span>];
 <span class='kw'>let</span> <span class='ident'>is_kind</span>: <span class='ident'>BOOL</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>isKindOfClass</span>:<span class='ident'>cls</span>];
 <span class='comment'>// Even void methods must have their return type annotated</span>
-<span class='kw'>let</span> _: () <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>release</span>];
-</pre>
+<span class='kw'>let</span> _: () <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>release</span>];</pre>
 
 <h1 id="declaring-classes" class='section-header'><a
                            href="#declaring-classes">Declaring classes</a></h1>
 <p>Objective-C classes can even be declared from Rust using the functionality of
 the <a href="declare/index.html"><code>declare</code></a> module.</p>
+
+<h1 id="exceptions" class='section-header'><a
+                           href="#exceptions">Exceptions</a></h1>
+<p>By default, if the <code>msg_send!</code> macro causes an exception to be thrown, this
+will unwind into Rust resulting in unsafe, undefined behavior.
+However, this crate has an <code>&quot;exception&quot;</code> feature which, when enabled, wraps
+each <code>msg_send!</code> in a <code>@try</code>/<code>@catch</code> and panics if an exception is caught,
+preventing Objective-C from unwinding into Rust.</p>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='declare/index.html'
+                    <tr class=' module-item'>
+                        <td><a class='mod' href='declare/index.html'
                                title='objc::declare'>declare</a></td>
-                        <td class='docblock short'><p>Functionality for declaring Objective-C classes.</p>
-</td>
+                        <td class='docblock short'>
+                             <p>Functionality for declaring Objective-C classes.</p>
+
+                        </td>
                     </tr>
                 
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='runtime/index.html'
+                    <tr class=' module-item'>
+                        <td><a class='mod' href='runtime/index.html'
                                title='objc::runtime'>runtime</a></td>
-                        <td class='docblock short'><p>A Rust interface for the functionality of the Objective-C runtime.</p>
-</td>
+                        <td class='docblock short'>
+                             <p>A Rust interface for the functionality of the Objective-C runtime.</p>
+
+                        </td>
                     </tr>
                 </table><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
 <table>
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='macro' href='macro.msg_send!.html'
+                    <tr class=' module-item'>
+                        <td><a class='macro' href='macro.msg_send!.html'
                                title='objc::msg_send!'>msg_send!</a></td>
-                        <td class='docblock short'><p>Sends a message to an object.</p>
-</td>
+                        <td class='docblock short'>
+                             <p>Sends a message to an object.</p>
+
+                        </td>
                     </tr>
                 
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='macro' href='macro.sel!.html'
+                    <tr class=' module-item'>
+                        <td><a class='macro' href='macro.sel!.html'
                                title='objc::sel!'>sel!</a></td>
-                        <td class='docblock short'><p>Registers a selector, returning a <code>Sel</code>.</p>
-</td>
+                        <td class='docblock short'>
+                             <p>Registers a selector, returning a <code>Sel</code>.</p>
+
+                        </td>
                     </tr>
                 </table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Encoding.html'
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Encoding.html'
                                title='objc::Encoding'>Encoding</a></td>
-                        <td class='docblock short'><p>An Objective-C type encoding.</p>
-</td>
+                        <td class='docblock short'>
+                             <p>An Objective-C type encoding.</p>
+
+                        </td>
                     </tr>
                 </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.Encode.html'
+                    <tr class=' module-item'>
+                        <td><a class='trait' href='trait.Encode.html'
                                title='objc::Encode'>Encode</a></td>
-                        <td class='docblock short'><p>Types that have an Objective-C type encoding.</p>
-</td>
+                        <td class='docblock short'>
+                             <p>Types that have an Objective-C type encoding.</p>
+
+                        </td>
                     </tr>
                 
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.Message.html'
+                    <tr class=' module-item'>
+                        <td><a class='trait' href='trait.Message.html'
                                title='objc::Message'>Message</a></td>
-                        <td class='docblock short'><p>Types that may be sent Objective-C messages.
+                        <td class='docblock short'>
+                             <p>Types that may be sent Objective-C messages.
 For example: objects, classes, and blocks.</p>
-</td>
+
+                        </td>
                     </tr>
                 
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.MessageArguments.html'
+                    <tr class=' module-item'>
+                        <td><a class='trait' href='trait.MessageArguments.html'
                                title='objc::MessageArguments'>MessageArguments</a></td>
-                        <td class='docblock short'><p>Types that may be used as the arguments of an Objective-C message.</p>
-</td>
+                        <td class='docblock short'>
+                             <p>Types that may be used as the arguments of an Objective-C message.</p>
+
+                        </td>
                     </tr>
                 </table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
 
-    <div id="help" class="hidden">
-        <div class="shortcuts">
-            <h1>Keyboard shortcuts</h1>
-            <dl>
-                <dt>?</dt>
-                <dd>Show this help dialog</dd>
-                <dt>S</dt>
-                <dd>Focus the search field</dd>
-                <dt>&larrb;</dt>
-                <dd>Move up in search results</dd>
-                <dt>&rarrb;</dt>
-                <dd>Move down in search results</dd>
-                <dt>&#9166;</dt>
-                <dd>Go to active search result</dd>
-            </dl>
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code>)
+                </p>
+            </div>
         </div>
-        <div class="infos">
-            <h1>Search tricks</h1>
-            <p>
-                Prefix searches with a type followed by a colon (e.g.
-                <code>fn:</code>) to restrict the search to a given type.
-            </p>
-            <p>
-                Accepted types are: <code>fn</code>, <code>mod</code>,
-                <code>struct</code>, <code>enum</code>,
-                <code>trait</code>, <code>typedef</code> (or
-                <code>tdef</code>).
-            </p>
-        </div>
-    </div>
+    </aside>
 
     
 

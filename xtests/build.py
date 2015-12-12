@@ -40,8 +40,13 @@ def read_all_tests(src_files):
         for name, test in read_tests(filename):
             yield name, test
 
+def list_src_files(src_dir):
+    for root, _, files in os.walk(src_dir):
+        for filename in files:
+            yield os.path.join(root, filename)
+
 if __name__ == '__main__':
-    src_files = [os.path.join(SRC_DIR, f) for f in os.listdir(SRC_DIR)]
+    src_files = list(list_src_files(SRC_DIR))
     output_file = os.path.join(TEST_DIR, 'tests.rs')
 
     if should_build(output_file, src_files):

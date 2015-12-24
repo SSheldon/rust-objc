@@ -89,17 +89,16 @@ macro_rules! msg_send {
 #[cfg(feature = "exception")]
 macro_rules! objc_try {
     ($b:block) => (
-        match $crate::exception::try(|| $b) {
-            Ok(result) => result,
-            Err(Some(exception)) => panic!("Uncaught exception {:?}", &*exception),
-            Err(None) => panic!("Uncaught exception nil"),
-        }
+        $crate::exception::try(|| $b).map_err(|exception| match exception {
+            Some(exception) => format!("Uncaught exception {:?}", &*exception),
+            None => "Uncaught exception nil".to_owned(),
+        })
     )
 }
 
 #[cfg(not(feature = "exception"))]
 macro_rules! objc_try {
-    ($b:block) => ($b)
+    ($b:block) => (Ok($b))
 }
 
 macro_rules! count_idents {

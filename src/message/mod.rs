@@ -1,7 +1,7 @@
 use std::any::Any;
 use std::mem;
 
-use runtime::{Class, Object, Sel, Super};
+use runtime::{Class, Imp, Object, Sel, Super};
 
 /// Types that may be sent Objective-C messages.
 /// For example: objects, classes, and blocks.
@@ -33,7 +33,10 @@ use self::platform::{msg_send_fn, msg_send_super_fn};
 use self::gnustep::{msg_send_fn, msg_send_super_fn};
 
 /// Types that may be used as the arguments of an Objective-C message.
-pub trait MessageArguments {
+pub trait MessageArguments: Sized {
+    unsafe fn invoke<R>(imp: Imp, obj: *mut Object, sel: Sel, args: Self) -> R
+            where R: Any;
+
     /// Sends a message to the given obj with the given selector and self as
     /// the arguments.
     ///
@@ -44,38 +47,33 @@ pub trait MessageArguments {
     /// It is recommended to use the `msg_send!` macro rather than calling this
     /// method directly.
     unsafe fn send<T, R>(self, obj: *mut T, sel: Sel) -> R
-            where T: Message, R: Any;
+            where T: Message, R: Any {
+        let (msg_send_fn, receiver) = msg_send_fn::<R>(obj as *mut Object, sel);
+        objc_try!({
+            Self::invoke(msg_send_fn, receiver, sel, self)
+        })
+    }
 
     /// Sends a message to the superclass of an instance of a class with self
     /// as the arguments.
     unsafe fn send_super<T, R>(self, obj: *mut T, superclass: &Class, sel: Sel) -> R
-            where T: Message, R: Any;
+            where T: Message, R: Any {
+        let sup = Super { receiver: obj as *mut Object, superclass: superclass };
+        let (msg_send_fn, receiver) = msg_send_super_fn::<R>(&sup, sel);
+        objc_try!({
+            Self::invoke(msg_send_fn, receiver, sel, self)
+        })
+    }
 }
 
 macro_rules! message_args_impl {
     ($($a:ident : $t:ident),*) => (
         impl<$($t),*> MessageArguments for ($($t,)*) {
-            unsafe fn send<T, R>(self, obj: *mut T, sel: Sel) -> R
-                    where T: Message, R: Any {
-                let (msg_send_fn, receiver) = msg_send_fn::<R>(obj as *mut Object, sel);
-                let msg_send_fn: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
-                    mem::transmute(msg_send_fn);
-                let ($($a,)*) = self;
-                objc_try!({
-                    msg_send_fn(receiver, sel $(, $a)*)
-                })
-            }
-
-            unsafe fn send_super<T, R>(self, obj: *mut T, superclass: &Class, sel: Sel) -> R
-                    where T: Message, R: Any {
-                let sup = Super { receiver: obj as *mut Object, superclass: superclass };
-                let (msg_send_fn, receiver) = msg_send_super_fn::<R>(&sup, sel);
-                let msg_send_fn: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
-                    mem::transmute(msg_send_fn);
-                let ($($a,)*) = self;
-                objc_try!({
-                    msg_send_fn(receiver, sel $(, $a)*)
-                })
+            unsafe fn invoke<R>(imp: Imp, obj: *mut Object, sel: Sel, ($($a,)*): Self) -> R
+                    where R: Any {
+                let imp: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
+                    mem::transmute(imp);
+                imp(obj, sel $(, $a)*)
             }
         }
     );

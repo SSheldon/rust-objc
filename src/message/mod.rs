@@ -48,21 +48,14 @@ pub trait MessageArguments: Sized {
     /// method directly.
     unsafe fn send<T, R>(self, obj: *mut T, sel: Sel) -> R
             where T: Message, R: Any {
-        let (msg_send_fn, receiver) = msg_send_fn::<R>(obj as *mut Object, sel);
-        objc_try!({
-            Self::invoke(msg_send_fn, receiver, sel, self)
-        })
+        send_unverified(obj, sel, self)
     }
 
     /// Sends a message to the superclass of an instance of a class with self
     /// as the arguments.
     unsafe fn send_super<T, R>(self, obj: *mut T, superclass: &Class, sel: Sel) -> R
             where T: Message, R: Any {
-        let sup = Super { receiver: obj as *mut Object, superclass: superclass };
-        let (msg_send_fn, receiver) = msg_send_super_fn::<R>(&sup, sel);
-        objc_try!({
-            Self::invoke(msg_send_fn, receiver, sel, self)
-        })
+        send_super_unverified(obj, superclass, sel, self)
     }
 }
 
@@ -93,13 +86,22 @@ message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K, l: L);
 
+#[inline(always)]
+unsafe fn send_unverified<T, A, R>(obj: *const T, sel: Sel, args: A) -> R
+        where T: Message, A: MessageArguments, R: Any {
+    let (msg_send_fn, receiver) = msg_send_fn::<R>(obj as *mut T as *mut Object, sel);
+    objc_try!({
+        A::invoke(msg_send_fn, receiver, sel, args)
+    })
+}
+
 #[doc(hidden)]
 #[inline(always)]
 #[cfg(not(feature = "verify_message"))]
 pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
         -> Result<R, String>
         where T: Message, A: MessageArguments, R: Any {
-    Ok(args.send(obj as *mut T, sel))
+    Ok(send_unverified(obj, sel, args))
 }
 
 #[doc(hidden)]
@@ -118,7 +120,18 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
     };
 
     verify_message_signature::<A, R>(cls, sel).map(|_| {
-        args.send(obj as *mut T, sel)
+        send_unverified(obj, sel, args)
+    })
+}
+
+#[inline(always)]
+unsafe fn send_super_unverified<T, A, R>(obj: *const T, superclass: &Class,
+        sel: Sel, args: A) -> R
+        where T: Message, A: MessageArguments, R: Any {
+    let sup = Super { receiver: obj as *mut T as *mut Object, superclass: superclass };
+    let (msg_send_fn, receiver) = msg_send_super_fn::<R>(&sup, sel);
+    objc_try!({
+        A::invoke(msg_send_fn, receiver, sel, args)
     })
 }
 
@@ -128,7 +141,7 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
 pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
         sel: Sel, args: A) -> Result<R, String>
         where T: Message, A: MessageArguments, R: Any {
-    Ok(args.send_super(obj as *mut T, superclass, sel))
+    Ok(send_super_unverified(obj, superclass, sel, args))
 }
 
 #[doc(hidden)]
@@ -145,7 +158,7 @@ pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
     }
 
     verify_message_signature::<A, R>(superclass, sel).map(|_| {
-        args.send_super(obj as *mut T, superclass, sel)
+        send_super_unverified(obj, superclass, sel, args)
     })
 }
 

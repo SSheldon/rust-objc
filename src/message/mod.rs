@@ -55,27 +55,6 @@ unsafe impl Message for Class { }
 pub trait MessageArguments: Sized {
     unsafe fn invoke<R>(imp: Imp, obj: *mut Object, sel: Sel, args: Self) -> R
             where R: Any;
-
-    /// Sends a message to the given obj with the given selector and self as
-    /// the arguments.
-    ///
-    /// The correct version of `objc_msgSend` will be chosen based on the
-    /// return type. For more information, see Apple's documenation:
-    /// https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778
-    ///
-    /// It is recommended to use the `msg_send!` macro rather than calling this
-    /// method directly.
-    unsafe fn send<T, R>(self, obj: *mut T, sel: Sel) -> R
-            where T: Message, R: Any {
-        send_unverified(obj, sel, self).unwrap()
-    }
-
-    /// Sends a message to the superclass of an instance of a class with self
-    /// as the arguments.
-    unsafe fn send_super<T, R>(self, obj: *mut T, superclass: &Class, sel: Sel) -> R
-            where T: Message, R: Any {
-        send_super_unverified(obj, superclass, sel, self).unwrap()
-    }
 }
 
 macro_rules! message_args_impl {

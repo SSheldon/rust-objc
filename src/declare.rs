@@ -40,9 +40,10 @@ use std::fmt;
 use std::mem;
 use std::ptr;
 
-use {Encode, Message};
 use runtime::{Class, Imp, NO, Object, Sel, self};
 use verify::EncodeArguments;
+use {Encode, Message};
+use to_c_str;
 
 /// An error returned from `MethodImplementation::imp_for` to indicate that a
 /// selector and function accept unequal numbers of arguments.
@@ -148,7 +149,7 @@ impl ClassDecl {
         let name = CString::new(name).unwrap();
         let super_ptr = superclass.map_or(ptr::null(), |c| c);
         let cls = unsafe {
-            runtime::objc_allocateClassPair(super_ptr, name.as_ptr(), 0)
+            runtime::objc_allocateClassPair(super_ptr, to_c_str(&name), 0)
         };
         if cls.is_null() {
             None
@@ -171,7 +172,7 @@ impl ClassDecl {
         };
 
         let success = runtime::class_addMethod(self.cls, sel, imp,
-            types.as_ptr());
+            to_c_str(&types));
         assert!(success != NO, "Failed to add method {:?}", sel);
     }
 
@@ -191,7 +192,7 @@ impl ClassDecl {
         let cls_obj = self.cls as *const Object;
         let metaclass = runtime::object_getClass(cls_obj) as *mut Class;
         let success = runtime::class_addMethod(metaclass, sel, imp,
-            types.as_ptr());
+            to_c_str(&types));
         assert!(success != NO, "Failed to add class method {:?}", sel);
     }
 
@@ -203,8 +204,8 @@ impl ClassDecl {
         let size = mem::size_of::<T>();
         let align = log2_align_of::<T>();
         let success = unsafe {
-            runtime::class_addIvar(self.cls, c_name.as_ptr(), size, align,
-                encoding.as_ptr())
+            runtime::class_addIvar(self.cls, to_c_str(&c_name), size, align,
+                to_c_str(&encoding))
         };
         assert!(success != NO, "Failed to add ivar {}", name);
     }

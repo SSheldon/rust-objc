@@ -109,8 +109,8 @@ impl Error for MessageError {
 macro_rules! objc_try {
     ($b:block) => (
         $crate::exception::try(|| $b).map_err(|exception| match exception {
-            Some(exception) => format!("Uncaught exception {:?}", &*exception),
-            None => "Uncaught exception nil".to_owned(),
+            Some(exception) => MessageError(format!("Uncaught exception {:?}", &*exception)),
+            None => MessageError("Uncaught exception nil".to_owned()),
         })
     )
 }
@@ -122,7 +122,8 @@ macro_rules! objc_try {
 
 #[inline(always)]
 unsafe fn send_unverified<T, A, R>(obj: *const T, sel: Sel, args: A)
-        -> Result<R, String> where T: Message, A: MessageArguments, R: Any {
+        -> Result<R, MessageError>
+        where T: Message, A: MessageArguments, R: Any {
     let (msg_send_fn, receiver) = msg_send_fn::<R>(obj as *mut T as *mut Object, sel);
     objc_try!({
         A::invoke(msg_send_fn, receiver, sel, args)
@@ -133,7 +134,7 @@ unsafe fn send_unverified<T, A, R>(obj: *const T, sel: Sel, args: A)
 #[inline(always)]
 #[cfg(not(feature = "verify_message"))]
 pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
-        -> Result<R, String>
+        -> Result<R, MessageError>
         where T: Message, A: MessageArguments, R: Any {
     send_unverified(obj, sel, args)
 }
@@ -142,13 +143,13 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
 #[inline(always)]
 #[cfg(feature = "verify_message")]
 pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
-        -> Result<R, String>
+        -> Result<R, MessageError>
         where T: Message, A: MessageArguments + ::EncodeArguments,
         R: Any + ::Encode {
     use self::verify::verify_message_signature;
 
     let cls = if obj.is_null() {
-        return Err(format!("Messaging {:?} to nil", sel));
+        return Err(MessageError(format!("Messaging {:?} to nil", sel)));
     } else {
         (*(obj as *const Object)).class()
     };
@@ -160,7 +161,7 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
 
 #[inline(always)]
 unsafe fn send_super_unverified<T, A, R>(obj: *const T, superclass: &Class,
-        sel: Sel, args: A) -> Result<R, String>
+        sel: Sel, args: A) -> Result<R, MessageError>
         where T: Message, A: MessageArguments, R: Any {
     let sup = Super { receiver: obj as *mut T as *mut Object, superclass: superclass };
     let (msg_send_fn, receiver) = msg_send_super_fn::<R>(&sup, sel);
@@ -173,7 +174,7 @@ unsafe fn send_super_unverified<T, A, R>(obj: *const T, superclass: &Class,
 #[inline(always)]
 #[cfg(not(feature = "verify_message"))]
 pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
-        sel: Sel, args: A) -> Result<R, String>
+        sel: Sel, args: A) -> Result<R, MessageError>
         where T: Message, A: MessageArguments, R: Any {
     send_super_unverified(obj, superclass, sel, args)
 }
@@ -182,13 +183,13 @@ pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
 #[inline(always)]
 #[cfg(feature = "verify_message")]
 pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
-        sel: Sel, args: A) -> Result<R, String>
+        sel: Sel, args: A) -> Result<R, MessageError>
         where T: Message, A: MessageArguments + ::EncodeArguments,
         R: Any + ::Encode {
     use self::verify::verify_message_signature;
 
     if obj.is_null() {
-        return Err(format!("Messaging {:?} to nil", sel));
+        return Err(MessageError(format!("Messaging {:?} to nil", sel)));
     }
 
     verify_message_signature::<A, R>(superclass, sel).and_then(|_| {

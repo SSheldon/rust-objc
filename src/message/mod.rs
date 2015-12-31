@@ -3,14 +3,6 @@ use std::mem;
 
 use runtime::{Class, Imp, Object, Sel, Super};
 
-/// Types that may be sent Objective-C messages.
-/// For example: objects, classes, and blocks.
-pub unsafe trait Message { }
-
-unsafe impl Message for Object { }
-
-unsafe impl Message for Class { }
-
 mod verify;
 
 #[cfg(target_arch = "x86")]
@@ -33,6 +25,14 @@ mod gnustep;
 use self::platform::{msg_send_fn, msg_send_super_fn};
 #[cfg(feature = "gnustep")]
 use self::gnustep::{msg_send_fn, msg_send_super_fn};
+
+/// Types that may be sent Objective-C messages.
+/// For example: objects, classes, and blocks.
+pub unsafe trait Message { }
+
+unsafe impl Message for Object { }
+
+unsafe impl Message for Class { }
 
 /// Types that may be used as the arguments of an Objective-C message.
 pub trait MessageArguments: Sized {

@@ -203,6 +203,12 @@ pub trait EncodeArguments {
     fn encodings() -> Self::Encs;
 }
 
+macro_rules! count_idents {
+    () => (0);
+    ($a:ident) => (1);
+    ($a:ident, $($b:ident),+) => (1 + count_idents!($($b),*));
+}
+
 macro_rules! encode_args_impl {
     ($($t:ident),*) => (
         impl<$($t: Encode),*> EncodeArguments for ($($t,)*) {

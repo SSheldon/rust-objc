@@ -86,12 +86,6 @@ macro_rules! msg_send {
     });
 }
 
-macro_rules! count_idents {
-    () => (0);
-    ($a:ident) => (1);
-    ($a:ident, $($b:ident),+) => (1 + count_idents!($($b),*));
-}
-
 macro_rules! encode {
     () => ("");
     (i8 $($x:tt)*) => (concat!("c", encode!($($x)*)));

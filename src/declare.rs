@@ -41,8 +41,7 @@ use std::mem;
 use std::ptr;
 
 use runtime::{Class, Imp, NO, Object, Sel, self};
-use verify::EncodeArguments;
-use {Encode, Message};
+use {Encode, EncodeArguments, Message};
 use to_c_str;
 
 /// An error returned from `MethodImplementation::imp_for` to indicate that a

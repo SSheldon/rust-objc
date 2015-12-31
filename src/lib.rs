@@ -43,7 +43,7 @@ extern crate malloc_buf;
 #[cfg(feature = "exception")]
 extern crate objc_exception;
 
-pub use encode::{Encode, Encoding};
+pub use encode::{Encode, EncodeArguments, Encoding};
 pub use message::{Message, MessageArguments};
 
 pub use message::send_message as __send_message;

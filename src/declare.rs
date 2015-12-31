@@ -34,36 +34,13 @@ decl.register();
 ```
 */
 
-use std::error::Error;
 use std::ffi::CString;
-use std::fmt;
 use std::mem;
 use std::ptr;
 
 use runtime::{Class, Imp, NO, Object, Sel, self};
-use {Encode, EncodeArguments, Message};
+use {Encode, EncodeArguments, Encoding, Message};
 use to_c_str;
-
-/// An error returned from `MethodImplementation::imp_for` to indicate that a
-/// selector and function accept unequal numbers of arguments.
-#[derive(Clone, PartialEq, Debug)]
-pub struct UnequalArgsError {
-    sel_args: usize,
-    fn_args: usize,
-}
-
-impl fmt::Display for UnequalArgsError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Selector accepts {} arguments, but function accepts {}",
-            self.sel_args, self.fn_args)
-    }
-}
-
-impl Error for UnequalArgsError {
-    fn description(&self) -> &str {
-        "Selector and function accept unequal numbers of arguments"
-    }
-}
 
 /// Types that can be used as the implementation of an Objective-C method.
 pub trait MethodImplementation {
@@ -76,21 +53,6 @@ pub trait MethodImplementation {
 
     /// Returns self as an `Imp` of a method.
     fn imp(self) -> Imp;
-
-    /// Returns self as an `Imp` of a method for the given selector.
-    ///
-    /// Returns an error if self and the selector do not accept the same number
-    /// of arguments.
-    fn imp_for(self, sel: Sel) -> Result<Imp, UnequalArgsError>
-            where Self: Sized {
-        let fn_args = Self::Args::encodings().as_ref().len();
-        let sel_args = count_args(sel);
-        if sel_args == fn_args {
-            Ok(self.imp())
-        } else {
-            Err(UnequalArgsError { sel_args: sel_args, fn_args: fn_args })
-        }
-    }
 }
 
 macro_rules! method_decl_impl {
@@ -131,9 +93,9 @@ fn count_args(sel: Sel) -> usize {
     2 + sel.name().chars().filter(|&c| c == ':').count()
 }
 
-fn method_type_encoding<F>() -> CString where F: MethodImplementation {
-    let mut types = F::Ret::encode().as_str().to_owned();
-    types.extend(F::Args::encodings().as_ref().iter().map(|e| e.as_str()));
+fn method_type_encoding(ret: &Encoding, args: &[Encoding]) -> CString {
+    let mut types = ret.as_str().to_owned();
+    types.extend(args.iter().map(|e| e.as_str()));
     CString::new(types).unwrap()
 }
 
@@ -174,13 +136,16 @@ impl ClassDecl {
     /// are expected when the method is invoked from Objective-C.
     pub unsafe fn add_method<F>(&mut self, sel: Sel, func: F)
             where F: MethodImplementation<Callee=Object> {
-        let types = method_type_encoding::<F>();
-        let imp = match func.imp_for(sel) {
-            Ok(imp) => imp,
-            Err(err) => panic!("{}", err),
-        };
+        let encs = F::Args::encodings();
+        let encs = encs.as_ref();
+        let sel_args = count_args(sel);
+        assert!(sel_args == encs.len(),
+            "Selector accepts {} arguments, but function accepts {}",
+            sel_args, encs.len(),
+        );
 
-        let success = runtime::class_addMethod(self.cls, sel, imp,
+        let types = method_type_encoding(&F::Ret::encode(), encs);
+        let success = runtime::class_addMethod(self.cls, sel, func.imp(),
             to_c_str(&types));
         assert!(success != NO, "Failed to add method {:?}", sel);
     }
@@ -192,15 +157,17 @@ impl ClassDecl {
     /// are expected when the method is invoked from Objective-C.
     pub unsafe fn add_class_method<F>(&mut self, sel: Sel, func: F)
             where F: MethodImplementation<Callee=Class> {
-        let types = method_type_encoding::<F>();
-        let imp = match func.imp_for(sel) {
-            Ok(imp) => imp,
-            Err(err) => panic!("{}", err),
-        };
+        let encs = F::Args::encodings();
+        let encs = encs.as_ref();
+        let sel_args = count_args(sel);
+        assert!(sel_args == encs.len(),
+            "Selector accepts {} arguments, but function accepts {}",
+            sel_args, encs.len(),
+        );
 
-        let cls_obj = self.cls as *const Object;
-        let metaclass = runtime::object_getClass(cls_obj) as *mut Class;
-        let success = runtime::class_addMethod(metaclass, sel, imp,
+        let types = method_type_encoding(&F::Ret::encode(), encs);
+        let metaclass = (*self.cls).metaclass() as *const _ as *mut _;
+        let success = runtime::class_addMethod(metaclass, sel, func.imp(),
             to_c_str(&types));
         assert!(success != NO, "Failed to add class method {:?}", sel);
     }
@@ -242,9 +209,7 @@ impl Drop for ClassDecl {
 
 #[cfg(test)]
 mod tests {
-    use runtime::{Object, Sel};
     use test_utils;
-    use super::MethodImplementation;
 
     #[test]
     fn test_custom_class() {
@@ -264,15 +229,5 @@ mod tests {
             let result: u32 = msg_send![cls, classFoo];
             assert!(result == 7);
         }
-    }
-
-    #[test]
-    fn test_mismatched_args() {
-        extern fn wrong_num_args_method(_obj: &Object, _cmd: Sel, _a: i32) { }
-
-        let sel = sel!(doSomethingWithFoo:bar:);
-        let f: extern fn(&Object, Sel, i32) = wrong_num_args_method;
-        let imp = f.imp_for(sel);
-        assert!(imp.is_err());
     }
 }

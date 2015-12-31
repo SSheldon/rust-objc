@@ -30,7 +30,22 @@ use self::gnustep::{msg_send_fn, msg_send_super_fn};
 
 /// Types that may be sent Objective-C messages.
 /// For example: objects, classes, and blocks.
-pub unsafe trait Message { }
+pub unsafe trait Message {
+    #[cfg(not(feature = "verify_message"))]
+    unsafe fn send_message<A, R>(&self, sel: Sel, args: A)
+            -> Result<R, MessageError>
+            where Self: Sized, A: MessageArguments, R: Any {
+        send_message(self, sel, args)
+    }
+
+    #[cfg(feature = "verify_message")]
+    unsafe fn send_message<A, R>(&self, sel: Sel, args: A)
+            -> Result<R, MessageError>
+            where Self: Sized, A: MessageArguments + ::EncodeArguments,
+            R: Any + ::Encode {
+        send_message(self, sel, args)
+    }
+}
 
 unsafe impl Message for Object { }
 
@@ -120,7 +135,6 @@ macro_rules! objc_try {
     ($b:block) => (Ok($b))
 }
 
-#[inline(always)]
 unsafe fn send_unverified<T, A, R>(obj: *const T, sel: Sel, args: A)
         -> Result<R, MessageError>
         where T: Message, A: MessageArguments, R: Any {
@@ -159,7 +173,6 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
     })
 }
 
-#[inline(always)]
 unsafe fn send_super_unverified<T, A, R>(obj: *const T, superclass: &Class,
         sel: Sel, args: A) -> Result<R, MessageError>
         where T: Message, A: MessageArguments, R: Any {

@@ -44,7 +44,7 @@ extern crate malloc_buf;
 extern crate objc_exception;
 
 pub use encode::{Encode, EncodeArguments, Encoding};
-pub use message::{Message, MessageArguments};
+pub use message::{Message, MessageArguments, MessageError};
 
 pub use message::send_message as __send_message;
 pub use message::send_super_message as __send_super_message;

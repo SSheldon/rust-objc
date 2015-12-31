@@ -1,4 +1,6 @@
 use std::any::Any;
+use std::error::Error;
+use std::fmt;
 use std::mem;
 
 use runtime::{Class, Imp, Object, Sel, Super};
@@ -87,6 +89,21 @@ message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K, l: L);
+
+#[derive(Debug)]
+pub struct MessageError(String);
+
+impl fmt::Display for MessageError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        fmt::Display::fmt(&self.0, f)
+    }
+}
+
+impl Error for MessageError {
+    fn description(&self) -> &str {
+        &self.0
+    }
+}
 
 #[cfg(feature = "exception")]
 macro_rules! objc_try {

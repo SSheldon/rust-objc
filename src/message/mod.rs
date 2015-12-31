@@ -88,6 +88,21 @@ message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K, l: L);
 
+#[cfg(feature = "exception")]
+macro_rules! objc_try {
+    ($b:block) => (
+        $crate::exception::try(|| $b).map_err(|exception| match exception {
+            Some(exception) => format!("Uncaught exception {:?}", &*exception),
+            None => "Uncaught exception nil".to_owned(),
+        })
+    )
+}
+
+#[cfg(not(feature = "exception"))]
+macro_rules! objc_try {
+    ($b:block) => (Ok($b))
+}
+
 #[inline(always)]
 unsafe fn send_unverified<T, A, R>(obj: *const T, sel: Sel, args: A)
         -> Result<R, String> where T: Message, A: MessageArguments, R: Any {

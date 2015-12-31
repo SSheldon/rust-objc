@@ -74,11 +74,23 @@ pub trait MethodImplementation {
 
     type Args: EncodeArguments;
 
+    /// Returns self as an `Imp` of a method.
+    fn imp(self) -> Imp;
+
     /// Returns self as an `Imp` of a method for the given selector.
     ///
     /// Returns an error if self and the selector do not accept the same number
     /// of arguments.
-    fn imp_for(self, sel: Sel) -> Result<Imp, UnequalArgsError>;
+    fn imp_for(self, sel: Sel) -> Result<Imp, UnequalArgsError>
+            where Self: Sized {
+        let fn_args = Self::Args::encodings().as_ref().len();
+        let sel_args = count_args(sel);
+        if sel_args == fn_args {
+            Ok(self.imp())
+        } else {
+            Err(UnequalArgsError { sel_args: sel_args, fn_args: fn_args })
+        }
+    }
 }
 
 macro_rules! method_decl_impl {
@@ -89,15 +101,8 @@ macro_rules! method_decl_impl {
             type Ret = $r;
             type Args = ($($t,)*);
 
-            fn imp_for(self, sel: Sel) -> Result<Imp, UnequalArgsError> {
-                // Add 2 to the arguments for self and _cmd
-                let fn_args = 2 + count_idents!($($t),*);
-                let sel_args = 2 + sel.name().chars().filter(|&c| c == ':').count();
-                if sel_args == fn_args {
-                    unsafe { Ok(mem::transmute(self)) }
-                } else {
-                    Err(UnequalArgsError { sel_args: sel_args, fn_args: fn_args })
-                }
+            fn imp(self) -> Imp {
+                unsafe { mem::transmute(self) }
             }
         }
     );
@@ -120,6 +125,11 @@ method_decl_impl!(A, B, C, D, E, F, G, H, I);
 method_decl_impl!(A, B, C, D, E, F, G, H, I, J);
 method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K);
 method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K, L);
+
+fn count_args(sel: Sel) -> usize {
+    // Add 2 to the arguments for self and _cmd
+    2 + sel.name().chars().filter(|&c| c == ':').count()
+}
 
 fn method_type_encoding<F>() -> CString where F: MethodImplementation {
     let mut types = F::Ret::encode().as_str().to_owned();

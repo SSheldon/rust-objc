@@ -48,7 +48,7 @@ pub trait MethodImplementation {
     type Callee: Message;
     /// The return type of the method.
     type Ret: Encode;
-
+    /// The argument types of the method.
     type Args: EncodeArguments;
 
     /// Returns self as an `Imp` of a method.

@@ -31,6 +31,16 @@ use self::gnustep::{msg_send_fn, msg_send_super_fn};
 /// Types that may be sent Objective-C messages.
 /// For example: objects, classes, and blocks.
 pub unsafe trait Message {
+    /**
+    Sends a message to self with the given selector and arguments.
+
+    The correct version of `objc_msgSend` will be chosen based on the
+    return type. For more information, see Apple's documenation:
+    https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778
+
+    If the selector is known at compile-time, it is recommended to use the
+    `msg_send!` macro rather than this method.
+    */
     #[cfg(not(feature = "verify_message"))]
     unsafe fn send_message<A, R>(&self, sel: Sel, args: A)
             -> Result<R, MessageError>
@@ -53,6 +63,11 @@ unsafe impl Message for Class { }
 
 /// Types that may be used as the arguments of an Objective-C message.
 pub trait MessageArguments: Sized {
+    /// Invoke an `Imp` with the given object, selector, and arguments.
+    ///
+    /// This method is the primitive used when sending messages and should not
+    /// be called directly; instead, use the `msg_send!` macro or, in cases
+    /// with a dynamic selector, the `Message::send_message` method.
     unsafe fn invoke<R>(imp: Imp, obj: *mut Object, sel: Sel, args: Self) -> R
             where R: Any;
 }
@@ -84,6 +99,15 @@ message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K);
 message_args_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, k: K, l: L);
 
+/**
+An error encountered while attempting to send a message.
+
+Currently, an error may be returned in two cases:
+
+* an Objective-C exception is thrown and the `exception` feature is enabled
+* the encodings of the arguments do not match the encoding of the method
+  and the `verify_message` feature is enabled
+*/
 #[derive(Debug)]
 pub struct MessageError(String);
 

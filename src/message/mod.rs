@@ -11,6 +11,8 @@ unsafe impl Message for Object { }
 
 unsafe impl Message for Class { }
 
+mod verify;
+
 #[cfg(target_arch = "x86")]
 #[path = "x86.rs"]
 mod platform;
@@ -111,7 +113,7 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
         -> Result<R, String>
         where T: Message, A: MessageArguments + ::EncodeArguments,
         R: Any + ::Encode {
-    use verify::verify_message_signature;
+    use self::verify::verify_message_signature;
 
     let cls = if obj.is_null() {
         return Err(format!("Messaging {:?} to nil", sel));
@@ -151,7 +153,7 @@ pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
         sel: Sel, args: A) -> Result<R, String>
         where T: Message, A: MessageArguments + ::EncodeArguments,
         R: Any + ::Encode {
-    use verify::verify_message_signature;
+    use self::verify::verify_message_signature;
 
     if obj.is_null() {
         return Err(format!("Messaging {:?} to nil", sel));

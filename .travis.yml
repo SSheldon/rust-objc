@@ -6,23 +6,26 @@ os:
   - osx
   - linux
 env:
-  - FEATURES=""
-  - FEATURES="exception"
+  - FEATURES="" IOS_ARCHS=""
 matrix:
-  exclude:
-    - os: linux
-      env: FEATURES="exception"
+  include:
+    - os: osx
+      rust: stable
+      env: FEATURES="exception" IOS_ARCHS=""
+    - os: osx
+      rust: nightly
+      env: FEATURES="exception" IOS_ARCHS="i386 x86_64 armv7 armv7s aarch64"
 sudo: false
-install: >
-  if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-    export FEATURES="gnustep $FEATURES";
-    ./gnustep_install.sh;
-    export LIBRARY_PATH=$HOME/libobjc2_staging/lib:$LIBRARY_PATH;
-    export LD_LIBRARY_PATH=$HOME/libobjc2_staging/lib:$LD_LIBRARY_PATH;
-  fi
+install:
+  - ./travis_install.sh
+  - >
+    if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+      export FEATURES="gnustep $FEATURES";
+      export LIBRARY_PATH=$HOME/libobjc2_staging/lib:$LIBRARY_PATH;
+      export LD_LIBRARY_PATH=$HOME/libobjc2_staging/lib:$LD_LIBRARY_PATH;
+    fi
 script:
-  - cargo build --verbose --features "$FEATURES"
-  - cargo test --verbose --features "$FEATURES"
+  - ./travis_test.sh
 addons:
   apt:
     packages:

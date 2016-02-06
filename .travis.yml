@@ -16,9 +16,9 @@ sudo: false
 install: >
   if [ "$TRAVIS_OS_NAME" = "linux" ]; then
     export FEATURES="gnustep $FEATURES";
-    export CC="clang";
-    export CXX="clang++";
-    . gnustep_install.sh;
+    ./gnustep_install.sh;
+    export LIBRARY_PATH=$HOME/libobjc2_staging/lib:$LIBRARY_PATH;
+    export LD_LIBRARY_PATH=$HOME/libobjc2_staging/lib:$LD_LIBRARY_PATH;
   fi
 script:
   - cargo build --verbose --features "$FEATURES"

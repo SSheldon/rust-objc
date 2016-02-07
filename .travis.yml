@@ -17,16 +17,14 @@ matrix:
       rust: nightly
       env: FEATURES="exception" IOS_ARCHS="i386 x86_64 armv7 armv7s aarch64"
 sudo: false
-install:
-  - ./travis_install.sh
-  - >
-    if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-      export FEATURES="gnustep $FEATURES";
-      export LIBRARY_PATH=$HOME/libobjc2_staging/lib:$LIBRARY_PATH;
-      export LD_LIBRARY_PATH=$HOME/libobjc2_staging/lib:$LD_LIBRARY_PATH;
-    fi
-script:
-  - ./travis_test.sh
+install: ./travis_install.sh
+before_script: >
+  if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+    export FEATURES="gnustep $FEATURES";
+    export LIBRARY_PATH=$HOME/libobjc2_staging/lib:$LIBRARY_PATH;
+    export LD_LIBRARY_PATH=$HOME/libobjc2_staging/lib:$LD_LIBRARY_PATH;
+  fi
+script: ./travis_test.sh
 addons:
   apt:
     packages:

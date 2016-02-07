@@ -15,7 +15,7 @@
 /* Begin PBXFileReference section */
 		13CB96891B4A50CD0091BEB9 /* objc_tests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = objc_tests.h; path = ../xtests/objc_tests.h; sourceTree = "<group>"; };
 		13CB968A1B4A50DD0091BEB9 /* libobjc_tests.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libobjc_tests.a; path = ../xtests/libobjc_tests.a; sourceTree = "<group>"; };
-		13E8B3E61B4A4B6F000FAD36 /* RustObjCTests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RustObjCTests.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13E8B3E61B4A4B6F000FAD36 /* RustObjC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RustObjC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13E8B3EA1B4A4B6F000FAD36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		13E8B3EB1B4A4B6F000FAD36 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		13E8B3ED1B4A4B6F000FAD36 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -47,7 +47,7 @@
 		13E8B3E71B4A4B6F000FAD36 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13E8B3E61B4A4B6F000FAD36 /* RustObjCTests.app */,
+				13E8B3E61B4A4B6F000FAD36 /* RustObjC.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -74,9 +74,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		13E8B3E51B4A4B6F000FAD36 /* RustObjCTests */ = {
+		13E8B3E51B4A4B6F000FAD36 /* RustObjC */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13E8B40B1B4A4B6F000FAD36 /* Build configuration list for PBXNativeTarget "RustObjCTests" */;
+			buildConfigurationList = 13E8B40B1B4A4B6F000FAD36 /* Build configuration list for PBXNativeTarget "RustObjC" */;
 			buildPhases = (
 				13E8B3E21B4A4B6F000FAD36 /* Sources */,
 				13E8B3E31B4A4B6F000FAD36 /* Frameworks */,
@@ -86,9 +86,9 @@
 			);
 			dependencies = (
 			);
-			name = RustObjCTests;
+			name = RustObjC;
 			productName = RustObjCTests;
-			productReference = 13E8B3E61B4A4B6F000FAD36 /* RustObjCTests.app */;
+			productReference = 13E8B3E61B4A4B6F000FAD36 /* RustObjC.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -117,7 +117,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13E8B3E51B4A4B6F000FAD36 /* RustObjCTests */,
+				13E8B3E51B4A4B6F000FAD36 /* RustObjC */,
 			);
 		};
 /* End PBXProject section */
@@ -216,7 +216,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		13E8B40B1B4A4B6F000FAD36 /* Build configuration list for PBXNativeTarget "RustObjCTests" */ = {
+		13E8B40B1B4A4B6F000FAD36 /* Build configuration list for PBXNativeTarget "RustObjC" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13E8B4071B4A4B6F000FAD36 /* Debug */,

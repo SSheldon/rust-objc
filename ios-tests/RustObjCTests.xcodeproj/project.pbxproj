@@ -37,7 +37,7 @@
 		13E8B3A01B4A49D7000FAD36 = {
 			isa = PBXGroup;
 			children = (
-				13E8B3E81B4A4B6F000FAD36 /* RustObjCTests */,
+				13E8B3E81B4A4B6F000FAD36 /* RustObjC */,
 				13CB96891B4A50CD0091BEB9 /* objc_tests.h */,
 				13CB968A1B4A50DD0091BEB9 /* libobjc_tests.a */,
 				13E8B3E71B4A4B6F000FAD36 /* Products */,
@@ -52,14 +52,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		13E8B3E81B4A4B6F000FAD36 /* RustObjCTests */ = {
+		13E8B3E81B4A4B6F000FAD36 /* RustObjC */ = {
 			isa = PBXGroup;
 			children = (
 				13E8B3ED1B4A4B6F000FAD36 /* AppDelegate.h */,
 				13E8B3EE1B4A4B6F000FAD36 /* AppDelegate.m */,
 				13E8B3E91B4A4B6F000FAD36 /* Supporting Files */,
 			);
-			path = RustObjCTests;
+			path = RustObjC;
 			sourceTree = "<group>";
 		};
 		13E8B3E91B4A4B6F000FAD36 /* Supporting Files */ = {
@@ -189,7 +189,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = RustObjCTests/Info.plist;
+				INFOPLIST_FILE = RustObjC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (

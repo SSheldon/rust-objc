@@ -39,26 +39,6 @@ pub struct Sel {
     ptr: *const c_void,
 }
 
-/// A structure describing a safely cacheable method implementation
-/// in the GNUstep Objective-C runtime.
-#[cfg(feature="gnustep")]
-#[repr(C)]
-pub struct Slot  {
-    /// The class to which the slot is attached
-    pub owner: *const Class,
-    /// The class for which this slot was cached.
-    pub cached_for: *mut Class,
-    /// The type signature of the method
-    pub types: *const c_char,
-    /// The version of the method. Will change if overriden, invalidating
-    /// the cache
-    pub version: c_int,
-    /// The implementation of the method
-    pub method: Imp,
-    /// The associated selector
-    pub selector: Sel,
-}
-
 /// A marker type to be embedded into other types just so that they cannot be
 /// constructed externally.
 enum PrivateMarker { }
@@ -130,15 +110,6 @@ extern {
     pub fn ivar_getOffset(ivar: *const Ivar) -> isize;
     pub fn ivar_getTypeEncoding(ivar: *const Ivar) -> *const c_char;
 
-    pub fn objc_msgSend(obj: *mut Object, op: Sel, ...) -> *mut Object;
-    #[cfg(target_arch = "x86")]
-    pub fn objc_msgSend_fpret(obj: *mut Object, op: Sel, ...) -> f64;
-    #[cfg(not(target_arch = "aarch64"))]
-    pub fn objc_msgSend_stret(obj: *mut Object, op: Sel, ...);
-    pub fn objc_msgSendSuper(sup: *const Super, op: Sel, ...) -> *mut Object;
-    #[cfg(not(target_arch = "aarch64"))]
-    pub fn objc_msgSendSuper_stret(sup: *const Super, op: Sel, ... );
-
     pub fn method_getName(method: *const Method) -> Sel;
     pub fn method_getImplementation(method: *const Method) -> Imp;
     pub fn method_copyReturnType(method: *const Method) -> *mut c_char;
@@ -146,11 +117,6 @@ extern {
     pub fn method_getNumberOfArguments(method: *const Method) -> c_uint;
     pub fn method_setImplementation(method: *mut Method, imp: Imp) -> Imp;
     pub fn method_exchangeImplementations(m1: *mut Method, m2: *mut Method);
-
-    #[cfg(feature="gnustep")]
-    pub fn objc_msg_lookup_sender(receiver: *mut *mut Object, selector: Sel, sender: *mut Object, ...) -> *mut Slot;
-    #[cfg(feature="gnustep")]
-    pub fn objc_slot_lookup_super(sup: *const Super, selector: Sel) -> *mut Slot;
 }
 
 impl Sel {

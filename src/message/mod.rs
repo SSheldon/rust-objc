@@ -7,26 +7,28 @@ use runtime::{Class, Imp, Object, Sel, Super};
 
 mod verify;
 
-#[cfg(target_arch = "x86")]
+#[cfg(all(not(feature = "gnustep"),
+          target_arch = "x86"))]
 #[path = "x86.rs"]
 mod platform;
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(not(feature = "gnustep"),
+          target_arch = "x86_64"))]
 #[path = "x86_64.rs"]
 mod platform;
-#[cfg(target_arch = "arm")]
+#[cfg(all(not(feature = "gnustep"),
+          target_arch = "arm"))]
 #[path = "arm.rs"]
 mod platform;
-#[cfg(all(target_arch = "aarch64", not(feature = "gnustep")))]
+#[cfg(all(not(feature = "gnustep"),
+          target_arch = "aarch64"))]
 #[path = "arm64.rs"]
 mod platform;
 
 #[cfg(feature= "gnustep")]
-mod gnustep;
+#[path = "gnustep.rs"]
+mod platform;
 
-#[cfg(not(feature = "gnustep"))]
 use self::platform::{msg_send_fn, msg_send_super_fn};
-#[cfg(feature = "gnustep")]
-use self::gnustep::{msg_send_fn, msg_send_super_fn};
 
 /// Types that may be sent Objective-C messages.
 /// For example: objects, classes, and blocks.

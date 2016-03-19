@@ -1,13 +1,5 @@
 use runtime::{Object, Imp, Sel, Super};
 
-#[cfg(any(target_arch = "arm",
-          target_arch = "x86",
-          target_arch = "x86_64"))]
-pub use super::platform::msg_send_fn;
-
-#[cfg(not(any(target_arch = "arm",
-              target_arch = "x86",
-              target_arch = "x86_64")))]
 pub fn msg_send_fn<R>(obj: *mut Object, sel: Sel) -> (Imp, *mut Object) {
     extern {
         fn objc_msg_lookup(receiver: *mut Object, op: Sel) -> Imp;

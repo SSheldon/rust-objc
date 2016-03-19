@@ -4,6 +4,7 @@ use std::fmt;
 use std::mem;
 
 use runtime::{Class, Imp, Object, Sel};
+use {Encode, EncodeArguments};
 
 mod verify;
 
@@ -28,6 +29,7 @@ mod platform;
 mod platform;
 
 use self::platform::{msg_send_fn, msg_send_super_fn};
+use self::verify::verify_message_signature;
 
 /// Specifies the superclass of an instance.
 #[repr(C)]
@@ -61,9 +63,16 @@ pub unsafe trait Message {
     #[cfg(feature = "verify_message")]
     unsafe fn send_message<A, R>(&self, sel: Sel, args: A)
             -> Result<R, MessageError>
-            where Self: Sized, A: MessageArguments + ::EncodeArguments,
-            R: Any + ::Encode {
+            where Self: Sized, A: MessageArguments + EncodeArguments,
+            R: Any + Encode {
         send_message(self, sel, args)
+    }
+
+    fn verify_message<A, R>(&self, sel: Sel) -> Result<(), MessageError>
+            where Self: Sized, A: MessageArguments + EncodeArguments,
+            R: Any + Encode  {
+        let obj = unsafe { &*(self as *const _ as *const Object) };
+        verify_message_signature::<A, R>(obj.class(), sel)
     }
 }
 
@@ -171,10 +180,8 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
 #[cfg(feature = "verify_message")]
 pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
         -> Result<R, MessageError>
-        where T: Message, A: MessageArguments + ::EncodeArguments,
-        R: Any + ::Encode {
-    use self::verify::verify_message_signature;
-
+        where T: Message, A: MessageArguments + EncodeArguments,
+        R: Any + Encode {
     let cls = if obj.is_null() {
         return Err(MessageError(format!("Messaging {:?} to nil", sel)));
     } else {
@@ -210,10 +217,8 @@ pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
 #[cfg(feature = "verify_message")]
 pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
         sel: Sel, args: A) -> Result<R, MessageError>
-        where T: Message, A: MessageArguments + ::EncodeArguments,
-        R: Any + ::Encode {
-    use self::verify::verify_message_signature;
-
+        where T: Message, A: MessageArguments + EncodeArguments,
+        R: Any + Encode {
     if obj.is_null() {
         return Err(MessageError(format!("Messaging {:?} to nil", sel)));
     }
@@ -225,8 +230,9 @@ pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
 
 #[cfg(test)]
 mod tests {
-    use runtime::Object;
     use test_utils;
+    use runtime::Object;
+    use super::Message;
 
     #[test]
     fn test_send_message() {
@@ -280,5 +286,17 @@ mod tests {
             let foo: u32 = msg_send![obj, foo];
             assert!(foo == 6);
         }
+    }
+
+    #[test]
+    fn test_verify_message() {
+        let obj = test_utils::custom_object();
+        assert!(obj.verify_message::<(), u32>(sel!(foo)).is_ok());
+        assert!(obj.verify_message::<(u32,), ()>(sel!(setFoo:)).is_ok());
+
+        // Incorrect types
+        assert!(obj.verify_message::<(), u64>(sel!(setFoo:)).is_err());
+        // Unimplemented selector
+        assert!(obj.verify_message::<(u32,), ()>(sel!(setFoo)).is_err());
     }
 }

@@ -1,5 +1,3 @@
-#![cfg_attr(not(feature = "verify_message"), allow(dead_code))]
-
 use runtime::{Class, Sel};
 use {Encode, EncodeArguments};
 use super::MessageError;

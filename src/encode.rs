@@ -212,12 +212,10 @@ macro_rules! count_idents {
 macro_rules! encode_args_impl {
     ($($t:ident),*) => (
         impl<$($t: Encode),*> EncodeArguments for ($($t,)*) {
-            type Encs = [Encoding; 2 + count_idents!($($t),*)];
+            type Encs = [Encoding; count_idents!($($t),*)];
 
             fn encodings() -> Self::Encs {
                 [
-                    <*mut Object>::encode(),
-                    Sel::encode(),
                     $($t::encode()),*
                 ]
             }

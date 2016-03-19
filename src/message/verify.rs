@@ -1,4 +1,4 @@
-use runtime::{Class, Sel};
+use runtime::{Class, Object, Sel};
 use {Encode, EncodeArguments};
 use super::MessageError;
 
@@ -22,9 +22,11 @@ pub fn verify_message_signature<A, R>(cls: &Class, sel: Sel)
         ));
     }
 
+    let self_and_cmd = [<*mut Object>::encode(), Sel::encode()];
     let args = A::encodings();
     let args = args.as_ref();
-    let count = args.len();
+
+    let count = self_and_cmd.len() + args.len();
     let expected_count = method.arguments_count();
     if count != expected_count {
         return Err(MessageError(
@@ -33,7 +35,7 @@ pub fn verify_message_signature<A, R>(cls: &Class, sel: Sel)
         ));
     }
 
-    for (i, arg) in args.iter().enumerate() {
+    for (i, arg) in self_and_cmd.iter().chain(args).enumerate() {
         let expected = method.argument_type(i).unwrap();
         if *arg != expected {
             return Err(MessageError(

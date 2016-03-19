@@ -89,12 +89,14 @@ method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K);
 method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K, L);
 
 fn count_args(sel: Sel) -> usize {
-    // Add 2 to the arguments for self and _cmd
-    2 + sel.name().chars().filter(|&c| c == ':').count()
+    sel.name().chars().filter(|&c| c == ':').count()
 }
 
 fn method_type_encoding(ret: &Encoding, args: &[Encoding]) -> CString {
     let mut types = ret.as_str().to_owned();
+    // First two arguments are always self and the selector
+    types.push_str(<*mut Object>::encode().as_str());
+    types.push_str(Sel::encode().as_str());
     types.extend(args.iter().map(|e| e.as_str()));
     CString::new(types).unwrap()
 }

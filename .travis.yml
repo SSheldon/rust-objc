@@ -20,7 +20,6 @@ sudo: false
 install: ./travis_install.sh
 before_script: >
   if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-    export FEATURES="gnustep $FEATURES";
     export LIBRARY_PATH=$HOME/libobjc2_staging/lib:$LIBRARY_PATH;
     export LD_LIBRARY_PATH=$HOME/libobjc2_staging/lib:$LD_LIBRARY_PATH;
   fi

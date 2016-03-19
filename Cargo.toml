@@ -23,7 +23,6 @@ exclude = [
 [features]
 exception = ["objc_exception"]
 verify_message = []
-gnustep = []
 
 [dependencies]
 malloc_buf = "0.0"

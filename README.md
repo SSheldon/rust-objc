@@ -55,5 +55,3 @@ preventing Objective-C from unwinding into Rust.
 
 The bindings can be used on Linux or *BSD utilizing the
 [GNUstep Objective-C runtime](https://www.github.com/gnustep/libobjc2).
-To enable it, you need to pass the required feature to cargo:
-`cargo build --feature gnustep`.

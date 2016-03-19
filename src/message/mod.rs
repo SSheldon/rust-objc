@@ -7,24 +7,23 @@ use runtime::{Class, Imp, Object, Sel, Super};
 
 mod verify;
 
-#[cfg(all(not(feature = "gnustep"),
+#[cfg(all(any(target_os = "macos", target_os = "ios"),
           target_arch = "x86"))]
 #[path = "x86.rs"]
 mod platform;
-#[cfg(all(not(feature = "gnustep"),
+#[cfg(all(any(target_os = "macos", target_os = "ios"),
           target_arch = "x86_64"))]
 #[path = "x86_64.rs"]
 mod platform;
-#[cfg(all(not(feature = "gnustep"),
+#[cfg(all(any(target_os = "macos", target_os = "ios"),
           target_arch = "arm"))]
 #[path = "arm.rs"]
 mod platform;
-#[cfg(all(not(feature = "gnustep"),
+#[cfg(all(any(target_os = "macos", target_os = "ios"),
           target_arch = "aarch64"))]
 #[path = "arm64.rs"]
 mod platform;
-
-#[cfg(feature= "gnustep")]
+#[cfg(not(any(target_os = "macos", target_os = "ios")))]
 #[path = "gnustep.rs"]
 mod platform;
 

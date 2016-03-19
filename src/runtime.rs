@@ -67,15 +67,6 @@ pub struct Object {
     _priv: PrivateMarker,
 }
 
-/// Specifies the superclass of an instance.
-#[repr(C)]
-pub struct Super {
-    /// Specifies an instance of a class.
-    pub receiver: *mut Object,
-    /// Specifies the particular superclass of the instance to message.
-    pub superclass: *const Class,
-}
-
 /// A pointer to the start of a method implementation.
 pub type Imp = unsafe extern fn(*mut Object, Sel, ...) -> *mut Object;
 

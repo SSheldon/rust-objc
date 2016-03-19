@@ -1,6 +1,7 @@
 use std::mem;
 
-use runtime::{Object, Imp, Sel, Super};
+use runtime::{Object, Imp, Sel};
+use super::Super;
 
 pub fn msg_send_fn<R>(obj: *mut Object, _: Sel) -> (Imp, *mut Object) {
     // If the size of an object is larger than two eightbytes, it has class MEMORY.

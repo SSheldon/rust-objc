@@ -3,7 +3,7 @@ use std::error::Error;
 use std::fmt;
 use std::mem;
 
-use runtime::{Class, Imp, Object, Sel, Super};
+use runtime::{Class, Imp, Object, Sel};
 
 mod verify;
 
@@ -28,6 +28,15 @@ mod platform;
 mod platform;
 
 use self::platform::{msg_send_fn, msg_send_super_fn};
+
+/// Specifies the superclass of an instance.
+#[repr(C)]
+pub struct Super {
+    /// Specifies an instance of a class.
+    pub receiver: *mut Object,
+    /// Specifies the particular superclass of the instance to message.
+    pub superclass: *const Class,
+}
 
 /// Types that may be sent Objective-C messages.
 /// For example: objects, classes, and blocks.

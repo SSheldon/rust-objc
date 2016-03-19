@@ -1,6 +1,7 @@
 use std::mem;
 
-use runtime::{Object, Imp, Sel, Super};
+use runtime::{Object, Imp, Sel};
+use super::Super;
 
 pub fn msg_send_fn<R>(obj: *mut Object, _: Sel) -> (Imp, *mut Object) {
     // stret is not even available in arm64.

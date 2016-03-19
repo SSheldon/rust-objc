@@ -1,7 +1,8 @@
 use std::any::{Any, TypeId};
 use std::mem;
 
-use runtime::{Object, Imp, Sel, Super};
+use runtime::{Object, Imp, Sel};
+use super::Super;
 
 pub fn msg_send_fn<R: Any>(obj: *mut Object, _: Sel) -> (Imp, *mut Object) {
     // Double-word sized fundamental data types don't use stret,

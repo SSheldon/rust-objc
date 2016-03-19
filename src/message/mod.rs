@@ -254,6 +254,7 @@ mod tests {
         assert!(result == expected);
     }
 
+    #[cfg(not(feature = "verify_message"))]
     #[test]
     fn test_send_message_nil() {
         let nil: *mut Object = ::std::ptr::null_mut();

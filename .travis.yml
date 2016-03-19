@@ -28,5 +28,5 @@ script: ./travis_test.sh
 addons:
   apt:
     packages:
-      - clang-3.7
+      - clang
       - cmake

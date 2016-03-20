@@ -9,6 +9,7 @@
 
     <title>objc::declare - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
@@ -45,19 +46,18 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-1477' class='srclink' href='../../src/objc/declare.rs.html#1-272' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-257' class='srclink' href='../../src/objc/declare.rs.html#1-263' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Functionality for declaring Objective-C classes.</p>
 
 <p>Classes can be declared using the <code>ClassDecl</code> struct. Instance variables and
 methods can then be added before the class is ultimately registered.</p>
 
-<h1 id="example" class='section-header'><a
-                           href="#example">Example</a></h1>
+<h1 id='example' class='section-header'><a href='#example'>Example</a></h1>
 <p>The following example demonstrates declaring a class named <code>MyNumber</code> that has
 one ivar, a <code>u32</code> named <code>_number</code> and a <code>number</code> method that returns it:</p>
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>superclass</span> <span class='op'>=</span> <span class='ident'>Class</span>::<span class='ident'>get</span>(<span class='string'>&quot;NSObject&quot;</span>).<span class='ident'>unwrap</span>();
-<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>decl</span> <span class='op'>=</span> <span class='ident'>ClassDecl</span>::<span class='ident'>new</span>(<span class='ident'>superclass</span>, <span class='string'>&quot;MyNumber&quot;</span>).<span class='ident'>unwrap</span>();
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>decl</span> <span class='op'>=</span> <span class='ident'>ClassDecl</span>::<span class='ident'>new</span>(<span class='string'>&quot;MyNumber&quot;</span>, <span class='ident'>superclass</span>).<span class='ident'>unwrap</span>();
 
 <span class='comment'>// Add an instance variable</span>
 <span class='ident'>decl</span>.<span class='ident'>add_ivar</span>::<span class='op'>&lt;</span><span class='ident'>u32</span><span class='op'>&gt;</span>(<span class='string'>&quot;_number&quot;</span>);
@@ -80,16 +80,6 @@ one ivar, a <code>u32</code> named <code>_number</code> and a <code>number</code
                         <td class='docblock short'>
                              <p>A type for declaring a new class and adding new methods and ivars to it
 before registering it.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.UnequalArgsError.html'
-                               title='objc::declare::UnequalArgsError'>UnequalArgsError</a></td>
-                        <td class='docblock short'>
-                             <p>An error returned from <code>MethodImplementation::imp_for</code> to indicate that a
-selector and function accept unequal numbers of arguments.</p>
 
                         </td>
                     </tr>
@@ -162,6 +152,6 @@ selector and function accept unequal numbers of arguments.</p>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

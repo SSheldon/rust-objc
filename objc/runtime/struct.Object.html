@@ -9,6 +9,7 @@
 
     <title>objc::runtime::Object - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
@@ -45,31 +46,33 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-62' class='srclink' href='../../src/objc/runtime.rs.html#65-67' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-33' class='srclink' href='../../src/objc/runtime.rs.html#65-67' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Object {
     // some fields omitted
 }</pre><div class='docblock'><p>A type that represents an instance of a class.</p>
 </div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../../objc/runtime/struct.Object.html' title='objc::runtime::Object'>Object</a></code></h3><div class='impl-items'><h4 id='method.class' class='method'><code>fn <a href='#method.class' class='fnname'>class</a>(&amp;self) -&gt; &amp;<a class='struct' href='../../objc/runtime/struct.Class.html' title='objc::runtime::Class'>Class</a></code></h4>
 <div class='docblock'><p>Returns the class of self.</p>
-</div><h4 id='method.get_ivar' class='method'><code>unsafe fn <a href='#method.get_ivar' class='fnname'>get_ivar</a>&lt;T&gt;(&amp;self, name: &amp;<a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; &amp;T <span class='where'>where T: <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a></span></code></h4>
+</div><h4 id='method.get_ivar' class='method'><code>unsafe fn <a href='#method.get_ivar' class='fnname'>get_ivar</a>&lt;T&gt;(&amp;self, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; &amp;T <span class='where'>where T: <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a></span></code></h4>
 <div class='docblock'><p>Returns a reference to the ivar of self with the given name.
 Panics if self has no ivar with the given name.
 Unsafe because the caller must ensure that the ivar is actually
 of type <code>T</code>.</p>
-</div><h4 id='method.get_mut_ivar' class='method'><code>unsafe fn <a href='#method.get_mut_ivar' class='fnname'>get_mut_ivar</a>&lt;T&gt;(&amp;mut self, name: &amp;<a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; &amp;mut T <span class='where'>where T: <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a></span></code></h4>
+</div><h4 id='method.get_mut_ivar' class='method'><code>unsafe fn <a href='#method.get_mut_ivar' class='fnname'>get_mut_ivar</a>&lt;T&gt;(&amp;mut self, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; &amp;mut T <span class='where'>where T: <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a></span></code></h4>
 <div class='docblock'><p>Returns a mutable reference to the ivar of self with the given name.
 Panics if self has no ivar with the given name.
 Unsafe because the caller must ensure that the ivar is actually
 of type <code>T</code>.</p>
-</div><h4 id='method.set_ivar' class='method'><code>unsafe fn <a href='#method.set_ivar' class='fnname'>set_ivar</a>&lt;T&gt;(&amp;mut self, name: &amp;<a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, value: T) <span class='where'>where T: <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a></span></code></h4>
+</div><h4 id='method.set_ivar' class='method'><code>unsafe fn <a href='#method.set_ivar' class='fnname'>set_ivar</a>&lt;T&gt;(&amp;mut self, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, value: T) <span class='where'>where T: <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a></span></code></h4>
 <div class='docblock'><p>Sets the value of the ivar of self with the given name.
 Panics if self has no ivar with the given name.
 Unsafe because the caller must ensure that the ivar is actually
 of type <code>T</code>.</p>
 </div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../objc/runtime/struct.Object.html' title='objc::runtime::Object'>Object</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#method.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 </div><h3 class='impl'><code>impl&lt;'a&gt; <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a> for &amp;'a <a class='struct' href='../../objc/runtime/struct.Object.html' title='objc::runtime::Object'>Object</a></code></h3><div class='impl-items'><h4 id='method.encode' class='method'><code>fn <a href='../../objc/trait.Encode.html#method.encode' class='fnname'>encode</a>() -&gt; <a class='struct' href='../../objc/struct.Encoding.html' title='objc::Encoding'>Encoding</a></code></h4>
-</div><h3 class='impl'><code>impl&lt;'a&gt; <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a> for &amp;'a mut <a class='struct' href='../../objc/runtime/struct.Object.html' title='objc::runtime::Object'>Object</a></code></h3><div class='impl-items'><h4 id='method.encode' class='method'><code>fn <a href='../../objc/trait.Encode.html#method.encode' class='fnname'>encode</a>() -&gt; <a class='struct' href='../../objc/struct.Encoding.html' title='objc::Encoding'>Encoding</a></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='../../objc/trait.Message.html' title='objc::Message'>Message</a> for <a class='struct' href='../../objc/runtime/struct.Object.html' title='objc::runtime::Object'>Object</a></code></h3><div class='impl-items'></div></section>
+</div><h3 class='impl'><code>impl&lt;'a&gt; <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a> for &amp;'a mut <a class='struct' href='../../objc/runtime/struct.Object.html' title='objc::runtime::Object'>Object</a></code></h3><div class='impl-items'><h4 id='method.encode-1' class='method'><code>fn <a href='../../objc/trait.Encode.html#method.encode' class='fnname'>encode</a>() -&gt; <a class='struct' href='../../objc/struct.Encoding.html' title='objc::Encoding'>Encoding</a></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='../../objc/trait.Message.html' title='objc::Message'>Message</a> for <a class='struct' href='../../objc/runtime/struct.Object.html' title='objc::runtime::Object'>Object</a></code></h3><div class='impl-items'><h4 id='method.send_message' class='method'><code>unsafe fn <a href='../../objc/trait.Message.html#method.send_message' class='fnname'>send_message</a>&lt;A, R&gt;(&amp;self, sel: <a class='struct' href='../../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>, args: A) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;R, <a class='struct' href='../../objc/struct.MessageError.html' title='objc::MessageError'>MessageError</a>&gt; <span class='where'>where Self: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>, A: <a class='trait' href='../../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a>, R: <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a></span></code></h4>
+<h4 id='method.verify_message' class='method'><code>fn <a href='../../objc/trait.Message.html#method.verify_message' class='fnname'>verify_message</a>&lt;A, R&gt;(&amp;self, sel: <a class='struct' href='../../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, <a class='struct' href='../../objc/struct.MessageError.html' title='objc::MessageError'>MessageError</a>&gt; <span class='where'>where Self: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>, A: <a class='trait' href='../../objc/trait.EncodeArguments.html' title='objc::EncodeArguments'>EncodeArguments</a>, R: <a class='trait' href='../../objc/trait.Encode.html' title='objc::Encode'>Encode</a></span></code></h4>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -128,6 +131,6 @@ of type <code>T</code>.</p>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

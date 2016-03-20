@@ -9,6 +9,7 @@
 
     <title>block::RcBlock - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
 
     
@@ -45,18 +46,18 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-1342' class='srclink' href='../src/block/lib.rs.html#133-135' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-377' class='srclink' href='../src/block/lib.rs.html#133-135' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct RcBlock&lt;A, R&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>A reference-counted Objective-C block.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;A, R&gt; <a class='struct' href='../block/struct.RcBlock.html' title='block::RcBlock'>RcBlock</a>&lt;A, R&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>unsafe fn <a href='#method.new' class='fnname'>new</a>(ptr: <a href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;</a>) -&gt; Self</code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;A, R&gt; <a class='struct' href='../block/struct.RcBlock.html' title='block::RcBlock'>RcBlock</a>&lt;A, R&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>unsafe fn <a href='#method.new' class='fnname'>new</a>(ptr: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;</a>) -&gt; Self</code></h4>
 <div class='docblock'><p>Construct an <code>RcBlock</code> for the given block without copying it.
 The caller must ensure the block has a +1 reference count.</p>
 
 <p>Unsafe because <code>ptr</code> must point to a valid <code>Block</code> and must have a +1
 reference count or it will be overreleased when the <code>RcBlock</code> is
 dropped.</p>
-</div><h4 id='method.copy' class='method'><code>unsafe fn <a href='#method.copy' class='fnname'>copy</a>(ptr: <a href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;</a>) -&gt; Self</code></h4>
+</div><h4 id='method.copy' class='method'><code>unsafe fn <a href='#method.copy' class='fnname'>copy</a>(ptr: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;</a>) -&gt; Self</code></h4>
 <div class='docblock'><p>Constructs an <code>RcBlock</code> by copying the given block.</p>
 
 <p>Unsafe because <code>ptr</code> must point to a valid <code>Block</code>.</p>
@@ -131,6 +132,6 @@ it will not cause a data race.</p>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

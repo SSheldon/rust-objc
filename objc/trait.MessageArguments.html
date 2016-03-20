@@ -9,6 +9,7 @@
 
     <title>objc::MessageArguments - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
 
     
@@ -45,41 +46,34 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-7023' class='srclink' href='../src/objc/message.rs.html#115-132' title='goto source code'>[src]</a></span></h1>
-<pre class='rust trait'>pub trait MessageArguments {
-    unsafe fn <a href='#tymethod.send' class='fnname'>send</a>&lt;T, R&gt;(self, obj: <a href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut T</a>, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; R <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a>, R: <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a></span>;
-    unsafe fn <a href='#tymethod.send_super' class='fnname'>send_super</a>&lt;T, R&gt;(self, obj: <a href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut T</a>, superclass: &amp;<a class='struct' href='../objc/runtime/struct.Class.html' title='objc::runtime::Class'>Class</a>, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; R <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a>, R: <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a></span>;
+        </span><a id='src-1276' class='srclink' href='../src/objc/message/mod.rs.html#106-114' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait MessageArguments: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> {
+    unsafe fn <a href='#tymethod.invoke' class='fnname'>invoke</a>&lt;R&gt;(imp: <a class='type' href='../objc/runtime/type.Imp.html' title='objc::runtime::Imp'>Imp</a>, obj: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../objc/runtime/struct.Object.html' title='objc::runtime::Object'>Object</a></a>, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>, args: Self) -&gt; R <span class='where'>where R: <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a></span>;
 }</pre><div class='docblock'><p>Types that may be used as the arguments of an Objective-C message.</p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.send' class='method stab '><code>unsafe fn <a href='#tymethod.send' class='fnname'>send</a>&lt;T, R&gt;(self, obj: <a href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut T</a>, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; R <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a>, R: <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a></span></code></h3><div class='docblock'><p>Sends a message to the given obj with the given selector and self as
-the arguments.</p>
+        <h3 id='tymethod.invoke' class='method stab '><code>unsafe fn <a href='#tymethod.invoke' class='fnname'>invoke</a>&lt;R&gt;(imp: <a class='type' href='../objc/runtime/type.Imp.html' title='objc::runtime::Imp'>Imp</a>, obj: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../objc/runtime/struct.Object.html' title='objc::runtime::Object'>Object</a></a>, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>, args: Self) -&gt; R <span class='where'>where R: <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a></span></code></h3><div class='docblock'><p>Invoke an <code>Imp</code> with the given object, selector, and arguments.</p>
 
-<p>The correct version of <code>objc_msgSend</code> will be chosen based on the
-return type. For more information, see Apple&#39;s documenation:
-<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778">https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778</a></p>
-
-<p>It is recommended to use the <code>msg_send!</code> macro rather than calling this
-method directly.</p>
-</div><h3 id='tymethod.send_super' class='method stab '><code>unsafe fn <a href='#tymethod.send_super' class='fnname'>send_super</a>&lt;T, R&gt;(self, obj: <a href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut T</a>, superclass: &amp;<a class='struct' href='../objc/runtime/struct.Class.html' title='objc::runtime::Class'>Class</a>, sel: <a class='struct' href='../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a>) -&gt; R <span class='where'>where T: <a class='trait' href='../objc/trait.Message.html' title='objc::Message'>Message</a>, R: <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a></span></code></h3><div class='docblock'><p>Sends a message to the superclass of an instance of a class with self
-as the arguments.</p>
+<p>This method is the primitive used when sending messages and should not
+be called directly; instead, use the <code>msg_send!</code> macro or, in cases
+with a dynamic selector, the <code>Message::send_message</code> method.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a></code></li>
-<li><code>impl&lt;A&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A,)</a></code></li>
-<li><code>impl&lt;A, B&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B)</a></code></li>
-<li><code>impl&lt;A, B, C&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C)</a></code></li>
-<li><code>impl&lt;A, B, C, D&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E, F&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E, F, G&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E, F, G, H&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G, H)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E, F, G, H, I&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G, H, I)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E, F, G, H, I, J&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G, H, I, J)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E, F, G, H, I, J, K&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G, H, I, J, K)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E, F, G, H, I, J, K, L&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G, H, I, J, K, L)</a></code></li>
+    <li><code>impl <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a></code></li>
+<li><code>impl&lt;A&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A,)</a></code></li>
+<li><code>impl&lt;A, B&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B)</a></code></li>
+<li><code>impl&lt;A, B, C&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C)</a></code></li>
+<li><code>impl&lt;A, B, C, D&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E, F&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, H&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G, H)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, H, I&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G, H, I)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, H, I, J&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G, H, I, J)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, H, I, J, K&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G, H, I, J, K)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, H, I, J, K, L&gt; <a class='trait' href='../objc/trait.MessageArguments.html' title='objc::MessageArguments'>MessageArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G, H, I, J, K, L)</a></code></li>
 </ul><script type="text/javascript" async
                               src="../implementors/objc/trait.MessageArguments.js">
                       </script></section>
@@ -141,6 +135,6 @@ as the arguments.</p>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

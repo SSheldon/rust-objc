@@ -9,6 +9,7 @@
 
     <title>dispatch - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
 
     
@@ -53,8 +54,7 @@ to queues where they are scheduled to execute.</p>
 
 <p>For more information, see Apple&#39;s <a href="https://developer.apple.com/library/mac/documentation/Performance/Reference/GCD_libdispatch_Ref/index.html">Grand Central Dispatch reference</a>.</p>
 
-<h1 id="serial-queues" class='section-header'><a
-                           href="#serial-queues">Serial Queues</a></h1>
+<h1 id='serial-queues' class='section-header'><a href='#serial-queues'>Serial Queues</a></h1>
 <p>Serial queues execute tasks serially in FIFO order. The application&#39;s main
 queue is serial and can be accessed through the <code>Queue::main</code> function.</p>
 <pre class='rust rust-example-rendered'>
@@ -64,8 +64,7 @@ queue is serial and can be accessed through the <code>Queue::main</code> functio
 <span class='ident'>queue</span>.<span class='ident'>async</span>(<span class='op'>||</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hello&quot;</span>));
 <span class='ident'>queue</span>.<span class='ident'>async</span>(<span class='op'>||</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;World&quot;</span>));</pre>
 
-<h1 id="concurrent-queues" class='section-header'><a
-                           href="#concurrent-queues">Concurrent Queues</a></h1>
+<h1 id='concurrent-queues' class='section-header'><a href='#concurrent-queues'>Concurrent Queues</a></h1>
 <p>Concurrent dispatch queues execute tasks concurrently. GCD provides global
 concurrent queues that can be accessed through the <code>Queue::global</code> function.</p>
 
@@ -207,6 +206,6 @@ and <code>map</code>:</p>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

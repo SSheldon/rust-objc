@@ -9,6 +9,7 @@
 
     <title>dispatch::Queue - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
 
     
@@ -45,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-428' class='srclink' href='../src/dispatch/lib.rs.html#112-114' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-143' class='srclink' href='../src/dispatch/lib.rs.html#112-114' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Queue {
     // some fields omitted
 }</pre><div class='docblock'><p>A Grand Central Dispatch queue.</p>
@@ -57,31 +58,31 @@ main thread.</p>
 </div><h4 id='method.global' class='method'><code>fn <a href='#method.global' class='fnname'>global</a>(priority: <a class='enum' href='../dispatch/enum.QueuePriority.html' title='dispatch::QueuePriority'>QueuePriority</a>) -&gt; Self</code></h4>
 <div class='docblock'><p>Returns a system-defined global concurrent <code>Queue</code> with the specified
 priority.</p>
-</div><h4 id='method.create' class='method'><code>fn <a href='#method.create' class='fnname'>create</a>(label: &amp;<a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, attr: <a class='enum' href='../dispatch/enum.QueueAttribute.html' title='dispatch::QueueAttribute'>QueueAttribute</a>) -&gt; Self</code></h4>
+</div><h4 id='method.create' class='method'><code>fn <a href='#method.create' class='fnname'>create</a>(label: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, attr: <a class='enum' href='../dispatch/enum.QueueAttribute.html' title='dispatch::QueueAttribute'>QueueAttribute</a>) -&gt; Self</code></h4>
 <div class='docblock'><p>Creates a new dispatch <code>Queue</code>.</p>
-</div><h4 id='method.with_target_queue' class='method'><code>fn <a href='#method.with_target_queue' class='fnname'>with_target_queue</a>(label: &amp;<a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, attr: <a class='enum' href='../dispatch/enum.QueueAttribute.html' title='dispatch::QueueAttribute'>QueueAttribute</a>, target: &amp;<a class='struct' href='../dispatch/struct.Queue.html' title='dispatch::Queue'>Queue</a>) -&gt; Self</code></h4>
+</div><h4 id='method.with_target_queue' class='method'><code>fn <a href='#method.with_target_queue' class='fnname'>with_target_queue</a>(label: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, attr: <a class='enum' href='../dispatch/enum.QueueAttribute.html' title='dispatch::QueueAttribute'>QueueAttribute</a>, target: &amp;<a class='struct' href='../dispatch/struct.Queue.html' title='dispatch::Queue'>Queue</a>) -&gt; Self</code></h4>
 <div class='docblock'><p>Creates a new dispatch <code>Queue</code> with the given target queue.</p>
 
 <p>A dispatch queue&#39;s priority is inherited from its target queue.
 Additionally, if both the queue and its target are serial queues,
 their blocks will not be invoked concurrently.</p>
-</div><h4 id='method.label' class='method'><code>fn <a href='#method.label' class='fnname'>label</a>(&amp;self) -&gt; &amp;<a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></h4>
+</div><h4 id='method.label' class='method'><code>fn <a href='#method.label' class='fnname'>label</a>(&amp;self) -&gt; &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></h4>
 <div class='docblock'><p>Returns the label that was specified for self.</p>
 </div><h4 id='method.sync' class='method'><code>fn <a href='#method.sync' class='fnname'>sync</a>&lt;T, F&gt;(&amp;self, work: F) -&gt; T <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>() -&gt; T, T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a></span></code></h4>
 <div class='docblock'><p>Submits a closure for execution on self and waits until it completes.</p>
 </div><h4 id='method.async' class='method'><code>fn <a href='#method.async' class='fnname'>async</a>&lt;F&gt;(&amp;self, work: F) <span class='where'>where F: 'static + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>()</span></code></h4>
 <div class='docblock'><p>Submits a closure for asynchronous execution on self and returns
 immediately.</p>
-</div><h4 id='method.after_ms' class='method'><code>fn <a href='#method.after_ms' class='fnname'>after_ms</a>&lt;F&gt;(&amp;self, ms: <a href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, work: F) <span class='where'>where F: 'static + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>()</span></code></h4>
+</div><h4 id='method.after_ms' class='method'><code>fn <a href='#method.after_ms' class='fnname'>after_ms</a>&lt;F&gt;(&amp;self, ms: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, work: F) <span class='where'>where F: 'static + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>()</span></code></h4>
 <div class='docblock'><p>After the specified delay, submits a closure for asynchronous execution
 on self.</p>
 </div><h4 id='method.after' class='method'><code>fn <a href='#method.after' class='fnname'>after</a>&lt;F&gt;(&amp;self, delay: <a class='struct' href='https://doc.rust-lang.org/nightly/std/time/duration/struct.Duration.html' title='std::time::duration::Duration'>Duration</a>, work: F) <span class='where'>where F: 'static + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>()</span></code></h4>
 <div class='docblock'><p>After the specified delay, submits a closure for asynchronous execution
 on self.</p>
-</div><h4 id='method.apply' class='method'><code>fn <a href='#method.apply' class='fnname'>apply</a>&lt;F&gt;(&amp;self, iterations: <a href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, work: F) <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(<a href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</span></code></h4>
+</div><h4 id='method.apply' class='method'><code>fn <a href='#method.apply' class='fnname'>apply</a>&lt;F&gt;(&amp;self, iterations: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, work: F) <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</span></code></h4>
 <div class='docblock'><p>Submits a closure to be executed on self the given number of iterations
 and waits until it completes.</p>
-</div><h4 id='method.foreach' class='method'><code>fn <a href='#method.foreach' class='fnname'>foreach</a>&lt;T, F&gt;(&amp;self, slice: <a href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;mut [</a>T<a href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, work: F) <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(&amp;mut T), T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a></span></code></h4>
+</div><h4 id='method.foreach' class='method'><code>fn <a href='#method.foreach' class='fnname'>foreach</a>&lt;T, F&gt;(&amp;self, slice: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;mut [</a>T<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, work: F) <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(&amp;mut T), T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a></span></code></h4>
 <div class='docblock'><p>Submits a closure to be executed on self for each element of the
 provided slice and waits until it completes.</p>
 </div><h4 id='method.map' class='method'><code>fn <a href='#method.map' class='fnname'>map</a>&lt;T, U, F&gt;(&amp;self, vec: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;T&gt;, work: F) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;U&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(T) -&gt; U, T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>, U: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a></span></code></h4>
@@ -182,6 +183,6 @@ Invocation does not resume until all <code>SuspendGuard</code>s have been droppe
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

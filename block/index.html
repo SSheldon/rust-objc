@@ -9,6 +9,7 @@
 
     <title>block - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
 
     
@@ -51,8 +52,7 @@
 <p>For more information on the specifics of the block implementation, see
 Clang&#39;s documentation: <a href="http://clang.llvm.org/docs/Block-ABI-Apple.html">http://clang.llvm.org/docs/Block-ABI-Apple.html</a></p>
 
-<h1 id="invoking-blocks" class='section-header'><a
-                           href="#invoking-blocks">Invoking blocks</a></h1>
+<h1 id='invoking-blocks' class='section-header'><a href='#invoking-blocks'>Invoking blocks</a></h1>
 <p>The <code>Block</code> struct is used for invoking blocks from Objective-C. For example,
 consider this Objective-C function:</p>
 
@@ -70,8 +70,7 @@ consider this Objective-C function:</p>
 <p>Note the extra parentheses in the <code>call</code> method, since the arguments must be
 passed as a tuple.</p>
 
-<h1 id="creating-blocks" class='section-header'><a
-                           href="#creating-blocks">Creating blocks</a></h1>
+<h1 id='creating-blocks' class='section-header'><a href='#creating-blocks'>Creating blocks</a></h1>
 <p>Creating a block to pass to Objective-C can be done with the <code>ConcreteBlock</code>
 struct. For example, to create a block that adds two <code>i32</code>s, we could write:</p>
 <pre class='rust rust-example-rendered'>
@@ -191,6 +190,6 @@ constructed on the stack.</p>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

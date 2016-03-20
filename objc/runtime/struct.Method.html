@@ -9,6 +9,7 @@
 
     <title>objc::runtime::Method - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
@@ -45,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-54' class='srclink' href='../../src/objc/runtime.rs.html#53-55' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-29' class='srclink' href='../../src/objc/runtime.rs.html#53-55' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Method {
     // some fields omitted
 }</pre><div class='docblock'><p>A type that represents a method in a class definition.</p>
@@ -53,10 +54,10 @@
 <div class='docblock'><p>Returns the name of self.</p>
 </div><h4 id='method.return_type' class='method'><code>fn <a href='#method.return_type' class='fnname'>return_type</a>(&amp;self) -&gt; <a class='struct' href='../../objc/struct.Encoding.html' title='objc::Encoding'>Encoding</a></code></h4>
 <div class='docblock'><p>Returns the <code>Encoding</code> of self&#39;s return type.</p>
-</div><h4 id='method.argument_type' class='method'><code>fn <a href='#method.argument_type' class='fnname'>argument_type</a>(&amp;self, index: <a href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../objc/struct.Encoding.html' title='objc::Encoding'>Encoding</a>&gt;</code></h4>
+</div><h4 id='method.argument_type' class='method'><code>fn <a href='#method.argument_type' class='fnname'>argument_type</a>(&amp;self, index: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../objc/struct.Encoding.html' title='objc::Encoding'>Encoding</a>&gt;</code></h4>
 <div class='docblock'><p>Returns the <code>Encoding</code> of a single parameter type of self, or
 <code>None</code> if self has no parameter at the given index.</p>
-</div><h4 id='method.arguments_count' class='method'><code>fn <a href='#method.arguments_count' class='fnname'>arguments_count</a>(&amp;self) -&gt; <a href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
+</div><h4 id='method.arguments_count' class='method'><code>fn <a href='#method.arguments_count' class='fnname'>arguments_count</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
 <div class='docblock'><p>Returns the number of arguments accepted by self.</p>
 </div><h4 id='method.implementation' class='method'><code>fn <a href='#method.implementation' class='fnname'>implementation</a>(&amp;self) -&gt; <a class='type' href='../../objc/runtime/type.Imp.html' title='objc::runtime::Imp'>Imp</a></code></h4>
 <div class='docblock'><p>Returns the implementation of self.</p>
@@ -119,6 +120,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

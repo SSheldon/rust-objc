@@ -40,7 +40,6 @@ use std::ptr;
 
 use runtime::{Class, Imp, NO, Object, Sel, self};
 use {Encode, EncodeArguments, Encoding, Message};
-use to_c_str;
 
 /// Types that can be used as the implementation of an Objective-C method.
 pub trait MethodImplementation {
@@ -121,7 +120,7 @@ impl ClassDecl {
         let name = CString::new(name).unwrap();
         let super_ptr = superclass.map_or(ptr::null(), |c| c);
         let cls = unsafe {
-            runtime::objc_allocateClassPair(super_ptr, to_c_str(&name), 0)
+            runtime::objc_allocateClassPair(super_ptr, name.as_ptr(), 0)
         };
         if cls.is_null() {
             None
@@ -177,7 +176,7 @@ impl ClassDecl {
 
         let types = method_type_encoding(&F::Ret::encode(), encs);
         let success = runtime::class_addMethod(self.cls, sel, func.imp(),
-            to_c_str(&types));
+            types.as_ptr());
         assert!(success != NO, "Failed to add method {:?}", sel);
     }
 
@@ -199,7 +198,7 @@ impl ClassDecl {
         let types = method_type_encoding(&F::Ret::encode(), encs);
         let metaclass = (*self.cls).metaclass() as *const _ as *mut _;
         let success = runtime::class_addMethod(metaclass, sel, func.imp(),
-            to_c_str(&types));
+            types.as_ptr());
         assert!(success != NO, "Failed to add class method {:?}", sel);
     }
 
@@ -211,8 +210,8 @@ impl ClassDecl {
         let size = mem::size_of::<T>();
         let align = log2_align_of::<T>();
         let success = unsafe {
-            runtime::class_addIvar(self.cls, to_c_str(&c_name), size, align,
-                to_c_str(&encoding))
+            runtime::class_addIvar(self.cls, c_name.as_ptr(), size, align,
+                encoding.as_ptr())
         };
         assert!(success != NO, "Failed to add ivar {}", name);
     }

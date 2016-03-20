@@ -1,10 +1,10 @@
+use std::ffi::CStr;
 use std::fmt;
 use std::os::raw::{c_char, c_void};
 use std::str;
 use malloc_buf::MallocBuffer;
 
 use runtime::{Class, Object, Sel};
-use from_c_str;
 
 const QUALIFIERS: &'static [char] = &[
     'r', // const
@@ -101,7 +101,7 @@ pub fn from_str(code: &str) -> Encoding {
 }
 
 pub unsafe fn from_malloc_str(ptr: *mut c_char) -> Encoding {
-    let s = from_c_str(ptr);
+    let s = CStr::from_ptr(ptr);
     let bytes = s.to_bytes_with_nul();
     assert!(str::from_utf8(bytes).is_ok());
     let buf = MallocBuffer::new(ptr as *mut u8, bytes.len()).unwrap();

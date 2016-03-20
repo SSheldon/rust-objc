@@ -84,19 +84,3 @@ mod message;
 
 #[cfg(test)]
 mod test_utils;
-
-// The from_c_str and to_c_str methods are unfortunately needed because,
-// prior to Rust 1.6, CStr uses a different definition of c_char than
-// std::os::raw on arm64.
-// TODO: remove this after most people are on Rust 1.6+
-
-use std::ffi::CStr;
-use std::os::raw::c_char;
-
-unsafe fn from_c_str<'a>(ptr: *const c_char) -> &'a CStr {
-    CStr::from_ptr(ptr as *const _)
-}
-
-fn to_c_str(s: &CStr) -> *const c_char {
-    s.as_ptr() as *const _
-}

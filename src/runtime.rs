@@ -3,7 +3,7 @@
 //! For more information on foreign functions, see Apple's documentation:
 //! https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html
 
-use std::ffi::CString;
+use std::ffi::{CStr, CString};
 use std::fmt;
 use std::os::raw::{c_char, c_int, c_uint, c_void};
 use std::ptr;
@@ -12,7 +12,6 @@ use malloc_buf::MallocBuffer;
 
 use encode;
 use {Encode, Encoding};
-use {from_c_str, to_c_str};
 
 /// The Objective-C `BOOL` type.
 ///
@@ -116,14 +115,14 @@ impl Sel {
     pub fn register(name: &str) -> Sel {
         let name = CString::new(name).unwrap();
         unsafe {
-            sel_registerName(to_c_str(&name))
+            sel_registerName(name.as_ptr())
         }
     }
 
     /// Returns the name of the method specified by self.
     pub fn name(&self) -> &str {
         let name = unsafe {
-            from_c_str(sel_getName(*self))
+            CStr::from_ptr(sel_getName(*self))
         };
         str::from_utf8(name.to_bytes()).unwrap()
     }
@@ -153,7 +152,7 @@ impl Ivar {
     /// Returns the name of self.
     pub fn name(&self) -> &str {
         let name = unsafe {
-            from_c_str(ivar_getName(self))
+            CStr::from_ptr(ivar_getName(self))
         };
         str::from_utf8(name.to_bytes()).unwrap()
     }
@@ -169,7 +168,7 @@ impl Ivar {
     /// Returns the `Encoding` of self.
     pub fn type_encoding(&self) -> Encoding {
         let encoding = unsafe {
-            from_c_str(ivar_getTypeEncoding(self))
+            CStr::from_ptr(ivar_getTypeEncoding(self))
         };
         let s = str::from_utf8(encoding.to_bytes()).unwrap();
         encode::from_str(s)
@@ -226,7 +225,7 @@ impl Class {
     pub fn get(name: &str) -> Option<&'static Class> {
         let name = CString::new(name).unwrap();
         unsafe {
-            let cls = objc_getClass(to_c_str(&name));
+            let cls = objc_getClass(name.as_ptr());
             if cls.is_null() { None } else { Some(&*cls) }
         }
     }
@@ -250,7 +249,7 @@ impl Class {
     /// Returns the name of self.
     pub fn name(&self) -> &str {
         let name = unsafe {
-            from_c_str(class_getName(self))
+            CStr::from_ptr(class_getName(self))
         };
         str::from_utf8(name.to_bytes()).unwrap()
     }
@@ -293,7 +292,7 @@ impl Class {
     pub fn instance_variable(&self, name: &str) -> Option<&Ivar> {
         let name = CString::new(name).unwrap();
         unsafe {
-            let ivar = class_getInstanceVariable(self, to_c_str(&name));
+            let ivar = class_getInstanceVariable(self, name.as_ptr());
             if ivar.is_null() { None } else { Some(&*ivar) }
         }
     }

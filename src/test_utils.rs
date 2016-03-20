@@ -65,7 +65,10 @@ pub fn custom_class() -> &'static Class {
     static REGISTER_CUSTOM_CLASS: Once = ONCE_INIT;
 
     REGISTER_CUSTOM_CLASS.call_once(|| {
-        let mut decl = ClassDecl::new("CustomObject", None).unwrap();
+        // The runtime will call this method, so it has to be implemented
+        extern fn custom_obj_class_initialize(_this: &Class, _cmd: Sel) { }
+
+        let mut decl = ClassDecl::root("CustomObject", custom_obj_class_initialize).unwrap();
 
         decl.add_ivar::<u32>("_foo");
 
@@ -85,9 +88,6 @@ pub fn custom_class() -> &'static Class {
             7
         }
 
-        // The runtime will call this method, so it has to be implemented
-        extern fn custom_obj_class_initialize(_this: &Class, _cmd: Sel) { }
-
         unsafe {
             let set_foo: extern fn(&mut Object, Sel, u32) = custom_obj_set_foo;
             decl.add_method(sel!(setFoo:), set_foo);
@@ -97,8 +97,6 @@ pub fn custom_class() -> &'static Class {
             decl.add_method(sel!(customStruct), get_struct);
             let class_method: extern fn(&Class, Sel) -> u32 = custom_obj_class_method;
             decl.add_class_method(sel!(classFoo), class_method);
-            let class_initialize: extern fn(&Class, Sel) = custom_obj_class_initialize;
-            decl.add_class_method(sel!(initialize), class_initialize);
         }
 
         decl.register();

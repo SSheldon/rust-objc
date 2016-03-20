@@ -131,6 +131,30 @@ impl ClassDecl {
         }
     }
 
+    /**
+    Constructs a `ClassDecl` declaring a new root class with the given name.
+    Returns `None` if the class couldn't be allocated.
+
+    An implementation for `+initialize` must also be given; the runtime calls
+    this method for all classes, so it must be defined on root classes.
+
+    Note that implementing a root class is not a simple endeavor.
+    For example, your class probably cannot be passed to Cocoa code unless
+    the entire `NSObject` protocol is implemented.
+    Functionality it expects, like implementations of `-retain` and `-release`
+    used by ARC, will not be present otherwise.
+    */
+    pub fn root(name: &str, intitialize_fn: extern fn(&Class, Sel))
+            -> Option<ClassDecl> {
+        let mut decl = ClassDecl::new(name, None);
+        if let Some(ref mut decl) = decl {
+            unsafe {
+                decl.add_class_method(sel!(initialize), intitialize_fn);
+            }
+        }
+        decl
+    }
+
     /// Adds a method with the given name and implementation to self.
     /// Panics if the method wasn't sucessfully added
     /// or if the selector and function take different numbers of arguments.

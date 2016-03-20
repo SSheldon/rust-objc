@@ -67,7 +67,7 @@ pub struct Object {
 }
 
 /// A pointer to the start of a method implementation.
-pub type Imp = unsafe extern fn(*mut Object, Sel, ...) -> *mut Object;
+pub type Imp = unsafe extern fn();
 
 #[link(name = "objc", kind = "dylib")]
 extern {

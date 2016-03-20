@@ -197,9 +197,13 @@ encode_message_impl!("@", Object);
 
 encode_message_impl!("#", Class);
 
+/// Types that represent a group of arguments, where each has an Objective-C
+/// type encoding.
 pub trait EncodeArguments {
+    /// The type as which the encodings for Self will be returned.
     type Encs: AsRef<[Encoding]>;
 
+    /// Returns the Objective-C type encodings for Self.
     fn encodings() -> Self::Encs;
 }
 

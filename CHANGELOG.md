@@ -1,0 +1,51 @@
+## 0.2.0
+
+### Added
+
+* Added verification for the types used when sending messages.
+  This can be enabled for all messages with the `"verify_message"` feature,
+  or you can test before sending specific messages with the
+  `Message::verify_message` method. Verification errors are reported using the
+  new `MessageError` struct.
+
+* Added support for the GNUstep runtime!
+  Operating systems besides OSX and iOS will fall back to the GNUstep runtime.
+
+* Root classes can be declared by using the `ClassDecl::root` constructor.
+
+### Changed
+
+* C types are now used from `std::os::raw` rather than `libc`. This means
+  `Encode` may not be implemented for `libc` types; switch them to the
+  `std::os::raw` equivalents instead. This avoids an issue that would arise
+  from simultaneously using different versions of the libc crate. 
+
+* Dynamic messaging was moved into the `Message` trait; instead of
+  `().send(obj, sel!(description))`, use
+  `obj.send_message(sel!(description), ())`.
+
+* Rearranged the parameters to `ClassDecl::new` for consistency; instead of
+  `ClassDecl::new(superclass, "MyObject")`, use
+  `ClassDecl::new("MyObject", superclass)`.
+
+* Overhauled the `MethodImplementation` trait. Encodings are now accessed
+  through the `MethodImplementation::Args` associated type. The `imp_for`
+  method was replaced with `imp` and no longer takes a selector or returns an
+  `UnequalArgsError`, although `ClassDecl::add_method` still validates the
+  number of arguments.
+
+* Updated the definition of `Imp` to not use the old dispatch prototypes.
+  To invoke an `Imp`, it must first be transmuted to the correct type.
+
+* Removed `objc_msgSend` functions from the `runtime` module; the availability
+  of these functions varies and they shouldn't be called without trasmuting,
+  so they are now hidden as an implementation detail of messaging.
+
+### Fixed
+
+* Corrected alignment of ivars in `ClassDecl`; declared classes may now have a
+  smaller size. 
+
+* With the `"exception"` or `"verify_message"` feature enabled, panics from
+  `msg_send!` will now be triggered from the line and file where the macro is
+  used, rather than from within the implementation of messaging.

@@ -114,7 +114,7 @@ pub fn custom_subclass() -> &'static Class {
 
     REGISTER_CUSTOM_SUBCLASS.call_once(|| {
         let superclass = custom_class();
-        let mut decl = ClassDecl::new("CustomSubclassObject", Some(superclass)).unwrap();
+        let mut decl = ClassDecl::new("CustomSubclassObject", superclass).unwrap();
 
         extern fn custom_subclass_get_foo(this: &Object, _cmd: Sel) -> u32 {
             let foo: u32 = unsafe {

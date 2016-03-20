@@ -26,7 +26,7 @@ one ivar, a `u32` named `_number` and a `number` method that returns it:
 
 ``` rust
 let superclass = Class::get("NSObject").unwrap();
-let mut decl = ClassDecl::new("MyNumber", Some(superclass)).unwrap();
+let mut decl = ClassDecl::new("MyNumber", superclass).unwrap();
 
 // Add an instance variable
 decl.add_ivar::<u32>("_number");

@@ -15,7 +15,7 @@ one ivar, a `u32` named `_number` and a `number` method that returns it:
 # use objc::runtime::{Class, Object, Sel};
 # fn main() {
 let superclass = Class::get("NSObject").unwrap();
-let mut decl = ClassDecl::new("MyNumber", Some(superclass)).unwrap();
+let mut decl = ClassDecl::new("MyNumber", superclass).unwrap();
 
 // Add an instance variable
 decl.add_ivar::<u32>("_number");
@@ -116,9 +116,8 @@ pub struct ClassDecl {
 }
 
 impl ClassDecl {
-    /// Constructs a `ClassDecl` with the given superclass and name.
-    /// Returns `None` if the class couldn't be allocated.
-    pub fn new(name: &str, superclass: Option<&Class>) -> Option<ClassDecl> {
+    fn with_superclass(name: &str, superclass: Option<&Class>)
+            -> Option<ClassDecl> {
         let name = CString::new(name).unwrap();
         let super_ptr = superclass.map_or(ptr::null(), |c| c);
         let cls = unsafe {
@@ -129,6 +128,12 @@ impl ClassDecl {
         } else {
             Some(ClassDecl { cls: cls })
         }
+    }
+
+    /// Constructs a `ClassDecl` with the given name and superclass.
+    /// Returns `None` if the class couldn't be allocated.
+    pub fn new(name: &str, superclass: &Class) -> Option<ClassDecl> {
+        ClassDecl::with_superclass(name, Some(superclass))
     }
 
     /**
@@ -146,7 +151,7 @@ impl ClassDecl {
     */
     pub fn root(name: &str, intitialize_fn: extern fn(&Class, Sel))
             -> Option<ClassDecl> {
-        let mut decl = ClassDecl::new(name, None);
+        let mut decl = ClassDecl::with_superclass(name, None);
         if let Some(ref mut decl) = decl {
             unsafe {
                 decl.add_class_method(sel!(initialize), intitialize_fn);

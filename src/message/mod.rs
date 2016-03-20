@@ -68,9 +68,31 @@ pub unsafe trait Message {
         send_message(self, sel, args)
     }
 
+    /**
+    Verifies that the argument and return types match the encoding of the
+    method for the given selector.
+
+    This will look up the encoding of the method for the given selector, `sel`,
+    and return a `MessageError` if any encodings differ for the arguments `A`
+    and return type `R`.
+
+    # Example
+    ``` no_run
+    # #[macro_use] extern crate objc;
+    # use objc::runtime::{BOOL, Class, Object};
+    # use objc::Message;
+    # fn main() {
+    let obj: &Object;
+    # obj = unsafe { msg_send![Class::get("NSObject").unwrap(), new] };
+    let sel = sel!(isKindOfClass:);
+    // Verify isKindOfClass: takes one Class and returns a BOOL
+    let result = obj.verify_message::<(&Class,), BOOL>(sel);
+    assert!(result.is_ok());
+    # }
+    ```
+    */
     fn verify_message<A, R>(&self, sel: Sel) -> Result<(), MessageError>
-            where Self: Sized, A: MessageArguments + EncodeArguments,
-            R: Any + Encode  {
+            where Self: Sized, A: EncodeArguments, R: Encode {
         let obj = unsafe { &*(self as *const _ as *const Object) };
         verify_message_signature::<A, R>(obj.class(), sel)
     }

@@ -38,7 +38,7 @@ use std::ffi::CString;
 use std::mem;
 use std::ptr;
 
-use runtime::{Class, Imp, NO, Object, Sel, self};
+use runtime::{BOOL, Class, Imp, NO, Object, Protocol, Sel, self};
 use {Encode, EncodeArguments, Encoding, Message};
 
 /// Types that can be used as the implementation of an Objective-C method.
@@ -216,6 +216,13 @@ impl ClassDecl {
         assert!(success != NO, "Failed to add ivar {}", name);
     }
 
+    /// Adds a protocol to self. Panics if the protocol wasn't successfully
+    /// added
+    pub fn add_protocol(&mut self, proto: &Protocol) {
+        let success = unsafe { runtime::class_addProtocol(self.cls, proto) };
+        assert!(success != NO, "Failed to add protocol {:?}", proto);
+    }
+
     /// Registers self, consuming it and returning a reference to the
     /// newly registered `Class`.
     pub fn register(self) -> &'static Class {
@@ -233,6 +240,76 @@ impl Drop for ClassDecl {
     fn drop(&mut self) {
         unsafe {
             runtime::objc_disposeClassPair(self.cls);
+        }
+    }
+}
+
+/// A type for declaring a new protocol and adding new methods to it
+/// before registering it.
+pub struct ProtocolDecl {
+    proto: *mut Protocol
+}
+
+impl ProtocolDecl {
+    /// Constructs a `ProtocolDecl` with the given name. Returns `None` if the
+    /// protocol couldn't be allocated.
+    pub fn new(name: &str) -> Option<ProtocolDecl> {
+        let c_name = CString::new(name).unwrap();
+        let proto = unsafe {
+            runtime::objc_allocateProtocol(c_name.as_ptr())
+        };
+        if proto.is_null() {
+            None
+        } else {
+            Some(ProtocolDecl { proto: proto })
+        }
+    }
+
+    fn add_method_description_common<Args, Ret>(&mut self, sel: Sel, is_required: bool,
+            is_instance_method: bool)
+            where Args: EncodeArguments,
+                  Ret: Encode {
+        let encs = Args::encodings();
+        let encs = encs.as_ref();
+        let sel_args = count_args(sel);
+        assert!(sel_args == encs.len(),
+            "Selector accepts {} arguments, but function accepts {}",
+            sel_args, encs.len(),
+        );
+        let types = method_type_encoding(&Ret::encode(), encs);
+        unsafe {
+            runtime::protocol_addMethodDescription(
+                self.proto, sel, types.as_ptr(), is_required as BOOL, is_instance_method as BOOL);
+        }
+    }
+
+    /// Adds an instance method declaration with a given description to self.
+    pub fn add_method_description<Args, Ret>(&mut self, sel: Sel, is_required: bool)
+            where Args: EncodeArguments,
+                  Ret: Encode {
+        self.add_method_description_common::<Args, Ret>(sel, is_required, true)
+    }
+
+    /// Adds a class method declaration with a given description to self.
+    pub fn add_class_method_description<Args, Ret>(&mut self, sel: Sel, is_required: bool)
+            where Args: EncodeArguments,
+                  Ret: Encode {
+        self.add_method_description_common::<Args, Ret>(sel, is_required, false)
+    }
+
+    /// Adds a requirement on another protocol.
+    pub fn add_protocol(&mut self, proto: &Protocol) {
+        unsafe {
+            runtime::protocol_addProtocol(self.proto, proto);
+        }
+    }
+
+    /// Registers self, consuming it and returning a reference to the
+    /// newly registered `Protocol`.
+    pub fn register(self) -> &'static Protocol {
+        unsafe {
+            runtime::objc_registerProtocol(self.proto);
+            &*self.proto
         }
     }
 }

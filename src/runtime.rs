@@ -60,6 +60,12 @@ pub struct Class {
     _priv: PrivateMarker,
 }
 
+/// A type that represents an Objective-C protocol.
+#[repr(C)]
+pub struct Protocol {
+    _priv: PrivateMarker
+}
+
 /// A type that represents an instance of a class.
 #[repr(C)]
 pub struct Object {
@@ -83,6 +89,9 @@ extern {
     pub fn class_copyIvarList(cls: *const Class, outCount: *mut c_uint) -> *mut *const Ivar;
     pub fn class_addMethod(cls: *mut Class, name: Sel, imp: Imp, types: *const c_char) -> BOOL;
     pub fn class_addIvar(cls: *mut Class, name: *const c_char, size: usize, alignment: u8, types: *const c_char) -> BOOL;
+    pub fn class_addProtocol(cls: *mut Class, proto: *const Protocol) -> BOOL;
+    pub fn class_conformsToProtocol(cls: *const Class, proto: *const Protocol) -> BOOL;
+    pub fn class_copyProtocolList(cls: *const Class, outCount: *mut c_uint) -> *mut *const Protocol;
 
     pub fn objc_allocateClassPair(superclass: *const Class, name: *const c_char, extraBytes: usize) -> *mut Class;
     pub fn objc_disposeClassPair(cls: *mut Class);
@@ -95,6 +104,18 @@ extern {
     pub fn objc_getClassList(buffer: *mut *const Class, bufferLen: c_int) -> c_int;
     pub fn objc_copyClassList(outCount: *mut c_uint) -> *mut *const Class;
     pub fn objc_getClass(name: *const c_char) -> *const Class;
+    pub fn objc_getProtocol(name: *const c_char) -> *const Protocol;
+    pub fn objc_copyProtocolList(outCount: *mut c_uint) -> *mut *const Protocol;
+    pub fn objc_allocateProtocol(name: *const c_char) -> *mut Protocol;
+    pub fn objc_registerProtocol(proto: *mut Protocol);
+
+    pub fn protocol_addMethodDescription(proto: *mut Protocol, name: Sel, types: *const c_char, isRequiredMethod: BOOL,
+                                         isInstanceMethod: BOOL);
+    pub fn protocol_addProtocol(proto: *mut Protocol, addition: *const Protocol);
+    pub fn protocol_getName(proto: *const Protocol) -> *const c_char;
+    pub fn protocol_isEqual(proto: *const Protocol, other: *const Protocol) -> BOOL;
+    pub fn protocol_copyProtocolList(proto: *const Protocol, outCount: *mut c_uint) -> *mut *const Protocol;
+    pub fn protocol_conformsToProtocol(proto: *const Protocol, other: *const Protocol) -> BOOL;
 
     pub fn ivar_getName(ivar: *const Ivar) -> *const c_char;
     pub fn ivar_getOffset(ivar: *const Ivar) -> isize;
@@ -307,6 +328,20 @@ impl Class {
 
     }
 
+    /// Checks whether this class conforms to the specified protocol.
+    pub fn conforms_to(&self, proto: &Protocol) -> bool {
+        unsafe { class_conformsToProtocol(self, proto) == YES }
+    }
+
+    /// Get a list of the protocols to which this class conforms.
+    pub fn adopted_protocols(&self) -> MallocBuffer<&Protocol> {
+        unsafe {
+            let mut count: c_uint = 0;
+            let protos = class_copyProtocolList(self, &mut count);
+            MallocBuffer::new(protos as *mut _, count as usize).unwrap()
+        }
+    }
+
     /// Describes the instance variables declared by self.
     pub fn instance_variables(&self) -> MallocBuffer<&Ivar> {
         unsafe {
@@ -328,6 +363,63 @@ impl PartialEq for Class {
 impl Eq for Class { }
 
 impl fmt::Debug for Class {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.name())
+    }
+}
+
+impl Protocol {
+    /// Returns the protocol definition of a specified protocol, or `None` if the
+    /// protocol is not registered with the Objective-C runtime.
+    pub fn get(name: &str) -> Option<&'static Protocol> {
+        let name = CString::new(name).unwrap();
+        unsafe {
+            let proto = objc_getProtocol(name.as_ptr());
+            if proto.is_null() { None } else { Some(&*proto) }
+        }
+    }
+
+    /// Obtains the list of registered protocol definitions.
+    pub fn protocols() -> MallocBuffer<&'static Protocol> {
+        unsafe {
+            let mut count: c_uint = 0;
+            let protocols = objc_copyProtocolList(&mut count);
+            MallocBuffer::new(protocols as *mut _, count as usize).unwrap()
+        }
+    }
+
+    /// Get a list of the protocols to which this protocol conforms.
+    pub fn adopted_protocols(&self) -> MallocBuffer<&Protocol> {
+        unsafe {
+            let mut count: c_uint = 0;
+            let protocols = protocol_copyProtocolList(self, &mut count);
+            MallocBuffer::new(protocols as *mut _, count as usize).unwrap()
+        }
+    }
+
+    /// Checks whether this protocol conforms to the specified protocol.
+    pub fn conforms_to(&self, proto: &Protocol) -> bool {
+        unsafe { protocol_conformsToProtocol(self, proto) == YES }
+    }
+
+    /// Returns the name of self.
+    pub fn name(&self) -> &str {
+        let name = unsafe {
+            CStr::from_ptr(protocol_getName(self))
+        };
+        str::from_utf8(name.to_bytes()).unwrap()
+    }
+}
+
+impl PartialEq for Protocol {
+    fn eq(&self, other: &Protocol) -> bool {
+        unsafe { protocol_isEqual(self, other) == YES }
+    }
+}
+
+impl Eq for Protocol { }
+
+impl fmt::Debug for Protocol {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.name())
     }
@@ -406,7 +498,7 @@ impl fmt::Debug for Object {
 mod tests {
     use test_utils;
     use Encode;
-    use super::{Class, Sel};
+    use super::{Class, Protocol, Sel};
 
     #[test]
     fn test_ivar() {
@@ -454,6 +546,43 @@ mod tests {
         assert!(Class::classes_count() > 0);
         let classes = Class::classes();
         assert!(classes.len() > 0);
+    }
+
+    #[test]
+    fn test_protocol() {
+        let proto = test_utils::custom_protocol();
+        assert!(proto.name() == "CustomProtocol");
+        let class = test_utils::custom_class();
+        assert!(class.conforms_to(proto));
+        let class_protocols = class.adopted_protocols();
+        assert!(class_protocols.len() > 0);
+    }
+
+    #[test]
+    fn test_protocol_method() {
+        let class = test_utils::custom_class();
+        let result: i32 = unsafe {
+            msg_send![class, addNumber:1 toNumber:2]
+        };
+        assert_eq!(result, 3);
+    }
+
+    #[test]
+    fn test_subprotocols() {
+        let sub_proto = test_utils::custom_subprotocol();
+        let super_proto = test_utils::custom_protocol();
+        assert!(sub_proto.conforms_to(super_proto));
+        let adopted_protocols = sub_proto.adopted_protocols();
+        assert_eq!(adopted_protocols[0], super_proto);
+    }
+
+    #[test]
+    fn test_protocols() {
+        // Ensure that a protocol has been registered on linux
+        let _ = test_utils::custom_protocol();
+
+        let protocols = Protocol::protocols();
+        assert!(protocols.len() > 0);
     }
 
     #[test]

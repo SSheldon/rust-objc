@@ -1,3 +1,13 @@
+## 0.2.1
+
+### Added
+
+* Added support for working with protocols with the `Protocol` struct.
+  The protocols a class conforms to can be examined with the new
+  `Class::adopted_protocols` and `Class::conforms_to` methods.
+
+* Protocols can be declared using the new `ProtocolDecl` struct.
+
 ## 0.2.0
 
 ### Added

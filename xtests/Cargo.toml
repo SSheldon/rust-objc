@@ -13,3 +13,7 @@ crate-type = ["staticlib"]
 [dependencies.objc]
 path = ".."
 features = ["exception"]
+
+[build-dependencies]
+regex = "0.1"
+walkdir = "0.1"

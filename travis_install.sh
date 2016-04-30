@@ -23,6 +23,11 @@ for arch in $IOS_ARCHS; do
     rust_ios_install "$arch"
 done
 
+if [ -n "$IOS_ARCHS" ]; then
+    curl -LO https://github.com/SSheldon/rust-test-ios/releases/download/0.1.0/rust-test-ios
+    chmod +x rust-test-ios
+fi
+
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
     gnustep_install
 fi

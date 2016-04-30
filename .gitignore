@@ -1,3 +1,6 @@
 doc/
 target/
 Cargo.lock
+
+tests-ios/*
+!tests-ios/prelude.rs

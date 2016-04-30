@@ -13,13 +13,16 @@ use walkdir::{DirEntry, WalkDir};
 static TEST_REGEX: &'static str =
     "#\\[test\\]\n(    fn ([^\\{]*)\\(\\) \\{(?s:.)*?\n    \\}\n)";
 
-static TEMPLATE: &'static str = r"
-use objc::*;
-use objc::declare::*;
+static TEMPLATE: &'static str = r##"
+#[macro_use]
+extern crate objc;
+
+pub use objc::*;
 use objc::runtime::*;
 
-use test_utils;
-";
+#[path = "../src/test_utils.rs"]
+mod test_utils;
+"##;
 
 fn has_rs_ext(path: &Path) -> bool {
     path.extension().and_then(|x| x.to_str()).map_or(false, |x| x == "rs")
@@ -61,13 +64,13 @@ fn build_test_module<I: Iterator<Item=String>>(src_contents: I) -> String {
     for test_name in &test_names {
         write!(&mut output, "(\"{0}\", {0}),\n", test_name).unwrap();
     }
-    output.push_str("];\n");
+    output.push_str("];\npub mod export;\n");
     output
 }
 
 fn main() {
     let cwd = env::current_dir().unwrap();
-    let output_path = cwd.join("tests.rs");
+    let output_path = cwd.join("lib.rs");
     let src_dir = cwd.parent().unwrap().join("src");
 
     let src_files: Vec<DirEntry> = WalkDir::new(src_dir).into_iter()

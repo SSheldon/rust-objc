@@ -1,15 +1,5 @@
-#[macro_use]
-extern crate objc;
-
-pub use objc::*;
-
-#[path = "../src/test_utils.rs"]
-mod test_utils;
-
-mod tests;
-
 use std::os::raw::c_char;
-use tests::TESTS;
+use super::TESTS;
 
 #[no_mangle]
 pub extern fn tests_count() -> usize {

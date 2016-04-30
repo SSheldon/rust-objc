@@ -17,8 +17,6 @@ exclude = [
   "travis_install.sh",
   "travis_test.sh",
   "tests-ios/**",
-  "ios-tests/**",
-  "xtests/**",
  ]
 
 [features]

@@ -60,6 +60,8 @@ The bindings can be used on Linux or *BSD utilizing the
 
 #![warn(missing_docs)]
 
+#![cfg_attr(feature = "verify_message", feature(specialization))]
+
 extern crate malloc_buf;
 #[cfg(feature = "exception")]
 extern crate objc_exception;

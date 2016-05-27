@@ -241,6 +241,27 @@ encode_args_impl!(A, B, C, D, E, F, G, H, I, J);
 encode_args_impl!(A, B, C, D, E, F, G, H, I, J, K);
 encode_args_impl!(A, B, C, D, E, F, G, H, I, J, K, L);
 
+#[cfg(feature = "verify_message")]
+pub fn maybe_encode<T>() -> Option<Encoding> {
+    trait MaybeEncode {
+        fn maybe_encode() -> Option<Encoding>;
+    }
+
+    impl<T> MaybeEncode for T {
+        default fn maybe_encode() -> Option<Encoding> {
+            None
+        }
+    }
+
+    impl<T: Encode> MaybeEncode for T {
+        fn maybe_encode() -> Option<Encoding> {
+            Some(T::encode())
+        }
+    }
+
+    T::maybe_encode()
+}
+
 #[cfg(test)]
 mod tests {
     use runtime::{Class, Object, Sel};

@@ -4,6 +4,8 @@ use std::fmt;
 use std::mem;
 
 use runtime::{Class, Imp, Object, Sel};
+#[cfg(feature = "verify_message")]
+use runtime::Method;
 use {Encode, EncodeArguments};
 
 mod verify;
@@ -111,6 +113,14 @@ pub trait MessageArguments: Sized {
     /// with a dynamic selector, the `Message::send_message` method.
     unsafe fn invoke<R>(imp: Imp, obj: *mut Object, sel: Sel, args: Self) -> R
             where R: Any;
+
+    /// Verifies that arguments of this type match the encoding for the given
+    /// method.
+    ///
+    /// This check will skip any arguments that do not implement `Encode`,
+    /// but if any available encodings differ it returns a `MessageError`.
+    #[cfg(feature = "verify_message")]
+    fn verify(method: &Method) -> Result<(), MessageError>;
 }
 
 macro_rules! message_args_impl {
@@ -121,6 +131,14 @@ macro_rules! message_args_impl {
                 let imp: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
                     mem::transmute(imp);
                 imp(obj, sel $(, $a)*)
+            }
+
+            #[cfg(feature = "verify_message")]
+            fn verify(method: &Method) -> Result<(), MessageError> {
+                let encs: &[Option<::Encoding>] = &[
+                    $(::encode::maybe_encode::<$t>()),*
+                ];
+                verify::verify_arguments(method, encs.iter().map(|e| e.as_ref()))
             }
         }
     );

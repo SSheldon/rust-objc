@@ -57,6 +57,34 @@ impl Encoding {
             },
         }
     }
+
+    fn prepend(self, pre: &str) -> Encoding {
+        let old_len = self.as_str().len();
+        let len = pre.len() + old_len;
+        if len <= CODE_INLINE_CAP {
+            let mut bytes = [0; CODE_INLINE_CAP];
+            (&mut bytes[..pre.len()]).copy_from_slice(pre.as_bytes());
+            (&mut bytes[pre.len()..len]).copy_from_slice(self.as_str().as_bytes());
+            Encoding { code: Code::Inline(len as u8, bytes) }
+        } else if let Code::Owned(mut code) = self.code {
+            unsafe {
+                let bytes = code.as_mut_vec();
+                // Make room for the prefix
+                bytes.resize(len, 0);
+                // Shift the old string left by the prefix length
+                let old = bytes.as_ptr();
+                let new = bytes.as_mut_ptr().offset(pre.len() as isize);
+                ::std::ptr::copy(old, new, old_len);
+                // Finally copy the prefix into the beginning
+                (&mut bytes[..pre.len()]).copy_from_slice(pre.as_bytes());
+            }
+            Encoding { code: Code::Owned(code) }
+        } else {
+            let mut code = pre.to_owned();
+            code.push_str(self.as_str());
+            Encoding { code: Code::Owned(code) }
+        }
+    }
 }
 
 impl Clone for Encoding {
@@ -93,9 +121,7 @@ pub fn from_str(code: &str) -> Encoding {
         Encoding { code: Code::Owned(code.to_owned()) }
     } else {
         let mut bytes = [0; CODE_INLINE_CAP];
-        for (dst, byte) in bytes.iter_mut().zip(code.bytes()) {
-            *dst = byte;
-        }
+        (&mut bytes[..code.len()]).copy_from_slice(code.as_bytes());
         Encoding { code: Code::Inline(code.len() as u8, bytes) }
     }
 }
@@ -140,11 +166,21 @@ encode_impls!(
     bool: "B",
     (): "v",
     *mut c_char: "*",
-    *const c_char: "r*",
     *mut c_void: "^v",
-    *const c_void: "r^v",
     Sel: ":",
 );
+
+unsafe impl<T: Encode> Encode for *mut T {
+    default fn encode() -> Encoding {
+        T::encode().prepend("^")
+    }
+}
+
+unsafe impl<T> Encode for *const T where *mut T: Encode {
+    default fn encode() -> Encoding {
+        <*mut T>::encode().prepend("r")
+    }
+}
 
 unsafe impl Encode for isize {
     #[cfg(target_pointer_width = "32")]
@@ -275,6 +311,8 @@ mod tests {
         assert!(<*mut Object>::encode().as_str() == "@");
         assert!(<&Class>::encode().as_str() == "#");
         assert!(Sel::encode().as_str() == ":");
+        assert!(<*mut u32>::encode().as_str() == "^I");
+        assert!(<*mut ::std::os::raw::c_char>::encode().as_str() == "*");
     }
 
     #[test]

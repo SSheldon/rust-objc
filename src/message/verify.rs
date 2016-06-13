@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::runtime::{Class, Method, Object, Sel};
+use crate::runtime::{Class, Method, Sel};
 use crate::{Encode, Encoding, EncodeArguments};
 
 pub enum VerificationError<'a> {
@@ -42,32 +42,52 @@ impl<'a> fmt::Display for VerificationError<'a> {
 pub fn verify_message_signature<A, R>(cls: &Class, sel: Sel)
         -> Result<(), VerificationError>
         where A: EncodeArguments, R: Encode {
-    let method = match cls.instance_method(sel) {
-        Some(method) => method,
-        None => return Err(VerificationError::MethodNotFound(cls, sel)),
-    };
+    let method = verify_selector(cls, sel)?;
 
     let ret = R::ENCODING;
-    let expected_ret = method.return_type();
-    if ret != *expected_ret {
-        return Err(VerificationError::MismatchedReturn(method, ret));
-    }
+    verify_return(method, Some(ret))?;
 
-    let self_and_cmd = [<*mut Object>::ENCODING, Sel::ENCODING];
     let args = A::ENCODINGS;
+    verify_arguments(method, args.iter().copied().map(Some))
+}
 
-    let count = self_and_cmd.len() + args.len();
+pub fn verify_selector(cls: &Class, sel: Sel)
+-> Result<&Method, VerificationError> {
+    match cls.instance_method(sel) {
+        Some(method) => Ok(method),
+        None => Err(VerificationError::MethodNotFound(cls, sel)),
+    }
+}
+
+pub fn verify_return<'a>(method: &'a Method, ret: Option<Encoding<'static>>)
+-> Result<(), VerificationError<'a>> {
+    let expected_ret = method.return_type();
+    match ret {
+        Some(ret) if ret != *expected_ret =>
+            Err(VerificationError::MismatchedReturn(method, ret)),
+        _ => Ok(())
+    }
+}
+
+pub fn verify_arguments<I>(method: &Method, args: I)
+-> Result<(), VerificationError>
+where I: Iterator<Item=Option<Encoding<'static>>> {
     let expected_count = method.arguments_count();
-    if count != expected_count {
-        return Err(VerificationError::MismatchedArgumentsCount(method, count));
-    }
 
-    for (i, arg) in self_and_cmd.iter().chain(args).copied().enumerate() {
-        let expected = method.argument_type(i).unwrap();
-        if arg != *expected {
-            return Err(VerificationError::MismatchedArgument(method, i, arg));
+    let mut i = 2;
+    for arg in args {
+        match (arg, method.argument_type(i)) {
+            (Some(arg), Some(expected)) if arg != *expected => {
+                return Err(VerificationError::MismatchedArgument(method, i, arg));
+            }
+            _ => (),
         }
+        i += 1;
     }
 
-    Ok(())
+    if i == expected_count {
+        Ok(())
+    } else {
+        Err(VerificationError::MismatchedArgumentsCount(method, i))
+    }
 }

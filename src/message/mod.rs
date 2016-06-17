@@ -54,18 +54,9 @@ pub unsafe trait Message {
     If the selector is known at compile-time, it is recommended to use the
     `msg_send!` macro rather than this method.
     */
-    #[cfg(not(feature = "verify_message"))]
     unsafe fn send_message<A, R>(&self, sel: Sel, args: A)
             -> Result<R, MessageError>
             where Self: Sized, A: MessageArguments, R: Any {
-        send_message(self, sel, args)
-    }
-
-    #[cfg(feature = "verify_message")]
-    unsafe fn send_message<A, R>(&self, sel: Sel, args: A)
-            -> Result<R, MessageError>
-            where Self: Sized, A: MessageArguments + EncodeArguments,
-            R: Any + Encode {
         send_message(self, sel, args)
     }
 
@@ -202,9 +193,20 @@ macro_rules! objc_try {
     ($b:block) => (Ok($b))
 }
 
-unsafe fn send_unverified<T, A, R>(obj: *const T, sel: Sel, args: A)
+#[doc(hidden)]
+#[inline(always)]
+pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
         -> Result<R, MessageError>
         where T: Message, A: MessageArguments, R: Any {
+    if cfg!(all(debug_assertions, feature = "verify_message")) {
+        let cls = if obj.is_null() {
+            return Err(MessageError(format!("Messaging {:?} to nil", sel)));
+        } else {
+            (*(obj as *const Object)).class()
+        };
+        try!(verify::verify_message_signature::<A, R>(cls, sel));
+    }
+
     let (msg_send_fn, receiver) = msg_send_fn::<R>(obj as *mut T as *mut Object, sel);
     objc_try!({
         A::invoke(msg_send_fn, receiver, sel, args)
@@ -213,63 +215,20 @@ unsafe fn send_unverified<T, A, R>(obj: *const T, sel: Sel, args: A)
 
 #[doc(hidden)]
 #[inline(always)]
-#[cfg(not(feature = "verify_message"))]
-pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
-        -> Result<R, MessageError>
-        where T: Message, A: MessageArguments, R: Any {
-    send_unverified(obj, sel, args)
-}
-
-#[doc(hidden)]
-#[inline(always)]
-#[cfg(feature = "verify_message")]
-pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
-        -> Result<R, MessageError>
-        where T: Message, A: MessageArguments + EncodeArguments,
-        R: Any + Encode {
-    let cls = if obj.is_null() {
-        return Err(MessageError(format!("Messaging {:?} to nil", sel)));
-    } else {
-        (*(obj as *const Object)).class()
-    };
-
-    verify::verify_message_signature::<A, R>(cls, sel).and_then(|_| {
-        send_unverified(obj, sel, args)
-    })
-}
-
-unsafe fn send_super_unverified<T, A, R>(obj: *const T, superclass: &Class,
+pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
         sel: Sel, args: A) -> Result<R, MessageError>
         where T: Message, A: MessageArguments, R: Any {
+    if cfg!(all(debug_assertions, feature = "verify_message")) {
+        if obj.is_null() {
+            return Err(MessageError(format!("Messaging {:?} to nil", sel)));
+        }
+        try!(verify::verify_message_signature::<A, R>(superclass, sel));
+    }
+
     let sup = Super { receiver: obj as *mut T as *mut Object, superclass: superclass };
     let (msg_send_fn, receiver) = msg_send_super_fn::<R>(&sup, sel);
     objc_try!({
         A::invoke(msg_send_fn, receiver, sel, args)
-    })
-}
-
-#[doc(hidden)]
-#[inline(always)]
-#[cfg(not(feature = "verify_message"))]
-pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
-        sel: Sel, args: A) -> Result<R, MessageError>
-        where T: Message, A: MessageArguments, R: Any {
-    send_super_unverified(obj, superclass, sel, args)
-}
-
-#[doc(hidden)]
-#[inline(always)]
-#[cfg(feature = "verify_message")]
-pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
-        sel: Sel, args: A) -> Result<R, MessageError>
-        where T: Message, A: MessageArguments + EncodeArguments,
-        R: Any + Encode {
-    if obj.is_null() {
-        return Err(MessageError(format!("Messaging {:?} to nil", sel)));
-    }
-
-    verify::verify_message_signature::<A, R>(superclass, sel).and_then(|_| {
-        send_super_unverified(obj, superclass, sel, args)
     })
 }
 

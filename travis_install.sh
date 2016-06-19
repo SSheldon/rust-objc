@@ -3,7 +3,7 @@
 set -eu
 
 rust_ios_install() {
-    ios_stdlib="rust-std-nightly-${1}-apple-ios"
+    ios_stdlib="rust-std-1.9.0-${1}-apple-ios"
     curl -O "https://static.rust-lang.org/dist/${ios_stdlib}.tar.gz"
     tar xzf "${ios_stdlib}.tar.gz"
     "./${ios_stdlib}/install.sh" --prefix=$(rustc --print sysroot)

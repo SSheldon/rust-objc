@@ -1,17 +1,17 @@
 use runtime::{Class, Method, Sel};
-use {Encode, EncodeArguments, Encoding};
+use Encoding;
 use super::MessageError;
 
+#[cfg(feature = "verify_message")]
 pub fn verify_message_signature<A, R>(cls: &Class, sel: Sel)
         -> Result<(), MessageError>
-        where A: EncodeArguments, R: Encode {
+        where A: ::MessageArguments {
     let method = try!(verify_selector(cls, sel));
 
-    let ret = R::encode();
-    try!(verify_return(method, Some(&ret)));
+    let ret = ::encode::maybe_encode::<R>();
+    try!(verify_return(method, ret.as_ref()));
 
-    let args = A::encodings();
-    verify_arguments(method, args.as_ref().iter().map(|a| Some(a)))
+    A::verify(method)
 }
 
 pub fn verify_selector(cls: &Class, sel: Sel) -> Result<&Method, MessageError> {

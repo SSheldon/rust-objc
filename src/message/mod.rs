@@ -36,7 +36,7 @@ mod platform;
 mod platform;
 
 use self::platform::{send_unverified, send_super_unverified};
-use self::verify::{VerificationError, verify_message_signature};
+use self::verify::VerificationError;
 
 /// Specifies the superclass of an instance.
 #[repr(C)]
@@ -101,8 +101,15 @@ pub unsafe trait Message {
     fn verify_message<A, R>(&self, sel: Sel) -> Result<(), MessageError>
             where Self: Sized, A: EncodeArguments, R: Encode {
         let obj = unsafe { &*(self as *const _ as *const Object) };
-        verify_message_signature::<A, R>(obj.class(), sel)
-            .map_err(MessageError::from)
+        let method = verify::verify_selector(obj.class(), sel)?;
+
+        let ret = R::ENCODING;
+        verify::verify_return(method, Some(ret))?;
+
+        let args = A::ENCODINGS;
+        verify::verify_arguments(method, args.iter().copied().map(Some))?;
+
+        Ok(())
     }
 }
 
@@ -217,7 +224,7 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
         (*(obj as *const Object)).class()
     };
 
-    verify_message_signature::<A, R>(cls, sel)?;
+    verify::verify_message_signature::<A, R>(cls, sel)?;
     send_unverified(obj, sel, args)
 }
 
@@ -241,7 +248,7 @@ pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
         return Err(VerificationError::NilReceiver(sel).into());
     }
 
-    verify_message_signature::<A, R>(superclass, sel)?;
+    verify::verify_message_signature::<A, R>(superclass, sel)?;
     send_super_unverified(obj, superclass, sel, args)
 }
 

@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::runtime::{Class, Method, Sel};
-use crate::{Encode, Encoding, EncodeArguments};
+use crate::Encoding;
 
 pub enum VerificationError<'a> {
     NilReceiver(Sel),
@@ -39,16 +39,16 @@ impl<'a> fmt::Display for VerificationError<'a> {
     }
 }
 
+#[cfg(feature = "verify_message")]
 pub fn verify_message_signature<A, R>(cls: &Class, sel: Sel)
-        -> Result<(), VerificationError>
-        where A: EncodeArguments, R: Encode {
+        -> Result<(), super::MessageError>
+        where A: crate::MessageArguments {
     let method = verify_selector(cls, sel)?;
 
-    let ret = R::ENCODING;
-    verify_return(method, Some(ret))?;
+    let ret = crate::encode::maybe_encode::<R>();
+    verify_return(method, ret)?;
 
-    let args = A::ENCODINGS;
-    verify_arguments(method, args.iter().copied().map(Some))
+    A::verify(method)
 }
 
 pub fn verify_selector(cls: &Class, sel: Sel)

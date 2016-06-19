@@ -4,7 +4,8 @@ use std::os::raw::{c_char, c_void};
 use std::str;
 use malloc_buf::MallocBuffer;
 
-use runtime::{Class, Object, Sel};
+use runtime::{Class, Sel};
+use Message;
 
 const QUALIFIERS: &'static [char] = &[
     'r', // const
@@ -166,21 +167,13 @@ encode_impls!(
     bool: "B",
     (): "v",
     *mut c_char: "*",
+    *const c_char: "r*",
     *mut c_void: "^v",
+    *const c_void: "r^v",
     Sel: ":",
+    *mut Class: "#",
+    *const Class: "#",
 );
-
-unsafe impl<T: Encode> Encode for *mut T {
-    default fn encode() -> Encoding {
-        T::encode().prepend("^")
-    }
-}
-
-unsafe impl<T> Encode for *const T where *mut T: Encode {
-    default fn encode() -> Encoding {
-        <*mut T>::encode().prepend("r")
-    }
-}
 
 unsafe impl Encode for isize {
     #[cfg(target_pointer_width = "32")]
@@ -198,40 +191,53 @@ unsafe impl Encode for usize {
     fn encode() -> Encoding { u64::encode() }
 }
 
-macro_rules! encode_message_impl {
-    ($code:expr, $name:ident) => (
-        encode_message_impl!($code, $name,);
-    );
-    ($code:expr, $name:ident, $($t:ident),*) => (
-        unsafe impl<'a $(, $t)*> $crate::Encode for &'a $name<$($t),*> {
-            fn encode() -> Encoding { from_static_str($code) }
-        }
-
-        unsafe impl<'a $(, $t)*> $crate::Encode for &'a mut $name<$($t),*> {
-            fn encode() -> Encoding { from_static_str($code) }
-        }
-
-        unsafe impl<'a $(, $t)*> $crate::Encode for Option<&'a $name<$($t),*>> {
-            fn encode() -> Encoding { from_static_str($code) }
-        }
-
-        unsafe impl<'a $(, $t)*> $crate::Encode for Option<&'a mut $name<$($t),*>> {
-            fn encode() -> Encoding { from_static_str($code) }
-        }
-
-        unsafe impl<$($t),*> $crate::Encode for *const $name<$($t),*> {
-            fn encode() -> Encoding { from_static_str($code) }
-        }
-
-        unsafe impl<$($t),*> $crate::Encode for *mut $name<$($t),*> {
-            fn encode() -> Encoding { from_static_str($code) }
-        }
-    );
+unsafe impl<T> Encode for *mut T where T: Message {
+    default fn encode() -> Encoding {
+        from_static_str("@")
+    }
 }
 
-encode_message_impl!("@", Object);
+unsafe impl<T> Encode for *const T where T: Message {
+    default fn encode() -> Encoding {
+        from_static_str("@")
+    }
+}
 
-encode_message_impl!("#", Class);
+unsafe impl<T> Encode for *mut T where T: Encode {
+    default fn encode() -> Encoding {
+        T::encode().prepend("^")
+    }
+}
+
+unsafe impl<T> Encode for *const T where *mut T: Encode {
+    default fn encode() -> Encoding {
+        <*mut T>::encode().prepend("r")
+    }
+}
+
+unsafe impl<'a, T> Encode for &'a T where *const T: Encode {
+    default fn encode() -> Encoding {
+        <*const T>::encode()
+    }
+}
+
+unsafe impl<'a, T> Encode for &'a mut T where *mut T: Encode {
+    default fn encode() -> Encoding {
+        <*mut T>::encode()
+    }
+}
+
+unsafe impl<'a , T> Encode for Option<&'a T> where *const T: Encode {
+    default fn encode() -> Encoding {
+        <*const T>::encode()
+    }
+}
+
+unsafe impl<'a , T> Encode for Option<&'a mut T> where *mut T: Encode {
+    default fn encode() -> Encoding {
+        <*mut T>::encode()
+    }
+}
 
 /// Types that represent a group of arguments, where each has an Objective-C
 /// type encoding.

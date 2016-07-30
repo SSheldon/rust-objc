@@ -56,6 +56,24 @@ let _: () = msg_send![obj, setArg1:1 arg2:2];
 */
 #[macro_export]
 macro_rules! msg_send {
+    (super($obj:expr), $name:ident) => ({
+        let sel = sel!($name);
+        let receiver_class = $obj.class();
+        let superclass : &$crate::runtime::Class = &*$crate::runtime::class_getSuperclass(receiver_class);
+        match $crate::__send_super_message(&*$obj, superclass, sel, ()) {
+            Err(s) => panic!("{}", s),
+            Ok(r) => r,
+        }
+    });
+    (super($obj:expr), $($name:ident : $arg:expr)+) => ({
+        let sel = sel!($($name:)+);
+        let receiver_class = $obj.class();
+        let superclass : &$crate::runtime::Class = &*$crate::runtime::class_getSuperclass(receiver_class);
+        match $crate::__send_super_message(&*$obj, superclass, sel, ($($arg,)*)) {
+            Err(s) => panic!("{}", s),
+            Ok(r) => r,
+        }
+    });
     (super($obj:expr, $superclass:expr), $name:ident) => ({
         let sel = sel!($name);
         match $crate::__send_super_message(&*$obj, $superclass, sel, ()) {

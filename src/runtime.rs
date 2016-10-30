@@ -159,6 +159,7 @@ impl Eq for Sel { }
 
 // Sel is safe to share across threads because it is immutable
 unsafe impl Sync for Sel { }
+unsafe impl Send for Sel { }
 
 impl Copy for Sel { }
 

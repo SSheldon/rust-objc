@@ -1,3 +1,9 @@
+## 0.2.2
+
+### Added
+
+* Implemented `Sync` and `Send` for `Sel`.
+
 ## 0.2.1
 
 ### Added

@@ -157,6 +157,9 @@ impl PartialEq for Sel {
 
 impl Eq for Sel { }
 
+// Sel is safe to share across threads because it is immutable
+unsafe impl Sync for Sel { }
+
 impl Copy for Sel { }
 
 impl Clone for Sel {

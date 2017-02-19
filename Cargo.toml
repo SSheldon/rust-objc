@@ -24,7 +24,7 @@ exception = ["objc_exception"]
 verify_message = []
 
 [dependencies]
-malloc_buf = "0.0"
+malloc_buf = "1.0"
 
 [dependencies.objc_exception]
 version = "0.1"

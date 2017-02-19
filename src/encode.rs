@@ -1,8 +1,8 @@
-use std::ffi::CStr;
 use std::fmt;
 use std::os::raw::{c_char, c_void};
 use std::str;
-use malloc_buf::MallocBuffer;
+
+use malloc_buf::Malloc;
 
 use runtime::{Class, Object, Sel};
 
@@ -26,7 +26,7 @@ enum Code {
     Slice(&'static str),
     Owned(String),
     Inline(u8, [u8; CODE_INLINE_CAP]),
-    Malloc(MallocBuffer<u8>)
+    Malloc(Malloc<str>)
 }
 
 /// An Objective-C type encoding.
@@ -52,9 +52,7 @@ impl Encoding {
             Code::Inline(len, ref bytes) => unsafe {
                 str::from_utf8_unchecked(&bytes[..len as usize])
             },
-            Code::Malloc(ref buf) => unsafe {
-                str::from_utf8_unchecked(&buf[..buf.len() - 1])
-            },
+            Code::Malloc(ref buf) => &*buf,
         }
     }
 }
@@ -101,11 +99,8 @@ pub fn from_str(code: &str) -> Encoding {
 }
 
 pub unsafe fn from_malloc_str(ptr: *mut c_char) -> Encoding {
-    let s = CStr::from_ptr(ptr);
-    let bytes = s.to_bytes_with_nul();
-    assert!(str::from_utf8(bytes).is_ok());
-    let buf = MallocBuffer::new(ptr as *mut u8, bytes.len()).unwrap();
-    Encoding { code: Code::Malloc(buf) }
+    let buf = Malloc::from_c_str(ptr);
+    Encoding { code: Code::Malloc(buf.unwrap()) }
 }
 
 /// Types that have an Objective-C type encoding.

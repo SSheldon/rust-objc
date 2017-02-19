@@ -8,7 +8,7 @@ use std::fmt;
 use std::os::raw::{c_char, c_int, c_uint, c_void};
 use std::ptr;
 use std::str;
-use malloc_buf::MallocBuffer;
+use malloc_buf::Malloc;
 
 use encode;
 use {Encode, Encoding};
@@ -284,11 +284,11 @@ impl Class {
     }
 
     /// Obtains the list of registered class definitions.
-    pub fn classes() -> MallocBuffer<&'static Class> {
+    pub fn classes() -> Malloc<[&'static Class]> {
         unsafe {
             let mut count: c_uint = 0;
             let classes = objc_copyClassList(&mut count);
-            MallocBuffer::new(classes as *mut _, count as usize).unwrap()
+            Malloc::from_array(classes as *mut _, count as usize)
         }
     }
 
@@ -351,11 +351,11 @@ impl Class {
     }
 
     /// Describes the instance methods implemented by self.
-    pub fn instance_methods(&self) -> MallocBuffer<&Method> {
+    pub fn instance_methods(&self) -> Malloc<[&Method]> {
         unsafe {
             let mut count: c_uint = 0;
             let methods = class_copyMethodList(self, &mut count);
-            MallocBuffer::new(methods as *mut _, count as usize).unwrap()
+            Malloc::from_array(methods as *mut _, count as usize)
         }
 
     }
@@ -366,20 +366,20 @@ impl Class {
     }
 
     /// Get a list of the protocols to which this class conforms.
-    pub fn adopted_protocols(&self) -> MallocBuffer<&Protocol> {
+    pub fn adopted_protocols(&self) -> Malloc<[&Protocol]> {
         unsafe {
             let mut count: c_uint = 0;
             let protos = class_copyProtocolList(self, &mut count);
-            MallocBuffer::new(protos as *mut _, count as usize).unwrap()
+            Malloc::from_array(protos as *mut _, count as usize)
         }
     }
 
     /// Describes the instance variables declared by self.
-    pub fn instance_variables(&self) -> MallocBuffer<&Ivar> {
+    pub fn instance_variables(&self) -> Malloc<[&Ivar]> {
         unsafe {
             let mut count: c_uint = 0;
             let ivars = class_copyIvarList(self, &mut count);
-            MallocBuffer::new(ivars as *mut _, count as usize).unwrap()
+            Malloc::from_array(ivars as *mut _, count as usize)
         }
     }
 }
@@ -412,20 +412,20 @@ impl Protocol {
     }
 
     /// Obtains the list of registered protocol definitions.
-    pub fn protocols() -> MallocBuffer<&'static Protocol> {
+    pub fn protocols() -> Malloc<[&'static Protocol]> {
         unsafe {
             let mut count: c_uint = 0;
             let protocols = objc_copyProtocolList(&mut count);
-            MallocBuffer::new(protocols as *mut _, count as usize).unwrap()
+            Malloc::from_array(protocols as *mut _, count as usize)
         }
     }
 
     /// Get a list of the protocols to which this protocol conforms.
-    pub fn adopted_protocols(&self) -> MallocBuffer<&Protocol> {
+    pub fn adopted_protocols(&self) -> Malloc<[&Protocol]> {
         unsafe {
             let mut count: c_uint = 0;
             let protocols = protocol_copyProtocolList(self, &mut count);
-            MallocBuffer::new(protocols as *mut _, count as usize).unwrap()
+            Malloc::from_array(protocols as *mut _, count as usize)
         }
     }
 

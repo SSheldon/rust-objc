@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors['objc_foundation'] = [];
+implementors["objc_foundation"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

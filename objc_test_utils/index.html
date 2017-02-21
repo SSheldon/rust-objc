@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,86 +44,70 @@
 
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>objc_test_utils</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-0' class='srclink' href='../src/objc_test_utils/lib.rs.html#1-49' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/objc_test_utils/lib.rs.html#1-49' title='goto source code'>[src]</a></span></h1>
 <h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='enum' href='enum.AddBlock.html'
-                               title='objc_test_utils::AddBlock'>AddBlock</a></td>
-                        <td class='docblock short'>
-                             <p>A block that takes one integer argument, adds to it, and returns the sum:
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.AddBlock.html'
+                                  title='objc_test_utils::AddBlock'>AddBlock</a></td>
+                           <td class='docblock-short'>
+                                <p>A block that takes one integer argument, adds to it, and returns the sum:
 <code>int32_t (^)(int32_t)</code>.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='enum' href='enum.IntBlock.html'
-                               title='objc_test_utils::IntBlock'>IntBlock</a></td>
-                        <td class='docblock short'>
-                             <p>A block that takes no arguments and returns an integer: <code>int32_t (^)()</code>.</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.IntBlock.html'
+                                  title='objc_test_utils::IntBlock'>IntBlock</a></td>
+                           <td class='docblock-short'>
+                                <p>A block that takes no arguments and returns an integer: <code>int32_t (^)()</code>.</p>
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.get_add_block.html'
-                               title='objc_test_utils::get_add_block'>get_add_block</a></td>
-                        <td class='docblock short'>
-                             <p>Returns a pointer to a global <code>AddBlock</code> that returns its argument + 7.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.get_add_block_with.html'
-                               title='objc_test_utils::get_add_block_with'>get_add_block_with</a></td>
-                        <td class='docblock short'>
-                             <p>Returns a pointer to a copied <code>AddBlock</code> that returns its argument + <code>i</code>.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.get_int_block.html'
-                               title='objc_test_utils::get_int_block'>get_int_block</a></td>
-                        <td class='docblock short'>
-                             <p>Returns a pointer to a global <code>IntBlock</code> that returns 7.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.get_int_block_with.html'
-                               title='objc_test_utils::get_int_block_with'>get_int_block_with</a></td>
-                        <td class='docblock short'>
-                             <p>Returns a pointer to a copied <code>IntBlock</code> that returns <code>i</code>.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.invoke_add_block.html'
-                               title='objc_test_utils::invoke_add_block'>invoke_add_block</a></td>
-                        <td class='docblock short'>
-                             <p>Invokes an <code>AddBlock</code> with <code>a</code> and returns the result.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.invoke_int_block.html'
-                               title='objc_test_utils::invoke_int_block'>invoke_int_block</a></td>
-                        <td class='docblock short'>
-                             <p>Invokes an <code>IntBlock</code> and returns its result.</p>
-
-                        </td>
-                    </tr>
-                </table></section>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.get_add_block.html'
+                                  title='objc_test_utils::get_add_block'>get_add_block</a></td>
+                           <td class='docblock-short'>
+                                <p>Returns a pointer to a global <code>AddBlock</code> that returns its argument + 7.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.get_add_block_with.html'
+                                  title='objc_test_utils::get_add_block_with'>get_add_block_with</a></td>
+                           <td class='docblock-short'>
+                                <p>Returns a pointer to a copied <code>AddBlock</code> that returns its argument + <code>i</code>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.get_int_block.html'
+                                  title='objc_test_utils::get_int_block'>get_int_block</a></td>
+                           <td class='docblock-short'>
+                                <p>Returns a pointer to a global <code>IntBlock</code> that returns 7.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.get_int_block_with.html'
+                                  title='objc_test_utils::get_int_block_with'>get_int_block_with</a></td>
+                           <td class='docblock-short'>
+                                <p>Returns a pointer to a copied <code>IntBlock</code> that returns <code>i</code>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.invoke_add_block.html'
+                                  title='objc_test_utils::invoke_add_block'>invoke_add_block</a></td>
+                           <td class='docblock-short'>
+                                <p>Invokes an <code>AddBlock</code> with <code>a</code> and returns the result.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.invoke_int_block.html'
+                                  title='objc_test_utils::invoke_int_block'>invoke_int_block</a></td>
+                           <td class='docblock-short'>
+                                <p>Invokes an <code>IntBlock</code> and returns its result.</p>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -145,6 +130,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -165,7 +152,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -176,11 +163,9 @@
     <script>
         window.rootPath = "../";
         window.currentCrate = "objc_test_utils";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

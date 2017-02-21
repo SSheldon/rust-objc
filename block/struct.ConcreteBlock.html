@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,33 +44,42 @@
 
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>block</a>::<wbr><a class='struct' href=''>ConcreteBlock</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-787' class='srclink' href='../src/block/lib.rs.html#234-238' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct ConcreteBlock&lt;A, R, F&gt; {
-    // some fields omitted
-}</pre><div class='docblock'><p>An Objective-C block whose size is known at compile time and may be
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/block/lib.rs.html#237-241' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[repr(C)]
+</div>pub struct ConcreteBlock&lt;A, R, F&gt; { /* fields omitted */ }</pre><div class='docblock'><p>An Objective-C block whose size is known at compile time and may be
 constructed on the stack.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;A, R, F&gt; <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, R, F&gt; <span class='where'>where A: <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a>, F: <a class='trait' href='../block/trait.IntoConcreteBlock.html' title='block::IntoConcreteBlock'>IntoConcreteBlock</a>&lt;A, Ret=R&gt;</span></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(closure: F) -&gt; Self</code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;A, R, F&gt; <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, R, F&gt; <span class='where'>where A: <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a>, F: <a class='trait' href='../block/trait.IntoConcreteBlock.html' title='block::IntoConcreteBlock'>IntoConcreteBlock</a>&lt;A, Ret=R&gt;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#243-251' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(closure: F) -&gt; Self</code></span></h4>
 <div class='docblock'><p>Constructs a <code>ConcreteBlock</code> with the given closure.
 When the block is called, it will return the value that results from
 calling the closure.</p>
-</div></div><h3 class='impl'><code>impl&lt;A, R, F&gt; <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, R, F&gt; <span class='where'>where F: 'static</span></code></h3><div class='impl-items'><h4 id='method.copy' class='method'><code>fn <a href='#method.copy' class='fnname'>copy</a>(self) -&gt; <a class='struct' href='../block/struct.RcBlock.html' title='block::RcBlock'>RcBlock</a>&lt;A, R&gt;</code></h4>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;A, R, F&gt; <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, R, F&gt; <span class='where'>where F: 'static</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#273-286' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.copy' class='method'><span id='copy.v' class='invisible'><code>fn <a href='#method.copy' class='fnname'>copy</a>(self) -&gt; <a class='struct' href='../block/struct.RcBlock.html' title='block::RcBlock'>RcBlock</a>&lt;A, R&gt;</code></span></h4>
 <div class='docblock'><p>Copy self onto the heap as an <code>RcBlock</code>.</p>
-</div></div><h2 id='deref-methods'>Methods from <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a>&lt;Target=<a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;&gt;</h2><div class='impl-items'><h4 id='method.call' class='method'><code>unsafe fn <a href='#method.call' class='fnname'>call</a>(&amp;self, args: A) -&gt; R</code></h4>
+</div></div><h2 id='deref-methods'>Methods from <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a>&lt;Target=<a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;&gt;</h2><div class='impl-items'><h4 id='method.call' class='method'><span id='call.v' class='invisible'><code>unsafe fn <a href='#method.call' class='fnname'>call</a>(&amp;self, args: A) -&gt; R</code></span></h4>
 <div class='docblock'><p>Call self with the given arguments.</p>
 
 <p>Unsafe because this invokes foreign code that the caller must verify
 doesn&#39;t violate any of Rust&#39;s safety rules. For example, if this block
 is shared with multiple references, the caller must ensure that calling
 it will not cause a data race.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl&lt;A, R, F&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, R, F&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a></span></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; Self</code></h4>
-<h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
-</div><h3 class='impl'><code>impl&lt;A, R, F&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a> for <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, R, F&gt;</code></h3><div class='impl-items'><h4 id='assoc_type.Target' class='type'><code>type Target = <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;</code></h4>
-<h4 id='method.deref' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#method.deref' class='fnname'>deref</a>(&amp;self) -&gt; &amp;<a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;</code></h4>
-</div><h3 class='impl'><code>impl&lt;A, R, F&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html' title='core::ops::DerefMut'>DerefMut</a> for <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, R, F&gt;</code></h3><div class='impl-items'><h4 id='method.deref_mut' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html#method.deref_mut' class='fnname'>deref_mut</a>(&amp;mut self) -&gt; &amp;mut <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;</code></h4>
-</div></section>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;A, R, F&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, R, F&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#288-295' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; Self</code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;A, R, F&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a> for <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, R, F&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#297-303' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Target' class='type'><span id='Target.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#associatedtype.Target' class='type'>Target</a> = <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;</code></span></h4>
+<div class='docblock'><p>The resulting type after dereferencing</p>
+</div><h4 id='method.deref' class='method'><span id='deref.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#tymethod.deref' class='fnname'>deref</a>(&amp;self) -&gt; &amp;<a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;</code></span></h4>
+<div class='docblock'><p>The method called to dereference a value</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;A, R, F&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html' title='core::ops::DerefMut'>DerefMut</a> for <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, R, F&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#305-309' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.deref_mut' class='method'><span id='deref_mut.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html#tymethod.deref_mut' class='fnname'>deref_mut</a>(&amp;mut self) -&gt; &amp;mut <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;</code></span></h4>
+<div class='docblock'><p>The method called to mutably dereference a value</p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -92,6 +102,8 @@ it will not cause a data race.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -112,7 +124,7 @@ it will not cause a data race.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -123,11 +135,9 @@ it will not cause a data race.</p>
     <script>
         window.rootPath = "../";
         window.currentCrate = "block";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

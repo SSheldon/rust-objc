@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-88ac128001ac3a9a/dispatch-0.0.3/src/ffi.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-1ecc6299db9ec823/dispatch-0.1.2/src/ffi.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>ffi.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -209,11 +210,15 @@
 <span id="166">166</span>
 <span id="167">167</span>
 <span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
 </pre><pre class='rust '>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>missing_docs</span>)]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>non_camel_case_types</span>)]</span>
 
-<span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_char</span>, <span class='ident'>c_long</span>, <span class='ident'>c_ulong</span>, <span class='ident'>c_void</span>, <span class='ident'>size_t</span>, <span class='ident'>timespec</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>raw</span>::{<span class='ident'>c_char</span>, <span class='ident'>c_long</span>, <span class='ident'>c_ulong</span>, <span class='ident'>c_void</span>};
 
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>dispatch_object_s</span> { }
 
@@ -236,7 +241,10 @@
 <span class='comment'>// dispatch_io_interval_flags_t</span>
 <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>dispatch_queue_attr_t</span> <span class='op'>=</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>dispatch_object_s</span>;
 
-<span class='attribute'>#[<span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;System&quot;</span>, <span class='ident'>kind</span> <span class='op'>=</span> <span class='string'>&quot;dylib&quot;</span>)]</span>
+<span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>),
+           <span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;System&quot;</span>, <span class='ident'>kind</span> <span class='op'>=</span> <span class='string'>&quot;dylib&quot;</span>))]</span>
+<span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>not</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>)),
+           <span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;dispatch&quot;</span>, <span class='ident'>kind</span> <span class='op'>=</span> <span class='string'>&quot;dylib&quot;</span>))]</span>
 <span class='kw'>extern</span> {
     <span class='kw'>static</span> <span class='ident'>_dispatch_main_q</span>: <span class='ident'>dispatch_object_s</span>;
     <span class='kw'>static</span> <span class='ident'>_dispatch_queue_attr_concurrent</span>: <span class='ident'>dispatch_object_s</span>;
@@ -255,7 +263,7 @@
     <span class='comment'>// void dispatch_after ( dispatch_time_t when, dispatch_queue_t queue, dispatch_block_t block );</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_after_f</span>(<span class='ident'>when</span>: <span class='ident'>dispatch_time_t</span>, <span class='ident'>queue</span>: <span class='ident'>dispatch_queue_t</span>, <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>work</span>: <span class='ident'>dispatch_function_t</span>);
     <span class='comment'>// void dispatch_apply ( size_t iterations, dispatch_queue_t queue, void (^block)(size_t) );</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_apply_f</span>(<span class='ident'>iterations</span>: <span class='ident'>size_t</span>, <span class='ident'>queue</span>: <span class='ident'>dispatch_queue_t</span>, <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>work</span>: <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>size_t</span>));
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_apply_f</span>(<span class='ident'>iterations</span>: <span class='ident'>usize</span>, <span class='ident'>queue</span>: <span class='ident'>dispatch_queue_t</span>, <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>work</span>: <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>usize</span>));
     <span class='comment'>// void dispatch_once ( dispatch_once_t *predicate, dispatch_block_t block );</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_once_f</span>(<span class='ident'>predicate</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>dispatch_once_t</span>, <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>function</span>: <span class='ident'>dispatch_function_t</span>);
 
@@ -324,7 +332,7 @@
     <span class='comment'>// dispatch_data_t dispatch_data_copy_region ( dispatch_data_t data, size_t location, size_t *offset_ptr );</span>
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_time</span>(<span class='ident'>when</span>: <span class='ident'>dispatch_time_t</span>, <span class='ident'>delta</span>: <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='ident'>dispatch_time_t</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_walltime</span>(<span class='ident'>when</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>timespec</span>, <span class='ident'>delta</span>: <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='ident'>dispatch_time_t</span>;
+    <span class='comment'>// dispatch_time_t dispatch_walltime( const struct timespec *when, int64_t delta);</span>
 
     <span class='comment'>// void dispatch_queue_set_specific ( dispatch_queue_t queue, const void *key, void *context, dispatch_function_t destructor );</span>
     <span class='comment'>// void * dispatch_queue_get_specific ( dispatch_queue_t queue, const void *key );</span>
@@ -340,11 +348,11 @@
 }
 
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_get_main_queue</span>() <span class='op'>-&gt;</span> <span class='ident'>dispatch_queue_t</span> {
-    <span class='kw-2'>&amp;</span><span class='ident'>_dispatch_main_q</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='ident'>dispatch_queue_t</span>
+    <span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='ident'>_dispatch_main_q</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='ident'>dispatch_queue_t</span> }
 }
 
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>DISPATCH_QUEUE_SERIAL</span>: <span class='ident'>dispatch_queue_attr_t</span> <span class='op'>=</span> <span class='number'>0</span> <span class='kw'>as</span> <span class='ident'>dispatch_queue_attr_t</span>;
-<span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>DISPATCH_QUEUE_CONCURRENT</span>: <span class='ident'>dispatch_queue_attr_t</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>_dispatch_queue_attr_concurrent</span>;
+<span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>DISPATCH_QUEUE_CONCURRENT</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>dispatch_object_s</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='ident'>_dispatch_queue_attr_concurrent</span> };
 
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>DISPATCH_QUEUE_PRIORITY_HIGH</span>: <span class='ident'>c_long</span>       <span class='op'>=</span> <span class='number'>2</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>DISPATCH_QUEUE_PRIORITY_DEFAULT</span>: <span class='ident'>c_long</span>    <span class='op'>=</span> <span class='number'>0</span>;
@@ -356,12 +364,13 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
-    <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_void</span>;
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_serial_queue</span>() {
+    <span class='kw'>fn</span> <span class='ident'>test_ffi_serial_queue</span>() {
+        <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>raw</span>::<span class='ident'>c_void</span>;
+        <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
+
         <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>serial_queue_test_add</span>(<span class='ident'>num</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>) {
             <span class='kw'>unsafe</span> {
                 <span class='op'>*</span>(<span class='ident'>num</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u32</span>) <span class='op'>=</span> <span class='number'>1</span>;
@@ -402,6 +411,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -422,7 +433,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -433,11 +444,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "dispatch";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

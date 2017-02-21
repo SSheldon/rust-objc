@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,11 +44,11 @@
 
     <section id='main' class="content fn">
 <h1 class='fqn'><span class='in-band'>Function <a href='index.html'>objc_exception</a>::<wbr><a class='fn' href=''>try</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-35' class='srclink' href='../src/objc_exception/lib.rs.html#62-73' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub unsafe fn try&lt;F, R&gt;(closure: F) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;R, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='enum' href='../objc_exception/enum.Exception.html' title='objc_exception::Exception'>Exception</a></a>&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>() -&gt; R</span></pre><div class='docblock'><p>Tries to execute the given closure and catches an Objective-C exception
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/objc_exception/lib.rs.html#62-73' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub unsafe fn try&lt;F, R&gt;(closure: F) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;R, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='enum' href='../objc_exception/enum.Exception.html' title='objc_exception::Exception'>Exception</a>&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>() -&gt; R</span></pre><div class='docblock'><p>Tries to execute the given closure and catches an Objective-C exception
 if one is thrown.</p>
 
 <p>Returns a <code>Result</code> that is either <code>Ok</code> if the closure succeeded without an
@@ -79,6 +80,8 @@ Objective-C, which is not safe.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -99,7 +102,7 @@ Objective-C, which is not safe.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -110,11 +113,9 @@ Objective-C, which is not safe.</p>
     <script>
         window.rootPath = "../";
         window.currentCrate = "objc_exception";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

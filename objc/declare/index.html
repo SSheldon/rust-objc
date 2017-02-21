@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -43,10 +44,10 @@
 
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>objc</a>::<wbr><a class='mod' href=''>declare</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-257' class='srclink' href='../../src/objc/declare.rs.html#1-263' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/objc/declare.rs.html#1-340' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Functionality for declaring Objective-C classes.</p>
 
 <p>Classes can be declared using the <code>ClassDecl</code> struct. Instance variables and
@@ -55,6 +56,7 @@ methods can then be added before the class is ultimately registered.</p>
 <h1 id='example' class='section-header'><a href='#example'>Example</a></h1>
 <p>The following example demonstrates declaring a class named <code>MyNumber</code> that has
 one ivar, a <code>u32</code> named <code>_number</code> and a <code>number</code> method that returns it:</p>
+
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>superclass</span> <span class='op'>=</span> <span class='ident'>Class</span>::<span class='ident'>get</span>(<span class='string'>&quot;NSObject&quot;</span>).<span class='ident'>unwrap</span>();
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>decl</span> <span class='op'>=</span> <span class='ident'>ClassDecl</span>::<span class='ident'>new</span>(<span class='string'>&quot;MyNumber&quot;</span>, <span class='ident'>superclass</span>).<span class='ident'>unwrap</span>();
@@ -74,26 +76,30 @@ one ivar, a <code>u32</code> named <code>_number</code> and a <code>number</code
 <span class='ident'>decl</span>.<span class='ident'>register</span>();</pre>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.ClassDecl.html'
-                               title='objc::declare::ClassDecl'>ClassDecl</a></td>
-                        <td class='docblock short'>
-                             <p>A type for declaring a new class and adding new methods and ivars to it
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.ClassDecl.html'
+                                  title='objc::declare::ClassDecl'>ClassDecl</a></td>
+                           <td class='docblock-short'>
+                                <p>A type for declaring a new class and adding new methods and ivars to it
 before registering it.</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.ProtocolDecl.html'
+                                  title='objc::declare::ProtocolDecl'>ProtocolDecl</a></td>
+                           <td class='docblock-short'>
+                                <p>A type for declaring a new protocol and adding new methods to it
+before registering it.</p>
+                           </td>
+                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='trait' href='trait.MethodImplementation.html'
-                               title='objc::declare::MethodImplementation'>MethodImplementation</a></td>
-                        <td class='docblock short'>
-                             <p>Types that can be used as the implementation of an Objective-C method.</p>
-
-                        </td>
-                    </tr>
-                </table></section>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.MethodImplementation.html'
+                                  title='objc::declare::MethodImplementation'>MethodImplementation</a></td>
+                           <td class='docblock-short'>
+                                <p>Types that can be used as the implementation of an Objective-C method.</p>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -116,6 +122,8 @@ before registering it.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -136,7 +144,7 @@ before registering it.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -147,11 +155,9 @@ before registering it.</p>
     <script>
         window.rootPath = "../../";
         window.currentCrate = "objc";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

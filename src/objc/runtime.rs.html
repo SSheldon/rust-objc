@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-88ac128001ac3a9a/objc-0.2.0/src/runtime.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-1ecc6299db9ec823/objc-0.2.2/src/runtime.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>runtime.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -510,6 +511,139 @@
 <span id="467">467</span>
 <span id="468">468</span>
 <span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! A Rust interface for the functionality of the Objective-C runtime.</span>
 <span class='doccomment'>//!</span>
@@ -541,9 +675,9 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;aarch64&quot;</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>BOOL</span> <span class='op'>=</span> <span class='ident'>bool</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;aarch64&quot;</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>YES</span>: <span class='ident'>BOOL</span> <span class='op'>=</span> <span class='boolval'>true</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>YES</span>: <span class='ident'>BOOL</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;aarch64&quot;</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>NO</span>: <span class='ident'>BOOL</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>NO</span>: <span class='ident'>BOOL</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
 
 <span class='doccomment'>/// A type that represents a method selector.</span>
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
@@ -573,6 +707,12 @@
     <span class='ident'>_priv</span>: <span class='ident'>PrivateMarker</span>,
 }
 
+<span class='doccomment'>/// A type that represents an Objective-C protocol.</span>
+<span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Protocol</span> {
+    <span class='ident'>_priv</span>: <span class='ident'>PrivateMarker</span>
+}
+
 <span class='doccomment'>/// A type that represents an instance of a class.</span>
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Object</span> {
@@ -596,6 +736,9 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>class_copyIvarList</span>(<span class='ident'>cls</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Class</span>, <span class='ident'>outCount</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_uint</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Ivar</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>class_addMethod</span>(<span class='ident'>cls</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Class</span>, <span class='ident'>name</span>: <span class='ident'>Sel</span>, <span class='ident'>imp</span>: <span class='ident'>Imp</span>, <span class='ident'>types</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>BOOL</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>class_addIvar</span>(<span class='ident'>cls</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Class</span>, <span class='ident'>name</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>size</span>: <span class='ident'>usize</span>, <span class='ident'>alignment</span>: <span class='ident'>u8</span>, <span class='ident'>types</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>BOOL</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>class_addProtocol</span>(<span class='ident'>cls</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Class</span>, <span class='ident'>proto</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Protocol</span>) <span class='op'>-&gt;</span> <span class='ident'>BOOL</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>class_conformsToProtocol</span>(<span class='ident'>cls</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Class</span>, <span class='ident'>proto</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Protocol</span>) <span class='op'>-&gt;</span> <span class='ident'>BOOL</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>class_copyProtocolList</span>(<span class='ident'>cls</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Class</span>, <span class='ident'>outCount</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_uint</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Protocol</span>;
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>objc_allocateClassPair</span>(<span class='ident'>superclass</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Class</span>, <span class='ident'>name</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>extraBytes</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Class</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>objc_disposeClassPair</span>(<span class='ident'>cls</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Class</span>);
@@ -608,6 +751,18 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>objc_getClassList</span>(<span class='ident'>buffer</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Class</span>, <span class='ident'>bufferLen</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>objc_copyClassList</span>(<span class='ident'>outCount</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_uint</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Class</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>objc_getClass</span>(<span class='ident'>name</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Class</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>objc_getProtocol</span>(<span class='ident'>name</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Protocol</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>objc_copyProtocolList</span>(<span class='ident'>outCount</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_uint</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Protocol</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>objc_allocateProtocol</span>(<span class='ident'>name</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Protocol</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>objc_registerProtocol</span>(<span class='ident'>proto</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Protocol</span>);
+
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>protocol_addMethodDescription</span>(<span class='ident'>proto</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Protocol</span>, <span class='ident'>name</span>: <span class='ident'>Sel</span>, <span class='ident'>types</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>isRequiredMethod</span>: <span class='ident'>BOOL</span>,
+                                         <span class='ident'>isInstanceMethod</span>: <span class='ident'>BOOL</span>);
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>protocol_addProtocol</span>(<span class='ident'>proto</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Protocol</span>, <span class='ident'>addition</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Protocol</span>);
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>protocol_getName</span>(<span class='ident'>proto</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Protocol</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>protocol_isEqual</span>(<span class='ident'>proto</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Protocol</span>, <span class='ident'>other</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Protocol</span>) <span class='op'>-&gt;</span> <span class='ident'>BOOL</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>protocol_copyProtocolList</span>(<span class='ident'>proto</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Protocol</span>, <span class='ident'>outCount</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_uint</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Protocol</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>protocol_conformsToProtocol</span>(<span class='ident'>proto</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Protocol</span>, <span class='ident'>other</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Protocol</span>) <span class='op'>-&gt;</span> <span class='ident'>BOOL</span>;
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ivar_getName</span>(<span class='ident'>ivar</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Ivar</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ivar_getOffset</span>(<span class='ident'>ivar</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Ivar</span>) <span class='op'>-&gt;</span> <span class='ident'>isize</span>;
@@ -648,6 +803,10 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>Eq</span> <span class='kw'>for</span> <span class='ident'>Sel</span> { }
+
+<span class='comment'>// Sel is safe to share across threads because it is immutable</span>
+<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Sync</span> <span class='kw'>for</span> <span class='ident'>Sel</span> { }
+<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Send</span> <span class='kw'>for</span> <span class='ident'>Sel</span> { }
 
 <span class='kw'>impl</span> <span class='ident'>Copy</span> <span class='kw'>for</span> <span class='ident'>Sel</span> { }
 
@@ -820,6 +979,20 @@
 
     }
 
+    <span class='doccomment'>/// Checks whether this class conforms to the specified protocol.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>conforms_to</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>proto</span>: <span class='kw-2'>&amp;</span><span class='ident'>Protocol</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>class_conformsToProtocol</span>(<span class='self'>self</span>, <span class='ident'>proto</span>) <span class='op'>==</span> <span class='ident'>YES</span> }
+    }
+
+    <span class='doccomment'>/// Get a list of the protocols to which this class conforms.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>adopted_protocols</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>MallocBuffer</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Protocol</span><span class='op'>&gt;</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>count</span>: <span class='ident'>c_uint</span> <span class='op'>=</span> <span class='number'>0</span>;
+            <span class='kw'>let</span> <span class='ident'>protos</span> <span class='op'>=</span> <span class='ident'>class_copyProtocolList</span>(<span class='self'>self</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>count</span>);
+            <span class='ident'>MallocBuffer</span>::<span class='ident'>new</span>(<span class='ident'>protos</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='ident'>count</span> <span class='kw'>as</span> <span class='ident'>usize</span>).<span class='ident'>unwrap</span>()
+        }
+    }
+
     <span class='doccomment'>/// Describes the instance variables declared by self.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>instance_variables</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>MallocBuffer</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Ivar</span><span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
@@ -841,6 +1014,63 @@
 <span class='kw'>impl</span> <span class='ident'>Eq</span> <span class='kw'>for</span> <span class='ident'>Class</span> { }
 
 <span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>Class</span> {
+    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
+        <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>name</span>())
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>Protocol</span> {
+    <span class='doccomment'>/// Returns the protocol definition of a specified protocol, or `None` if the</span>
+    <span class='doccomment'>/// protocol is not registered with the Objective-C runtime.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>Protocol</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>name</span>).<span class='ident'>unwrap</span>();
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>let</span> <span class='ident'>proto</span> <span class='op'>=</span> <span class='ident'>objc_getProtocol</span>(<span class='ident'>name</span>.<span class='ident'>as_ptr</span>());
+            <span class='kw'>if</span> <span class='ident'>proto</span>.<span class='ident'>is_null</span>() { <span class='prelude-val'>None</span> } <span class='kw'>else</span> { <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>proto</span>) }
+        }
+    }
+
+    <span class='doccomment'>/// Obtains the list of registered protocol definitions.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>protocols</span>() <span class='op'>-&gt;</span> <span class='ident'>MallocBuffer</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>Protocol</span><span class='op'>&gt;</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>count</span>: <span class='ident'>c_uint</span> <span class='op'>=</span> <span class='number'>0</span>;
+            <span class='kw'>let</span> <span class='ident'>protocols</span> <span class='op'>=</span> <span class='ident'>objc_copyProtocolList</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>count</span>);
+            <span class='ident'>MallocBuffer</span>::<span class='ident'>new</span>(<span class='ident'>protocols</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='ident'>count</span> <span class='kw'>as</span> <span class='ident'>usize</span>).<span class='ident'>unwrap</span>()
+        }
+    }
+
+    <span class='doccomment'>/// Get a list of the protocols to which this protocol conforms.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>adopted_protocols</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>MallocBuffer</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Protocol</span><span class='op'>&gt;</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>count</span>: <span class='ident'>c_uint</span> <span class='op'>=</span> <span class='number'>0</span>;
+            <span class='kw'>let</span> <span class='ident'>protocols</span> <span class='op'>=</span> <span class='ident'>protocol_copyProtocolList</span>(<span class='self'>self</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>count</span>);
+            <span class='ident'>MallocBuffer</span>::<span class='ident'>new</span>(<span class='ident'>protocols</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='ident'>count</span> <span class='kw'>as</span> <span class='ident'>usize</span>).<span class='ident'>unwrap</span>()
+        }
+    }
+
+    <span class='doccomment'>/// Checks whether this protocol conforms to the specified protocol.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>conforms_to</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>proto</span>: <span class='kw-2'>&amp;</span><span class='ident'>Protocol</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>protocol_conformsToProtocol</span>(<span class='self'>self</span>, <span class='ident'>proto</span>) <span class='op'>==</span> <span class='ident'>YES</span> }
+    }
+
+    <span class='doccomment'>/// Returns the name of self.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>name</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
+        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
+            <span class='ident'>CStr</span>::<span class='ident'>from_ptr</span>(<span class='ident'>protocol_getName</span>(<span class='self'>self</span>))
+        };
+        <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>name</span>.<span class='ident'>to_bytes</span>()).<span class='ident'>unwrap</span>()
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>PartialEq</span> <span class='kw'>for</span> <span class='ident'>Protocol</span> {
+    <span class='kw'>fn</span> <span class='ident'>eq</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='ident'>Protocol</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>protocol_isEqual</span>(<span class='self'>self</span>, <span class='ident'>other</span>) <span class='op'>==</span> <span class='ident'>YES</span> }
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>Eq</span> <span class='kw'>for</span> <span class='ident'>Protocol</span> { }
+
+<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>Protocol</span> {
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
         <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>name</span>())
     }
@@ -919,7 +1149,7 @@
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
     <span class='kw'>use</span> <span class='ident'>test_utils</span>;
     <span class='kw'>use</span> <span class='ident'>Encode</span>;
-    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>Class</span>, <span class='ident'>Sel</span>};
+    <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Class</span>, <span class='ident'>Protocol</span>, <span class='ident'>Sel</span>};
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_ivar</span>() {
@@ -970,6 +1200,43 @@
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>test_protocol</span>() {
+        <span class='kw'>let</span> <span class='ident'>proto</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>custom_protocol</span>();
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>proto</span>.<span class='ident'>name</span>() <span class='op'>==</span> <span class='string'>&quot;CustomProtocol&quot;</span>);
+        <span class='kw'>let</span> <span class='ident'>class</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>custom_class</span>();
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>class</span>.<span class='ident'>conforms_to</span>(<span class='ident'>proto</span>));
+        <span class='kw'>let</span> <span class='ident'>class_protocols</span> <span class='op'>=</span> <span class='ident'>class</span>.<span class='ident'>adopted_protocols</span>();
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>class_protocols</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>0</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>test_protocol_method</span>() {
+        <span class='kw'>let</span> <span class='ident'>class</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>custom_class</span>();
+        <span class='kw'>let</span> <span class='ident'>result</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
+            <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>class</span>, <span class='ident'>addNumber</span>:<span class='number'>1</span> <span class='ident'>toNumber</span>:<span class='number'>2</span>]
+        };
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>result</span>, <span class='number'>3</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>test_subprotocols</span>() {
+        <span class='kw'>let</span> <span class='ident'>sub_proto</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>custom_subprotocol</span>();
+        <span class='kw'>let</span> <span class='ident'>super_proto</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>custom_protocol</span>();
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>sub_proto</span>.<span class='ident'>conforms_to</span>(<span class='ident'>super_proto</span>));
+        <span class='kw'>let</span> <span class='ident'>adopted_protocols</span> <span class='op'>=</span> <span class='ident'>sub_proto</span>.<span class='ident'>adopted_protocols</span>();
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>adopted_protocols</span>[<span class='number'>0</span>], <span class='ident'>super_proto</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>test_protocols</span>() {
+        <span class='comment'>// Ensure that a protocol has been registered on linux</span>
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>custom_protocol</span>();
+
+        <span class='kw'>let</span> <span class='ident'>protocols</span> <span class='op'>=</span> <span class='ident'>Protocol</span>::<span class='ident'>protocols</span>();
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>protocols</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>0</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_object</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>custom_object</span>();
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>obj</span>.<span class='ident'>class</span>() <span class='op'>==</span> <span class='ident'>test_utils</span>::<span class='ident'>custom_class</span>());
@@ -1004,6 +1271,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -1024,7 +1293,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -1035,11 +1304,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "objc";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

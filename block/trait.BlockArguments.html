@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,39 +44,39 @@
 
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>block</a>::<wbr><a class='trait' href=''>BlockArguments</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-16' class='srclink' href='../src/block/lib.rs.html#68-74' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/block/lib.rs.html#71-77' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait BlockArguments: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> {
-    unsafe fn <a href='#tymethod.call_block' class='fnname'>call_block</a>&lt;R&gt;(self, block: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;Self, R&gt;</a>) -&gt; R;
+    unsafe fn <a href='#tymethod.call_block' class='fnname'>call_block</a>&lt;R&gt;(self, block: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;Self, R&gt;) -&gt; R;
 }</pre><div class='docblock'><p>Types that may be used as the arguments to an Objective-C block.</p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.call_block' class='method stab '><code>unsafe fn <a href='#tymethod.call_block' class='fnname'>call_block</a>&lt;R&gt;(self, block: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;Self, R&gt;</a>) -&gt; R</code></h3><div class='docblock'><p>Calls the given <code>Block</code> with self as the arguments.</p>
+        <h3 id='tymethod.call_block' class='method stab '><span id='call_block.v' class='invisible'><code>unsafe fn <a href='#tymethod.call_block' class='fnname'>call_block</a>&lt;R&gt;(self, block: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;Self, R&gt;) -&gt; R</code></span></h3><div class='docblock'><p>Calls the given <code>Block</code> with self as the arguments.</p>
 
 <p>Unsafe because <code>block</code> must point to a valid <code>Block</code> and this invokes
 foreign code whose safety the compiler cannot verify.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a></code></li>
-<li><code>impl&lt;A&gt; <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A,)</a></code></li>
-<li><code>impl&lt;A, B&gt; <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B)</a></code></li>
-<li><code>impl&lt;A, B, C&gt; <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C)</a></code></li>
-<li><code>impl&lt;A, B, C, D&gt; <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E&gt; <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E, F&gt; <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E, F, G&gt; <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E, F, G, H&gt; <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G, H)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E, F, G, H, I&gt; <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G, H, I)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E, F, G, H, I, J&gt; <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G, H, I, J)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E, F, G, H, I, J, K&gt; <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G, H, I, J, K)</a></code></li>
-<li><code>impl&lt;A, B, C, D, E, F, G, H, I, J, K, L&gt; <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(A, B, C, D, E, F, G, H, I, J, K, L)</a></code></li>
+    <li><code>impl BlockArguments for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a></code></li>
+<li><code>impl&lt;A&gt; BlockArguments for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>,)</a></code></li>
+<li><code>impl&lt;A, B&gt; BlockArguments for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl&lt;A, B, C&gt; BlockArguments for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl&lt;A, B, C, D&gt; BlockArguments for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E&gt; BlockArguments for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E, F&gt; BlockArguments for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E, F<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G&gt; BlockArguments for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E, F, G<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, H&gt; BlockArguments for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E, F, G, H<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, H, I&gt; BlockArguments for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E, F, G, H, I<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, H, I, J&gt; BlockArguments for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E, F, G, H, I, J<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, H, I, J, K&gt; BlockArguments for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E, F, G, H, I, J, K<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, H, I, J, K, L&gt; BlockArguments for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E, F, G, H, I, J, K, L<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
 </ul><script type="text/javascript" async
-                              src="../implementors/block/trait.BlockArguments.js">
-                      </script></section>
+                         src="../implementors/block/trait.BlockArguments.js">
+                 </script></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -98,6 +99,8 @@ foreign code whose safety the compiler cannot verify.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -118,7 +121,7 @@ foreign code whose safety the compiler cannot verify.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -129,11 +132,9 @@ foreign code whose safety the compiler cannot verify.</p>
     <script>
         window.rootPath = "../";
         window.currentCrate = "block";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

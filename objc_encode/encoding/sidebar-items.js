@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Primitive","An encoding for a \"primitive\" type which is not a composition of other types."]],"struct":[["Array","An encoding for an array."],["Pointer","An encoding for a pointer."],["Struct","An encoding for a struct."],["Union","An encoding for a union."]]});

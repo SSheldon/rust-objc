@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,28 +44,41 @@
 
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>block</a>::<wbr><a class='trait' href=''>IntoConcreteBlock</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-405' class='srclink' href='../src/block/lib.rs.html#182-188' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/block/lib.rs.html#185-191' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait IntoConcreteBlock&lt;A&gt;: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> <span class='where'>where A: <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a></span> {
-    type Ret;
+    type <a href='#associatedtype.Ret' class='type'>Ret</a>;
     fn <a href='#tymethod.into_concrete_block' class='fnname'>into_concrete_block</a>(self) -&gt; <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, Self::<a class='trait' href='../block/trait.IntoConcreteBlock.html' title='block::IntoConcreteBlock'>Ret</a>, Self&gt;;
 }</pre><div class='docblock'><p>Types that may be converted into a <code>ConcreteBlock</code>.</p>
 </div>
             <h2 id='associated-types'>Associated Types</h2>
             <div class='methods'>
-        <h3 id='associatedtype.Ret' class='method stab '><code>type Ret</code></h3><div class='docblock'><p>The return type of the resulting <code>ConcreteBlock</code>.</p>
+        <h3 id='associatedtype.Ret' class='method stab '><span id='Ret.t' class='invisible'><code>type <a href='#associatedtype.Ret' class='type'>Ret</a></code></span></h3><div class='docblock'><p>The return type of the resulting <code>ConcreteBlock</code>.</p>
 </div></div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.into_concrete_block' class='method stab '><code>fn <a href='#tymethod.into_concrete_block' class='fnname'>into_concrete_block</a>(self) -&gt; <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, Self::<a class='trait' href='../block/trait.IntoConcreteBlock.html' title='block::IntoConcreteBlock'>Ret</a>, Self&gt;</code></h3><div class='docblock'><p>Consumes self to create a <code>ConcreteBlock</code>.</p>
+        <h3 id='tymethod.into_concrete_block' class='method stab '><span id='into_concrete_block.v' class='invisible'><code>fn <a href='#tymethod.into_concrete_block' class='fnname'>into_concrete_block</a>(self) -&gt; <a class='struct' href='../block/struct.ConcreteBlock.html' title='block::ConcreteBlock'>ConcreteBlock</a>&lt;A, Self::<a class='trait' href='../block/trait.IntoConcreteBlock.html' title='block::IntoConcreteBlock'>Ret</a>, Self&gt;</code></span></h3><div class='docblock'><p>Consumes self to create a <code>ConcreteBlock</code>.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    </ul><script type="text/javascript" async
-                              src="../implementors/block/trait.IntoConcreteBlock.js">
-                      </script></section>
+    <li><code>impl&lt;R, X&gt; IntoConcreteBlock&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; for X <span class='where'>where X: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>() -&gt; R</span></code></li>
+<li><code>impl&lt;A, R, X&gt; IntoConcreteBlock&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>,)</a>&gt; for X <span class='where'>where X: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(A) -&gt; R</span></code></li>
+<li><code>impl&lt;A, B, R, X&gt; IntoConcreteBlock&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt; for X <span class='where'>where X: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(A, B) -&gt; R</span></code></li>
+<li><code>impl&lt;A, B, C, R, X&gt; IntoConcreteBlock&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt; for X <span class='where'>where X: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(A, B, C) -&gt; R</span></code></li>
+<li><code>impl&lt;A, B, C, D, R, X&gt; IntoConcreteBlock&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt; for X <span class='where'>where X: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(A, B, C, D) -&gt; R</span></code></li>
+<li><code>impl&lt;A, B, C, D, E, R, X&gt; IntoConcreteBlock&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt; for X <span class='where'>where X: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(A, B, C, D, E) -&gt; R</span></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, R, X&gt; IntoConcreteBlock&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E, F<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt; for X <span class='where'>where X: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(A, B, C, D, E, F) -&gt; R</span></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, R, X&gt; IntoConcreteBlock&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E, F, G<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt; for X <span class='where'>where X: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(A, B, C, D, E, F, G) -&gt; R</span></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, H, R, X&gt; IntoConcreteBlock&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E, F, G, H<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt; for X <span class='where'>where X: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(A, B, C, D, E, F, G, H) -&gt; R</span></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, H, I, R, X&gt; IntoConcreteBlock&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E, F, G, H, I<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt; for X <span class='where'>where X: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(A, B, C, D, E, F, G, H, I) -&gt; R</span></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, H, I, J, R, X&gt; IntoConcreteBlock&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E, F, G, H, I, J<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt; for X <span class='where'>where X: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(A, B, C, D, E, F, G, H, I, J) -&gt; R</span></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, H, I, J, K, R, X&gt; IntoConcreteBlock&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E, F, G, H, I, J, K<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt; for X <span class='where'>where X: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(A, B, C, D, E, F, G, H, I, J, K) -&gt; R</span></code></li>
+<li><code>impl&lt;A, B, C, D, E, F, G, H, I, J, K, L, R, X&gt; IntoConcreteBlock&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C, D, E, F, G, H, I, J, K, L<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt; for X <span class='where'>where X: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(A, B, C, D, E, F, G, H, I, J, K, L) -&gt; R</span></code></li>
+</ul><script type="text/javascript" async
+                         src="../implementors/block/trait.IntoConcreteBlock.js">
+                 </script></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -87,6 +101,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -107,7 +123,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -118,11 +134,9 @@
     <script>
         window.rootPath = "../";
         window.currentCrate = "block";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,14 +44,15 @@
 
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>objc</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-0' class='srclink' href='../src/objc/lib.rs.html#1-86' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/objc/lib.rs.html#1-86' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Objective-C Runtime bindings and wrapper for Rust.</p>
 
 <h1 id='messaging-objects' class='section-header'><a href='#messaging-objects'>Messaging objects</a></h1>
 <p>Objective-C objects can be messaged using the <a href="macro.msg_send!.html"><code>msg_send!</code></a> macro:</p>
+
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>cls</span> <span class='op'>=</span> <span class='ident'>Class</span>::<span class='ident'>get</span>(<span class='string'>&quot;NSObject&quot;</span>).<span class='ident'>unwrap</span>();
 <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>cls</span>, <span class='ident'>new</span>];
@@ -90,101 +92,81 @@ for specific selectors.</p>
 <a href="https://www.github.com/gnustep/libobjc2">GNUstep Objective-C runtime</a>.</p>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='mod' href='declare/index.html'
-                               title='objc::declare'>declare</a></td>
-                        <td class='docblock short'>
-                             <p>Functionality for declaring Objective-C classes.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='mod' href='runtime/index.html'
-                               title='objc::runtime'>runtime</a></td>
-                        <td class='docblock short'>
-                             <p>A Rust interface for the functionality of the Objective-C runtime.</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='declare/index.html'
+                                  title='objc::declare'>declare</a></td>
+                           <td class='docblock-short'>
+                                <p>Functionality for declaring Objective-C classes.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='runtime/index.html'
+                                  title='objc::runtime'>runtime</a></td>
+                           <td class='docblock-short'>
+                                <p>A Rust interface for the functionality of the Objective-C runtime.</p>
+                           </td>
+                       </tr></table><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='macro' href='macro.msg_send!.html'
-                               title='objc::msg_send!'>msg_send!</a></td>
-                        <td class='docblock short'>
-                             <p>Sends a message to an object.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='macro' href='macro.sel!.html'
-                               title='objc::sel!'>sel!</a></td>
-                        <td class='docblock short'>
-                             <p>Registers a selector, returning a <code>Sel</code>.</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.msg_send.html'
+                                  title='objc::msg_send'>msg_send</a></td>
+                           <td class='docblock-short'>
+                                <p>Sends a message to an object.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.sel.html'
+                                  title='objc::sel'>sel</a></td>
+                           <td class='docblock-short'>
+                                <p>Registers a selector, returning a <code>Sel</code>.</p>
+                           </td>
+                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Encoding.html'
-                               title='objc::Encoding'>Encoding</a></td>
-                        <td class='docblock short'>
-                             <p>An Objective-C type encoding.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.MessageError.html'
-                               title='objc::MessageError'>MessageError</a></td>
-                        <td class='docblock short'>
-                             <p>An error encountered while attempting to send a message.</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Encoding.html'
+                                  title='objc::Encoding'>Encoding</a></td>
+                           <td class='docblock-short'>
+                                <p>An Objective-C type encoding.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.MessageError.html'
+                                  title='objc::MessageError'>MessageError</a></td>
+                           <td class='docblock-short'>
+                                <p>An error encountered while attempting to send a message.</p>
+                           </td>
+                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='trait' href='trait.Encode.html'
-                               title='objc::Encode'>Encode</a></td>
-                        <td class='docblock short'>
-                             <p>Types that have an Objective-C type encoding.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='trait' href='trait.EncodeArguments.html'
-                               title='objc::EncodeArguments'>EncodeArguments</a></td>
-                        <td class='docblock short'>
-                             <p>Types that represent a group of arguments, where each has an Objective-C
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.Encode.html'
+                                  title='objc::Encode'>Encode</a></td>
+                           <td class='docblock-short'>
+                                <p>Types that have an Objective-C type encoding.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.EncodeArguments.html'
+                                  title='objc::EncodeArguments'>EncodeArguments</a></td>
+                           <td class='docblock-short'>
+                                <p>Types that represent a group of arguments, where each has an Objective-C
 type encoding.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='trait' href='trait.Message.html'
-                               title='objc::Message'>Message</a></td>
-                        <td class='docblock short'>
-                             <p>Types that may be sent Objective-C messages.
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.Message.html'
+                                  title='objc::Message'>Message</a></td>
+                           <td class='docblock-short'>
+                                <p>Types that may be sent Objective-C messages.
 For example: objects, classes, and blocks.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='trait' href='trait.MessageArguments.html'
-                               title='objc::MessageArguments'>MessageArguments</a></td>
-                        <td class='docblock short'>
-                             <p>Types that may be used as the arguments of an Objective-C message.</p>
-
-                        </td>
-                    </tr>
-                </table></section>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.MessageArguments.html'
+                                  title='objc::MessageArguments'>MessageArguments</a></td>
+                           <td class='docblock-short'>
+                                <p>Types that may be used as the arguments of an Objective-C message.</p>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -207,6 +189,8 @@ For example: objects, classes, and blocks.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -227,7 +211,7 @@ For example: objects, classes, and blocks.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -238,11 +222,9 @@ For example: objects, classes, and blocks.</p>
     <script>
         window.rootPath = "../";
         window.currentCrate = "objc";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

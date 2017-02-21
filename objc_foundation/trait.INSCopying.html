@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,31 +44,31 @@
 
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>objc_foundation</a>::<wbr><a class='trait' href=''>INSCopying</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-978' class='srclink' href='../src/objc_foundation/string.rs.html#9-18' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/objc_foundation/string.rs.html#9-18' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait INSCopying: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a> {
-    type Output: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a>;
+    type <a href='#associatedtype.Output' class='type'>Output</a>: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a>;
     fn <a href='#method.copy' class='fnname'>copy</a>(&amp;self) -&gt; <a class='type' href='../objc_id/id/type.ShareId.html' title='objc_id::id::ShareId'>ShareId</a>&lt;Self::<a class='trait' href='../objc_foundation/trait.INSCopying.html' title='objc_foundation::INSCopying'>Output</a>&gt; { ... }
 }</pre>
             <h2 id='associated-types'>Associated Types</h2>
             <div class='methods'>
-        <h3 id='associatedtype.Output' class='method stab '><code>type Output: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a></code></h3></div>
+        <h3 id='associatedtype.Output' class='method stab '><span id='Output.t' class='invisible'><code>type <a href='#associatedtype.Output' class='type'>Output</a>: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a></code></span></h3></div>
             <h2 id='provided-methods'>Provided Methods</h2>
             <div class='methods'>
-        <h3 id='method.copy' class='method stab '><code>fn <a href='#method.copy' class='fnname'>copy</a>(&amp;self) -&gt; <a class='type' href='../objc_id/id/type.ShareId.html' title='objc_id::id::ShareId'>ShareId</a>&lt;Self::<a class='trait' href='../objc_foundation/trait.INSCopying.html' title='objc_foundation::INSCopying'>Output</a>&gt;</code></h3></div>
+        <h3 id='method.copy' class='method stab '><span id='copy.v' class='invisible'><code>fn <a href='#method.copy' class='fnname'>copy</a>(&amp;self) -&gt; <a class='type' href='../objc_id/id/type.ShareId.html' title='objc_id::id::ShareId'>ShareId</a>&lt;Self::<a class='trait' href='../objc_foundation/trait.INSCopying.html' title='objc_foundation::INSCopying'>Output</a>&gt;</code></span></h3></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl&lt;T&gt; <a class='trait' href='../objc_foundation/trait.INSCopying.html' title='objc_foundation::INSCopying'>INSCopying</a> for <a class='struct' href='../objc_foundation/struct.NSArray.html' title='objc_foundation::NSArray'>NSArray</a>&lt;T, <a class='enum' href='../objc_id/id/enum.Shared.html' title='objc_id::id::Shared'>Shared</a>&gt; <span class='where'>where T: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a></span></code></li>
-<li><code>impl&lt;T&gt; <a class='trait' href='../objc_foundation/trait.INSCopying.html' title='objc_foundation::INSCopying'>INSCopying</a> for <a class='struct' href='../objc_foundation/struct.NSMutableArray.html' title='objc_foundation::NSMutableArray'>NSMutableArray</a>&lt;T, <a class='enum' href='../objc_id/id/enum.Shared.html' title='objc_id::id::Shared'>Shared</a>&gt; <span class='where'>where T: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a></span></code></li>
-<li><code>impl <a class='trait' href='../objc_foundation/trait.INSCopying.html' title='objc_foundation::INSCopying'>INSCopying</a> for <a class='struct' href='../objc_foundation/struct.NSData.html' title='objc_foundation::NSData'>NSData</a></code></li>
-<li><code>impl <a class='trait' href='../objc_foundation/trait.INSCopying.html' title='objc_foundation::INSCopying'>INSCopying</a> for <a class='struct' href='../objc_foundation/struct.NSMutableData.html' title='objc_foundation::NSMutableData'>NSMutableData</a></code></li>
-<li><code>impl <a class='trait' href='../objc_foundation/trait.INSCopying.html' title='objc_foundation::INSCopying'>INSCopying</a> for <a class='struct' href='../objc_foundation/struct.NSString.html' title='objc_foundation::NSString'>NSString</a></code></li>
-<li><code>impl&lt;T&gt; <a class='trait' href='../objc_foundation/trait.INSCopying.html' title='objc_foundation::INSCopying'>INSCopying</a> for <a class='struct' href='../objc_foundation/struct.NSValue.html' title='objc_foundation::NSValue'>NSValue</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a></span></code></li>
+    <li><code>impl&lt;T&gt; INSCopying for <a class='struct' href='../objc_foundation/struct.NSArray.html' title='objc_foundation::NSArray'>NSArray</a>&lt;T, <a class='enum' href='../objc_id/id/enum.Shared.html' title='objc_id::id::Shared'>Shared</a>&gt; <span class='where'>where T: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a></span></code></li>
+<li><code>impl&lt;T&gt; INSCopying for <a class='struct' href='../objc_foundation/struct.NSMutableArray.html' title='objc_foundation::NSMutableArray'>NSMutableArray</a>&lt;T, <a class='enum' href='../objc_id/id/enum.Shared.html' title='objc_id::id::Shared'>Shared</a>&gt; <span class='where'>where T: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a></span></code></li>
+<li><code>impl INSCopying for <a class='struct' href='../objc_foundation/struct.NSData.html' title='objc_foundation::NSData'>NSData</a></code></li>
+<li><code>impl INSCopying for <a class='struct' href='../objc_foundation/struct.NSMutableData.html' title='objc_foundation::NSMutableData'>NSMutableData</a></code></li>
+<li><code>impl INSCopying for <a class='struct' href='../objc_foundation/struct.NSString.html' title='objc_foundation::NSString'>NSString</a></code></li>
+<li><code>impl&lt;T&gt; INSCopying for <a class='struct' href='../objc_foundation/struct.NSValue.html' title='objc_foundation::NSValue'>NSValue</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a></span></code></li>
 </ul><script type="text/javascript" async
-                              src="../implementors/objc_foundation/trait.INSCopying.js">
-                      </script></section>
+                         src="../implementors/objc_foundation/trait.INSCopying.js">
+                 </script></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -90,6 +91,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -110,7 +113,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -121,11 +124,9 @@
     <script>
         window.rootPath = "../";
         window.currentCrate = "objc_foundation";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

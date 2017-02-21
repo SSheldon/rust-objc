@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,10 +44,10 @@
 
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>objc_foundation</a>::<wbr><a class='trait' href=''>INSData</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-375' class='srclink' href='../src/objc_foundation/data.rs.html#10-60' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/objc_foundation/data.rs.html#10-60' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait INSData: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a> {
     fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a> { ... }
     fn <a href='#method.bytes' class='fnname'>bytes</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a> { ... }
@@ -55,14 +56,14 @@
 }</pre>
             <h2 id='provided-methods'>Provided Methods</h2>
             <div class='methods'>
-        <h3 id='method.len' class='method stab '><code>fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h3><h3 id='method.bytes' class='method stab '><code>fn <a href='#method.bytes' class='fnname'>bytes</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></h3><h3 id='method.with_bytes' class='method stab '><code>fn <a href='#method.with_bytes' class='fnname'>with_bytes</a>(bytes: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='struct' href='../objc_id/id/struct.Id.html' title='objc_id::id::Id'>Id</a>&lt;Self&gt;</code></h3><h3 id='method.from_vec' class='method stab '><code>fn <a href='#method.from_vec' class='fnname'>from_vec</a>(bytes: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;) -&gt; <a class='struct' href='../objc_id/id/struct.Id.html' title='objc_id::id::Id'>Id</a>&lt;Self&gt;</code></h3></div>
+        <h3 id='method.len' class='method stab '><span id='len.v' class='invisible'><code>fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h3><h3 id='method.bytes' class='method stab '><span id='bytes.v' class='invisible'><code>fn <a href='#method.bytes' class='fnname'>bytes</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></span></h3><h3 id='method.with_bytes' class='method stab '><span id='with_bytes.v' class='invisible'><code>fn <a href='#method.with_bytes' class='fnname'>with_bytes</a>(bytes: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='struct' href='../objc_id/id/struct.Id.html' title='objc_id::id::Id'>Id</a>&lt;Self&gt;</code></span></h3><h3 id='method.from_vec' class='method stab '><span id='from_vec.v' class='invisible'><code>fn <a href='#method.from_vec' class='fnname'>from_vec</a>(bytes: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;) -&gt; <a class='struct' href='../objc_id/id/struct.Id.html' title='objc_id::id::Id'>Id</a>&lt;Self&gt;</code></span></h3></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl <a class='trait' href='../objc_foundation/trait.INSData.html' title='objc_foundation::INSData'>INSData</a> for <a class='struct' href='../objc_foundation/struct.NSData.html' title='objc_foundation::NSData'>NSData</a></code></li>
-<li><code>impl <a class='trait' href='../objc_foundation/trait.INSData.html' title='objc_foundation::INSData'>INSData</a> for <a class='struct' href='../objc_foundation/struct.NSMutableData.html' title='objc_foundation::NSMutableData'>NSMutableData</a></code></li>
+    <li><code>impl INSData for <a class='struct' href='../objc_foundation/struct.NSData.html' title='objc_foundation::NSData'>NSData</a></code></li>
+<li><code>impl INSData for <a class='struct' href='../objc_foundation/struct.NSMutableData.html' title='objc_foundation::NSMutableData'>NSMutableData</a></code></li>
 </ul><script type="text/javascript" async
-                              src="../implementors/objc_foundation/trait.INSData.js">
-                      </script></section>
+                         src="../implementors/objc_foundation/trait.INSData.js">
+                 </script></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -85,6 +86,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -105,7 +108,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -116,11 +119,9 @@
     <script>
         window.rootPath = "../";
         window.currentCrate = "objc_foundation";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

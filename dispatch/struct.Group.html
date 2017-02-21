@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,46 +44,52 @@
 
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>dispatch</a>::<wbr><a class='struct' href=''>Group</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-310' class='srclink' href='../src/dispatch/lib.rs.html#440-442' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Group {
-    // some fields omitted
-}</pre><div class='docblock'><p>A Grand Central Dispatch group.</p>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/dispatch/lib.rs.html#447-449' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Group { /* fields omitted */ }</pre><div class='docblock'><p>A Grand Central Dispatch group.</p>
 
 <p>A <code>Group</code> is a mechanism for grouping closures and monitoring them. This
 allows for aggregate synchronization, so you can track when all the
 closures complete, even if they are running on different queues.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../dispatch/struct.Group.html' title='dispatch::Group'>Group</a></code></h3><div class='impl-items'><h4 id='method.create' class='method'><code>fn <a href='#method.create' class='fnname'>create</a>() -&gt; <a class='struct' href='../dispatch/struct.Group.html' title='dispatch::Group'>Group</a></code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../dispatch/struct.Group.html' title='dispatch::Group'>Group</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/dispatch/lib.rs.html#451-520' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.create' class='method'><span id='create.v' class='invisible'><code>fn <a href='#method.create' class='fnname'>create</a>() -&gt; <a class='struct' href='../dispatch/struct.Group.html' title='dispatch::Group'>Group</a></code></span></h4>
 <div class='docblock'><p>Creates a new dispatch <code>Group</code>.</p>
-</div><h4 id='method.enter' class='method'><code>fn <a href='#method.enter' class='fnname'>enter</a>(&amp;self) -&gt; <a class='struct' href='../dispatch/struct.GroupGuard.html' title='dispatch::GroupGuard'>GroupGuard</a></code></h4>
+</div><h4 id='method.enter' class='method'><span id='enter.v' class='invisible'><code>fn <a href='#method.enter' class='fnname'>enter</a>(&amp;self) -&gt; <a class='struct' href='../dispatch/struct.GroupGuard.html' title='dispatch::GroupGuard'>GroupGuard</a></code></span></h4>
 <div class='docblock'><p>Indicates that a closure has entered self, and increments the current
 count of outstanding tasks. Returns a <code>GroupGuard</code> that should be
 dropped when the closure leaves self, decrementing the count.</p>
-</div><h4 id='method.async' class='method'><code>fn <a href='#method.async' class='fnname'>async</a>&lt;F&gt;(&amp;self, queue: &amp;<a class='struct' href='../dispatch/struct.Queue.html' title='dispatch::Queue'>Queue</a>, work: F) <span class='where'>where F: 'static + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>()</span></code></h4>
+</div><h4 id='method.async' class='method'><span id='async.v' class='invisible'><code>fn <a href='#method.async' class='fnname'>async</a>&lt;F&gt;(&amp;self, queue: &amp;<a class='struct' href='../dispatch/struct.Queue.html' title='dispatch::Queue'>Queue</a>, work: F) <span class='where'>where F: 'static + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>()</span></code></span></h4>
 <div class='docblock'><p>Submits a closure asynchronously to the given <code>Queue</code> and associates it
 with self.</p>
-</div><h4 id='method.notify' class='method'><code>fn <a href='#method.notify' class='fnname'>notify</a>&lt;F&gt;(&amp;self, queue: &amp;<a class='struct' href='../dispatch/struct.Queue.html' title='dispatch::Queue'>Queue</a>, work: F) <span class='where'>where F: 'static + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>()</span></code></h4>
+</div><h4 id='method.notify' class='method'><span id='notify.v' class='invisible'><code>fn <a href='#method.notify' class='fnname'>notify</a>&lt;F&gt;(&amp;self, queue: &amp;<a class='struct' href='../dispatch/struct.Queue.html' title='dispatch::Queue'>Queue</a>, work: F) <span class='where'>where F: 'static + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>()</span></code></span></h4>
 <div class='docblock'><p>Schedules a closure to be submitted to the given <code>Queue</code> when all tasks
 associated with self have completed.
 If self is empty, the closure is submitted immediately.</p>
-</div><h4 id='method.wait' class='method'><code>fn <a href='#method.wait' class='fnname'>wait</a>(&amp;self)</code></h4>
+</div><h4 id='method.wait' class='method'><span id='wait.v' class='invisible'><code>fn <a href='#method.wait' class='fnname'>wait</a>(&amp;self)</code></span></h4>
 <div class='docblock'><p>Waits synchronously for all tasks associated with self to complete.</p>
-</div><h4 id='method.wait_timeout_ms' class='method'><code>fn <a href='#method.wait_timeout_ms' class='fnname'>wait_timeout_ms</a>(&amp;self, ms: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h4 id='method.wait_timeout_ms' class='method'><span id='wait_timeout_ms.v' class='invisible'><code>fn <a href='#method.wait_timeout_ms' class='fnname'>wait_timeout_ms</a>(&amp;self, ms: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
 <div class='docblock'><p>Waits for all tasks associated with self to complete within the
 specified duration.
 Returns true if the tasks completed or false if the timeout elapsed.</p>
-</div><h4 id='method.wait_timeout' class='method'><code>fn <a href='#method.wait_timeout' class='fnname'>wait_timeout</a>(&amp;self, timeout: <a class='struct' href='https://doc.rust-lang.org/nightly/std/time/duration/struct.Duration.html' title='std::time::duration::Duration'>Duration</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h4 id='method.wait_timeout' class='method'><span id='wait_timeout.v' class='invisible'><code>fn <a href='#method.wait_timeout' class='fnname'>wait_timeout</a>(&amp;self, timeout: <a class='struct' href='https://doc.rust-lang.org/nightly/std/time/duration/struct.Duration.html' title='std::time::duration::Duration'>Duration</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
 <div class='docblock'><p>Waits for all tasks associated with self to complete within the
 specified duration.
 Returns true if the tasks completed or false if the timeout elapsed.</p>
-</div><h4 id='method.is_empty' class='method'><code>fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h4 id='method.is_empty' class='method'><span id='is_empty.v' class='invisible'><code>fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
 <div class='docblock'><p>Returns whether self is currently empty.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> for <a class='struct' href='../dispatch/struct.Group.html' title='dispatch::Group'>Group</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../dispatch/struct.Group.html' title='dispatch::Group'>Group</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../dispatch/struct.Group.html' title='dispatch::Group'>Group</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; Self</code></h4>
-<h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../dispatch/struct.Group.html' title='dispatch::Group'>Group</a></code></h3><div class='impl-items'><h4 id='method.drop' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#method.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
-</div></section>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> for <a class='struct' href='../dispatch/struct.Group.html' title='dispatch::Group'>Group</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/dispatch/lib.rs.html#522' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../dispatch/struct.Group.html' title='dispatch::Group'>Group</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/dispatch/lib.rs.html#523' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../dispatch/struct.Group.html' title='dispatch::Group'>Group</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/dispatch/lib.rs.html#525-532' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; Self</code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../dispatch/struct.Group.html' title='dispatch::Group'>Group</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/dispatch/lib.rs.html#534-540' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.drop' class='method'><span id='drop.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>A method called when the value goes out of scope. <a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop">Read more</a></p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -105,6 +112,8 @@ Returns true if the tasks completed or false if the timeout elapsed.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -125,7 +134,7 @@ Returns true if the tasks completed or false if the timeout elapsed.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -136,11 +145,9 @@ Returns true if the tasks completed or false if the timeout elapsed.</p>
     <script>
         window.rootPath = "../";
         window.currentCrate = "dispatch";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

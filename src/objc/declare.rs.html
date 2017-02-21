@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-88ac128001ac3a9a/objc-0.2.0/src/declare.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-1ecc6299db9ec823/objc-0.2.2/src/declare.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>declare.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -304,6 +305,83 @@
 <span id="261">261</span>
 <span id="262">262</span>
 <span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
 </pre><pre class='rust '>
 <span class='doccomment'>/*!
 Functionality for declaring Objective-C classes.
@@ -345,7 +423,7 @@ decl.register();
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
 
-<span class='kw'>use</span> <span class='ident'>runtime</span>::{<span class='ident'>Class</span>, <span class='ident'>Imp</span>, <span class='ident'>NO</span>, <span class='ident'>Object</span>, <span class='ident'>Sel</span>, <span class='self'>self</span>};
+<span class='kw'>use</span> <span class='ident'>runtime</span>::{<span class='ident'>BOOL</span>, <span class='ident'>Class</span>, <span class='ident'>Imp</span>, <span class='ident'>NO</span>, <span class='ident'>Object</span>, <span class='ident'>Protocol</span>, <span class='ident'>Sel</span>, <span class='self'>self</span>};
 <span class='kw'>use</span> {<span class='ident'>Encode</span>, <span class='ident'>EncodeArguments</span>, <span class='ident'>Encoding</span>, <span class='ident'>Message</span>};
 
 <span class='doccomment'>/// Types that can be used as the implementation of an Objective-C method.</span>
@@ -523,6 +601,13 @@ decl.register();
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>success</span> <span class='op'>!=</span> <span class='ident'>NO</span>, <span class='string'>&quot;Failed to add ivar {}&quot;</span>, <span class='ident'>name</span>);
     }
 
+    <span class='doccomment'>/// Adds a protocol to self. Panics if the protocol wasn&#39;t successfully</span>
+    <span class='doccomment'>/// added</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_protocol</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>proto</span>: <span class='kw-2'>&amp;</span><span class='ident'>Protocol</span>) {
+        <span class='kw'>let</span> <span class='ident'>success</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>runtime</span>::<span class='ident'>class_addProtocol</span>(<span class='self'>self</span>.<span class='ident'>cls</span>, <span class='ident'>proto</span>) };
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>success</span> <span class='op'>!=</span> <span class='ident'>NO</span>, <span class='string'>&quot;Failed to add protocol {:?}&quot;</span>, <span class='ident'>proto</span>);
+    }
+
     <span class='doccomment'>/// Registers self, consuming it and returning a reference to the</span>
     <span class='doccomment'>/// newly registered `Class`.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>register</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>Class</span> {
@@ -540,6 +625,76 @@ decl.register();
     <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
         <span class='kw'>unsafe</span> {
             <span class='ident'>runtime</span>::<span class='ident'>objc_disposeClassPair</span>(<span class='self'>self</span>.<span class='ident'>cls</span>);
+        }
+    }
+}
+
+<span class='doccomment'>/// A type for declaring a new protocol and adding new methods to it</span>
+<span class='doccomment'>/// before registering it.</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ProtocolDecl</span> {
+    <span class='ident'>proto</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Protocol</span>
+}
+
+<span class='kw'>impl</span> <span class='ident'>ProtocolDecl</span> {
+    <span class='doccomment'>/// Constructs a `ProtocolDecl` with the given name. Returns `None` if the</span>
+    <span class='doccomment'>/// protocol couldn&#39;t be allocated.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>ProtocolDecl</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='ident'>c_name</span> <span class='op'>=</span> <span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>name</span>).<span class='ident'>unwrap</span>();
+        <span class='kw'>let</span> <span class='ident'>proto</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
+            <span class='ident'>runtime</span>::<span class='ident'>objc_allocateProtocol</span>(<span class='ident'>c_name</span>.<span class='ident'>as_ptr</span>())
+        };
+        <span class='kw'>if</span> <span class='ident'>proto</span>.<span class='ident'>is_null</span>() {
+            <span class='prelude-val'>None</span>
+        } <span class='kw'>else</span> {
+            <span class='prelude-val'>Some</span>(<span class='ident'>ProtocolDecl</span> { <span class='ident'>proto</span>: <span class='ident'>proto</span> })
+        }
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>add_method_description_common</span><span class='op'>&lt;</span><span class='ident'>Args</span>, <span class='ident'>Ret</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>, <span class='ident'>is_required</span>: <span class='ident'>bool</span>,
+            <span class='ident'>is_instance_method</span>: <span class='ident'>bool</span>)
+            <span class='kw'>where</span> <span class='ident'>Args</span>: <span class='ident'>EncodeArguments</span>,
+                  <span class='ident'>Ret</span>: <span class='ident'>Encode</span> {
+        <span class='kw'>let</span> <span class='ident'>encs</span> <span class='op'>=</span> <span class='ident'>Args</span>::<span class='ident'>encodings</span>();
+        <span class='kw'>let</span> <span class='ident'>encs</span> <span class='op'>=</span> <span class='ident'>encs</span>.<span class='ident'>as_ref</span>();
+        <span class='kw'>let</span> <span class='ident'>sel_args</span> <span class='op'>=</span> <span class='ident'>count_args</span>(<span class='ident'>sel</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>sel_args</span> <span class='op'>==</span> <span class='ident'>encs</span>.<span class='ident'>len</span>(),
+            <span class='string'>&quot;Selector accepts {} arguments, but function accepts {}&quot;</span>,
+            <span class='ident'>sel_args</span>, <span class='ident'>encs</span>.<span class='ident'>len</span>(),
+        );
+        <span class='kw'>let</span> <span class='ident'>types</span> <span class='op'>=</span> <span class='ident'>method_type_encoding</span>(<span class='kw-2'>&amp;</span><span class='ident'>Ret</span>::<span class='ident'>encode</span>(), <span class='ident'>encs</span>);
+        <span class='kw'>unsafe</span> {
+            <span class='ident'>runtime</span>::<span class='ident'>protocol_addMethodDescription</span>(
+                <span class='self'>self</span>.<span class='ident'>proto</span>, <span class='ident'>sel</span>, <span class='ident'>types</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>is_required</span> <span class='kw'>as</span> <span class='ident'>BOOL</span>, <span class='ident'>is_instance_method</span> <span class='kw'>as</span> <span class='ident'>BOOL</span>);
+        }
+    }
+
+    <span class='doccomment'>/// Adds an instance method declaration with a given description to self.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_method_description</span><span class='op'>&lt;</span><span class='ident'>Args</span>, <span class='ident'>Ret</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>, <span class='ident'>is_required</span>: <span class='ident'>bool</span>)
+            <span class='kw'>where</span> <span class='ident'>Args</span>: <span class='ident'>EncodeArguments</span>,
+                  <span class='ident'>Ret</span>: <span class='ident'>Encode</span> {
+        <span class='self'>self</span>.<span class='ident'>add_method_description_common</span>::<span class='op'>&lt;</span><span class='ident'>Args</span>, <span class='ident'>Ret</span><span class='op'>&gt;</span>(<span class='ident'>sel</span>, <span class='ident'>is_required</span>, <span class='bool-val'>true</span>)
+    }
+
+    <span class='doccomment'>/// Adds a class method declaration with a given description to self.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_class_method_description</span><span class='op'>&lt;</span><span class='ident'>Args</span>, <span class='ident'>Ret</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>, <span class='ident'>is_required</span>: <span class='ident'>bool</span>)
+            <span class='kw'>where</span> <span class='ident'>Args</span>: <span class='ident'>EncodeArguments</span>,
+                  <span class='ident'>Ret</span>: <span class='ident'>Encode</span> {
+        <span class='self'>self</span>.<span class='ident'>add_method_description_common</span>::<span class='op'>&lt;</span><span class='ident'>Args</span>, <span class='ident'>Ret</span><span class='op'>&gt;</span>(<span class='ident'>sel</span>, <span class='ident'>is_required</span>, <span class='bool-val'>false</span>)
+    }
+
+    <span class='doccomment'>/// Adds a requirement on another protocol.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_protocol</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>proto</span>: <span class='kw-2'>&amp;</span><span class='ident'>Protocol</span>) {
+        <span class='kw'>unsafe</span> {
+            <span class='ident'>runtime</span>::<span class='ident'>protocol_addProtocol</span>(<span class='self'>self</span>.<span class='ident'>proto</span>, <span class='ident'>proto</span>);
+        }
+    }
+
+    <span class='doccomment'>/// Registers self, consuming it and returning a reference to the</span>
+    <span class='doccomment'>/// newly registered `Protocol`.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>register</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>Protocol</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='ident'>runtime</span>::<span class='ident'>objc_registerProtocol</span>(<span class='self'>self</span>.<span class='ident'>proto</span>);
+            <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='self'>self</span>.<span class='ident'>proto</span>
         }
     }
 }
@@ -592,6 +747,8 @@ decl.register();
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -612,7 +769,7 @@ decl.register();
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -623,11 +780,9 @@ decl.register();
     <script>
         window.rootPath = "../../";
         window.currentCrate = "objc";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -43,23 +44,23 @@
 
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a>::<wbr><a class='struct' href=''>Method</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-29' class='srclink' href='../../src/objc/runtime.rs.html#53-55' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Method {
-    // some fields omitted
-}</pre><div class='docblock'><p>A type that represents a method in a class definition.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../../objc/runtime/struct.Method.html' title='objc::runtime::Method'>Method</a></code></h3><div class='impl-items'><h4 id='method.name' class='method'><code>fn <a href='#method.name' class='fnname'>name</a>(&amp;self) -&gt; <a class='struct' href='../../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a></code></h4>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/objc/runtime.rs.html#53-55' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[repr(C)]
+</div>pub struct Method { /* fields omitted */ }</pre><div class='docblock'><p>A type that represents a method in a class definition.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../objc/runtime/struct.Method.html' title='objc::runtime::Method'>Method</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#203-245' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.name' class='method'><span id='name.v' class='invisible'><code>fn <a href='#method.name' class='fnname'>name</a>(&amp;self) -&gt; <a class='struct' href='../../objc/runtime/struct.Sel.html' title='objc::runtime::Sel'>Sel</a></code></span></h4>
 <div class='docblock'><p>Returns the name of self.</p>
-</div><h4 id='method.return_type' class='method'><code>fn <a href='#method.return_type' class='fnname'>return_type</a>(&amp;self) -&gt; <a class='struct' href='../../objc/struct.Encoding.html' title='objc::Encoding'>Encoding</a></code></h4>
+</div><h4 id='method.return_type' class='method'><span id='return_type.v' class='invisible'><code>fn <a href='#method.return_type' class='fnname'>return_type</a>(&amp;self) -&gt; <a class='struct' href='../../objc/struct.Encoding.html' title='objc::Encoding'>Encoding</a></code></span></h4>
 <div class='docblock'><p>Returns the <code>Encoding</code> of self&#39;s return type.</p>
-</div><h4 id='method.argument_type' class='method'><code>fn <a href='#method.argument_type' class='fnname'>argument_type</a>(&amp;self, index: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../objc/struct.Encoding.html' title='objc::Encoding'>Encoding</a>&gt;</code></h4>
+</div><h4 id='method.argument_type' class='method'><span id='argument_type.v' class='invisible'><code>fn <a href='#method.argument_type' class='fnname'>argument_type</a>(&amp;self, index: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../objc/struct.Encoding.html' title='objc::Encoding'>Encoding</a>&gt;</code></span></h4>
 <div class='docblock'><p>Returns the <code>Encoding</code> of a single parameter type of self, or
 <code>None</code> if self has no parameter at the given index.</p>
-</div><h4 id='method.arguments_count' class='method'><code>fn <a href='#method.arguments_count' class='fnname'>arguments_count</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
+</div><h4 id='method.arguments_count' class='method'><span id='arguments_count.v' class='invisible'><code>fn <a href='#method.arguments_count' class='fnname'>arguments_count</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h4>
 <div class='docblock'><p>Returns the number of arguments accepted by self.</p>
-</div><h4 id='method.implementation' class='method'><code>fn <a href='#method.implementation' class='fnname'>implementation</a>(&amp;self) -&gt; <a class='type' href='../../objc/runtime/type.Imp.html' title='objc::runtime::Imp'>Imp</a></code></h4>
+</div><h4 id='method.implementation' class='method'><span id='implementation.v' class='invisible'><code>fn <a href='#method.implementation' class='fnname'>implementation</a>(&amp;self) -&gt; <a class='type' href='../../objc/runtime/type.Imp.html' title='objc::runtime::Imp'>Imp</a></code></span></h4>
 <div class='docblock'><p>Returns the implementation of self.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -84,6 +85,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -104,7 +107,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -115,11 +118,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "objc";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

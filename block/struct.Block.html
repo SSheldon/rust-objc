@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,15 +44,15 @@
 
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>block</a>::<wbr><a class='struct' href=''>Block</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-367' class='srclink' href='../src/block/lib.rs.html#116-118' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Block&lt;A, R&gt; {
-    // some fields omitted
-}</pre><div class='docblock'><p>An Objective-C block that takes arguments of <code>A</code> when called and
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/block/lib.rs.html#119-121' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[repr(C)]
+</div>pub struct Block&lt;A, R&gt; { /* fields omitted */ }</pre><div class='docblock'><p>An Objective-C block that takes arguments of <code>A</code> when called and
 returns a value of <code>R</code>.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;A: <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a>, R&gt; <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt; <span class='where'>where A: <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a></span></code></h3><div class='impl-items'><h4 id='method.call' class='method'><code>unsafe fn <a href='#method.call' class='fnname'>call</a>(&amp;self, args: A) -&gt; R</code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;A:&nbsp;<a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a>, R&gt; <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt; <span class='where'>where A: <a class='trait' href='../block/trait.BlockArguments.html' title='block::BlockArguments'>BlockArguments</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#123-133' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.call' class='method'><span id='call.v' class='invisible'><code>unsafe fn <a href='#method.call' class='fnname'>call</a>(&amp;self, args: A) -&gt; R</code></span></h4>
 <div class='docblock'><p>Call self with the given arguments.</p>
 
 <p>Unsafe because this invokes foreign code that the caller must verify
@@ -81,6 +82,8 @@ it will not cause a data race.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -101,7 +104,7 @@ it will not cause a data race.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -112,11 +115,9 @@ it will not cause a data race.</p>
     <script>
         window.rootPath = "../";
         window.currentCrate = "block";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

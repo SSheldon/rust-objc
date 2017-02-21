@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,10 +44,10 @@
 
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>objc_foundation</a>::<wbr><a class='trait' href=''>INSObject</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-869' class='srclink' href='../src/objc_foundation/object.rs.html#15-53' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/objc_foundation/object.rs.html#15-53' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait INSObject: <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../objc/message/trait.Message.html' title='objc::message::Message'>Message</a> {
     fn <a href='#tymethod.class' class='fnname'>class</a>() -&gt; &amp;'static <a class='struct' href='../objc/runtime/struct.Class.html' title='objc::runtime::Class'>Class</a>;
 
@@ -58,23 +59,23 @@
 }</pre>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.class' class='method stab '><code>fn <a href='#tymethod.class' class='fnname'>class</a>() -&gt; &amp;'static <a class='struct' href='../objc/runtime/struct.Class.html' title='objc::runtime::Class'>Class</a></code></h3></div>
+        <h3 id='tymethod.class' class='method stab '><span id='class.v' class='invisible'><code>fn <a href='#tymethod.class' class='fnname'>class</a>() -&gt; &amp;'static <a class='struct' href='../objc/runtime/struct.Class.html' title='objc::runtime::Class'>Class</a></code></span></h3></div>
             <h2 id='provided-methods'>Provided Methods</h2>
             <div class='methods'>
-        <h3 id='method.hash_code' class='method stab '><code>fn <a href='#method.hash_code' class='fnname'>hash_code</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h3><h3 id='method.is_equal' class='method stab '><code>fn <a href='#method.is_equal' class='fnname'>is_equal</a>&lt;T&gt;(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> <span class='where'>where T: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a></span></code></h3><h3 id='method.description' class='method stab '><code>fn <a href='#method.description' class='fnname'>description</a>(&amp;self) -&gt; <a class='type' href='../objc_id/id/type.ShareId.html' title='objc_id::id::ShareId'>ShareId</a>&lt;<a class='struct' href='../objc_foundation/struct.NSString.html' title='objc_foundation::NSString'>NSString</a>&gt;</code></h3><h3 id='method.is_kind_of' class='method stab '><code>fn <a href='#method.is_kind_of' class='fnname'>is_kind_of</a>(&amp;self, cls: &amp;<a class='struct' href='../objc/runtime/struct.Class.html' title='objc::runtime::Class'>Class</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h3><h3 id='method.new' class='method stab '><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../objc_id/id/struct.Id.html' title='objc_id::id::Id'>Id</a>&lt;Self&gt;</code></h3></div>
+        <h3 id='method.hash_code' class='method stab '><span id='hash_code.v' class='invisible'><code>fn <a href='#method.hash_code' class='fnname'>hash_code</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h3><h3 id='method.is_equal' class='method stab '><span id='is_equal.v' class='invisible'><code>fn <a href='#method.is_equal' class='fnname'>is_equal</a>&lt;T&gt;(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> <span class='where'>where T: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a></span></code></span></h3><h3 id='method.description' class='method stab '><span id='description.v' class='invisible'><code>fn <a href='#method.description' class='fnname'>description</a>(&amp;self) -&gt; <a class='type' href='../objc_id/id/type.ShareId.html' title='objc_id::id::ShareId'>ShareId</a>&lt;<a class='struct' href='../objc_foundation/struct.NSString.html' title='objc_foundation::NSString'>NSString</a>&gt;</code></span></h3><h3 id='method.is_kind_of' class='method stab '><span id='is_kind_of.v' class='invisible'><code>fn <a href='#method.is_kind_of' class='fnname'>is_kind_of</a>(&amp;self, cls: &amp;<a class='struct' href='../objc/runtime/struct.Class.html' title='objc::runtime::Class'>Class</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h3><h3 id='method.new' class='method stab '><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../objc_id/id/struct.Id.html' title='objc_id::id::Id'>Id</a>&lt;Self&gt;</code></span></h3></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl&lt;T, O&gt; <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a> for <a class='struct' href='../objc_foundation/struct.NSArray.html' title='objc_foundation::NSArray'>NSArray</a>&lt;T, O&gt; <span class='where'>where T: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a>, O: <a class='trait' href='../objc_id/id/trait.Ownership.html' title='objc_id::id::Ownership'>Ownership</a></span></code></li>
-<li><code>impl&lt;T, O&gt; <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a> for <a class='struct' href='../objc_foundation/struct.NSMutableArray.html' title='objc_foundation::NSMutableArray'>NSMutableArray</a>&lt;T, O&gt; <span class='where'>where T: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a>, O: <a class='trait' href='../objc_id/id/trait.Ownership.html' title='objc_id::id::Ownership'>Ownership</a></span></code></li>
-<li><code>impl <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a> for <a class='struct' href='../objc_foundation/struct.NSData.html' title='objc_foundation::NSData'>NSData</a></code></li>
-<li><code>impl <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a> for <a class='struct' href='../objc_foundation/struct.NSMutableData.html' title='objc_foundation::NSMutableData'>NSMutableData</a></code></li>
-<li><code>impl&lt;K, V&gt; <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a> for <a class='struct' href='../objc_foundation/struct.NSDictionary.html' title='objc_foundation::NSDictionary'>NSDictionary</a>&lt;K, V&gt; <span class='where'>where K: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a>, V: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a></span></code></li>
-<li><code>impl <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a> for <a class='struct' href='../objc_foundation/struct.NSObject.html' title='objc_foundation::NSObject'>NSObject</a></code></li>
-<li><code>impl <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a> for <a class='struct' href='../objc_foundation/struct.NSString.html' title='objc_foundation::NSString'>NSString</a></code></li>
-<li><code>impl&lt;T&gt; <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a> for <a class='struct' href='../objc_foundation/struct.NSValue.html' title='objc_foundation::NSValue'>NSValue</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a></span></code></li>
+    <li><code>impl&lt;T, O&gt; INSObject for <a class='struct' href='../objc_foundation/struct.NSArray.html' title='objc_foundation::NSArray'>NSArray</a>&lt;T, O&gt; <span class='where'>where T: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a>, O: <a class='trait' href='../objc_id/id/trait.Ownership.html' title='objc_id::id::Ownership'>Ownership</a></span></code></li>
+<li><code>impl&lt;T, O&gt; INSObject for <a class='struct' href='../objc_foundation/struct.NSMutableArray.html' title='objc_foundation::NSMutableArray'>NSMutableArray</a>&lt;T, O&gt; <span class='where'>where T: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a>, O: <a class='trait' href='../objc_id/id/trait.Ownership.html' title='objc_id::id::Ownership'>Ownership</a></span></code></li>
+<li><code>impl INSObject for <a class='struct' href='../objc_foundation/struct.NSData.html' title='objc_foundation::NSData'>NSData</a></code></li>
+<li><code>impl INSObject for <a class='struct' href='../objc_foundation/struct.NSMutableData.html' title='objc_foundation::NSMutableData'>NSMutableData</a></code></li>
+<li><code>impl&lt;K, V&gt; INSObject for <a class='struct' href='../objc_foundation/struct.NSDictionary.html' title='objc_foundation::NSDictionary'>NSDictionary</a>&lt;K, V&gt; <span class='where'>where K: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a>, V: <a class='trait' href='../objc_foundation/trait.INSObject.html' title='objc_foundation::INSObject'>INSObject</a></span></code></li>
+<li><code>impl INSObject for <a class='struct' href='../objc_foundation/struct.NSObject.html' title='objc_foundation::NSObject'>NSObject</a></code></li>
+<li><code>impl INSObject for <a class='struct' href='../objc_foundation/struct.NSString.html' title='objc_foundation::NSString'>NSString</a></code></li>
+<li><code>impl&lt;T&gt; INSObject for <a class='struct' href='../objc_foundation/struct.NSValue.html' title='objc_foundation::NSValue'>NSValue</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a></span></code></li>
 </ul><script type="text/javascript" async
-                              src="../implementors/objc_foundation/trait.INSObject.js">
-                      </script></section>
+                         src="../implementors/objc_foundation/trait.INSObject.js">
+                 </script></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -97,6 +98,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -117,7 +120,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -128,11 +131,9 @@
     <script>
         window.rootPath = "../";
         window.currentCrate = "objc_foundation";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

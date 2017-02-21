@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -43,340 +44,390 @@
 
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>objc</a>::<wbr><a class='mod' href=''>runtime</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-11' class='srclink' href='../../src/objc/runtime.rs.html#1-469' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/objc/runtime.rs.html#1-602' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>A Rust interface for the functionality of the Objective-C runtime.</p>
 
 <p>For more information on foreign functions, see Apple&#39;s documentation:
 <a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html">https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html</a></p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Class.html'
-                               title='objc::runtime::Class'>Class</a></td>
-                        <td class='docblock short'>
-                             <p>A type that represents an Objective-C class.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Ivar.html'
-                               title='objc::runtime::Ivar'>Ivar</a></td>
-                        <td class='docblock short'>
-                             <p>A type that represents an instance variable.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Method.html'
-                               title='objc::runtime::Method'>Method</a></td>
-                        <td class='docblock short'>
-                             <p>A type that represents a method in a class definition.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Object.html'
-                               title='objc::runtime::Object'>Object</a></td>
-                        <td class='docblock short'>
-                             <p>A type that represents an instance of a class.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Sel.html'
-                               title='objc::runtime::Sel'>Sel</a></td>
-                        <td class='docblock short'>
-                             <p>A type that represents a method selector.</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Class.html'
+                                  title='objc::runtime::Class'>Class</a></td>
+                           <td class='docblock-short'>
+                                <p>A type that represents an Objective-C class.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Ivar.html'
+                                  title='objc::runtime::Ivar'>Ivar</a></td>
+                           <td class='docblock-short'>
+                                <p>A type that represents an instance variable.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Method.html'
+                                  title='objc::runtime::Method'>Method</a></td>
+                           <td class='docblock-short'>
+                                <p>A type that represents a method in a class definition.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Object.html'
+                                  title='objc::runtime::Object'>Object</a></td>
+                           <td class='docblock-short'>
+                                <p>A type that represents an instance of a class.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Protocol.html'
+                                  title='objc::runtime::Protocol'>Protocol</a></td>
+                           <td class='docblock-short'>
+                                <p>A type that represents an Objective-C protocol.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Sel.html'
+                                  title='objc::runtime::Sel'>Sel</a></td>
+                           <td class='docblock-short'>
+                                <p>A type that represents a method selector.</p>
+                           </td>
+                       </tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='constant' href='constant.NO.html'
-                               title='objc::runtime::NO'>NO</a></td>
-                        <td class='docblock short'>
-                             <p>The equivalent of false for Objective-C&#39;s <code>BOOL</code> type.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='constant' href='constant.YES.html'
-                               title='objc::runtime::YES'>YES</a></td>
-                        <td class='docblock short'>
-                             <p>The equivalent of true for Objective-C&#39;s <code>BOOL</code> type.</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.NO.html'
+                                  title='objc::runtime::NO'>NO</a></td>
+                           <td class='docblock-short'>
+                                <p>The equivalent of false for Objective-C&#39;s <code>BOOL</code> type.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.YES.html'
+                                  title='objc::runtime::YES'>YES</a></td>
+                           <td class='docblock-short'>
+                                <p>The equivalent of true for Objective-C&#39;s <code>BOOL</code> type.</p>
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.class_addIvar.html'
-                               title='objc::runtime::class_addIvar'>class_addIvar</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.class_addMethod.html'
-                               title='objc::runtime::class_addMethod'>class_addMethod</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.class_copyIvarList.html'
-                               title='objc::runtime::class_copyIvarList'>class_copyIvarList</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.class_copyMethodList.html'
-                               title='objc::runtime::class_copyMethodList'>class_copyMethodList</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.class_createInstance.html'
-                               title='objc::runtime::class_createInstance'>class_createInstance</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.class_getInstanceMethod.html'
-                               title='objc::runtime::class_getInstanceMethod'>class_getInstanceMethod</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.class_getInstanceSize.html'
-                               title='objc::runtime::class_getInstanceSize'>class_getInstanceSize</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.class_getInstanceVariable.html'
-                               title='objc::runtime::class_getInstanceVariable'>class_getInstanceVariable</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.class_getName.html'
-                               title='objc::runtime::class_getName'>class_getName</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.class_getSuperclass.html'
-                               title='objc::runtime::class_getSuperclass'>class_getSuperclass</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.ivar_getName.html'
-                               title='objc::runtime::ivar_getName'>ivar_getName</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.ivar_getOffset.html'
-                               title='objc::runtime::ivar_getOffset'>ivar_getOffset</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.ivar_getTypeEncoding.html'
-                               title='objc::runtime::ivar_getTypeEncoding'>ivar_getTypeEncoding</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.method_copyArgumentType.html'
-                               title='objc::runtime::method_copyArgumentType'>method_copyArgumentType</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.method_copyReturnType.html'
-                               title='objc::runtime::method_copyReturnType'>method_copyReturnType</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.method_exchangeImplementations.html'
-                               title='objc::runtime::method_exchangeImplementations'>method_exchangeImplementations</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.method_getImplementation.html'
-                               title='objc::runtime::method_getImplementation'>method_getImplementation</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.method_getName.html'
-                               title='objc::runtime::method_getName'>method_getName</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.method_getNumberOfArguments.html'
-                               title='objc::runtime::method_getNumberOfArguments'>method_getNumberOfArguments</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.method_setImplementation.html'
-                               title='objc::runtime::method_setImplementation'>method_setImplementation</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.objc_allocateClassPair.html'
-                               title='objc::runtime::objc_allocateClassPair'>objc_allocateClassPair</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.objc_copyClassList.html'
-                               title='objc::runtime::objc_copyClassList'>objc_copyClassList</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.objc_disposeClassPair.html'
-                               title='objc::runtime::objc_disposeClassPair'>objc_disposeClassPair</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.objc_getClass.html'
-                               title='objc::runtime::objc_getClass'>objc_getClass</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.objc_getClassList.html'
-                               title='objc::runtime::objc_getClassList'>objc_getClassList</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.objc_registerClassPair.html'
-                               title='objc::runtime::objc_registerClassPair'>objc_registerClassPair</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.object_dispose.html'
-                               title='objc::runtime::object_dispose'>object_dispose</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.object_getClass.html'
-                               title='objc::runtime::object_getClass'>object_getClass</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.sel_getName.html'
-                               title='objc::runtime::sel_getName'>sel_getName</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.sel_registerName.html'
-                               title='objc::runtime::sel_registerName'>sel_registerName</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                </table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.class_addIvar.html'
+                                  title='objc::runtime::class_addIvar'>class_addIvar</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.class_addMethod.html'
+                                  title='objc::runtime::class_addMethod'>class_addMethod</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.class_addProtocol.html'
+                                  title='objc::runtime::class_addProtocol'>class_addProtocol</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.class_conformsToProtocol.html'
+                                  title='objc::runtime::class_conformsToProtocol'>class_conformsToProtocol</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.class_copyIvarList.html'
+                                  title='objc::runtime::class_copyIvarList'>class_copyIvarList</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.class_copyMethodList.html'
+                                  title='objc::runtime::class_copyMethodList'>class_copyMethodList</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.class_copyProtocolList.html'
+                                  title='objc::runtime::class_copyProtocolList'>class_copyProtocolList</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.class_createInstance.html'
+                                  title='objc::runtime::class_createInstance'>class_createInstance</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.class_getInstanceMethod.html'
+                                  title='objc::runtime::class_getInstanceMethod'>class_getInstanceMethod</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.class_getInstanceSize.html'
+                                  title='objc::runtime::class_getInstanceSize'>class_getInstanceSize</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.class_getInstanceVariable.html'
+                                  title='objc::runtime::class_getInstanceVariable'>class_getInstanceVariable</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.class_getName.html'
+                                  title='objc::runtime::class_getName'>class_getName</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.class_getSuperclass.html'
+                                  title='objc::runtime::class_getSuperclass'>class_getSuperclass</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.ivar_getName.html'
+                                  title='objc::runtime::ivar_getName'>ivar_getName</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.ivar_getOffset.html'
+                                  title='objc::runtime::ivar_getOffset'>ivar_getOffset</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.ivar_getTypeEncoding.html'
+                                  title='objc::runtime::ivar_getTypeEncoding'>ivar_getTypeEncoding</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.method_copyArgumentType.html'
+                                  title='objc::runtime::method_copyArgumentType'>method_copyArgumentType</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.method_copyReturnType.html'
+                                  title='objc::runtime::method_copyReturnType'>method_copyReturnType</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.method_exchangeImplementations.html'
+                                  title='objc::runtime::method_exchangeImplementations'>method_exchangeImplementations</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.method_getImplementation.html'
+                                  title='objc::runtime::method_getImplementation'>method_getImplementation</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.method_getName.html'
+                                  title='objc::runtime::method_getName'>method_getName</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.method_getNumberOfArguments.html'
+                                  title='objc::runtime::method_getNumberOfArguments'>method_getNumberOfArguments</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.method_setImplementation.html'
+                                  title='objc::runtime::method_setImplementation'>method_setImplementation</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.objc_allocateClassPair.html'
+                                  title='objc::runtime::objc_allocateClassPair'>objc_allocateClassPair</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.objc_allocateProtocol.html'
+                                  title='objc::runtime::objc_allocateProtocol'>objc_allocateProtocol</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.objc_copyClassList.html'
+                                  title='objc::runtime::objc_copyClassList'>objc_copyClassList</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.objc_copyProtocolList.html'
+                                  title='objc::runtime::objc_copyProtocolList'>objc_copyProtocolList</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.objc_disposeClassPair.html'
+                                  title='objc::runtime::objc_disposeClassPair'>objc_disposeClassPair</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.objc_getClass.html'
+                                  title='objc::runtime::objc_getClass'>objc_getClass</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.objc_getClassList.html'
+                                  title='objc::runtime::objc_getClassList'>objc_getClassList</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.objc_getProtocol.html'
+                                  title='objc::runtime::objc_getProtocol'>objc_getProtocol</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.objc_registerClassPair.html'
+                                  title='objc::runtime::objc_registerClassPair'>objc_registerClassPair</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.objc_registerProtocol.html'
+                                  title='objc::runtime::objc_registerProtocol'>objc_registerProtocol</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.object_dispose.html'
+                                  title='objc::runtime::object_dispose'>object_dispose</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.object_getClass.html'
+                                  title='objc::runtime::object_getClass'>object_getClass</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.protocol_addMethodDescription.html'
+                                  title='objc::runtime::protocol_addMethodDescription'>protocol_addMethodDescription</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.protocol_addProtocol.html'
+                                  title='objc::runtime::protocol_addProtocol'>protocol_addProtocol</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.protocol_conformsToProtocol.html'
+                                  title='objc::runtime::protocol_conformsToProtocol'>protocol_conformsToProtocol</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.protocol_copyProtocolList.html'
+                                  title='objc::runtime::protocol_copyProtocolList'>protocol_copyProtocolList</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.protocol_getName.html'
+                                  title='objc::runtime::protocol_getName'>protocol_getName</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.protocol_isEqual.html'
+                                  title='objc::runtime::protocol_isEqual'>protocol_isEqual</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.sel_getName.html'
+                                  title='objc::runtime::sel_getName'>sel_getName</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.sel_registerName.html'
+                                  title='objc::runtime::sel_registerName'>sel_registerName</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='type' href='type.BOOL.html'
-                               title='objc::runtime::BOOL'>BOOL</a></td>
-                        <td class='docblock short'>
-                             <p>The Objective-C <code>BOOL</code> type.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='type' href='type.Imp.html'
-                               title='objc::runtime::Imp'>Imp</a></td>
-                        <td class='docblock short'>
-                             <p>A pointer to the start of a method implementation.</p>
-
-                        </td>
-                    </tr>
-                </table></section>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.BOOL.html'
+                                  title='objc::runtime::BOOL'>BOOL</a></td>
+                           <td class='docblock-short'>
+                                <p>The Objective-C <code>BOOL</code> type.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Imp.html'
+                                  title='objc::runtime::Imp'>Imp</a></td>
+                           <td class='docblock-short'>
+                                <p>A pointer to the start of a method implementation.</p>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -399,6 +450,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -419,7 +472,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -430,11 +483,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "objc";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

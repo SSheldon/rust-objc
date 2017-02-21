@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,10 +44,10 @@
 
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>objc_id</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-0' class='srclink' href='../src/objc_id/lib.rs.html#1-49' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/objc_id/lib.rs.html#1-49' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Rust smart pointers for Objective-C reference counting.</p>
 
 <p>To ensure that Objective-C objects are retained and released
@@ -58,6 +59,7 @@ dereferenced. An owned <code>Id</code> can be downgraded to a <a href="type.Shar
 which can be cloned to allow multiple references.</p>
 
 <p>Weak references may be created using the <a href="struct.WeakId.html"><code>WeakId</code></a> struct.</p>
+
 <pre class='rust rust-example-rendered'>
 <span class='kw'>use</span> <span class='ident'>objc</span>::<span class='ident'>runtime</span>::{<span class='ident'>Class</span>, <span class='ident'>Object</span>};
 <span class='kw'>use</span> <span class='ident'>objc_id</span>::{<span class='ident'>Id</span>, <span class='ident'>WeakId</span>};
@@ -81,67 +83,55 @@ which can be cloned to allow multiple references.</p>
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>weak</span>.<span class='ident'>load</span>().<span class='ident'>is_none</span>());</pre>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Id.html'
-                               title='objc_id::Id'>Id</a></td>
-                        <td class='docblock short'>
-                             <p>A pointer type for Objective-C&#39;s reference counted objects.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.WeakId.html'
-                               title='objc_id::WeakId'>WeakId</a></td>
-                        <td class='docblock short'>
-                             <p>A pointer type for a weak reference to an Objective-C reference counted
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Id.html'
+                                  title='objc_id::Id'>Id</a></td>
+                           <td class='docblock-short'>
+                                <p>A pointer type for Objective-C&#39;s reference counted objects.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.WeakId.html'
+                                  title='objc_id::WeakId'>WeakId</a></td>
+                           <td class='docblock-short'>
+                                <p>A pointer type for a weak reference to an Objective-C reference counted
 object.</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='enum' href='enum.Owned.html'
-                               title='objc_id::Owned'>Owned</a></td>
-                        <td class='docblock short'>
-                             <p>A type used to mark that a struct owns the object(s) it contains,
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Owned.html'
+                                  title='objc_id::Owned'>Owned</a></td>
+                           <td class='docblock-short'>
+                                <p>A type used to mark that a struct owns the object(s) it contains,
 so it has the sole references to them.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='enum' href='enum.Shared.html'
-                               title='objc_id::Shared'>Shared</a></td>
-                        <td class='docblock short'>
-                             <p>A type used to mark that the object(s) a struct contains are shared,
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Shared.html'
+                                  title='objc_id::Shared'>Shared</a></td>
+                           <td class='docblock-short'>
+                                <p>A type used to mark that the object(s) a struct contains are shared,
 so there may be other references to them.</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+                           </td>
+                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='trait' href='trait.Ownership.html'
-                               title='objc_id::Ownership'>Ownership</a></td>
-                        <td class='docblock short'>
-                             <p>A type that marks what type of ownership a struct has over the object(s)
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.Ownership.html'
+                                  title='objc_id::Ownership'>Ownership</a></td>
+                           <td class='docblock-short'>
+                                <p>A type that marks what type of ownership a struct has over the object(s)
 it contains; specifically, either <code>Owned</code> or <code>Shared</code>.</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='type' href='type.ShareId.html'
-                               title='objc_id::ShareId'>ShareId</a></td>
-                        <td class='docblock short'>
-                             <p>A convenient alias for a shared <code>Id</code>.</p>
-
-                        </td>
-                    </tr>
-                </table></section>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.ShareId.html'
+                                  title='objc_id::ShareId'>ShareId</a></td>
+                           <td class='docblock-short'>
+                                <p>A convenient alias for a shared <code>Id</code>.</p>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -164,6 +154,8 @@ it contains; specifically, either <code>Owned</code> or <code>Shared</code>.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -184,7 +176,7 @@ it contains; specifically, either <code>Owned</code> or <code>Shared</code>.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -195,11 +187,9 @@ it contains; specifically, either <code>Owned</code> or <code>Shared</code>.</p>
     <script>
         window.rootPath = "../";
         window.currentCrate = "objc_id";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

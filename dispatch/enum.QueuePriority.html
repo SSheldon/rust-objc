@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,10 +44,10 @@
 
     <section id='main' class="content enum">
 <h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>dispatch</a>::<wbr><a class='enum' href=''>QueuePriority</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-135' class='srclink' href='../src/dispatch/lib.rs.html#80-95' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/dispatch/lib.rs.html#87-102' title='goto source code'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum QueuePriority {
     High,
     Default,
@@ -54,17 +55,17 @@
     Background,
 }</pre><div class='docblock'><p>The priority of a global concurrent queue.</p>
 </div><h2 class='variants'>Variants</h2>
-<table><tr><td id='variant.High'><code>High</code></td><td><div class='docblock'><p>The queue is scheduled for execution before any default priority or low
+<span id='variant.High' class='variant'><span id='High.v' class='invisible'><code>High</code></span></span><div class='docblock'><p>The queue is scheduled for execution before any default priority or low
 priority queue.</p>
-</div></td></tr><tr><td id='variant.Default'><code>Default</code></td><td><div class='docblock'><p>The queue is scheduled for execution after all high priority queues,
+</div><span id='variant.Default' class='variant'><span id='Default.v' class='invisible'><code>Default</code></span></span><div class='docblock'><p>The queue is scheduled for execution after all high priority queues,
 but before any low priority queues.</p>
-</div></td></tr><tr><td id='variant.Low'><code>Low</code></td><td><div class='docblock'><p>The queue is scheduled for execution after all default priority and
+</div><span id='variant.Low' class='variant'><span id='Low.v' class='invisible'><code>Low</code></span></span><div class='docblock'><p>The queue is scheduled for execution after all default priority and
 high priority queues.</p>
-</div></td></tr><tr><td id='variant.Background'><code>Background</code></td><td><div class='docblock'><p>The queue is scheduled for execution after all high priority queues
+</div><span id='variant.Background' class='variant'><span id='Background.v' class='invisible'><code>Background</code></span></span><div class='docblock'><p>The queue is scheduled for execution after all high priority queues
 have been scheduled. The system runs items on a thread whose
 priority is set for background status and any disk I/O is throttled to
 minimize the impact on the system.</p>
-</div></td></tr></table></section>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -87,6 +88,8 @@ minimize the impact on the system.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -107,7 +110,7 @@ minimize the impact on the system.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -118,11 +121,9 @@ minimize the impact on the system.</p>
     <script>
         window.rootPath = "../";
         window.currentCrate = "dispatch";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

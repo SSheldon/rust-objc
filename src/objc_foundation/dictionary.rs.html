@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-88ac128001ac3a9a/objc-foundation-0.1.0/src/dictionary.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-1ecc6299db9ec823/objc-foundation-0.1.1/src/dictionary.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>dictionary.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -307,36 +308,36 @@
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>object_for</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>Self</span>::<span class='ident'>Key</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Self</span>::<span class='ident'>Value</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>object_for</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='self'>Self</span>::<span class='ident'>Key</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='self'>Self</span>::<span class='ident'>Value</span><span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Self</span>::<span class='ident'>Value</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>objectForKey</span>:<span class='ident'>key</span>];
+            <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>Value</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>objectForKey</span>:<span class='ident'>key</span>];
             <span class='kw'>if</span> <span class='ident'>obj</span>.<span class='ident'>is_null</span>() { <span class='prelude-val'>None</span> } <span class='kw'>else</span> { <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>obj</span>) }
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>keys</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Self</span>::<span class='ident'>Key</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>keys</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='self'>Self</span>::<span class='ident'>Key</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>count</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>keys</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>len</span>);
         <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> _: () <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>getObjects</span>:<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>::<span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Value</span><span class='op'>&gt;</span>()
+            <span class='kw'>let</span> _: () <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>getObjects</span>:<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>::<span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span><span class='op'>&gt;</span>()
                                            <span class='ident'>andKeys</span>:<span class='ident'>keys</span>.<span class='ident'>as_mut_ptr</span>()];
             <span class='ident'>keys</span>.<span class='ident'>set_len</span>(<span class='ident'>len</span>);
         }
         <span class='ident'>keys</span>
     }
 
-    <span class='kw'>fn</span> <span class='ident'>values</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Self</span>::<span class='ident'>Value</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>values</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='self'>Self</span>::<span class='ident'>Value</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>count</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>vals</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>len</span>);
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> _: () <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>getObjects</span>:<span class='ident'>vals</span>.<span class='ident'>as_mut_ptr</span>()
-                                           <span class='ident'>andKeys</span>:<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>::<span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Key</span><span class='op'>&gt;</span>()];
+                                           <span class='ident'>andKeys</span>:<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>::<span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Key</span><span class='op'>&gt;</span>()];
             <span class='ident'>vals</span>.<span class='ident'>set_len</span>(<span class='ident'>len</span>);
         }
         <span class='ident'>vals</span>
     }
 
-    <span class='kw'>fn</span> <span class='ident'>keys_and_objects</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Self</span>::<span class='ident'>Key</span><span class='op'>&gt;</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Self</span>::<span class='ident'>Value</span><span class='op'>&gt;</span>) {
+    <span class='kw'>fn</span> <span class='ident'>keys_and_objects</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='self'>Self</span>::<span class='ident'>Key</span><span class='op'>&gt;</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='self'>Self</span>::<span class='ident'>Value</span><span class='op'>&gt;</span>) {
         <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>count</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>keys</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>len</span>);
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>objs</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>len</span>);
@@ -349,37 +350,37 @@
         (<span class='ident'>keys</span>, <span class='ident'>objs</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>key_enumerator</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>NSEnumerator</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Key</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>key_enumerator</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>NSEnumerator</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Key</span><span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>keyEnumerator</span>];
             <span class='ident'>NSEnumerator</span>::<span class='ident'>from_ptr</span>(<span class='ident'>result</span>)
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>object_enumerator</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>NSEnumerator</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Value</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>object_enumerator</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>NSEnumerator</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span><span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>objectEnumerator</span>];
             <span class='ident'>NSEnumerator</span>::<span class='ident'>from_ptr</span>(<span class='ident'>result</span>)
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>keys_array</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Id</span><span class='op'>&lt;</span><span class='ident'>NSSharedArray</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Key</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>keys_array</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Id</span><span class='op'>&lt;</span><span class='ident'>NSSharedArray</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Key</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>keys</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>NSSharedArray</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Key</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>allKeys</span>];
+            <span class='kw'>let</span> <span class='ident'>keys</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>NSSharedArray</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Key</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>allKeys</span>];
             <span class='ident'>Id</span>::<span class='ident'>from_ptr</span>(<span class='ident'>keys</span>)
         }
     }
 
     <span class='kw'>fn</span> <span class='ident'>from_keys_and_objects</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>keys</span>: <span class='kw-2'>&amp;</span>[<span class='kw-2'>&amp;</span><span class='ident'>T</span>],
-            <span class='ident'>vals</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Id</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>Self</span>::<span class='ident'>Own</span><span class='op'>&gt;&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Id</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>
-            <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>INSCopying</span><span class='op'>&lt;</span><span class='ident'>Output</span><span class='op'>=</span><span class='ident'>Self</span>::<span class='ident'>Key</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>vals_refs</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Self</span>::<span class='ident'>Value</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>vals</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>obj</span><span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='op'>*</span><span class='ident'>obj</span>).<span class='ident'>collect</span>();
+            <span class='ident'>vals</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Id</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Own</span><span class='op'>&gt;&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Id</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>
+            <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>INSCopying</span><span class='op'>&lt;</span><span class='ident'>Output</span><span class='op'>=</span><span class='self'>Self</span>::<span class='ident'>Key</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='ident'>vals_refs</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='self'>Self</span>::<span class='ident'>Value</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>vals</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>obj</span><span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='op'>*</span><span class='ident'>obj</span>).<span class='ident'>collect</span>();
         <span class='kw'>unsafe</span> {
             <span class='ident'>from_refs</span>(<span class='ident'>keys</span>, <span class='kw-2'>&amp;</span><span class='ident'>vals_refs</span>)
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>into_values_array</span>(<span class='ident'>dict</span>: <span class='ident'>Id</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Id</span><span class='op'>&lt;</span><span class='ident'>NSArray</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>Self</span>::<span class='ident'>Own</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>into_values_array</span>(<span class='ident'>dict</span>: <span class='ident'>Id</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Id</span><span class='op'>&lt;</span><span class='ident'>NSArray</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Own</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='ident'>vals</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>dict</span>, <span class='ident'>allValues</span>];
             <span class='ident'>Id</span>::<span class='ident'>from_ptr</span>(<span class='ident'>vals</span>)
@@ -424,7 +425,7 @@
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
     <span class='kw'>use</span> <span class='ident'>objc_id</span>::<span class='ident'>Id</span>;
     <span class='kw'>use</span> {<span class='ident'>INSArray</span>, <span class='ident'>INSObject</span>, <span class='ident'>INSString</span>, <span class='ident'>NSObject</span>, <span class='ident'>NSString</span>};
-    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>INSDictionary</span>, <span class='ident'>NSDictionary</span>};
+    <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>INSDictionary</span>, <span class='ident'>NSDictionary</span>};
 
     <span class='kw'>fn</span> <span class='ident'>sample_dict</span>(<span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>Id</span><span class='op'>&lt;</span><span class='ident'>NSDictionary</span><span class='op'>&lt;</span><span class='ident'>NSString</span>, <span class='ident'>NSObject</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>string</span> <span class='op'>=</span> <span class='ident'>NSString</span>::<span class='ident'>from_str</span>(<span class='ident'>key</span>);
@@ -526,6 +527,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -546,7 +549,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -557,11 +560,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "objc_foundation";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Encoding` trait in crate `objc_encode`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Encoding">
+
+    <title>objc_encode::Encoding - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>objc_encode</a></p><script>window.sidebarCurrent = {name: 'Encoding', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content trait">
+<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>objc_encode</a>::<wbr><a class='trait' href=''>Encoding</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/objc_encode/lib.rs.html#68-97' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait Encoding: <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> {
+    type <a href='#associatedtype.PointerTarget' class='type'>PointerTarget</a>: ?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>Encoding</a>;
+    type <a href='#associatedtype.ArrayItem' class='type'>ArrayItem</a>: ?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>Encoding</a>;
+    type <a href='#associatedtype.StructFields' class='type'>StructFields</a>: ?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../objc_encode/trait.Encodings.html' title='objc_encode::Encodings'>Encodings</a>;
+    type <a href='#associatedtype.UnionMembers' class='type'>UnionMembers</a>: ?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../objc_encode/trait.Encodings.html' title='objc_encode::Encodings'>Encodings</a>;
+    fn <a href='#tymethod.descriptor' class='fnname'>descriptor</a>(&amp;self)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='../objc_encode/enum.Descriptor.html' title='objc_encode::Descriptor'>Descriptor</a>&lt;Self::<a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>PointerTarget</a>, Self::<a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>ArrayItem</a>, Self::<a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>StructFields</a>, Self::<a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>UnionMembers</a>&gt;;
+
+    fn <a href='#method.eq_encoding' class='fnname'>eq_encoding</a>&lt;T:&nbsp;?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>Encoding</a>&gt;(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> { ... }
+    fn <a href='#method.write' class='fnname'>write</a>&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Write.html' title='core::fmt::Write'>Write</a>&gt;(&amp;self, writer: &amp;mut W) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a> { ... }
+}</pre><div class='docblock'><p>An Objective-C type encoding.</p>
+</div>
+            <h2 id='associated-types'>Associated Types</h2>
+            <div class='methods'>
+        <h3 id='associatedtype.PointerTarget' class='method stab '><span id='PointerTarget.t' class='invisible'><code>type <a href='#associatedtype.PointerTarget' class='type'>PointerTarget</a>: ?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>Encoding</a></code></span></h3><div class='docblock'><p>The type of <code>Encoding</code> that Self will use if it is an encoding for
+a pointer to describe its target.</p>
+</div><h3 id='associatedtype.ArrayItem' class='method stab '><span id='ArrayItem.t' class='invisible'><code>type <a href='#associatedtype.ArrayItem' class='type'>ArrayItem</a>: ?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>Encoding</a></code></span></h3><div class='docblock'><p>The type of <code>Encoding</code> that Self will use if it is an encoding for
+an array to describe its items.</p>
+</div><h3 id='associatedtype.StructFields' class='method stab '><span id='StructFields.t' class='invisible'><code>type <a href='#associatedtype.StructFields' class='type'>StructFields</a>: ?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../objc_encode/trait.Encodings.html' title='objc_encode::Encodings'>Encodings</a></code></span></h3><div class='docblock'><p>The type of <code>Encodings</code> that Self will use if it is an encoding for
+a struct to describe its fields.</p>
+</div><h3 id='associatedtype.UnionMembers' class='method stab '><span id='UnionMembers.t' class='invisible'><code>type <a href='#associatedtype.UnionMembers' class='type'>UnionMembers</a>: ?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../objc_encode/trait.Encodings.html' title='objc_encode::Encodings'>Encodings</a></code></span></h3><div class='docblock'><p>The type of <code>Encodings</code> that Self will use if it is an encoding for
+a union to describe its members.</p>
+</div></div>
+            <h2 id='required-methods'>Required Methods</h2>
+            <div class='methods'>
+        <h3 id='tymethod.descriptor' class='method stab '><span id='descriptor.v' class='invisible'><code>fn <a href='#tymethod.descriptor' class='fnname'>descriptor</a>(&amp;self)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='../objc_encode/enum.Descriptor.html' title='objc_encode::Descriptor'>Descriptor</a>&lt;Self::<a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>PointerTarget</a>, Self::<a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>ArrayItem</a>, Self::<a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>StructFields</a>, Self::<a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>UnionMembers</a>&gt;</code></span></h3><div class='docblock'><p>Returns a <code>Descriptor</code> that describes what kind of encoding self is.</p>
+</div></div>
+            <h2 id='provided-methods'>Provided Methods</h2>
+            <div class='methods'>
+        <h3 id='method.eq_encoding' class='method stab '><span id='eq_encoding.v' class='invisible'><code>fn <a href='#method.eq_encoding' class='fnname'>eq_encoding</a>&lt;T:&nbsp;?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>Encoding</a>&gt;(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h3><div class='docblock'><p>Returns whether self is equal to the given <code>Encoding</code>.</p>
+</div><h3 id='method.write' class='method stab '><span id='write.v' class='invisible'><code>fn <a href='#method.write' class='fnname'>write</a>&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Write.html' title='core::fmt::Write'>Write</a>&gt;(&amp;self, writer: &amp;mut W) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h3><div class='docblock'><p>Writes the string representation of self to the given writer.</p>
+</div></div>
+        <h2 id='implementors'>Implementors</h2>
+        <ul class='item-list' id='implementors-list'>
+    <li><code>impl&lt;T&gt; Encoding for <a class='struct' href='../objc_encode/encoding/struct.Array.html' title='objc_encode::encoding::Array'>Array</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>Encoding</a></span></code></li>
+<li><code>impl&lt;T&gt; Encoding for <a class='struct' href='../objc_encode/encoding/struct.Pointer.html' title='objc_encode::encoding::Pointer'>Pointer</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>Encoding</a></span></code></li>
+<li><code>impl Encoding for <a class='enum' href='../objc_encode/encoding/enum.Primitive.html' title='objc_encode::encoding::Primitive'>Primitive</a></code></li>
+<li><code>impl&lt;S, T&gt; Encoding for <a class='struct' href='../objc_encode/encoding/struct.Struct.html' title='objc_encode::encoding::Struct'>Struct</a>&lt;S, T&gt; <span class='where'>where S: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;, T: <a class='trait' href='../objc_encode/trait.Encodings.html' title='objc_encode::Encodings'>Encodings</a></span></code></li>
+<li><code>impl&lt;S, T&gt; Encoding for <a class='struct' href='../objc_encode/encoding/struct.Union.html' title='objc_encode::encoding::Union'>Union</a>&lt;S, T&gt; <span class='where'>where S: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;, T: <a class='trait' href='../objc_encode/trait.Encodings.html' title='objc_encode::Encodings'>Encodings</a></span></code></li>
+<li><code>impl&lt;S:&nbsp;?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>&gt; Encoding for <a class='struct' href='../objc_encode/parse/struct.StrEncoding.html' title='objc_encode::parse::StrEncoding'>StrEncoding</a>&lt;S&gt; <span class='where'>where S: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;</span></code></li>
+</ul><script type="text/javascript" async
+                         src="../implementors/objc_encode/trait.Encoding.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "objc_encode";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

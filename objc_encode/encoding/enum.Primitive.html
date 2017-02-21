@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Primitive` enum in crate `objc_encode`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Primitive">
+
+    <title>objc_encode::encoding::Primitive - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>objc_encode</a>::<wbr><a href='index.html'>encoding</a></p><script>window.sidebarCurrent = {name: 'Primitive', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content enum">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>objc_encode</a>::<wbr><a href='index.html'>encoding</a>::<wbr><a class='enum' href=''>Primitive</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/objc_encode/encoding/primitive.rs.html#8-30' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'>pub enum Primitive {
+    Char,
+    Short,
+    Int,
+    Long,
+    LongLong,
+    UChar,
+    UShort,
+    UInt,
+    ULong,
+    ULongLong,
+    Float,
+    Double,
+    Bool,
+    Void,
+    String,
+    Object,
+    Block,
+    Class,
+    Sel,
+    Unknown,
+    BitField(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>),
+}</pre><div class='docblock'><p>An encoding for a &quot;primitive&quot; type which is not a composition of other types.</p>
+</div><h2 class='variants'>Variants</h2>
+<span id='variant.Char' class='variant'><span id='Char.v' class='invisible'><code>Char</code></span></span><span id='variant.Short' class='variant'><span id='Short.v' class='invisible'><code>Short</code></span></span><span id='variant.Int' class='variant'><span id='Int.v' class='invisible'><code>Int</code></span></span><span id='variant.Long' class='variant'><span id='Long.v' class='invisible'><code>Long</code></span></span><span id='variant.LongLong' class='variant'><span id='LongLong.v' class='invisible'><code>LongLong</code></span></span><span id='variant.UChar' class='variant'><span id='UChar.v' class='invisible'><code>UChar</code></span></span><span id='variant.UShort' class='variant'><span id='UShort.v' class='invisible'><code>UShort</code></span></span><span id='variant.UInt' class='variant'><span id='UInt.v' class='invisible'><code>UInt</code></span></span><span id='variant.ULong' class='variant'><span id='ULong.v' class='invisible'><code>ULong</code></span></span><span id='variant.ULongLong' class='variant'><span id='ULongLong.v' class='invisible'><code>ULongLong</code></span></span><span id='variant.Float' class='variant'><span id='Float.v' class='invisible'><code>Float</code></span></span><span id='variant.Double' class='variant'><span id='Double.v' class='invisible'><code>Double</code></span></span><span id='variant.Bool' class='variant'><span id='Bool.v' class='invisible'><code>Bool</code></span></span><span id='variant.Void' class='variant'><span id='Void.v' class='invisible'><code>Void</code></span></span><span id='variant.String' class='variant'><span id='String.v' class='invisible'><code>String</code></span></span><span id='variant.Object' class='variant'><span id='Object.v' class='invisible'><code>Object</code></span></span><span id='variant.Block' class='variant'><span id='Block.v' class='invisible'><code>Block</code></span></span><span id='variant.Class' class='variant'><span id='Class.v' class='invisible'><code>Class</code></span></span><span id='variant.Sel' class='variant'><span id='Sel.v' class='invisible'><code>Sel</code></span></span><span id='variant.Unknown' class='variant'><span id='Unknown.v' class='invisible'><code>Unknown</code></span></span><span id='variant.BitField' class='variant'><span id='BitField.v' class='invisible'><code>BitField(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>)</code></span></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../../objc_encode/encoding/enum.Primitive.html' title='objc_encode::encoding::Primitive'>Primitive</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc_encode/encoding/primitive.rs.html#7' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../../objc_encode/encoding/enum.Primitive.html' title='objc_encode::encoding::Primitive'>Primitive</a></code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../../objc_encode/encoding/enum.Primitive.html' title='objc_encode::encoding::Primitive'>Primitive</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc_encode/encoding/primitive.rs.html#7' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../../objc_encode/encoding/enum.Primitive.html' title='objc_encode::encoding::Primitive'>Primitive</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc_encode/encoding/primitive.rs.html#7' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>Encoding</a> for <a class='enum' href='../../objc_encode/encoding/enum.Primitive.html' title='objc_encode::encoding::Primitive'>Primitive</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc_encode/encoding/primitive.rs.html#32-41' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.PointerTarget' class='type'><span id='PointerTarget.t' class='invisible'><code>type <a href='../../objc_encode/trait.Encoding.html#associatedtype.PointerTarget' class='type'>PointerTarget</a> = Never</code></span></h4>
+<div class='docblock'><p>The type of <code>Encoding</code> that Self will use if it is an encoding for a pointer to describe its target. <a href="../../objc_encode/trait.Encoding.html#associatedtype.PointerTarget">Read more</a></p>
+</div><h4 id='associatedtype.ArrayItem' class='type'><span id='ArrayItem.t' class='invisible'><code>type <a href='../../objc_encode/trait.Encoding.html#associatedtype.ArrayItem' class='type'>ArrayItem</a> = Never</code></span></h4>
+<div class='docblock'><p>The type of <code>Encoding</code> that Self will use if it is an encoding for an array to describe its items. <a href="../../objc_encode/trait.Encoding.html#associatedtype.ArrayItem">Read more</a></p>
+</div><h4 id='associatedtype.StructFields' class='type'><span id='StructFields.t' class='invisible'><code>type <a href='../../objc_encode/trait.Encoding.html#associatedtype.StructFields' class='type'>StructFields</a> = Never</code></span></h4>
+<div class='docblock'><p>The type of <code>Encodings</code> that Self will use if it is an encoding for a struct to describe its fields. <a href="../../objc_encode/trait.Encoding.html#associatedtype.StructFields">Read more</a></p>
+</div><h4 id='associatedtype.UnionMembers' class='type'><span id='UnionMembers.t' class='invisible'><code>type <a href='../../objc_encode/trait.Encoding.html#associatedtype.UnionMembers' class='type'>UnionMembers</a> = Never</code></span></h4>
+<div class='docblock'><p>The type of <code>Encodings</code> that Self will use if it is an encoding for a union to describe its members. <a href="../../objc_encode/trait.Encoding.html#associatedtype.UnionMembers">Read more</a></p>
+</div><h4 id='method.descriptor' class='method'><span id='descriptor.v' class='invisible'><code>fn <a href='../../objc_encode/trait.Encoding.html#tymethod.descriptor' class='fnname'>descriptor</a>(&amp;self) -&gt; <a class='enum' href='../../objc_encode/enum.Descriptor.html' title='objc_encode::Descriptor'>Descriptor</a>&lt;Never, Never, Never, Never&gt;</code></span></h4>
+<div class='docblock'><p>Returns a <code>Descriptor</code> that describes what kind of encoding self is.</p>
+</div><h4 id='method.eq_encoding' class='method'><span id='eq_encoding.v' class='invisible'><code>fn <a href='../../objc_encode/trait.Encoding.html#method.eq_encoding' class='fnname'>eq_encoding</a>&lt;T:&nbsp;?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>Encoding</a>&gt;(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>Returns whether self is equal to the given <code>Encoding</code>.</p>
+</div><h4 id='method.write' class='method'><span id='write.v' class='invisible'><code>fn <a href='../../objc_encode/trait.Encoding.html#method.write' class='fnname'>write</a>&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Write.html' title='core::fmt::Write'>Write</a>&gt;(&amp;self, writer: &amp;mut W) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+<div class='docblock'><p>Writes the string representation of self to the given writer.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> for <a class='enum' href='../../objc_encode/encoding/enum.Primitive.html' title='objc_encode::encoding::Primitive'>Primitive</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc_encode/encoding/primitive.rs.html#43-47' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt-1' class='method'><span id='fmt.v-1' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, formatter: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;E:&nbsp;?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;E&gt; for <a class='enum' href='../../objc_encode/encoding/enum.Primitive.html' title='objc_encode::encoding::Primitive'>Primitive</a> <span class='where'>where E: <a class='trait' href='../../objc_encode/trait.Encoding.html' title='objc_encode::Encoding'>Encoding</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc_encode/encoding/primitive.rs.html#49-53' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.eq' class='method'><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: &amp;E) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class='method'><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='enum' href='../../objc_encode/encoding/enum.Primitive.html' title='objc_encode::encoding::Primitive'>Primitive</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc_encode/encoding/primitive.rs.html#55' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "objc_encode";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

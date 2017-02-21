@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["NSString",""]],"trait":[["INSCopying",""],["INSMutableCopying",""],["INSString",""]]});

@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-88ac128001ac3a9a/objc-foundation-0.1.0/src/macros.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-1ecc6299db9ec823/objc-foundation-0.1.1/src/macros.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>macros.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -106,7 +107,7 @@
 
         <span class='kw'>unsafe</span> <span class='kw'>impl</span> ::<span class='ident'>objc</span>::<span class='ident'>Message</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> { }
 
-        <span class='kw'>impl</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>INSObject</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
+        <span class='kw'>impl</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>INSObject</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
             <span class='kw'>fn</span> <span class='ident'>class</span>() <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> ::<span class='ident'>objc</span>::<span class='ident'>runtime</span>::<span class='ident'>Class</span> {
                 <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>);
                 <span class='kw'>match</span> ::<span class='ident'>objc</span>::<span class='ident'>runtime</span>::<span class='ident'>Class</span>::<span class='ident'>get</span>(<span class='ident'>name</span>) {
@@ -117,8 +118,8 @@
         }
 
         <span class='kw'>impl</span> ::<span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>PartialEq</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
-            <span class='kw'>fn</span> <span class='ident'>eq</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-                <span class='kw'>use</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>INSObject</span>;
+            <span class='kw'>fn</span> <span class='ident'>eq</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+                <span class='kw'>use</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>INSObject</span>;
                 <span class='self'>self</span>.<span class='ident'>is_equal</span>(<span class='ident'>other</span>)
             }
         }
@@ -127,14 +128,14 @@
 
         <span class='kw'>impl</span> ::<span class='ident'>std</span>::<span class='ident'>hash</span>::<span class='ident'>Hash</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
             <span class='kw'>fn</span> <span class='ident'>hash</span><span class='op'>&lt;</span><span class='ident'>H</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>state</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>H</span>) <span class='kw'>where</span> <span class='ident'>H</span>: ::<span class='ident'>std</span>::<span class='ident'>hash</span>::<span class='ident'>Hasher</span> {
-                <span class='kw'>use</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>INSObject</span>;
+                <span class='kw'>use</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>INSObject</span>;
                 <span class='self'>self</span>.<span class='ident'>hash_code</span>().<span class='ident'>hash</span>(<span class='ident'>state</span>);
             }
         }
 
         <span class='kw'>impl</span> ::<span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
             <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> ::<span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> ::<span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-                <span class='kw'>use</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::{<span class='ident'>INSObject</span>, <span class='ident'>INSString</span>};
+                <span class='kw'>use</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::{<span class='macro-nonterminal'>INSObject</span>, <span class='ident'>INSString</span>};
                 ::<span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Debug</span>::<span class='ident'>fmt</span>(<span class='self'>self</span>.<span class='ident'>description</span>().<span class='ident'>as_str</span>(), <span class='ident'>f</span>)
             }
         }
@@ -176,6 +177,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -196,7 +199,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -207,11 +210,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "objc_foundation";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

@@ -308,6 +308,15 @@ mod tests {
             // The subclass is overriden to return foo + 2
             let foo: u32 = msg_send![obj, foo];
             assert!(foo == 6);
+
+            // This is the second variant of sending messages to super, used when the superclass is
+            // unknown at compile time.
+            let foo: u32 = msg_send![super(obj), foo];
+            assert!(foo == 4);
+
+            // The subclass is overriden to return foo + 2
+            let foo: u32 = msg_send![obj, foo];
+            assert!(foo == 6);
         }
     }
 

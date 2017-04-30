@@ -1,4 +1,6 @@
 #[macro_use]
+extern crate terminated;
+#[macro_use]
 extern crate objc;
 
 use objc::Encode;
@@ -26,7 +28,7 @@ fn main() {
 
     // Access an ivar of the object
     let isa: *const Class = unsafe {
-        *(**obj).get_ivar("isa")
+        *(**obj).get_ivar(ntstr!("isa"))
     };
     println!("NSObject isa: {:?}", isa);
 

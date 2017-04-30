@@ -11,18 +11,19 @@ one ivar, a `u32` named `_number` and a `number` method that returns it:
 
 ``` no_run
 # #[macro_use] extern crate objc;
+# #[macro_use] extern crate terminated;
 # use objc::declare::ClassDecl;
 # use objc::runtime::{Class, Object, Sel};
 # fn main() {
 let superclass = class!(NSObject);
-let mut decl = ClassDecl::new("MyNumber", superclass).unwrap();
+let mut decl = ClassDecl::new(ntstr!("MyNumber"), superclass).unwrap();
 
 // Add an instance variable
-decl.add_ivar::<u32>("_number");
+decl.add_ivar::<u32>(ntstr!("_number"));
 
 // Add an ObjC method for getting the number
 extern fn my_number_get(this: &Object, _cmd: Sel) -> u32 {
-    unsafe { *this.get_ivar("_number") }
+    unsafe { *this.get_ivar(ntstr!("_number")) }
 }
 unsafe {
     decl.add_method(sel!(number),
@@ -36,7 +37,10 @@ decl.register();
 
 use std::ffi::CString;
 use std::mem;
+use std::os::raw::c_char;
 use std::ptr;
+
+use terminated::NulTerminatedStr;
 
 use runtime::{BOOL, Class, Imp, NO, Object, Protocol, Sel, self};
 use {Encode, EncodeArguments, Encoding, Message};
@@ -117,12 +121,12 @@ pub struct ClassDecl {
 }
 
 impl ClassDecl {
-    fn with_superclass(name: &str, superclass: Option<&Class>)
+    fn with_superclass(name: &NulTerminatedStr, superclass: Option<&Class>)
             -> Option<ClassDecl> {
-        let name = CString::new(name).unwrap();
+        let name_ptr = name.as_ptr() as *const c_char;
         let super_ptr = superclass.map_or(ptr::null(), |c| c);
         let cls = unsafe {
-            runtime::objc_allocateClassPair(super_ptr, name.as_ptr(), 0)
+            runtime::objc_allocateClassPair(super_ptr, name_ptr, 0)
         };
         if cls.is_null() {
             None
@@ -133,7 +137,8 @@ impl ClassDecl {
 
     /// Constructs a `ClassDecl` with the given name and superclass.
     /// Returns `None` if the class couldn't be allocated.
-    pub fn new(name: &str, superclass: &Class) -> Option<ClassDecl> {
+    pub fn new(name: &NulTerminatedStr, superclass: &Class)
+            -> Option<ClassDecl> {
         ClassDecl::with_superclass(name, Some(superclass))
     }
 
@@ -150,7 +155,7 @@ impl ClassDecl {
     Functionality it expects, like implementations of `-retain` and `-release`
     used by ARC, will not be present otherwise.
     */
-    pub fn root(name: &str, intitialize_fn: extern fn(&Class, Sel))
+    pub fn root(name: &NulTerminatedStr, intitialize_fn: extern fn(&Class, Sel))
             -> Option<ClassDecl> {
         let mut decl = ClassDecl::with_superclass(name, None);
         if let Some(ref mut decl) = decl {
@@ -204,13 +209,13 @@ impl ClassDecl {
 
     /// Adds an ivar with type `T` and the provided name to self.
     /// Panics if the ivar wasn't successfully added.
-    pub fn add_ivar<T>(&mut self, name: &str) where T: Encode {
-        let c_name = CString::new(name).unwrap();
+    pub fn add_ivar<T>(&mut self, name: &NulTerminatedStr) where T: Encode {
+        let name_ptr = name.as_ptr() as *const c_char;
         let encoding = CString::new(T::ENCODING.to_string()).unwrap();
         let size = mem::size_of::<T>();
         let align = log2_align_of::<T>();
         let success = unsafe {
-            runtime::class_addIvar(self.cls, c_name.as_ptr(), size, align,
+            runtime::class_addIvar(self.cls, name_ptr, size, align,
                 encoding.as_ptr())
         };
         assert!(success != NO, "Failed to add ivar {}", name);
@@ -253,10 +258,10 @@ pub struct ProtocolDecl {
 impl ProtocolDecl {
     /// Constructs a `ProtocolDecl` with the given name. Returns `None` if the
     /// protocol couldn't be allocated.
-    pub fn new(name: &str) -> Option<ProtocolDecl> {
-        let c_name = CString::new(name).unwrap();
+    pub fn new(name: &NulTerminatedStr) -> Option<ProtocolDecl> {
+        let name_ptr = name.as_ptr() as *const c_char;
         let proto = unsafe {
-            runtime::objc_allocateProtocol(c_name.as_ptr())
+            runtime::objc_allocateProtocol(name_ptr)
         };
         if proto.is_null() {
             None

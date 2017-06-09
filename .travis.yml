@@ -13,8 +13,8 @@ matrix:
       rust: stable
       env: FEATURES="exception verify_message" IOS_ARCHS=""
     - os: osx
-      osx_image: xcode7.2
-      rust: 1.9.0
+      osx_image: xcode7.3
+      rust: stable
       env: FEATURES="exception" IOS_ARCHS="i386 x86_64 armv7 armv7s aarch64"
 sudo: false
 install: ./travis_install.sh

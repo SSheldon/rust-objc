@@ -1,7 +1,7 @@
 //! A Rust interface for the functionality of the Objective-C runtime.
 //!
 //! For more information on foreign functions, see Apple's documentation:
-//! https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html
+//! <https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html>
 
 use std::ffi::{CStr, CString};
 use std::fmt;

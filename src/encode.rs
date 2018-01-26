@@ -32,7 +32,7 @@ enum Code {
 /// An Objective-C type encoding.
 ///
 /// For more information, see Apple's documentation:
-/// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
+/// <https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html>
 pub struct Encoding {
     code: Code,
 }

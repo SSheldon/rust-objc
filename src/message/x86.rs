@@ -8,7 +8,7 @@ pub fn msg_send_fn<R: Any>(obj: *mut Object, _: Sel) -> (Imp, *mut Object) {
     // Structures 1 or 2 bytes in size are placed in EAX.
     // Structures 4 or 8 bytes in size are placed in: EAX and EDX.
     // Structures of other sizes are placed at the address supplied by the caller.
-    // https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/LowLevelABI/130-IA-32_Function_Calling_Conventions/IA32.html
+    // <https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/LowLevelABI/130-IA-32_Function_Calling_Conventions/IA32.html>
 
     extern {
         fn objc_msgSend();

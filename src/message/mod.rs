@@ -47,8 +47,8 @@ pub unsafe trait Message {
     Sends a message to self with the given selector and arguments.
 
     The correct version of `objc_msgSend` will be chosen based on the
-    return type. For more information, see Apple's documenation:
-    https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778
+    return type. For more information, see Apple's documentation:
+    <https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778>
 
     If the selector is known at compile-time, it is recommended to use the
     `msg_send!` macro rather than this method.

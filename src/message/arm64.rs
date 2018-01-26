@@ -3,7 +3,7 @@ use super::Super;
 
 pub fn msg_send_fn<R>(obj: *mut Object, _: Sel) -> (Imp, *mut Object) {
     // stret is not even available in arm64.
-    // https://twitter.com/gparker/status/378079715824660480
+    // <https://twitter.com/gparker/status/378079715824660480>
 
     extern {
         fn objc_msgSend();

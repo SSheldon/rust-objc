@@ -99,6 +99,10 @@ pub fn custom_class() -> &'static Class {
             fst + snd
         }
 
+        extern fn custom_obj_add_2_numbers(_this: &Class, _cmd: Sel, fst: i32, snd: i32) -> i32 {
+            fst + snd
+        }
+
         unsafe {
             let set_foo: extern fn(&mut Object, Sel, u32) = custom_obj_set_foo;
             decl.add_method(sel!(setFoo:), set_foo);
@@ -113,6 +117,9 @@ pub fn custom_class() -> &'static Class {
             decl.add_method(sel!(setBar:), protocol_instance_method);
             let protocol_class_method: extern fn(&Class, Sel, i32, i32) -> i32 = custom_obj_add_number_to_number;
             decl.add_class_method(sel!(addNumber:toNumber:), protocol_class_method);
+
+            let method_with_unlabeled_parameter: extern fn(&Class, Sel, i32, i32) -> i32 = custom_obj_add_2_numbers;
+            decl.add_class_method(sel!(add2Numbers:_:), method_with_unlabeled_parameter);
         }
 
         decl.register();

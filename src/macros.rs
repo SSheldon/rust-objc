@@ -1,3 +1,10 @@
+/// Should only be used by `sel!`.
+#[macro_export]
+macro_rules! objc_stringigy_label {
+    (_) => (""); // `_` is just a placeholder for empty labels.
+    ($name:ident) => (stringify!($name));
+}
+
 /**
 Registers a selector, returning a `Sel`.
 
@@ -7,6 +14,7 @@ Registers a selector, returning a `Sel`.
 # fn main() {
 let sel = sel!(description);
 let sel = sel!(setObject:forKey:);
+let set = sel!(functionWithControlPoints:_:_:_:);
 # }
 ```
 */
@@ -20,15 +28,15 @@ macro_rules! sel {
             let ptr = name_with_nul.as_ptr() as *const _;
             unsafe { $crate::runtime::sel_registerName(ptr) }
         }
-        register_sel(concat!(stringify!($name), '\0'))
+        register_sel(concat!(objc_stringigy_label!($name), '\0'))
     });
-    ($($name:ident :)+) => ({
+    ($($name:tt :)+) => ({
         #[inline(always)]
         fn register_sel(name_with_nul: &str) -> $crate::runtime::Sel {
             let ptr = name_with_nul.as_ptr() as *const _;
             unsafe { $crate::runtime::sel_registerName(ptr) }
         }
-        register_sel(concat!($(stringify!($name), ':'),+, '\0'))
+        register_sel(concat!($(objc_stringigy_label!($name), ':'),+, '\0'))
     });
 }
 
@@ -77,7 +85,7 @@ macro_rules! msg_send {
             Ok(r) => r,
         }
     });
-    ($obj:expr, $($name:ident : $arg:expr)+) => ({
+    ($obj:expr, $($name:tt : $arg:expr)+) => ({
         let sel = sel!($($name:)+);
         match $crate::__send_message(&*$obj, sel, ($($arg,)*)) {
             Err(s) => panic!("{}", s),

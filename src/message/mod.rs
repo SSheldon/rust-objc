@@ -276,6 +276,15 @@ mod tests {
         assert!(result == expected);
     }
 
+    #[test]
+    fn test_send_message_with_unlabeled_parameter() {
+        let cls = test_utils::custom_class();
+        let result: i32 = unsafe {
+            msg_send![cls, add2Numbers:42i32 _:-64i32]
+        };
+        assert!(result == -22);
+    }
+
     #[cfg(not(feature = "verify_message"))]
     #[test]
     fn test_send_message_nil() {

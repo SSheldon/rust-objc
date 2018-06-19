@@ -1,3 +1,30 @@
+#[doc(hidden)]
+#[macro_export]
+macro_rules! sel_impl {
+    // Declare a function to hide unsafety, otherwise we can trigger the
+    // unused_unsafe lint; see rust-lang/rust#8472
+    ($name:expr) => ({
+        #[inline(always)]
+        fn register_sel(name: &str) -> $crate::runtime::Sel {
+            unsafe {
+                static SEL: ::std::sync::atomic::AtomicPtr<::std::os::raw::c_void> =
+                    ::std::sync::atomic::AtomicPtr::new(0 as *mut _);
+                let ptr = SEL.load(::std::sync::atomic::Ordering::Relaxed);
+                // It should be fine to use `Relaxed` ordering here because `sel_registerName` is
+                // thread-safe.
+                if ptr.is_null() {
+                    let sel = $crate::runtime::sel_registerName(name.as_ptr() as *const _);
+                    SEL.store(sel.as_ptr() as *mut _, ::std::sync::atomic::Ordering::Relaxed);
+                    sel
+                } else {
+                    $crate::runtime::Sel::from_ptr(ptr)
+                }
+            }
+        }
+        register_sel($name)
+    })
+}
+
 /**
 Registers a selector, returning a `Sel`.
 
@@ -12,24 +39,8 @@ let sel = sel!(setObject:forKey:);
 */
 #[macro_export]
 macro_rules! sel {
-    // Declare a function to hide unsafety, otherwise we can trigger the
-    // unused_unsafe lint; see rust-lang/rust#8472
-    ($name:ident) => ({
-        #[inline(always)]
-        fn register_sel(name_with_nul: &str) -> $crate::runtime::Sel {
-            let ptr = name_with_nul.as_ptr() as *const _;
-            unsafe { $crate::runtime::sel_registerName(ptr) }
-        }
-        register_sel(concat!(stringify!($name), '\0'))
-    });
-    ($($name:ident :)+) => ({
-        #[inline(always)]
-        fn register_sel(name_with_nul: &str) -> $crate::runtime::Sel {
-            let ptr = name_with_nul.as_ptr() as *const _;
-            unsafe { $crate::runtime::sel_registerName(ptr) }
-        }
-        register_sel(concat!($(stringify!($name), ':'),+, '\0'))
-    });
+    ($name:ident) => ({sel_impl!(concat!(stringify!($name), '\0'))});
+    ($($name:ident :)+) => ({sel_impl!(concat!($(stringify!($name), ':'),+, '\0'))});
 }
 
 /**

@@ -147,6 +147,22 @@ impl Sel {
         };
         str::from_utf8(name.to_bytes()).unwrap()
     }
+
+    /// Wraps a raw pointer to a selector into a `Sel` object.
+    ///
+    /// This is almost never what you want; use `Sel::register()` instead.
+    #[inline]
+    pub unsafe fn from_ptr(ptr: *const c_void) -> Sel {
+        Sel {
+            ptr,
+        }
+    }
+
+    /// Returns a pointer to the raw selector.
+    #[inline]
+    pub fn as_ptr(&self) -> *const c_void {
+        self.ptr
+    }
 }
 
 impl PartialEq for Sel {

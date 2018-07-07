@@ -9,14 +9,19 @@
 
     <title>objc_id::WeakId - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'><a href='index.html'>objc_id</a></p><script>window.sidebarCurrent = {name: 'WeakId', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct WeakId</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.load">load</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Sync">Sync</a><a href="#impl-Send">Send</a></div></div><p class='location'><a href='index.html'>objc_id</a></p><script>window.sidebarCurrent = {name: 'WeakId', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,23 +55,25 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>objc_id</a>::<wbr><a class='struct' href=''>WeakId</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>objc_id</a>::<wbr><a class="struct" href=''>WeakId</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/objc_id/weak.rs.html#48-51' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct WeakId&lt;T&gt; { /* fields omitted */ }</pre><div class='docblock'><p>A pointer type for a weak reference to an Objective-C reference counted
+               </span><a class='srclink' href='../src/objc_id/weak.rs.html#48-51' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust struct'>pub struct WeakId&lt;T&gt; { /* fields omitted */ }</pre></div><div class='docblock'><p>A pointer type for a weak reference to an Objective-C reference counted
 object.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;T&gt; <a class='struct' href='../objc_id/struct.WeakId.html' title='objc_id::WeakId'>WeakId</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='../objc/message/trait.Message.html' title='objc::message::Message'>Message</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/objc_id/weak.rs.html#53-73' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(obj: &amp;<a class='type' href='../objc_id/type.ShareId.html' title='objc_id::ShareId'>ShareId</a>&lt;T&gt;) -&gt; <a class='struct' href='../objc_id/struct.WeakId.html' title='objc_id::WeakId'>WeakId</a>&lt;T&gt;</code></span></h4>
-<div class='docblock'><p>Construct a new <code>WeakId</code> referencing the given <code>ShareId</code>.</p>
-</div><h4 id='method.load' class='method'><span id='load.v' class='invisible'><code>fn <a href='#method.load' class='fnname'>load</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../objc_id/type.ShareId.html' title='objc_id::ShareId'>ShareId</a>&lt;T&gt;&gt;</code></span></h4>
-<div class='docblock'><p>Load a <code>ShareId</code> from the <code>WeakId</code> if the object still exists.
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;T&gt; <a class="struct" href="../objc_id/struct.WeakId.html" title="struct objc_id::WeakId">WeakId</a>&lt;T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="../objc/message/trait.Message.html" title="trait objc::message::Message">Message</a>,&nbsp;</span></code><a href='#impl' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/objc_id/weak.rs.html#53-73' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.new' class='fnname'>new</a>(obj: &amp;<a class="type" href="../objc_id/type.ShareId.html" title="type objc_id::ShareId">ShareId</a>&lt;T&gt;) -&gt; <a class="struct" href="../objc_id/struct.WeakId.html" title="struct objc_id::WeakId">WeakId</a>&lt;T&gt;</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/objc_id/weak.rs.html#55-61' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Construct a new <code>WeakId</code> referencing the given <code>ShareId</code>.</p>
+</div><h4 id='method.load' class="method"><span id='load.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.load' class='fnname'>load</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="type" href="../objc_id/type.ShareId.html" title="type objc_id::ShareId">ShareId</a>&lt;T&gt;&gt;</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/objc_id/weak.rs.html#65-72' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Load a <code>ShareId</code> from the <code>WeakId</code> if the object still exists.
 Returns <code>None</code> if the object has been deallocated.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;T&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> for <a class='struct' href='../objc_id/struct.WeakId.html' title='objc_id::WeakId'>WeakId</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/objc_id/weak.rs.html#75' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl&lt;T&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../objc_id/struct.WeakId.html' title='objc_id::WeakId'>WeakId</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/objc_id/weak.rs.html#77' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div></section>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+            <div id='implementations-list'>
+        <h3 id='impl-Sync' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;T&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../objc_id/struct.WeakId.html" title="struct objc_id::WeakId">WeakId</a>&lt;T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,&nbsp;</span></code><a href='#impl-Sync' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/objc_id/weak.rs.html#75' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'></div><h3 id='impl-Send' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;T&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../objc_id/struct.WeakId.html" title="struct objc_id::WeakId">WeakId</a>&lt;T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,&nbsp;</span></code><a href='#impl-Send' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/objc_id/weak.rs.html#77' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -71,18 +86,22 @@ Returns <code>None</code> if the object has been deallocated.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -115,7 +134,6 @@ Returns <code>None</code> if the object has been deallocated.</p>
         window.rootPath = "../";
         window.currentCrate = "objc_id";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

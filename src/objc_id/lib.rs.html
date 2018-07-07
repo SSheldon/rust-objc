@@ -9,14 +9,19 @@
 
     <title>lib.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +55,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -91,8 +104,8 @@
 <span id="47">47</span>
 <span id="48">48</span>
 <span id="49">49</span>
-</pre><pre class='rust '>
-<span class='doccomment'>/*!
+</pre><pre class="rust ">
+<span class="doccomment">/*!
 Rust smart pointers for Objective-C reference counting.
 
 To ensure that Objective-C objects are retained and released
@@ -133,14 +146,14 @@ assert!(weak.load().is_none());
 ```
 */</span>
 
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>objc</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">objc</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>id</span>::{<span class='ident'>Id</span>, <span class='ident'>Owned</span>, <span class='ident'>Ownership</span>, <span class='ident'>Shared</span>, <span class='ident'>ShareId</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>weak</span>::<span class='ident'>WeakId</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">id</span>::{<span class="ident">Id</span>, <span class="ident">Owned</span>, <span class="ident">Ownership</span>, <span class="ident">Shared</span>, <span class="ident">ShareId</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">weak</span>::<span class="ident">WeakId</span>;
 
-<span class='kw'>mod</span> <span class='ident'>id</span>;
-<span class='kw'>mod</span> <span class='ident'>weak</span>;
+<span class="kw">mod</span> <span class="ident">id</span>;
+<span class="kw">mod</span> <span class="ident">weak</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -155,18 +168,22 @@ assert!(weak.load().is_none());
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -199,7 +216,6 @@ assert!(weak.load().is_none());
         window.rootPath = "../../";
         window.currentCrate = "objc_id";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

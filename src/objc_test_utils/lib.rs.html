@@ -9,14 +9,19 @@
 
     <title>lib.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +55,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -91,53 +104,53 @@
 <span id="47">47</span>
 <span id="48">48</span>
 <span id="49">49</span>
-</pre><pre class='rust '>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_name</span> <span class='op'>=</span> <span class='string'>&quot;objc_test_utils&quot;</span>]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span> <span class='op'>=</span> <span class='string'>&quot;lib&quot;</span>]</span>
+</pre><pre class="rust ">
+<span class="attribute">#![<span class="ident">crate_name</span> <span class="op">=</span> <span class="string">&quot;objc_test_utils&quot;</span>]</span>
+<span class="attribute">#![<span class="ident">crate_type</span> <span class="op">=</span> <span class="string">&quot;lib&quot;</span>]</span>
 
-<span class='attribute'>#[<span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;Foundation&quot;</span>, <span class='ident'>kind</span> <span class='op'>=</span> <span class='string'>&quot;framework&quot;</span>)]</span>
-<span class='kw'>extern</span> { }
+<span class="attribute">#[<span class="ident">link</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;Foundation&quot;</span>, <span class="ident">kind</span> <span class="op">=</span> <span class="string">&quot;framework&quot;</span>)]</span>
+<span class="kw">extern</span> { }
 
-<span class='doccomment'>/// A block that takes no arguments and returns an integer: `int32_t (^)()`.</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>IntBlock</span> { }
+<span class="doccomment">/// A block that takes no arguments and returns an integer: `int32_t (^)()`.</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">IntBlock</span> { }
 
-<span class='doccomment'>/// A block that takes one integer argument, adds to it, and returns the sum:</span>
-<span class='doccomment'>/// `int32_t (^)(int32_t)`.</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>AddBlock</span> { }
+<span class="doccomment">/// A block that takes one integer argument, adds to it, and returns the sum:</span>
+<span class="doccomment">/// `int32_t (^)(int32_t)`.</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AddBlock</span> { }
 
-<span class='attribute'>#[<span class='ident'>link</span>(<span class='ident'>name</span><span class='op'>=</span><span class='string'>&quot;block_utils&quot;</span>, <span class='ident'>kind</span><span class='op'>=</span><span class='string'>&quot;static&quot;</span>)]</span>
-<span class='kw'>extern</span> {
-    <span class='doccomment'>/// Returns a pointer to a global `IntBlock` that returns 7.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_int_block</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>IntBlock</span>;
-    <span class='doccomment'>/// Returns a pointer to a copied `IntBlock` that returns `i`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_int_block_with</span>(<span class='ident'>i</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>IntBlock</span>;
-    <span class='doccomment'>/// Returns a pointer to a global `AddBlock` that returns its argument + 7.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_add_block</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>AddBlock</span>;
-    <span class='doccomment'>/// Returns a pointer to a copied `AddBlock` that returns its argument + `i`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_add_block_with</span>(<span class='ident'>i</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>AddBlock</span>;
-    <span class='doccomment'>/// Invokes an `IntBlock` and returns its result.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>invoke_int_block</span>(<span class='ident'>block</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>IntBlock</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span>;
-    <span class='doccomment'>/// Invokes an `AddBlock` with `a` and returns the result.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>invoke_add_block</span>(<span class='ident'>block</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>AddBlock</span>, <span class='ident'>a</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span>;
+<span class="attribute">#[<span class="ident">link</span>(<span class="ident">name</span><span class="op">=</span><span class="string">&quot;block_utils&quot;</span>, <span class="ident">kind</span><span class="op">=</span><span class="string">&quot;static&quot;</span>)]</span>
+<span class="kw">extern</span> {
+    <span class="doccomment">/// Returns a pointer to a global `IntBlock` that returns 7.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_int_block</span>() <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">IntBlock</span>;
+    <span class="doccomment">/// Returns a pointer to a copied `IntBlock` that returns `i`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_int_block_with</span>(<span class="ident">i</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">IntBlock</span>;
+    <span class="doccomment">/// Returns a pointer to a global `AddBlock` that returns its argument + 7.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_add_block</span>() <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">AddBlock</span>;
+    <span class="doccomment">/// Returns a pointer to a copied `AddBlock` that returns its argument + `i`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_add_block_with</span>(<span class="ident">i</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">AddBlock</span>;
+    <span class="doccomment">/// Invokes an `IntBlock` and returns its result.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invoke_int_block</span>(<span class="ident">block</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">IntBlock</span>) <span class="op">-&gt;</span> <span class="ident">i32</span>;
+    <span class="doccomment">/// Invokes an `AddBlock` with `a` and returns the result.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invoke_add_block</span>(<span class="ident">block</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">AddBlock</span>, <span class="ident">a</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="ident">i32</span>;
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_int_block</span>() {
-        <span class='kw'>unsafe</span> {
-            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>invoke_int_block</span>(<span class='ident'>get_int_block</span>()) <span class='op'>==</span> <span class='number'>7</span>);
-            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>invoke_int_block</span>(<span class='ident'>get_int_block_with</span>(<span class='number'>13</span>)) <span class='op'>==</span> <span class='number'>13</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_int_block</span>() {
+        <span class="kw">unsafe</span> {
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">invoke_int_block</span>(<span class="ident">get_int_block</span>()) <span class="op">==</span> <span class="number">7</span>);
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">invoke_int_block</span>(<span class="ident">get_int_block_with</span>(<span class="number">13</span>)) <span class="op">==</span> <span class="number">13</span>);
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_add_block</span>() {
-        <span class='kw'>unsafe</span> {
-            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>invoke_add_block</span>(<span class='ident'>get_add_block</span>(), <span class='number'>5</span>) <span class='op'>==</span> <span class='number'>12</span>);
-            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>invoke_add_block</span>(<span class='ident'>get_add_block_with</span>(<span class='number'>3</span>), <span class='number'>5</span>) <span class='op'>==</span> <span class='number'>8</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_add_block</span>() {
+        <span class="kw">unsafe</span> {
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">invoke_add_block</span>(<span class="ident">get_add_block</span>(), <span class="number">5</span>) <span class="op">==</span> <span class="number">12</span>);
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">invoke_add_block</span>(<span class="ident">get_add_block_with</span>(<span class="number">3</span>), <span class="number">5</span>) <span class="op">==</span> <span class="number">8</span>);
         }
     }
 }
@@ -155,18 +168,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -199,7 +216,6 @@
         window.rootPath = "../../";
         window.currentCrate = "objc_test_utils";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

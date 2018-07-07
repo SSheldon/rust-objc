@@ -9,14 +9,19 @@
 
     <title>dispatch::QueuePriority - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc enum">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'><a href='index.html'>dispatch</a></p><script>window.sidebarCurrent = {name: 'QueuePriority', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Enum QueuePriority</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#variants">Variants</a><div class="sidebar-links"><a href="#variant.High">High</a><a href="#variant.Default">Default</a><a href="#variant.Low">Low</a><a href="#variant.Background">Background</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">Send</a><a href="#impl-Sync">Sync</a></div></div><p class='location'><a href='index.html'>dispatch</a></p><script>window.sidebarCurrent = {name: 'QueuePriority', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,30 +55,39 @@
         </form>
     </nav>
 
-    <section id='main' class="content enum">
-<h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>dispatch</a>::<wbr><a class='enum' href=''>QueuePriority</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>dispatch</a>::<wbr><a class="enum" href=''>QueuePriority</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/dispatch/lib.rs.html#87-102' title='goto source code'>[src]</a></span></h1>
-<pre class='rust enum'>pub enum QueuePriority {
+               </span><a class='srclink' href='../src/dispatch/lib.rs.html#87-102' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust enum'>pub enum QueuePriority {
     High,
     Default,
     Low,
     Background,
-}</pre><div class='docblock'><p>The priority of a global concurrent queue.</p>
-</div><h2 class='variants'>Variants</h2>
-<span id='variant.High' class='variant'><span id='High.v' class='invisible'><code>High</code></span></span><div class='docblock'><p>The queue is scheduled for execution before any default priority or low
+}</pre></div><div class='docblock'><p>The priority of a global concurrent queue.</p>
+</div><h2 id='variants' class='variants small-section-header'>
+                   Variants<a href='#variants' class='anchor'></a></h2>
+<span id="variant.High" class="variant small-section-header"><a href="#variant.High" class="anchor field"></a><span id='High.v' class='invisible'><code>High</code></span></span><div class='docblock'><p>The queue is scheduled for execution before any default priority or low
 priority queue.</p>
-</div><span id='variant.Default' class='variant'><span id='Default.v' class='invisible'><code>Default</code></span></span><div class='docblock'><p>The queue is scheduled for execution after all high priority queues,
+</div><span id="variant.Default" class="variant small-section-header"><a href="#variant.Default" class="anchor field"></a><span id='Default.v' class='invisible'><code>Default</code></span></span><div class='docblock'><p>The queue is scheduled for execution after all high priority queues,
 but before any low priority queues.</p>
-</div><span id='variant.Low' class='variant'><span id='Low.v' class='invisible'><code>Low</code></span></span><div class='docblock'><p>The queue is scheduled for execution after all default priority and
+</div><span id="variant.Low" class="variant small-section-header"><a href="#variant.Low" class="anchor field"></a><span id='Low.v' class='invisible'><code>Low</code></span></span><div class='docblock'><p>The queue is scheduled for execution after all default priority and
 high priority queues.</p>
-</div><span id='variant.Background' class='variant'><span id='Background.v' class='invisible'><code>Background</code></span></span><div class='docblock'><p>The queue is scheduled for execution after all high priority queues
+</div><span id="variant.Background" class="variant small-section-header"><a href="#variant.Background" class="anchor field"></a><span id='Background.v' class='invisible'><code>Background</code></span></span><div class='docblock'><p>The queue is scheduled for execution after all high priority queues
 have been scheduled. The system runs items on a thread whose
 priority is set for background status and any disk I/O is throttled to
 minimize the impact on the system.</p>
-</div></section>
+</div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+            <div id='implementations-list'>
+        </div>
+                <h2 id='synthetic-implementations' class='small-section-header'>
+                  Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+                </h2>
+                <div id='synthetic-implementations-list'>
+            <h3 id='impl-Send' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="enum" href="../dispatch/enum.QueuePriority.html" title="enum dispatch::QueuePriority">QueuePriority</a></code><a href='#impl-Send' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="enum" href="../dispatch/enum.QueuePriority.html" title="enum dispatch::QueuePriority">QueuePriority</a></code><a href='#impl-Sync' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -78,18 +100,22 @@ minimize the impact on the system.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -122,7 +148,6 @@ minimize the impact on the system.</p>
         window.rootPath = "../";
         window.currentCrate = "dispatch";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

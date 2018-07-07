@@ -9,14 +9,19 @@
 
     <title>data.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +55,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -242,205 +255,205 @@
 <span id="198">198</span>
 <span id="199">199</span>
 <span id="200">200</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Range</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>raw</span>::<span class='ident'>c_void</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Range</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_void</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">slice</span>;
 
-<span class='kw'>use</span> <span class='ident'>objc_id</span>::<span class='ident'>Id</span>;
-<span class='kw'>use</span> <span class='ident'>block</span>::{<span class='ident'>Block</span>, <span class='ident'>ConcreteBlock</span>};
-<span class='kw'>use</span> {<span class='ident'>INSObject</span>, <span class='ident'>INSCopying</span>, <span class='ident'>INSMutableCopying</span>, <span class='ident'>NSRange</span>};
+<span class="kw">use</span> <span class="ident">objc_id</span>::<span class="ident">Id</span>;
+<span class="kw">use</span> <span class="ident">block</span>::{<span class="ident">Block</span>, <span class="ident">ConcreteBlock</span>};
+<span class="kw">use</span> {<span class="ident">INSObject</span>, <span class="ident">INSCopying</span>, <span class="ident">INSMutableCopying</span>, <span class="ident">NSRange</span>};
 
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>INSData</span> : <span class='ident'>INSObject</span> {
-    <span class='kw'>fn</span> <span class='ident'>len</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>length</span>]
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">INSData</span> : <span class="ident">INSObject</span> {
+    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="kw">unsafe</span> {
+            <span class="macro">msg_send</span><span class="macro">!</span>[<span class="self">self</span>, <span class="ident">length</span>]
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>bytes</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] {
-        <span class='kw'>let</span> <span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>bytes</span>] };
-        <span class='comment'>// The bytes pointer may be null for length zero</span>
-        <span class='kw'>let</span> (<span class='ident'>ptr</span>, <span class='ident'>len</span>) <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>ptr</span>.<span class='ident'>is_null</span>() {
-            (<span class='number'>0x1</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>, <span class='number'>0</span>)
-        } <span class='kw'>else</span> {
-            (<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>, <span class='self'>self</span>.<span class='ident'>len</span>())
+    <span class="kw">fn</span> <span class="ident">bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
+        <span class="kw">let</span> <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="macro">msg_send</span><span class="macro">!</span>[<span class="self">self</span>, <span class="ident">bytes</span>] };
+        <span class="comment">// The bytes pointer may be null for length zero</span>
+        <span class="kw">let</span> (<span class="ident">ptr</span>, <span class="ident">len</span>) <span class="op">=</span> <span class="kw">if</span> <span class="ident">ptr</span>.<span class="ident">is_null</span>() {
+            (<span class="number">0x1</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>, <span class="number">0</span>)
+        } <span class="kw">else</span> {
+            (<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>, <span class="self">self</span>.<span class="ident">len</span>())
         };
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>ptr</span>, <span class='ident'>len</span>)
+        <span class="kw">unsafe</span> {
+            <span class="ident">slice</span>::<span class="ident">from_raw_parts</span>(<span class="ident">ptr</span>, <span class="ident">len</span>)
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>with_bytes</span>(<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>Id</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>cls</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>class</span>();
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>cls</span>, <span class='ident'>alloc</span>];
-            <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>initWithBytes</span>:<span class='ident'>bytes</span>.<span class='ident'>as_ptr</span>()
-                                                       <span class='ident'>length</span>:<span class='ident'>bytes</span>.<span class='ident'>len</span>()];
-            <span class='ident'>Id</span>::<span class='ident'>from_retained_ptr</span>(<span class='ident'>obj</span>)
+    <span class="kw">fn</span> <span class="ident">with_bytes</span>(<span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">Id</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">cls</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">class</span>();
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="self">Self</span> <span class="op">=</span> <span class="macro">msg_send</span><span class="macro">!</span>[<span class="ident">cls</span>, <span class="ident">alloc</span>];
+            <span class="kw">let</span> <span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="self">Self</span> <span class="op">=</span> <span class="macro">msg_send</span><span class="macro">!</span>[<span class="ident">obj</span>, <span class="ident">initWithBytes</span>:<span class="ident">bytes</span>.<span class="ident">as_ptr</span>()
+                                                       <span class="ident">length</span>:<span class="ident">bytes</span>.<span class="ident">len</span>()];
+            <span class="ident">Id</span>::<span class="ident">from_retained_ptr</span>(<span class="ident">obj</span>)
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>from_vec</span>(<span class='ident'>bytes</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Id</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>capacity</span> <span class='op'>=</span> <span class='ident'>bytes</span>.<span class='ident'>capacity</span>();
-        <span class='kw'>let</span> <span class='ident'>dealloc</span> <span class='op'>=</span> <span class='ident'>ConcreteBlock</span>::<span class='ident'>new</span>(<span class='kw'>move</span> <span class='op'>|</span><span class='ident'>bytes</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>len</span>: <span class='ident'>usize</span><span class='op'>|</span> <span class='kw'>unsafe</span> {
-            <span class='comment'>// Recreate the Vec and let it drop</span>
-            <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>bytes</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>len</span>, <span class='ident'>capacity</span>);
+    <span class="kw">fn</span> <span class="ident">from_vec</span>(<span class="ident">bytes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Id</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">capacity</span> <span class="op">=</span> <span class="ident">bytes</span>.<span class="ident">capacity</span>();
+        <span class="kw">let</span> <span class="ident">dealloc</span> <span class="op">=</span> <span class="ident">ConcreteBlock</span>::<span class="ident">new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">bytes</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">len</span>: <span class="ident">usize</span><span class="op">|</span> <span class="kw">unsafe</span> {
+            <span class="comment">// Recreate the Vec and let it drop</span>
+            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">from_raw_parts</span>(<span class="ident">bytes</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>, <span class="ident">len</span>, <span class="ident">capacity</span>);
         });
-        <span class='kw'>let</span> <span class='ident'>dealloc</span> <span class='op'>=</span> <span class='ident'>dealloc</span>.<span class='ident'>copy</span>();
-        <span class='kw'>let</span> <span class='ident'>dealloc</span>: <span class='kw-2'>&amp;</span><span class='ident'>Block</span><span class='op'>&lt;</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>usize</span>), ()<span class='op'>&gt;</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>dealloc</span>;
+        <span class="kw">let</span> <span class="ident">dealloc</span> <span class="op">=</span> <span class="ident">dealloc</span>.<span class="ident">copy</span>();
+        <span class="kw">let</span> <span class="ident">dealloc</span>: <span class="kw-2">&amp;</span><span class="ident">Block</span><span class="op">&lt;</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">usize</span>), ()<span class="op">&gt;</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">dealloc</span>;
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='ident'>bytes</span>;
-        <span class='kw'>let</span> <span class='ident'>cls</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>class</span>();
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>cls</span>, <span class='ident'>alloc</span>];
-            <span class='kw'>let</span> <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>initWithBytesNoCopy</span>:<span class='ident'>bytes</span>.<span class='ident'>as_mut_ptr</span>()
-                                                             <span class='ident'>length</span>:<span class='ident'>bytes</span>.<span class='ident'>len</span>()
-                                                        <span class='ident'>deallocator</span>:<span class='ident'>dealloc</span>];
-            <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='ident'>bytes</span>);
-            <span class='ident'>Id</span>::<span class='ident'>from_retained_ptr</span>(<span class='ident'>obj</span>)
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">bytes</span>;
+        <span class="kw">let</span> <span class="ident">cls</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">class</span>();
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="self">Self</span> <span class="op">=</span> <span class="macro">msg_send</span><span class="macro">!</span>[<span class="ident">cls</span>, <span class="ident">alloc</span>];
+            <span class="kw">let</span> <span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="self">Self</span> <span class="op">=</span> <span class="macro">msg_send</span><span class="macro">!</span>[<span class="ident">obj</span>, <span class="ident">initWithBytesNoCopy</span>:<span class="ident">bytes</span>.<span class="ident">as_mut_ptr</span>()
+                                                             <span class="ident">length</span>:<span class="ident">bytes</span>.<span class="ident">len</span>()
+                                                        <span class="ident">deallocator</span>:<span class="ident">dealloc</span>];
+            <span class="ident">mem</span>::<span class="ident">forget</span>(<span class="ident">bytes</span>);
+            <span class="ident">Id</span>::<span class="ident">from_retained_ptr</span>(<span class="ident">obj</span>)
         }
     }
 }
 
-<span class='macro'>object_struct</span><span class='macro'>!</span>(<span class='ident'>NSData</span>);
+<span class="macro">object_struct</span><span class="macro">!</span>(<span class="ident">NSData</span>);
 
-<span class='kw'>impl</span> <span class='ident'>INSData</span> <span class='kw'>for</span> <span class='ident'>NSData</span> { }
+<span class="kw">impl</span> <span class="ident">INSData</span> <span class="kw">for</span> <span class="ident">NSData</span> { }
 
-<span class='kw'>impl</span> <span class='ident'>INSCopying</span> <span class='kw'>for</span> <span class='ident'>NSData</span> {
-    <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>NSData</span>;
+<span class="kw">impl</span> <span class="ident">INSCopying</span> <span class="kw">for</span> <span class="ident">NSData</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">NSData</span>;
 }
 
-<span class='kw'>impl</span> <span class='ident'>INSMutableCopying</span> <span class='kw'>for</span> <span class='ident'>NSData</span> {
-    <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>NSMutableData</span>;
+<span class="kw">impl</span> <span class="ident">INSMutableCopying</span> <span class="kw">for</span> <span class="ident">NSData</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">NSMutableData</span>;
 }
 
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>INSMutableData</span> : <span class='ident'>INSData</span> {
-    <span class='kw'>fn</span> <span class='ident'>bytes_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>] {
-        <span class='kw'>let</span> <span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>mutableBytes</span>] };
-        <span class='comment'>// The bytes pointer may be null for length zero</span>
-        <span class='kw'>let</span> (<span class='ident'>ptr</span>, <span class='ident'>len</span>) <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>ptr</span>.<span class='ident'>is_null</span>() {
-            (<span class='number'>0x1</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='number'>0</span>)
-        } <span class='kw'>else</span> {
-            (<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='self'>self</span>.<span class='ident'>len</span>())
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">INSMutableData</span> : <span class="ident">INSData</span> {
+    <span class="kw">fn</span> <span class="ident">bytes_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>] {
+        <span class="kw">let</span> <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="macro">msg_send</span><span class="macro">!</span>[<span class="self">self</span>, <span class="ident">mutableBytes</span>] };
+        <span class="comment">// The bytes pointer may be null for length zero</span>
+        <span class="kw">let</span> (<span class="ident">ptr</span>, <span class="ident">len</span>) <span class="op">=</span> <span class="kw">if</span> <span class="ident">ptr</span>.<span class="ident">is_null</span>() {
+            (<span class="number">0x1</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>, <span class="number">0</span>)
+        } <span class="kw">else</span> {
+            (<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>, <span class="self">self</span>.<span class="ident">len</span>())
         };
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>slice</span>::<span class='ident'>from_raw_parts_mut</span>(<span class='ident'>ptr</span>, <span class='ident'>len</span>)
+        <span class="kw">unsafe</span> {
+            <span class="ident">slice</span>::<span class="ident">from_raw_parts_mut</span>(<span class="ident">ptr</span>, <span class="ident">len</span>)
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>set_len</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>len</span>: <span class='ident'>usize</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> _: () <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>setLength</span>:<span class='ident'>len</span>];
+    <span class="kw">fn</span> <span class="ident">set_len</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">len</span>: <span class="ident">usize</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw">_</span>: () <span class="op">=</span> <span class="macro">msg_send</span><span class="macro">!</span>[<span class="self">self</span>, <span class="ident">setLength</span>:<span class="ident">len</span>];
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>append</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> _: () <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>appendBytes</span>:<span class='ident'>bytes</span>.<span class='ident'>as_ptr</span>()
-                                             <span class='ident'>length</span>:<span class='ident'>bytes</span>.<span class='ident'>len</span>()];
+    <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw">_</span>: () <span class="op">=</span> <span class="macro">msg_send</span><span class="macro">!</span>[<span class="self">self</span>, <span class="ident">appendBytes</span>:<span class="ident">bytes</span>.<span class="ident">as_ptr</span>()
+                                             <span class="ident">length</span>:<span class="ident">bytes</span>.<span class="ident">len</span>()];
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>replace_range</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>range</span>: <span class='ident'>Range</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>, <span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) {
-        <span class='kw'>let</span> <span class='ident'>range</span> <span class='op'>=</span> <span class='ident'>NSRange</span>::<span class='ident'>from_range</span>(<span class='ident'>range</span>);
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> _: () <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='self'>self</span>, <span class='ident'>replaceBytesInRange</span>:<span class='ident'>range</span>
-                                                  <span class='ident'>withBytes</span>:<span class='ident'>bytes</span>.<span class='ident'>as_ptr</span>()
-                                                     <span class='ident'>length</span>:<span class='ident'>bytes</span>.<span class='ident'>len</span>()];
+    <span class="kw">fn</span> <span class="ident">replace_range</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">range</span>: <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) {
+        <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">NSRange</span>::<span class="ident">from_range</span>(<span class="ident">range</span>);
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw">_</span>: () <span class="op">=</span> <span class="macro">msg_send</span><span class="macro">!</span>[<span class="self">self</span>, <span class="ident">replaceBytesInRange</span>:<span class="ident">range</span>
+                                                  <span class="ident">withBytes</span>:<span class="ident">bytes</span>.<span class="ident">as_ptr</span>()
+                                                     <span class="ident">length</span>:<span class="ident">bytes</span>.<span class="ident">len</span>()];
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>set_bytes</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) {
-        <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>len</span>();
-        <span class='self'>self</span>.<span class='ident'>replace_range</span>(<span class='number'>0</span>..<span class='ident'>len</span>, <span class='ident'>bytes</span>);
+    <span class="kw">fn</span> <span class="ident">set_bytes</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) {
+        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">len</span>();
+        <span class="self">self</span>.<span class="ident">replace_range</span>(<span class="number">0</span>..<span class="ident">len</span>, <span class="ident">bytes</span>);
     }
 }
 
-<span class='macro'>object_struct</span><span class='macro'>!</span>(<span class='ident'>NSMutableData</span>);
+<span class="macro">object_struct</span><span class="macro">!</span>(<span class="ident">NSMutableData</span>);
 
-<span class='kw'>impl</span> <span class='ident'>INSData</span> <span class='kw'>for</span> <span class='ident'>NSMutableData</span> { }
+<span class="kw">impl</span> <span class="ident">INSData</span> <span class="kw">for</span> <span class="ident">NSMutableData</span> { }
 
-<span class='kw'>impl</span> <span class='ident'>INSMutableData</span> <span class='kw'>for</span> <span class='ident'>NSMutableData</span> { }
+<span class="kw">impl</span> <span class="ident">INSMutableData</span> <span class="kw">for</span> <span class="ident">NSMutableData</span> { }
 
-<span class='kw'>impl</span> <span class='ident'>INSCopying</span> <span class='kw'>for</span> <span class='ident'>NSMutableData</span> {
-    <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>NSData</span>;
+<span class="kw">impl</span> <span class="ident">INSCopying</span> <span class="kw">for</span> <span class="ident">NSMutableData</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">NSData</span>;
 }
 
-<span class='kw'>impl</span> <span class='ident'>INSMutableCopying</span> <span class='kw'>for</span> <span class='ident'>NSMutableData</span> {
-    <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>NSMutableData</span>;
+<span class="kw">impl</span> <span class="ident">INSMutableCopying</span> <span class="kw">for</span> <span class="ident">NSMutableData</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">NSMutableData</span>;
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='ident'>INSObject</span>;
-    <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>INSData</span>, <span class='ident'>INSMutableData</span>, <span class='ident'>NSData</span>, <span class='ident'>NSMutableData</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">use</span> <span class="ident">INSObject</span>;
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">INSData</span>, <span class="ident">INSMutableData</span>, <span class="ident">NSData</span>, <span class="ident">NSMutableData</span>};
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_bytes</span>() {
-        <span class='kw'>let</span> <span class='ident'>bytes</span> <span class='op'>=</span> [<span class='number'>3</span>, <span class='number'>7</span>, <span class='number'>16</span>, <span class='number'>52</span>, <span class='number'>112</span>, <span class='number'>19</span>];
-        <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>NSData</span>::<span class='ident'>with_bytes</span>(<span class='kw-2'>&amp;</span><span class='ident'>bytes</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='ident'>bytes</span>.<span class='ident'>len</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>bytes</span>() <span class='op'>==</span> <span class='ident'>bytes</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_bytes</span>() {
+        <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> [<span class="number">3</span>, <span class="number">7</span>, <span class="number">16</span>, <span class="number">52</span>, <span class="number">112</span>, <span class="number">19</span>];
+        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">NSData</span>::<span class="ident">with_bytes</span>(<span class="kw-2">&amp;</span><span class="ident">bytes</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">data</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="ident">bytes</span>.<span class="ident">len</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">data</span>.<span class="ident">bytes</span>() <span class="op">==</span> <span class="ident">bytes</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_no_bytes</span>() {
-        <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>NSData</span>::<span class='ident'>new</span>();
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='ident'>data</span>.<span class='ident'>bytes</span>()).<span class='ident'>is_some</span>());
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_no_bytes</span>() {
+        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">NSData</span>::<span class="ident">new</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">bytes</span>()).<span class="ident">is_some</span>());
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_bytes_mut</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>NSMutableData</span>::<span class='ident'>with_bytes</span>(<span class='kw-2'>&amp;</span>[<span class='number'>7</span>, <span class='number'>16</span>]);
-        <span class='ident'>data</span>.<span class='ident'>bytes_mut</span>()[<span class='number'>0</span>] <span class='op'>=</span> <span class='number'>3</span>;
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>bytes</span>() <span class='op'>==</span> [<span class='number'>3</span>, <span class='number'>16</span>]);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_bytes_mut</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">NSMutableData</span>::<span class="ident">with_bytes</span>(<span class="kw-2">&amp;</span>[<span class="number">7</span>, <span class="number">16</span>]);
+        <span class="ident">data</span>.<span class="ident">bytes_mut</span>()[<span class="number">0</span>] <span class="op">=</span> <span class="number">3</span>;
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">data</span>.<span class="ident">bytes</span>() <span class="op">==</span> [<span class="number">3</span>, <span class="number">16</span>]);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_set_len</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>NSMutableData</span>::<span class='ident'>with_bytes</span>(<span class='kw-2'>&amp;</span>[<span class='number'>7</span>, <span class='number'>16</span>]);
-        <span class='ident'>data</span>.<span class='ident'>set_len</span>(<span class='number'>4</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>4</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>bytes</span>() <span class='op'>==</span> [<span class='number'>7</span>, <span class='number'>16</span>, <span class='number'>0</span>, <span class='number'>0</span>]);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_set_len</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">NSMutableData</span>::<span class="ident">with_bytes</span>(<span class="kw-2">&amp;</span>[<span class="number">7</span>, <span class="number">16</span>]);
+        <span class="ident">data</span>.<span class="ident">set_len</span>(<span class="number">4</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">data</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">4</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">data</span>.<span class="ident">bytes</span>() <span class="op">==</span> [<span class="number">7</span>, <span class="number">16</span>, <span class="number">0</span>, <span class="number">0</span>]);
 
-        <span class='ident'>data</span>.<span class='ident'>set_len</span>(<span class='number'>1</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>1</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>bytes</span>() <span class='op'>==</span> [<span class='number'>7</span>]);
+        <span class="ident">data</span>.<span class="ident">set_len</span>(<span class="number">1</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">data</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">data</span>.<span class="ident">bytes</span>() <span class="op">==</span> [<span class="number">7</span>]);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_append</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>NSMutableData</span>::<span class='ident'>with_bytes</span>(<span class='kw-2'>&amp;</span>[<span class='number'>7</span>, <span class='number'>16</span>]);
-        <span class='ident'>data</span>.<span class='ident'>append</span>(<span class='kw-2'>&amp;</span>[<span class='number'>3</span>, <span class='number'>52</span>]);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>4</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>bytes</span>() <span class='op'>==</span> [<span class='number'>7</span>, <span class='number'>16</span>, <span class='number'>3</span>, <span class='number'>52</span>]);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_append</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">NSMutableData</span>::<span class="ident">with_bytes</span>(<span class="kw-2">&amp;</span>[<span class="number">7</span>, <span class="number">16</span>]);
+        <span class="ident">data</span>.<span class="ident">append</span>(<span class="kw-2">&amp;</span>[<span class="number">3</span>, <span class="number">52</span>]);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">data</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">4</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">data</span>.<span class="ident">bytes</span>() <span class="op">==</span> [<span class="number">7</span>, <span class="number">16</span>, <span class="number">3</span>, <span class="number">52</span>]);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_replace</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>NSMutableData</span>::<span class='ident'>with_bytes</span>(<span class='kw-2'>&amp;</span>[<span class='number'>7</span>, <span class='number'>16</span>]);
-        <span class='ident'>data</span>.<span class='ident'>replace_range</span>(<span class='number'>0</span>..<span class='number'>0</span>, <span class='kw-2'>&amp;</span>[<span class='number'>3</span>]);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>bytes</span>() <span class='op'>==</span> [<span class='number'>3</span>, <span class='number'>7</span>, <span class='number'>16</span>]);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_replace</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">NSMutableData</span>::<span class="ident">with_bytes</span>(<span class="kw-2">&amp;</span>[<span class="number">7</span>, <span class="number">16</span>]);
+        <span class="ident">data</span>.<span class="ident">replace_range</span>(<span class="number">0</span>..<span class="number">0</span>, <span class="kw-2">&amp;</span>[<span class="number">3</span>]);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">data</span>.<span class="ident">bytes</span>() <span class="op">==</span> [<span class="number">3</span>, <span class="number">7</span>, <span class="number">16</span>]);
 
-        <span class='ident'>data</span>.<span class='ident'>replace_range</span>(<span class='number'>1</span>..<span class='number'>2</span>, <span class='kw-2'>&amp;</span>[<span class='number'>52</span>, <span class='number'>13</span>]);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>bytes</span>() <span class='op'>==</span> [<span class='number'>3</span>, <span class='number'>52</span>, <span class='number'>13</span>, <span class='number'>16</span>]);
+        <span class="ident">data</span>.<span class="ident">replace_range</span>(<span class="number">1</span>..<span class="number">2</span>, <span class="kw-2">&amp;</span>[<span class="number">52</span>, <span class="number">13</span>]);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">data</span>.<span class="ident">bytes</span>() <span class="op">==</span> [<span class="number">3</span>, <span class="number">52</span>, <span class="number">13</span>, <span class="number">16</span>]);
 
-        <span class='ident'>data</span>.<span class='ident'>replace_range</span>(<span class='number'>2</span>..<span class='number'>4</span>, <span class='kw-2'>&amp;</span>[<span class='number'>6</span>]);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>bytes</span>() <span class='op'>==</span> [<span class='number'>3</span>, <span class='number'>52</span>, <span class='number'>6</span>]);
+        <span class="ident">data</span>.<span class="ident">replace_range</span>(<span class="number">2</span>..<span class="number">4</span>, <span class="kw-2">&amp;</span>[<span class="number">6</span>]);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">data</span>.<span class="ident">bytes</span>() <span class="op">==</span> [<span class="number">3</span>, <span class="number">52</span>, <span class="number">6</span>]);
 
-        <span class='ident'>data</span>.<span class='ident'>set_bytes</span>(<span class='kw-2'>&amp;</span>[<span class='number'>8</span>, <span class='number'>17</span>]);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>bytes</span>() <span class='op'>==</span> [<span class='number'>8</span>, <span class='number'>17</span>]);
+        <span class="ident">data</span>.<span class="ident">set_bytes</span>(<span class="kw-2">&amp;</span>[<span class="number">8</span>, <span class="number">17</span>]);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">data</span>.<span class="ident">bytes</span>() <span class="op">==</span> [<span class="number">8</span>, <span class="number">17</span>]);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_from_vec</span>() {
-        <span class='kw'>let</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>3</span>, <span class='number'>7</span>, <span class='number'>16</span>];
-        <span class='kw'>let</span> <span class='ident'>bytes_ptr</span> <span class='op'>=</span> <span class='ident'>bytes</span>.<span class='ident'>as_ptr</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_from_vec</span>() {
+        <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">3</span>, <span class="number">7</span>, <span class="number">16</span>];
+        <span class="kw">let</span> <span class="ident">bytes_ptr</span> <span class="op">=</span> <span class="ident">bytes</span>.<span class="ident">as_ptr</span>();
 
-        <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>NSData</span>::<span class='ident'>from_vec</span>(<span class='ident'>bytes</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>bytes</span>().<span class='ident'>as_ptr</span>() <span class='op'>==</span> <span class='ident'>bytes_ptr</span>);
+        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">NSData</span>::<span class="ident">from_vec</span>(<span class="ident">bytes</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">data</span>.<span class="ident">bytes</span>().<span class="ident">as_ptr</span>() <span class="op">==</span> <span class="ident">bytes_ptr</span>);
     }
 }
 </pre>
@@ -457,18 +470,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -501,7 +518,6 @@
         window.rootPath = "../../";
         window.currentCrate = "objc_foundation";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

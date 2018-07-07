@@ -9,14 +9,19 @@
 
     <title>lib.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +55,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -75,40 +88,40 @@
 <span id="31">31</span>
 <span id="32">32</span>
 <span id="33">33</span>
-</pre><pre class='rust '>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_name</span> <span class='op'>=</span> <span class='string'>&quot;objc_foundation&quot;</span>]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span> <span class='op'>=</span> <span class='string'>&quot;lib&quot;</span>]</span>
+</pre><pre class="rust ">
+<span class="attribute">#![<span class="ident">crate_name</span> <span class="op">=</span> <span class="string">&quot;objc_foundation&quot;</span>]</span>
+<span class="attribute">#![<span class="ident">crate_type</span> <span class="op">=</span> <span class="string">&quot;lib&quot;</span>]</span>
 
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>objc</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>objc_id</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>block</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">objc</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">objc_id</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">block</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>array</span>::{
-    <span class='ident'>INSArray</span>, <span class='ident'>INSMutableArray</span>,
-    <span class='ident'>NSArray</span>, <span class='ident'>NSComparisonResult</span>, <span class='ident'>NSMutableArray</span>, <span class='ident'>NSRange</span>,
-    <span class='ident'>NSMutableSharedArray</span>, <span class='ident'>NSSharedArray</span>,
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">array</span>::{
+    <span class="ident">INSArray</span>, <span class="ident">INSMutableArray</span>,
+    <span class="ident">NSArray</span>, <span class="ident">NSComparisonResult</span>, <span class="ident">NSMutableArray</span>, <span class="ident">NSRange</span>,
+    <span class="ident">NSMutableSharedArray</span>, <span class="ident">NSSharedArray</span>,
 };
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>data</span>::{<span class='ident'>INSData</span>, <span class='ident'>INSMutableData</span>, <span class='ident'>NSData</span>, <span class='ident'>NSMutableData</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>dictionary</span>::{<span class='ident'>INSDictionary</span>, <span class='ident'>NSDictionary</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>enumerator</span>::{<span class='ident'>INSFastEnumeration</span>, <span class='ident'>NSEnumerator</span>, <span class='ident'>NSFastEnumerator</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>object</span>::{<span class='ident'>INSObject</span>, <span class='ident'>NSObject</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>string</span>::{<span class='ident'>INSCopying</span>, <span class='ident'>INSMutableCopying</span>, <span class='ident'>INSString</span>, <span class='ident'>NSString</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>value</span>::{<span class='ident'>INSValue</span>, <span class='ident'>NSValue</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">data</span>::{<span class="ident">INSData</span>, <span class="ident">INSMutableData</span>, <span class="ident">NSData</span>, <span class="ident">NSMutableData</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">dictionary</span>::{<span class="ident">INSDictionary</span>, <span class="ident">NSDictionary</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">enumerator</span>::{<span class="ident">INSFastEnumeration</span>, <span class="ident">NSEnumerator</span>, <span class="ident">NSFastEnumerator</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">object</span>::{<span class="ident">INSObject</span>, <span class="ident">NSObject</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">string</span>::{<span class="ident">INSCopying</span>, <span class="ident">INSMutableCopying</span>, <span class="ident">INSString</span>, <span class="ident">NSString</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">value</span>::{<span class="ident">INSValue</span>, <span class="ident">NSValue</span>};
 
-<span class='attribute'>#[<span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;Foundation&quot;</span>, <span class='ident'>kind</span> <span class='op'>=</span> <span class='string'>&quot;framework&quot;</span>)]</span>
-<span class='kw'>extern</span> { }
+<span class="attribute">#[<span class="ident">link</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;Foundation&quot;</span>, <span class="ident">kind</span> <span class="op">=</span> <span class="string">&quot;framework&quot;</span>)]</span>
+<span class="kw">extern</span> { }
 
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>macros</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">mod</span> <span class="ident">macros</span>;
 
-<span class='kw'>mod</span> <span class='ident'>array</span>;
-<span class='kw'>mod</span> <span class='ident'>data</span>;
-<span class='kw'>mod</span> <span class='ident'>dictionary</span>;
-<span class='kw'>mod</span> <span class='ident'>enumerator</span>;
-<span class='kw'>mod</span> <span class='ident'>object</span>;
-<span class='kw'>mod</span> <span class='ident'>string</span>;
-<span class='kw'>mod</span> <span class='ident'>value</span>;
+<span class="kw">mod</span> <span class="ident">array</span>;
+<span class="kw">mod</span> <span class="ident">data</span>;
+<span class="kw">mod</span> <span class="ident">dictionary</span>;
+<span class="kw">mod</span> <span class="ident">enumerator</span>;
+<span class="kw">mod</span> <span class="ident">object</span>;
+<span class="kw">mod</span> <span class="ident">string</span>;
+<span class="kw">mod</span> <span class="ident">value</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -123,18 +136,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -167,7 +184,6 @@
         window.rootPath = "../../";
         window.currentCrate = "objc_foundation";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

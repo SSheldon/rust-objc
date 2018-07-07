@@ -9,14 +9,19 @@
 
     <title>lib.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +55,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -142,104 +155,104 @@
 <span id="98"> 98</span>
 <span id="99"> 99</span>
 <span id="100">100</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Rust interface for Objective-C&#39;s `@throw` and `@try`/`@catch` statements.</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Rust interface for Objective-C&#39;s `@throw` and `@try`/`@catch` statements.</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>raw</span>::{<span class='ident'>c_int</span>, <span class='ident'>c_void</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::{<span class="ident">c_int</span>, <span class="ident">c_void</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
 
-<span class='attribute'>#[<span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;objc&quot;</span>, <span class='ident'>kind</span> <span class='op'>=</span> <span class='string'>&quot;dylib&quot;</span>)]</span>
-<span class='kw'>extern</span> { }
+<span class="attribute">#[<span class="ident">link</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;objc&quot;</span>, <span class="ident">kind</span> <span class="op">=</span> <span class="string">&quot;dylib&quot;</span>)]</span>
+<span class="kw">extern</span> { }
 
-<span class='kw'>extern</span> {
-    <span class='kw'>fn</span> <span class='ident'>RustObjCExceptionThrow</span>(<span class='ident'>exception</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>);
-    <span class='kw'>fn</span> <span class='ident'>RustObjCExceptionTryCatch</span>(<span class='ident'>try</span>: <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>),
-            <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>error</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+<span class="kw">extern</span> {
+    <span class="kw">fn</span> <span class="ident">RustObjCExceptionThrow</span>(<span class="ident">exception</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>);
+    <span class="kw">fn</span> <span class="ident">RustObjCExceptionTryCatch</span>(<span class="ident">try</span>: <span class="kw">extern</span> <span class="kw">fn</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>),
+            <span class="ident">context</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">error</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
 }
 
-<span class='doccomment'>/// An opaque type representing any Objective-C object thrown as an exception.</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Exception</span> { }
+<span class="doccomment">/// An opaque type representing any Objective-C object thrown as an exception.</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Exception</span> { }
 
-<span class='doccomment'>/// Throws an Objective-C exception.</span>
-<span class='doccomment'>/// The argument must be a pointer to an Objective-C object.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Unsafe because this unwinds from Objective-C.</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>throw</span>(<span class='ident'>exception</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Exception</span>) <span class='op'>-&gt;</span> <span class='op'>!</span> {
-    <span class='ident'>RustObjCExceptionThrow</span>(<span class='ident'>exception</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _);
-    <span class='macro'>unreachable</span><span class='macro'>!</span>();
+<span class="doccomment">/// Throws an Objective-C exception.</span>
+<span class="doccomment">/// The argument must be a pointer to an Objective-C object.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Unsafe because this unwinds from Objective-C.</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">throw</span>(<span class="ident">exception</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Exception</span>) <span class="op">-&gt;</span> <span class="op">!</span> {
+    <span class="ident">RustObjCExceptionThrow</span>(<span class="ident">exception</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
+    <span class="macro">unreachable</span><span class="macro">!</span>();
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>try_no_ret</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>closure</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Exception</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>() {
-    <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>try_objc_execute_closure</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>closure</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>)
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>() {
-        <span class='comment'>// This is always passed Some, so it&#39;s safe to unwrap</span>
-        <span class='kw'>let</span> <span class='ident'>closure</span> <span class='op'>=</span> <span class='ident'>closure</span>.<span class='ident'>take</span>().<span class='ident'>unwrap</span>();
-        <span class='ident'>closure</span>();
+<span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">try_no_ret</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">closure</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Exception</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>() {
+    <span class="kw">extern</span> <span class="kw">fn</span> <span class="ident">try_objc_execute_closure</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">closure</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>)
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>() {
+        <span class="comment">// This is always passed Some, so it&#39;s safe to unwrap</span>
+        <span class="kw">let</span> <span class="ident">closure</span> <span class="op">=</span> <span class="ident">closure</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
+        <span class="ident">closure</span>();
     }
 
-    <span class='kw'>let</span> <span class='ident'>f</span>: <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>) <span class='op'>=</span> <span class='ident'>try_objc_execute_closure</span>;
-    <span class='kw'>let</span> <span class='ident'>f</span>: <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>) <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>f</span>);
-    <span class='comment'>// Wrap the closure in an Option so it can be taken</span>
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>closure</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>closure</span>);
-    <span class='kw'>let</span> <span class='ident'>context</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>closure</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>;
+    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw">extern</span> <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>) <span class="op">=</span> <span class="ident">try_objc_execute_closure</span>;
+    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw">extern</span> <span class="kw">fn</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>) <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">transmute</span>(<span class="ident">f</span>);
+    <span class="comment">// Wrap the closure in an Option so it can be taken</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">closure</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">closure</span>);
+    <span class="kw">let</span> <span class="ident">context</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">closure</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>;
 
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>exception</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>();
-    <span class='kw'>let</span> <span class='ident'>success</span> <span class='op'>=</span> <span class='ident'>RustObjCExceptionTryCatch</span>(<span class='ident'>f</span>, <span class='ident'>context</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>exception</span>);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">exception</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>();
+    <span class="kw">let</span> <span class="ident">success</span> <span class="op">=</span> <span class="ident">RustObjCExceptionTryCatch</span>(<span class="ident">f</span>, <span class="ident">context</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">exception</span>);
 
-    <span class='kw'>if</span> <span class='ident'>success</span> <span class='op'>==</span> <span class='number'>0</span> {
-        <span class='prelude-val'>Ok</span>(())
-    } <span class='kw'>else</span> {
-        <span class='prelude-val'>Err</span>(<span class='ident'>exception</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _)
+    <span class="kw">if</span> <span class="ident">success</span> <span class="op">==</span> <span class="number">0</span> {
+        <span class="prelude-val">Ok</span>(())
+    } <span class="kw">else</span> {
+        <span class="prelude-val">Err</span>(<span class="ident">exception</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>)
     }
 }
 
-<span class='doccomment'>/// Tries to execute the given closure and catches an Objective-C exception</span>
-<span class='doccomment'>/// if one is thrown.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Returns a `Result` that is either `Ok` if the closure succeeded without an</span>
-<span class='doccomment'>/// exception being thrown, or an `Err` with a pointer to an exception if one</span>
-<span class='doccomment'>/// was thrown. The exception is retained and so must be released.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Unsafe because this encourages unwinding through the closure from</span>
-<span class='doccomment'>/// Objective-C, which is not safe.</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>try</span><span class='op'>&lt;</span><span class='ident'>F</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>closure</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Exception</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>() <span class='op'>-&gt;</span> <span class='ident'>R</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>value</span> <span class='op'>=</span> <span class='prelude-val'>None</span>;
-    <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> {
-        <span class='kw'>let</span> <span class='ident'>value_ref</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>value</span>;
-        <span class='ident'>try_no_ret</span>(<span class='kw'>move</span> <span class='op'>||</span> {
-            <span class='op'>*</span><span class='ident'>value_ref</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>closure</span>());
+<span class="doccomment">/// Tries to execute the given closure and catches an Objective-C exception</span>
+<span class="doccomment">/// if one is thrown.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Returns a `Result` that is either `Ok` if the closure succeeded without an</span>
+<span class="doccomment">/// exception being thrown, or an `Err` with a pointer to an exception if one</span>
+<span class="doccomment">/// was thrown. The exception is retained and so must be released.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Unsafe because this encourages unwinding through the closure from</span>
+<span class="doccomment">/// Objective-C, which is not safe.</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">try</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">closure</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Exception</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>() <span class="op">-&gt;</span> <span class="ident">R</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">value</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+    <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> {
+        <span class="kw">let</span> <span class="ident">value_ref</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">value</span>;
+        <span class="ident">try_no_ret</span>(<span class="kw">move</span> <span class="op">||</span> {
+            <span class="kw-2">*</span><span class="ident">value_ref</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">closure</span>());
         })
     };
-    <span class='comment'>// If the try succeeded, this was set so it&#39;s safe to unwrap</span>
-    <span class='ident'>result</span>.<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>value</span>.<span class='ident'>unwrap</span>())
+    <span class="comment">// If the try succeeded, this was set so it&#39;s safe to unwrap</span>
+    <span class="ident">result</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">value</span>.<span class="ident">unwrap</span>())
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
-    <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>throw</span>, <span class='ident'>try</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">throw</span>, <span class="ident">try</span>};
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_try</span>() {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot;Hello&quot;</span>.<span class='ident'>to_string</span>();
-            <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>try</span>(<span class='kw'>move</span> <span class='op'>||</span> {
-                <span class='kw'>if</span> <span class='ident'>s</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>0</span> {
-                    <span class='ident'>throw</span>(<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>());
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_try</span>() {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;Hello&quot;</span>.<span class="ident">to_string</span>();
+            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">try</span>(<span class="kw">move</span> <span class="op">||</span> {
+                <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">0</span> {
+                    <span class="ident">throw</span>(<span class="ident">ptr</span>::<span class="ident">null_mut</span>());
                 }
-                <span class='ident'>s</span>.<span class='ident'>len</span>()
+                <span class="ident">s</span>.<span class="ident">len</span>()
             });
-            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>result</span>.<span class='ident'>unwrap_err</span>() <span class='op'>==</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>());
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">unwrap_err</span>() <span class="op">==</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>());
 
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot;Hello&quot;</span>.<span class='ident'>to_string</span>();
-            <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>try</span>(<span class='kw'>move</span> <span class='op'>||</span> {
-                <span class='ident'>s</span>.<span class='ident'>push_str</span>(<span class='string'>&quot;, World!&quot;</span>);
-                <span class='ident'>s</span>
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;Hello&quot;</span>.<span class="ident">to_string</span>();
+            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">try</span>(<span class="kw">move</span> <span class="op">||</span> {
+                <span class="ident">s</span>.<span class="ident">push_str</span>(<span class="string">&quot;, World!&quot;</span>);
+                <span class="ident">s</span>
             });
-            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>result</span>.<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='string'>&quot;Hello, World!&quot;</span>);
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">unwrap</span>() <span class="op">==</span> <span class="string">&quot;Hello, World!&quot;</span>);
         }
     }
 }
@@ -257,18 +270,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -301,7 +318,6 @@
         window.rootPath = "../../";
         window.currentCrate = "objc_exception";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

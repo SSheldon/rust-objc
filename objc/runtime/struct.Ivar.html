@@ -9,14 +9,19 @@
 
     <title>objc::runtime::Ivar - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'><a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a></p><script>window.sidebarCurrent = {name: 'Ivar', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Ivar</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.name">name</a><a href="#method.offset">offset</a><a href="#method.type_encoding">type_encoding</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">Send</a><a href="#impl-Sync">Sync</a></div></div><p class='location'><a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a></p><script>window.sidebarCurrent = {name: 'Ivar', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,22 +55,30 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a>::<wbr><a class='struct' href=''>Ivar</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a>::<wbr><a class="struct" href=''>Ivar</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/objc/runtime.rs.html#47-49' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'><div class="docblock attributes">#[repr(C)]
-</div>pub struct Ivar { /* fields omitted */ }</pre><div class='docblock'><p>A type that represents an instance variable.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../objc/runtime/struct.Ivar.html' title='objc::runtime::Ivar'>Ivar</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#176-201' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.name' class='method'><span id='name.v' class='invisible'><code>fn <a href='#method.name' class='fnname'>name</a>(&amp;self) -&gt; &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></span></h4>
-<div class='docblock'><p>Returns the name of self.</p>
-</div><h4 id='method.offset' class='method'><span id='offset.v' class='invisible'><code>fn <a href='#method.offset' class='fnname'>offset</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.isize.html'>isize</a></code></span></h4>
-<div class='docblock'><p>Returns the offset of self.</p>
-</div><h4 id='method.type_encoding' class='method'><span id='type_encoding.v' class='invisible'><code>fn <a href='#method.type_encoding' class='fnname'>type_encoding</a>(&amp;self) -&gt; <a class='struct' href='../../objc/struct.Encoding.html' title='objc::Encoding'>Encoding</a></code></span></h4>
-<div class='docblock'><p>Returns the <code>Encoding</code> of self.</p>
-</div></div></section>
+               </span><a class='srclink' href='../../src/objc/runtime.rs.html#47-49' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust struct'><div class="docblock attributes">#[repr(C)]
+</div>pub struct Ivar { /* fields omitted */ }</pre></div><div class='docblock'><p>A type that represents an instance variable.</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="struct" href="../../objc/runtime/struct.Ivar.html" title="struct objc::runtime::Ivar">Ivar</a></code><a href='#impl' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#192-217' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.name' class="method"><span id='name.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.name' class='fnname'>name</a>(&amp;self) -&gt; &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a></code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#194-199' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Returns the name of self.</p>
+</div><h4 id='method.offset' class="method"><span id='offset.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.offset' class='fnname'>offset</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.isize.html">isize</a></code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#202-207' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Returns the offset of self.</p>
+</div><h4 id='method.type_encoding' class="method"><span id='type_encoding.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.type_encoding' class='fnname'>type_encoding</a>(&amp;self) -&gt; <a class="struct" href="../../objc/struct.Encoding.html" title="struct objc::Encoding">Encoding</a></code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#210-216' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Returns the <code>Encoding</code> of self.</p>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+            <div id='implementations-list'>
+        </div>
+                <h2 id='synthetic-implementations' class='small-section-header'>
+                  Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+                </h2>
+                <div id='synthetic-implementations-list'>
+            <h3 id='impl-Send' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../../objc/runtime/struct.Ivar.html" title="struct objc::runtime::Ivar">Ivar</a></code><a href='#impl-Send' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../../objc/runtime/struct.Ivar.html" title="struct objc::runtime::Ivar">Ivar</a></code><a href='#impl-Sync' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -70,18 +91,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -114,7 +139,6 @@
         window.rootPath = "../../";
         window.currentCrate = "objc";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

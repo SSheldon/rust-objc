@@ -9,14 +9,19 @@
 
     <title>objc::runtime::Protocol - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'><a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a></p><script>window.sidebarCurrent = {name: 'Protocol', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Protocol</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.get">get</a><a href="#method.protocols">protocols</a><a href="#method.adopted_protocols">adopted_protocols</a><a href="#method.conforms_to">conforms_to</a><a href="#method.name">name</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-PartialEq">PartialEq</a><a href="#impl-Eq">Eq</a><a href="#impl-Debug">Debug</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">Send</a><a href="#impl-Sync">Sync</a></div></div><p class='location'><a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a></p><script>window.sidebarCurrent = {name: 'Protocol', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,36 +55,36 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a>::<wbr><a class='struct' href=''>Protocol</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>objc</a>::<wbr><a href='index.html'>runtime</a>::<wbr><a class="struct" href=''>Protocol</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/objc/runtime.rs.html#65-67' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'><div class="docblock attributes">#[repr(C)]
-</div>pub struct Protocol { /* fields omitted */ }</pre><div class='docblock'><p>A type that represents an Objective-C protocol.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../objc/runtime/struct.Protocol.html' title='objc::runtime::Protocol'>Protocol</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#375-416' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.get' class='method'><span id='get.v' class='invisible'><code>fn <a href='#method.get' class='fnname'>get</a>(name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;'static <a class='struct' href='../../objc/runtime/struct.Protocol.html' title='objc::runtime::Protocol'>Protocol</a>&gt;</code></span></h4>
-<div class='docblock'><p>Returns the protocol definition of a specified protocol, or <code>None</code> if the
+               </span><a class='srclink' href='../../src/objc/runtime.rs.html#65-67' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust struct'><div class="docblock attributes">#[repr(C)]
+</div>pub struct Protocol { /* fields omitted */ }</pre></div><div class='docblock'><p>A type that represents an Objective-C protocol.</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="struct" href="../../objc/runtime/struct.Protocol.html" title="struct objc::runtime::Protocol">Protocol</a></code><a href='#impl' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#391-432' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.get' class="method"><span id='get.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.get' class='fnname'>get</a>(name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'static <a class="struct" href="../../objc/runtime/struct.Protocol.html" title="struct objc::runtime::Protocol">Protocol</a>&gt;</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#394-400' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Returns the protocol definition of a specified protocol, or <code>None</code> if the
 protocol is not registered with the Objective-C runtime.</p>
-</div><h4 id='method.protocols' class='method'><span id='protocols.v' class='invisible'><code>fn <a href='#method.protocols' class='fnname'>protocols</a>() -&gt; <a class='struct' href='../../malloc_buf/struct.MallocBuffer.html' title='malloc_buf::MallocBuffer'>MallocBuffer</a>&lt;&amp;'static <a class='struct' href='../../objc/runtime/struct.Protocol.html' title='objc::runtime::Protocol'>Protocol</a>&gt;</code></span></h4>
-<div class='docblock'><p>Obtains the list of registered protocol definitions.</p>
-</div><h4 id='method.adopted_protocols' class='method'><span id='adopted_protocols.v' class='invisible'><code>fn <a href='#method.adopted_protocols' class='fnname'>adopted_protocols</a>(&amp;self) -&gt; <a class='struct' href='../../malloc_buf/struct.MallocBuffer.html' title='malloc_buf::MallocBuffer'>MallocBuffer</a>&lt;&amp;<a class='struct' href='../../objc/runtime/struct.Protocol.html' title='objc::runtime::Protocol'>Protocol</a>&gt;</code></span></h4>
-<div class='docblock'><p>Get a list of the protocols to which this protocol conforms.</p>
-</div><h4 id='method.conforms_to' class='method'><span id='conforms_to.v' class='invisible'><code>fn <a href='#method.conforms_to' class='fnname'>conforms_to</a>(&amp;self, proto: &amp;<a class='struct' href='../../objc/runtime/struct.Protocol.html' title='objc::runtime::Protocol'>Protocol</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
-<div class='docblock'><p>Checks whether this protocol conforms to the specified protocol.</p>
-</div><h4 id='method.name' class='method'><span id='name.v' class='invisible'><code>fn <a href='#method.name' class='fnname'>name</a>(&amp;self) -&gt; &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></span></h4>
-<div class='docblock'><p>Returns the name of self.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='struct' href='../../objc/runtime/struct.Protocol.html' title='objc::runtime::Protocol'>Protocol</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#418-422' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.eq' class='method'><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: &amp;<a class='struct' href='../../objc/runtime/struct.Protocol.html' title='objc::runtime::Protocol'>Protocol</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
-<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
-</div><h4 id='method.ne' class='method'><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
-<div class='docblock'><p>This method tests for <code>!=</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../../objc/runtime/struct.Protocol.html' title='objc::runtime::Protocol'>Protocol</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#424' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../objc/runtime/struct.Protocol.html' title='objc::runtime::Protocol'>Protocol</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#426-430' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
-<div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div></section>
+</div><h4 id='method.protocols' class="method"><span id='protocols.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.protocols' class='fnname'>protocols</a>() -&gt; <a class="struct" href="../../malloc_buf/struct.MallocBuffer.html" title="struct malloc_buf::MallocBuffer">MallocBuffer</a>&lt;&amp;'static <a class="struct" href="../../objc/runtime/struct.Protocol.html" title="struct objc::runtime::Protocol">Protocol</a>&gt;</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#403-409' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Obtains the list of registered protocol definitions.</p>
+</div><h4 id='method.adopted_protocols' class="method"><span id='adopted_protocols.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.adopted_protocols' class='fnname'>adopted_protocols</a>(&amp;self) -&gt; <a class="struct" href="../../malloc_buf/struct.MallocBuffer.html" title="struct malloc_buf::MallocBuffer">MallocBuffer</a>&lt;&amp;<a class="struct" href="../../objc/runtime/struct.Protocol.html" title="struct objc::runtime::Protocol">Protocol</a>&gt;</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#412-418' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Get a list of the protocols to which this protocol conforms.</p>
+</div><h4 id='method.conforms_to' class="method"><span id='conforms_to.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.conforms_to' class='fnname'>conforms_to</a>(&amp;self, proto: &amp;<a class="struct" href="../../objc/runtime/struct.Protocol.html" title="struct objc::runtime::Protocol">Protocol</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#421-423' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Checks whether this protocol conforms to the specified protocol.</p>
+</div><h4 id='method.name' class="method"><span id='name.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.name' class='fnname'>name</a>(&amp;self) -&gt; &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a></code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#426-431' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Returns the name of self.</p>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+            <div id='implementations-list'>
+        <h3 id='impl-PartialEq' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> for <a class="struct" href="../../objc/runtime/struct.Protocol.html" title="struct objc::runtime::Protocol">Protocol</a></code><a href='#impl-PartialEq' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#434-438' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: &amp;<a class="struct" href="../../objc/runtime/struct.Protocol.html" title="struct objc::runtime::Protocol">Protocol</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#435-437' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></td><td><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#121' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../../objc/runtime/struct.Protocol.html" title="struct objc::runtime::Protocol">Protocol</a></code><a href='#impl-Eq' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#440' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'></div><h3 id='impl-Debug' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../../objc/runtime/struct.Protocol.html" title="struct objc::runtime::Protocol">Protocol</a></code><a href='#impl-Debug' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#442-446' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/objc/runtime.rs.html#443-445' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>
+</div></div></div>
+                <h2 id='synthetic-implementations' class='small-section-header'>
+                  Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+                </h2>
+                <div id='synthetic-implementations-list'>
+            <h3 id='impl-Send' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../../objc/runtime/struct.Protocol.html" title="struct objc::runtime::Protocol">Protocol</a></code><a href='#impl-Send' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../../objc/runtime/struct.Protocol.html" title="struct objc::runtime::Protocol">Protocol</a></code><a href='#impl-Sync' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -84,18 +97,22 @@ protocol is not registered with the Objective-C runtime.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -128,7 +145,6 @@ protocol is not registered with the Objective-C runtime.</p>
         window.rootPath = "../../";
         window.currentCrate = "objc";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

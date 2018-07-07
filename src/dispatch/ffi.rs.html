@@ -9,14 +9,19 @@
 
     <title>ffi.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +55,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -214,177 +227,177 @@
 <span id="170">170</span>
 <span id="171">171</span>
 <span id="172">172</span>
-</pre><pre class='rust '>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>missing_docs</span>)]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>non_camel_case_types</span>)]</span>
+</pre><pre class="rust ">
+<span class="attribute">#![<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
+<span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>raw</span>::{<span class='ident'>c_char</span>, <span class='ident'>c_long</span>, <span class='ident'>c_ulong</span>, <span class='ident'>c_void</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::{<span class="ident">c_char</span>, <span class="ident">c_long</span>, <span class="ident">c_ulong</span>, <span class="ident">c_void</span>};
 
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>dispatch_object_s</span> { }
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">dispatch_object_s</span> { }
 
-<span class='comment'>// dispatch_block_t</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>dispatch_function_t</span> <span class='op'>=</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>);
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>dispatch_semaphore_t</span> <span class='op'>=</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>dispatch_object_s</span>;
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>dispatch_group_t</span> <span class='op'>=</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>dispatch_object_s</span>;
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>dispatch_object_t</span> <span class='op'>=</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>dispatch_object_s</span>;
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>dispatch_once_t</span> <span class='op'>=</span> <span class='ident'>c_long</span>;
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>dispatch_queue_t</span> <span class='op'>=</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>dispatch_object_s</span>;
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>dispatch_time_t</span> <span class='op'>=</span> <span class='ident'>u64</span>;
-<span class='comment'>// dispatch_source_type_t</span>
-<span class='comment'>// dispatch_fd_t</span>
-<span class='comment'>// dispatch_data_t</span>
-<span class='comment'>// dispatch_data_applier_t</span>
-<span class='comment'>// dispatch_io_t</span>
-<span class='comment'>// dispatch_io_handler_t</span>
-<span class='comment'>// dispatch_io_type_t</span>
-<span class='comment'>// dispatch_io_close_flags_t</span>
-<span class='comment'>// dispatch_io_interval_flags_t</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>dispatch_queue_attr_t</span> <span class='op'>=</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>dispatch_object_s</span>;
+<span class="comment">// dispatch_block_t</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">dispatch_function_t</span> <span class="op">=</span> <span class="kw">extern</span> <span class="kw">fn</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>);
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">dispatch_semaphore_t</span> <span class="op">=</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">dispatch_object_s</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">dispatch_group_t</span> <span class="op">=</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">dispatch_object_s</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">dispatch_object_t</span> <span class="op">=</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">dispatch_object_s</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">dispatch_once_t</span> <span class="op">=</span> <span class="ident">c_long</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">dispatch_queue_t</span> <span class="op">=</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">dispatch_object_s</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">dispatch_time_t</span> <span class="op">=</span> <span class="ident">u64</span>;
+<span class="comment">// dispatch_source_type_t</span>
+<span class="comment">// dispatch_fd_t</span>
+<span class="comment">// dispatch_data_t</span>
+<span class="comment">// dispatch_data_applier_t</span>
+<span class="comment">// dispatch_io_t</span>
+<span class="comment">// dispatch_io_handler_t</span>
+<span class="comment">// dispatch_io_type_t</span>
+<span class="comment">// dispatch_io_close_flags_t</span>
+<span class="comment">// dispatch_io_interval_flags_t</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">dispatch_queue_attr_t</span> <span class="op">=</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">dispatch_object_s</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>),
-           <span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;System&quot;</span>, <span class='ident'>kind</span> <span class='op'>=</span> <span class='string'>&quot;dylib&quot;</span>))]</span>
-<span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>not</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>)),
-           <span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;dispatch&quot;</span>, <span class='ident'>kind</span> <span class='op'>=</span> <span class='string'>&quot;dylib&quot;</span>))]</span>
-<span class='kw'>extern</span> {
-    <span class='kw'>static</span> <span class='ident'>_dispatch_main_q</span>: <span class='ident'>dispatch_object_s</span>;
-    <span class='kw'>static</span> <span class='ident'>_dispatch_queue_attr_concurrent</span>: <span class='ident'>dispatch_object_s</span>;
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>),
+           <span class="ident">link</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;System&quot;</span>, <span class="ident">kind</span> <span class="op">=</span> <span class="string">&quot;dylib&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>)),
+           <span class="ident">link</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;dispatch&quot;</span>, <span class="ident">kind</span> <span class="op">=</span> <span class="string">&quot;dylib&quot;</span>))]</span>
+<span class="kw">extern</span> {
+    <span class="kw">static</span> <span class="ident">_dispatch_main_q</span>: <span class="ident">dispatch_object_s</span>;
+    <span class="kw">static</span> <span class="ident">_dispatch_queue_attr_concurrent</span>: <span class="ident">dispatch_object_s</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_get_global_queue</span>(<span class='ident'>identifier</span>: <span class='ident'>c_long</span>, <span class='ident'>flags</span>: <span class='ident'>c_ulong</span>) <span class='op'>-&gt;</span> <span class='ident'>dispatch_queue_t</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_queue_create</span>(<span class='ident'>label</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>attr</span>: <span class='ident'>dispatch_queue_attr_t</span>) <span class='op'>-&gt;</span> <span class='ident'>dispatch_queue_t</span>;
-    <span class='comment'>// dispatch_queue_attr_t dispatch_queue_attr_make_with_qos_class ( dispatch_queue_attr_t attr, dispatch_qos_class_t qos_class, int relative_priority );</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_queue_get_label</span>(<span class='ident'>queue</span>: <span class='ident'>dispatch_queue_t</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_set_target_queue</span>(<span class='ident'>object</span>: <span class='ident'>dispatch_object_t</span>, <span class='ident'>queue</span>: <span class='ident'>dispatch_queue_t</span>);
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_main</span>();
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_get_global_queue</span>(<span class="ident">identifier</span>: <span class="ident">c_long</span>, <span class="ident">flags</span>: <span class="ident">c_ulong</span>) <span class="op">-&gt;</span> <span class="ident">dispatch_queue_t</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_queue_create</span>(<span class="ident">label</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">attr</span>: <span class="ident">dispatch_queue_attr_t</span>) <span class="op">-&gt;</span> <span class="ident">dispatch_queue_t</span>;
+    <span class="comment">// dispatch_queue_attr_t dispatch_queue_attr_make_with_qos_class ( dispatch_queue_attr_t attr, dispatch_qos_class_t qos_class, int relative_priority );</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_queue_get_label</span>(<span class="ident">queue</span>: <span class="ident">dispatch_queue_t</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_set_target_queue</span>(<span class="ident">object</span>: <span class="ident">dispatch_object_t</span>, <span class="ident">queue</span>: <span class="ident">dispatch_queue_t</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_main</span>();
 
-    <span class='comment'>// void dispatch_async ( dispatch_queue_t queue, dispatch_block_t block );</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_async_f</span>(<span class='ident'>queue</span>: <span class='ident'>dispatch_queue_t</span>, <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>work</span>: <span class='ident'>dispatch_function_t</span>);
-    <span class='comment'>// void dispatch_sync ( dispatch_queue_t queue, dispatch_block_t block );</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_sync_f</span>(<span class='ident'>queue</span>: <span class='ident'>dispatch_queue_t</span>, <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>work</span>: <span class='ident'>dispatch_function_t</span>);
-    <span class='comment'>// void dispatch_after ( dispatch_time_t when, dispatch_queue_t queue, dispatch_block_t block );</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_after_f</span>(<span class='ident'>when</span>: <span class='ident'>dispatch_time_t</span>, <span class='ident'>queue</span>: <span class='ident'>dispatch_queue_t</span>, <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>work</span>: <span class='ident'>dispatch_function_t</span>);
-    <span class='comment'>// void dispatch_apply ( size_t iterations, dispatch_queue_t queue, void (^block)(size_t) );</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_apply_f</span>(<span class='ident'>iterations</span>: <span class='ident'>usize</span>, <span class='ident'>queue</span>: <span class='ident'>dispatch_queue_t</span>, <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>work</span>: <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>usize</span>));
-    <span class='comment'>// void dispatch_once ( dispatch_once_t *predicate, dispatch_block_t block );</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_once_f</span>(<span class='ident'>predicate</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>dispatch_once_t</span>, <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>function</span>: <span class='ident'>dispatch_function_t</span>);
+    <span class="comment">// void dispatch_async ( dispatch_queue_t queue, dispatch_block_t block );</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_async_f</span>(<span class="ident">queue</span>: <span class="ident">dispatch_queue_t</span>, <span class="ident">context</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">work</span>: <span class="ident">dispatch_function_t</span>);
+    <span class="comment">// void dispatch_sync ( dispatch_queue_t queue, dispatch_block_t block );</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_sync_f</span>(<span class="ident">queue</span>: <span class="ident">dispatch_queue_t</span>, <span class="ident">context</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">work</span>: <span class="ident">dispatch_function_t</span>);
+    <span class="comment">// void dispatch_after ( dispatch_time_t when, dispatch_queue_t queue, dispatch_block_t block );</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_after_f</span>(<span class="ident">when</span>: <span class="ident">dispatch_time_t</span>, <span class="ident">queue</span>: <span class="ident">dispatch_queue_t</span>, <span class="ident">context</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">work</span>: <span class="ident">dispatch_function_t</span>);
+    <span class="comment">// void dispatch_apply ( size_t iterations, dispatch_queue_t queue, void (^block)(size_t) );</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_apply_f</span>(<span class="ident">iterations</span>: <span class="ident">usize</span>, <span class="ident">queue</span>: <span class="ident">dispatch_queue_t</span>, <span class="ident">context</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">work</span>: <span class="kw">extern</span> <span class="kw">fn</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">usize</span>));
+    <span class="comment">// void dispatch_once ( dispatch_once_t *predicate, dispatch_block_t block );</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_once_f</span>(<span class="ident">predicate</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">dispatch_once_t</span>, <span class="ident">context</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">function</span>: <span class="ident">dispatch_function_t</span>);
 
-    <span class='comment'>// void dispatch_group_async ( dispatch_group_t group, dispatch_queue_t queue, dispatch_block_t block );</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_group_async_f</span>(<span class='ident'>group</span>: <span class='ident'>dispatch_group_t</span>, <span class='ident'>queue</span>: <span class='ident'>dispatch_queue_t</span>, <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>work</span>: <span class='ident'>dispatch_function_t</span>);
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_group_create</span>() <span class='op'>-&gt;</span> <span class='ident'>dispatch_group_t</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_group_enter</span>(<span class='ident'>group</span>: <span class='ident'>dispatch_group_t</span>);
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_group_leave</span>(<span class='ident'>group</span>: <span class='ident'>dispatch_group_t</span>);
-    <span class='comment'>// void dispatch_group_notify ( dispatch_group_t group, dispatch_queue_t queue, dispatch_block_t block );</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_group_notify_f</span>(<span class='ident'>group</span>: <span class='ident'>dispatch_group_t</span>, <span class='ident'>queue</span>: <span class='ident'>dispatch_queue_t</span>, <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>work</span>: <span class='ident'>dispatch_function_t</span>);
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_group_wait</span>(<span class='ident'>group</span>: <span class='ident'>dispatch_group_t</span>, <span class='ident'>timeout</span>: <span class='ident'>dispatch_time_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_long</span>;
+    <span class="comment">// void dispatch_group_async ( dispatch_group_t group, dispatch_queue_t queue, dispatch_block_t block );</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_group_async_f</span>(<span class="ident">group</span>: <span class="ident">dispatch_group_t</span>, <span class="ident">queue</span>: <span class="ident">dispatch_queue_t</span>, <span class="ident">context</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">work</span>: <span class="ident">dispatch_function_t</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_group_create</span>() <span class="op">-&gt;</span> <span class="ident">dispatch_group_t</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_group_enter</span>(<span class="ident">group</span>: <span class="ident">dispatch_group_t</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_group_leave</span>(<span class="ident">group</span>: <span class="ident">dispatch_group_t</span>);
+    <span class="comment">// void dispatch_group_notify ( dispatch_group_t group, dispatch_queue_t queue, dispatch_block_t block );</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_group_notify_f</span>(<span class="ident">group</span>: <span class="ident">dispatch_group_t</span>, <span class="ident">queue</span>: <span class="ident">dispatch_queue_t</span>, <span class="ident">context</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">work</span>: <span class="ident">dispatch_function_t</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_group_wait</span>(<span class="ident">group</span>: <span class="ident">dispatch_group_t</span>, <span class="ident">timeout</span>: <span class="ident">dispatch_time_t</span>) <span class="op">-&gt;</span> <span class="ident">c_long</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_get_context</span>(<span class='ident'>object</span>: <span class='ident'>dispatch_object_t</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_release</span>(<span class='ident'>object</span>: <span class='ident'>dispatch_object_t</span>);
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_resume</span>(<span class='ident'>object</span>: <span class='ident'>dispatch_object_t</span>);
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_retain</span>(<span class='ident'>object</span>: <span class='ident'>dispatch_object_t</span>);
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_set_context</span>(<span class='ident'>object</span>: <span class='ident'>dispatch_object_t</span>, <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>);
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_set_finalizer_f</span>(<span class='ident'>object</span>: <span class='ident'>dispatch_object_t</span>, <span class='ident'>finalizer</span>: <span class='ident'>dispatch_function_t</span>);
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_suspend</span>(<span class='ident'>object</span>: <span class='ident'>dispatch_object_t</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_get_context</span>(<span class="ident">object</span>: <span class="ident">dispatch_object_t</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_release</span>(<span class="ident">object</span>: <span class="ident">dispatch_object_t</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_resume</span>(<span class="ident">object</span>: <span class="ident">dispatch_object_t</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_retain</span>(<span class="ident">object</span>: <span class="ident">dispatch_object_t</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_set_context</span>(<span class="ident">object</span>: <span class="ident">dispatch_object_t</span>, <span class="ident">context</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_set_finalizer_f</span>(<span class="ident">object</span>: <span class="ident">dispatch_object_t</span>, <span class="ident">finalizer</span>: <span class="ident">dispatch_function_t</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_suspend</span>(<span class="ident">object</span>: <span class="ident">dispatch_object_t</span>);
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_semaphore_create</span>(<span class='ident'>value</span>: <span class='ident'>c_long</span>) <span class='op'>-&gt;</span> <span class='ident'>dispatch_semaphore_t</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_semaphore_signal</span>(<span class='ident'>dsema</span>: <span class='ident'>dispatch_semaphore_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_long</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_semaphore_wait</span>(<span class='ident'>dsema</span>: <span class='ident'>dispatch_semaphore_t</span>, <span class='ident'>timeout</span>: <span class='ident'>dispatch_time_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_long</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_semaphore_create</span>(<span class="ident">value</span>: <span class="ident">c_long</span>) <span class="op">-&gt;</span> <span class="ident">dispatch_semaphore_t</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_semaphore_signal</span>(<span class="ident">dsema</span>: <span class="ident">dispatch_semaphore_t</span>) <span class="op">-&gt;</span> <span class="ident">c_long</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_semaphore_wait</span>(<span class="ident">dsema</span>: <span class="ident">dispatch_semaphore_t</span>, <span class="ident">timeout</span>: <span class="ident">dispatch_time_t</span>) <span class="op">-&gt;</span> <span class="ident">c_long</span>;
 
-    <span class='comment'>// void dispatch_barrier_async ( dispatch_queue_t queue, dispatch_block_t block );</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_barrier_async_f</span>(<span class='ident'>queue</span>: <span class='ident'>dispatch_queue_t</span>, <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>work</span>: <span class='ident'>dispatch_function_t</span>);
-    <span class='comment'>// void dispatch_barrier_sync ( dispatch_queue_t queue, dispatch_block_t block );</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_barrier_sync_f</span>(<span class='ident'>queue</span>: <span class='ident'>dispatch_queue_t</span>, <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>work</span>: <span class='ident'>dispatch_function_t</span>);
+    <span class="comment">// void dispatch_barrier_async ( dispatch_queue_t queue, dispatch_block_t block );</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_barrier_async_f</span>(<span class="ident">queue</span>: <span class="ident">dispatch_queue_t</span>, <span class="ident">context</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">work</span>: <span class="ident">dispatch_function_t</span>);
+    <span class="comment">// void dispatch_barrier_sync ( dispatch_queue_t queue, dispatch_block_t block );</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_barrier_sync_f</span>(<span class="ident">queue</span>: <span class="ident">dispatch_queue_t</span>, <span class="ident">context</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">work</span>: <span class="ident">dispatch_function_t</span>);
 
-    <span class='comment'>// void dispatch_source_cancel ( dispatch_source_t source );</span>
-    <span class='comment'>// dispatch_source_t dispatch_source_create ( dispatch_source_type_t type, uintptr_t handle, unsigned long mask, dispatch_queue_t queue );</span>
-    <span class='comment'>// unsigned long dispatch_source_get_data ( dispatch_source_t source );</span>
-    <span class='comment'>// uintptr_t dispatch_source_get_handle ( dispatch_source_t source );</span>
-    <span class='comment'>// unsigned long dispatch_source_get_mask ( dispatch_source_t source );</span>
-    <span class='comment'>// void dispatch_source_merge_data ( dispatch_source_t source, unsigned long value );</span>
-    <span class='comment'>// void dispatch_source_set_registration_handler ( dispatch_source_t source, dispatch_block_t handler );</span>
-    <span class='comment'>// void dispatch_source_set_registration_handler_f ( dispatch_source_t source, dispatch_function_t handler );</span>
-    <span class='comment'>// void dispatch_source_set_cancel_handler ( dispatch_source_t source, dispatch_block_t handler );</span>
-    <span class='comment'>// void dispatch_source_set_cancel_handler_f ( dispatch_source_t source, dispatch_function_t handler );</span>
-    <span class='comment'>// void dispatch_source_set_event_handler ( dispatch_source_t source, dispatch_block_t handler );</span>
-    <span class='comment'>// void dispatch_source_set_event_handler_f ( dispatch_source_t source, dispatch_function_t handler );</span>
-    <span class='comment'>// void dispatch_source_set_timer ( dispatch_source_t source, dispatch_time_t start, uint64_t interval, uint64_t leeway );</span>
-    <span class='comment'>// long dispatch_source_testcancel ( dispatch_source_t source );</span>
+    <span class="comment">// void dispatch_source_cancel ( dispatch_source_t source );</span>
+    <span class="comment">// dispatch_source_t dispatch_source_create ( dispatch_source_type_t type, uintptr_t handle, unsigned long mask, dispatch_queue_t queue );</span>
+    <span class="comment">// unsigned long dispatch_source_get_data ( dispatch_source_t source );</span>
+    <span class="comment">// uintptr_t dispatch_source_get_handle ( dispatch_source_t source );</span>
+    <span class="comment">// unsigned long dispatch_source_get_mask ( dispatch_source_t source );</span>
+    <span class="comment">// void dispatch_source_merge_data ( dispatch_source_t source, unsigned long value );</span>
+    <span class="comment">// void dispatch_source_set_registration_handler ( dispatch_source_t source, dispatch_block_t handler );</span>
+    <span class="comment">// void dispatch_source_set_registration_handler_f ( dispatch_source_t source, dispatch_function_t handler );</span>
+    <span class="comment">// void dispatch_source_set_cancel_handler ( dispatch_source_t source, dispatch_block_t handler );</span>
+    <span class="comment">// void dispatch_source_set_cancel_handler_f ( dispatch_source_t source, dispatch_function_t handler );</span>
+    <span class="comment">// void dispatch_source_set_event_handler ( dispatch_source_t source, dispatch_block_t handler );</span>
+    <span class="comment">// void dispatch_source_set_event_handler_f ( dispatch_source_t source, dispatch_function_t handler );</span>
+    <span class="comment">// void dispatch_source_set_timer ( dispatch_source_t source, dispatch_time_t start, uint64_t interval, uint64_t leeway );</span>
+    <span class="comment">// long dispatch_source_testcancel ( dispatch_source_t source );</span>
 
-    <span class='comment'>// void dispatch_read ( dispatch_fd_t fd, size_t length, dispatch_queue_t queue, void (^handler)(dispatch_data_t data, int error) );</span>
-    <span class='comment'>// void dispatch_write ( dispatch_fd_t fd, dispatch_data_t data, dispatch_queue_t queue, void (^handler)(dispatch_data_t data, int error) );</span>
+    <span class="comment">// void dispatch_read ( dispatch_fd_t fd, size_t length, dispatch_queue_t queue, void (^handler)(dispatch_data_t data, int error) );</span>
+    <span class="comment">// void dispatch_write ( dispatch_fd_t fd, dispatch_data_t data, dispatch_queue_t queue, void (^handler)(dispatch_data_t data, int error) );</span>
 
-    <span class='comment'>// dispatch_io_t dispatch_io_create ( dispatch_io_type_t type, dispatch_fd_t fd, dispatch_queue_t queue, void (^cleanup_handler)(int error) );</span>
-    <span class='comment'>// dispatch_io_t dispatch_io_create_with_path ( dispatch_io_type_t type, const char *path, int oflag, mode_t mode, dispatch_queue_t queue, void (^cleanup_handler)(int error) );</span>
-    <span class='comment'>// dispatch_io_t dispatch_io_create_with_io ( dispatch_io_type_t type, dispatch_io_t io, dispatch_queue_t queue, void (^cleanup_handler)(int error) );</span>
-    <span class='comment'>// void dispatch_io_read ( dispatch_io_t channel, off_t offset, size_t length, dispatch_queue_t queue, dispatch_io_handler_t io_handler );</span>
-    <span class='comment'>// void dispatch_io_write ( dispatch_io_t channel, off_t offset, dispatch_data_t data, dispatch_queue_t queue, dispatch_io_handler_t io_handler );</span>
-    <span class='comment'>// void dispatch_io_close ( dispatch_io_t channel, dispatch_io_close_flags_t flags );</span>
-    <span class='comment'>// void dispatch_io_barrier ( dispatch_io_t channel, dispatch_block_t barrier );</span>
-    <span class='comment'>// void dispatch_io_set_high_water ( dispatch_io_t channel, size_t high_water );</span>
-    <span class='comment'>// void dispatch_io_set_low_water ( dispatch_io_t channel, size_t low_water );</span>
-    <span class='comment'>// void dispatch_io_set_interval ( dispatch_io_t channel, uint64_t interval, dispatch_io_interval_flags_t flags );</span>
-    <span class='comment'>// dispatch_fd_t dispatch_io_get_descriptor ( dispatch_io_t channel );</span>
+    <span class="comment">// dispatch_io_t dispatch_io_create ( dispatch_io_type_t type, dispatch_fd_t fd, dispatch_queue_t queue, void (^cleanup_handler)(int error) );</span>
+    <span class="comment">// dispatch_io_t dispatch_io_create_with_path ( dispatch_io_type_t type, const char *path, int oflag, mode_t mode, dispatch_queue_t queue, void (^cleanup_handler)(int error) );</span>
+    <span class="comment">// dispatch_io_t dispatch_io_create_with_io ( dispatch_io_type_t type, dispatch_io_t io, dispatch_queue_t queue, void (^cleanup_handler)(int error) );</span>
+    <span class="comment">// void dispatch_io_read ( dispatch_io_t channel, off_t offset, size_t length, dispatch_queue_t queue, dispatch_io_handler_t io_handler );</span>
+    <span class="comment">// void dispatch_io_write ( dispatch_io_t channel, off_t offset, dispatch_data_t data, dispatch_queue_t queue, dispatch_io_handler_t io_handler );</span>
+    <span class="comment">// void dispatch_io_close ( dispatch_io_t channel, dispatch_io_close_flags_t flags );</span>
+    <span class="comment">// void dispatch_io_barrier ( dispatch_io_t channel, dispatch_block_t barrier );</span>
+    <span class="comment">// void dispatch_io_set_high_water ( dispatch_io_t channel, size_t high_water );</span>
+    <span class="comment">// void dispatch_io_set_low_water ( dispatch_io_t channel, size_t low_water );</span>
+    <span class="comment">// void dispatch_io_set_interval ( dispatch_io_t channel, uint64_t interval, dispatch_io_interval_flags_t flags );</span>
+    <span class="comment">// dispatch_fd_t dispatch_io_get_descriptor ( dispatch_io_t channel );</span>
 
-    <span class='comment'>// dispatch_data_t dispatch_data_create ( const void *buffer, size_t size, dispatch_queue_t queue, dispatch_block_t destructor );</span>
-    <span class='comment'>// size_t dispatch_data_get_size ( dispatch_data_t data );</span>
-    <span class='comment'>// dispatch_data_t dispatch_data_create_map ( dispatch_data_t data, const void **buffer_ptr, size_t *size_ptr );</span>
-    <span class='comment'>// dispatch_data_t dispatch_data_create_concat ( dispatch_data_t data1, dispatch_data_t data2 );</span>
-    <span class='comment'>// dispatch_data_t dispatch_data_create_subrange ( dispatch_data_t data, size_t offset, size_t length );</span>
-    <span class='comment'>// bool dispatch_data_apply ( dispatch_data_t data, dispatch_data_applier_t applier );</span>
-    <span class='comment'>// dispatch_data_t dispatch_data_copy_region ( dispatch_data_t data, size_t location, size_t *offset_ptr );</span>
+    <span class="comment">// dispatch_data_t dispatch_data_create ( const void *buffer, size_t size, dispatch_queue_t queue, dispatch_block_t destructor );</span>
+    <span class="comment">// size_t dispatch_data_get_size ( dispatch_data_t data );</span>
+    <span class="comment">// dispatch_data_t dispatch_data_create_map ( dispatch_data_t data, const void **buffer_ptr, size_t *size_ptr );</span>
+    <span class="comment">// dispatch_data_t dispatch_data_create_concat ( dispatch_data_t data1, dispatch_data_t data2 );</span>
+    <span class="comment">// dispatch_data_t dispatch_data_create_subrange ( dispatch_data_t data, size_t offset, size_t length );</span>
+    <span class="comment">// bool dispatch_data_apply ( dispatch_data_t data, dispatch_data_applier_t applier );</span>
+    <span class="comment">// dispatch_data_t dispatch_data_copy_region ( dispatch_data_t data, size_t location, size_t *offset_ptr );</span>
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_time</span>(<span class='ident'>when</span>: <span class='ident'>dispatch_time_t</span>, <span class='ident'>delta</span>: <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='ident'>dispatch_time_t</span>;
-    <span class='comment'>// dispatch_time_t dispatch_walltime( const struct timespec *when, int64_t delta);</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_time</span>(<span class="ident">when</span>: <span class="ident">dispatch_time_t</span>, <span class="ident">delta</span>: <span class="ident">i64</span>) <span class="op">-&gt;</span> <span class="ident">dispatch_time_t</span>;
+    <span class="comment">// dispatch_time_t dispatch_walltime( const struct timespec *when, int64_t delta);</span>
 
-    <span class='comment'>// void dispatch_queue_set_specific ( dispatch_queue_t queue, const void *key, void *context, dispatch_function_t destructor );</span>
-    <span class='comment'>// void * dispatch_queue_get_specific ( dispatch_queue_t queue, const void *key );</span>
-    <span class='comment'>// void * dispatch_get_specific ( const void *key );</span>
+    <span class="comment">// void dispatch_queue_set_specific ( dispatch_queue_t queue, const void *key, void *context, dispatch_function_t destructor );</span>
+    <span class="comment">// void * dispatch_queue_get_specific ( dispatch_queue_t queue, const void *key );</span>
+    <span class="comment">// void * dispatch_get_specific ( const void *key );</span>
 
-    <span class='comment'>// dispatch_block_t dispatch_block_create(dispatch_block_flags_t flags, dispatch_block_t block);</span>
-    <span class='comment'>// dispatch_block_t dispatch_block_create_with_qos_class(dispatch_block_flags_t flags, dispatch_qos_class_t qos_class, int relative_priority, dispatch_block_t block);</span>
-    <span class='comment'>// void dispatch_block_perform(dispatch_block_flags_t flags, dispatch_block_t block);</span>
-    <span class='comment'>// long dispatch_block_wait(dispatch_block_t block, dispatch_time_t timeout);</span>
-    <span class='comment'>// dispatch_block_notify(dispatch_block_t block, dispatch_queue_t queue, dispatch_block_t notification_block);</span>
-    <span class='comment'>// void dispatch_block_cancel(dispatch_block_t block);</span>
-    <span class='comment'>// long dispatch_block_testcancel(dispatch_block_t block);</span>
+    <span class="comment">// dispatch_block_t dispatch_block_create(dispatch_block_flags_t flags, dispatch_block_t block);</span>
+    <span class="comment">// dispatch_block_t dispatch_block_create_with_qos_class(dispatch_block_flags_t flags, dispatch_qos_class_t qos_class, int relative_priority, dispatch_block_t block);</span>
+    <span class="comment">// void dispatch_block_perform(dispatch_block_flags_t flags, dispatch_block_t block);</span>
+    <span class="comment">// long dispatch_block_wait(dispatch_block_t block, dispatch_time_t timeout);</span>
+    <span class="comment">// dispatch_block_notify(dispatch_block_t block, dispatch_queue_t queue, dispatch_block_t notification_block);</span>
+    <span class="comment">// void dispatch_block_cancel(dispatch_block_t block);</span>
+    <span class="comment">// long dispatch_block_testcancel(dispatch_block_t block);</span>
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dispatch_get_main_queue</span>() <span class='op'>-&gt;</span> <span class='ident'>dispatch_queue_t</span> {
-    <span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='ident'>_dispatch_main_q</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='ident'>dispatch_queue_t</span> }
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dispatch_get_main_queue</span>() <span class="op">-&gt;</span> <span class="ident">dispatch_queue_t</span> {
+    <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="ident">_dispatch_main_q</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="ident">dispatch_queue_t</span> }
 }
 
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>DISPATCH_QUEUE_SERIAL</span>: <span class='ident'>dispatch_queue_attr_t</span> <span class='op'>=</span> <span class='number'>0</span> <span class='kw'>as</span> <span class='ident'>dispatch_queue_attr_t</span>;
-<span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>DISPATCH_QUEUE_CONCURRENT</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>dispatch_object_s</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='ident'>_dispatch_queue_attr_concurrent</span> };
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DISPATCH_QUEUE_SERIAL</span>: <span class="ident">dispatch_queue_attr_t</span> <span class="op">=</span> <span class="number">0</span> <span class="kw">as</span> <span class="ident">dispatch_queue_attr_t</span>;
+<span class="kw">pub</span> <span class="kw">static</span> <span class="ident">DISPATCH_QUEUE_CONCURRENT</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">dispatch_object_s</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="ident">_dispatch_queue_attr_concurrent</span> };
 
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>DISPATCH_QUEUE_PRIORITY_HIGH</span>: <span class='ident'>c_long</span>       <span class='op'>=</span> <span class='number'>2</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>DISPATCH_QUEUE_PRIORITY_DEFAULT</span>: <span class='ident'>c_long</span>    <span class='op'>=</span> <span class='number'>0</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>DISPATCH_QUEUE_PRIORITY_LOW</span>: <span class='ident'>c_long</span>        <span class='op'>=</span> <span class='op'>-</span><span class='number'>2</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>DISPATCH_QUEUE_PRIORITY_BACKGROUND</span>: <span class='ident'>c_long</span> <span class='op'>=</span> <span class='op'>-</span><span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='number'>15</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DISPATCH_QUEUE_PRIORITY_HIGH</span>: <span class="ident">c_long</span>       <span class="op">=</span> <span class="number">2</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>: <span class="ident">c_long</span>    <span class="op">=</span> <span class="number">0</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DISPATCH_QUEUE_PRIORITY_LOW</span>: <span class="ident">c_long</span>        <span class="op">=</span> <span class="op">-</span><span class="number">2</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DISPATCH_QUEUE_PRIORITY_BACKGROUND</span>: <span class="ident">c_long</span> <span class="op">=</span> <span class="op">-</span><span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="number">15</span>;
 
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>DISPATCH_TIME_NOW</span>: <span class='ident'>dispatch_time_t</span>     <span class='op'>=</span> <span class='number'>0</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>DISPATCH_TIME_FOREVER</span>: <span class='ident'>dispatch_time_t</span> <span class='op'>=</span> <span class='op'>!</span><span class='number'>0</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DISPATCH_TIME_NOW</span>: <span class="ident">dispatch_time_t</span>     <span class="op">=</span> <span class="number">0</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DISPATCH_TIME_FOREVER</span>: <span class="ident">dispatch_time_t</span> <span class="op">=</span> <span class="op">!</span><span class="number">0</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_ffi_serial_queue</span>() {
-        <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>raw</span>::<span class='ident'>c_void</span>;
-        <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_ffi_serial_queue</span>() {
+        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_void</span>;
+        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
 
-        <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>serial_queue_test_add</span>(<span class='ident'>num</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>) {
-            <span class='kw'>unsafe</span> {
-                <span class='op'>*</span>(<span class='ident'>num</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u32</span>) <span class='op'>=</span> <span class='number'>1</span>;
+        <span class="kw">extern</span> <span class="kw">fn</span> <span class="ident">serial_queue_test_add</span>(<span class="ident">num</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>) {
+            <span class="kw">unsafe</span> {
+                <span class="kw-2">*</span>(<span class="ident">num</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u32</span>) <span class="op">=</span> <span class="number">1</span>;
             }
         }
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>num</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='number'>0</span>;
-        <span class='kw'>let</span> <span class='ident'>num_ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u32</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>num</span>;
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>dispatch_queue_create</span>(<span class='ident'>ptr</span>::<span class='ident'>null</span>(), <span class='ident'>DISPATCH_QUEUE_SERIAL</span>);
-            <span class='ident'>dispatch_sync_f</span>(<span class='ident'>q</span>, <span class='ident'>num_ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>serial_queue_test_add</span>);
-            <span class='ident'>dispatch_release</span>(<span class='ident'>q</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">num</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="kw">let</span> <span class="ident">num_ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u32</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">num</span>;
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">q</span> <span class="op">=</span> <span class="ident">dispatch_queue_create</span>(<span class="ident">ptr</span>::<span class="ident">null</span>(), <span class="ident">DISPATCH_QUEUE_SERIAL</span>);
+            <span class="ident">dispatch_sync_f</span>(<span class="ident">q</span>, <span class="ident">num_ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">serial_queue_test_add</span>);
+            <span class="ident">dispatch_release</span>(<span class="ident">q</span>);
         }
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>num</span> <span class='op'>==</span> <span class='number'>1</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">num</span> <span class="op">==</span> <span class="number">1</span>);
     }
 }
 </pre>
@@ -401,18 +414,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -445,7 +462,6 @@
         window.rootPath = "../../";
         window.currentCrate = "dispatch";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

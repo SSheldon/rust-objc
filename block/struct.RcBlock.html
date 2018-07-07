@@ -9,14 +9,19 @@
 
     <title>block::RcBlock - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'><a href='index.html'>block</a></p><script>window.sidebarCurrent = {name: 'RcBlock', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct RcBlock</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.copy">copy</a></div><a class="sidebar-title" href="#deref-methods">Methods from Deref&lt;Target=Block&lt;A, R&gt;&gt;</a><div class="sidebar-links"><a href="#method.call">call</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Deref">Deref</a><a href="#impl-Drop">Drop</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>block</a></p><script>window.sidebarCurrent = {name: 'RcBlock', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,46 +55,48 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>block</a>::<wbr><a class='struct' href=''>RcBlock</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>block</a>::<wbr><a class="struct" href=''>RcBlock</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/block/lib.rs.html#136-138' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct RcBlock&lt;A, R&gt; { /* fields omitted */ }</pre><div class='docblock'><p>A reference-counted Objective-C block.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;A, R&gt; <a class='struct' href='../block/struct.RcBlock.html' title='block::RcBlock'>RcBlock</a>&lt;A, R&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#140-158' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>unsafe fn <a href='#method.new' class='fnname'>new</a>(ptr: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;) -&gt; Self</code></span></h4>
-<div class='docblock'><p>Construct an <code>RcBlock</code> for the given block without copying it.
+               </span><a class='srclink' href='../src/block/lib.rs.html#136-138' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust struct'>pub struct RcBlock&lt;A, R&gt; { /* fields omitted */ }</pre></div><div class='docblock'><p>A reference-counted Objective-C block.</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;A, R&gt; <a class="struct" href="../block/struct.RcBlock.html" title="struct block::RcBlock">RcBlock</a>&lt;A, R&gt;</code><a href='#impl' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#140-158' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub unsafe fn <a href='#method.new' class='fnname'>new</a>(ptr: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a><a class="struct" href="../block/struct.Block.html" title="struct block::Block">Block</a>&lt;A, R&gt;) -&gt; Self</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#147-149' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Construct an <code>RcBlock</code> for the given block without copying it.
 The caller must ensure the block has a +1 reference count.</p>
-
 <p>Unsafe because <code>ptr</code> must point to a valid <code>Block</code> and must have a +1
 reference count or it will be overreleased when the <code>RcBlock</code> is
 dropped.</p>
-</div><h4 id='method.copy' class='method'><span id='copy.v' class='invisible'><code>unsafe fn <a href='#method.copy' class='fnname'>copy</a>(ptr: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;) -&gt; Self</code></span></h4>
-<div class='docblock'><p>Constructs an <code>RcBlock</code> by copying the given block.</p>
-
+</div><h4 id='method.copy' class="method"><span id='copy.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub unsafe fn <a href='#method.copy' class='fnname'>copy</a>(ptr: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a><a class="struct" href="../block/struct.Block.html" title="struct block::Block">Block</a>&lt;A, R&gt;) -&gt; Self</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#154-157' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Constructs an <code>RcBlock</code> by copying the given block.</p>
 <p>Unsafe because <code>ptr</code> must point to a valid <code>Block</code>.</p>
-</div></div><h2 id='deref-methods'>Methods from <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a>&lt;Target=<a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;&gt;</h2><div class='impl-items'><h4 id='method.call' class='method'><span id='call.v' class='invisible'><code>unsafe fn <a href='#method.call' class='fnname'>call</a>(&amp;self, args: A) -&gt; R</code></span></h4>
-<div class='docblock'><p>Call self with the given arguments.</p>
-
+</div></div>
+                    <h2 id='deref-methods' class='small-section-header'>
+                      Methods from <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/deref/trait.Deref.html" title="trait core::ops::deref::Deref">Deref</a>&lt;Target = <a class="struct" href="../block/struct.Block.html" title="struct block::Block">Block</a>&lt;A, R&gt;&gt;<a href='#deref-methods' class='anchor'></a>
+                    </h2>
+                <div class='impl-items'><h4 id='method.call' class="method"><span id='call.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub unsafe fn <a href='#method.call' class='fnname'>call</a>(&amp;self, args: A) -&gt; R</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#130-132' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Call self with the given arguments.</p>
 <p>Unsafe because this invokes foreign code that the caller must verify
-doesn&#39;t violate any of Rust&#39;s safety rules. For example, if this block
+doesn't violate any of Rust's safety rules. For example, if this block
 is shared with multiple references, the caller must ensure that calling
 it will not cause a data race.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;A, R&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../block/struct.RcBlock.html' title='block::RcBlock'>RcBlock</a>&lt;A, R&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#160-166' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../block/struct.RcBlock.html' title='block::RcBlock'>RcBlock</a>&lt;A, R&gt;</code></span></h4>
-<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
-<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;A, R&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a> for <a class='struct' href='../block/struct.RcBlock.html' title='block::RcBlock'>RcBlock</a>&lt;A, R&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#168-174' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='associatedtype.Target' class='type'><span id='Target.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#associatedtype.Target' class='type'>Target</a> = <a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;</code></span></h4>
-<div class='docblock'><p>The resulting type after dereferencing</p>
-</div><h4 id='method.deref' class='method'><span id='deref.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#tymethod.deref' class='fnname'>deref</a>(&amp;self) -&gt; &amp;<a class='struct' href='../block/struct.Block.html' title='block::Block'>Block</a>&lt;A, R&gt;</code></span></h4>
-<div class='docblock'><p>The method called to dereference a value</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;A, R&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../block/struct.RcBlock.html' title='block::RcBlock'>RcBlock</a>&lt;A, R&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#176-182' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.drop' class='method'><span id='drop.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span></h4>
-<div class='docblock'><p>A method called when the value goes out of scope. <a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop">Read more</a></p>
-</div></div></section>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+            <div id='implementations-list'>
+        <h3 id='impl-Clone' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;A, R&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../block/struct.RcBlock.html" title="struct block::RcBlock">RcBlock</a>&lt;A, R&gt;</code><a href='#impl-Clone' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#160-166' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../block/struct.RcBlock.html" title="struct block::RcBlock">RcBlock</a>&lt;A, R&gt;</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#161-165' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self)</code></span></td><td><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/clone.rs.html#117-119' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 id='impl-Deref' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;A, R&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/deref/trait.Deref.html" title="trait core::ops::deref::Deref">Deref</a> for <a class="struct" href="../block/struct.RcBlock.html" title="struct block::RcBlock">RcBlock</a>&lt;A, R&gt;</code><a href='#impl-Deref' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#168-174' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='associatedtype.Target' class="type"><span id='Target.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/ops/deref/trait.Deref.html#associatedtype.Target' class="type">Target</a> = <a class="struct" href="../block/struct.Block.html" title="struct block::Block">Block</a>&lt;A, R&gt;</code></span></h4>
+<div class='docblock'><p>The resulting type after dereferencing.</p>
+</div><h4 id='method.deref' class="method"><span id='deref.v' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/deref/trait.Deref.html#tymethod.deref' class='fnname'>deref</a>(&amp;self) -&gt; &amp;<a class="struct" href="../block/struct.Block.html" title="struct block::Block">Block</a>&lt;A, R&gt;</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#171-173' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Dereferences the value.</p>
+</div></div><h3 id='impl-Drop' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;A, R&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html" title="trait core::ops::drop::Drop">Drop</a> for <a class="struct" href="../block/struct.RcBlock.html" title="struct block::RcBlock">RcBlock</a>&lt;A, R&gt;</code><a href='#impl-Drop' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#176-182' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.drop' class="method"><span id='drop.v' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/block/lib.rs.html#177-181' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Executes the destructor for this type. <a href="https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html#tymethod.drop">Read more</a></p>
+</div></div></div>
+                <h2 id='synthetic-implementations' class='small-section-header'>
+                  Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+                </h2>
+                <div id='synthetic-implementations-list'>
+            <h3 id='impl-Send' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;A, R&gt; !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../block/struct.RcBlock.html" title="struct block::RcBlock">RcBlock</a>&lt;A, R&gt;</code><a href='#impl-Send' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;A, R&gt; !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../block/struct.RcBlock.html" title="struct block::RcBlock">RcBlock</a>&lt;A, R&gt;</code><a href='#impl-Sync' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -94,18 +109,22 @@ it will not cause a data race.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -138,7 +157,6 @@ it will not cause a data race.</p>
         window.rootPath = "../";
         window.currentCrate = "block";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

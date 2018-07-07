@@ -4,19 +4,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-1ecc6299db9ec823/objc-0.2.2/src/message/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/ssheldon/.cargo/registry/src/github.com-1ecc6299db9ec823/objc-0.2.3/src/message/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +55,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -367,78 +380,78 @@
 <span id="323">323</span>
 <span id="324">324</span>
 <span id="325">325</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>any</span>::<span class='ident'>Any</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">any</span>::<span class="ident">Any</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 
-<span class='kw'>use</span> <span class='ident'>runtime</span>::{<span class='ident'>Class</span>, <span class='ident'>Imp</span>, <span class='ident'>Object</span>, <span class='ident'>Sel</span>};
-<span class='kw'>use</span> {<span class='ident'>Encode</span>, <span class='ident'>EncodeArguments</span>};
+<span class="kw">use</span> <span class="ident">runtime</span>::{<span class="ident">Class</span>, <span class="ident">Imp</span>, <span class="ident">Object</span>, <span class="ident">Sel</span>};
+<span class="kw">use</span> {<span class="ident">Encode</span>, <span class="ident">EncodeArguments</span>};
 
-<span class='kw'>mod</span> <span class='ident'>verify</span>;
+<span class="kw">mod</span> <span class="ident">verify</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>),
-          <span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;x86&quot;</span>))]</span>
-<span class='attribute'>#[<span class='ident'>path</span> <span class='op'>=</span> <span class='string'>&quot;x86.rs&quot;</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>platform</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>),
-          <span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;x86_64&quot;</span>))]</span>
-<span class='attribute'>#[<span class='ident'>path</span> <span class='op'>=</span> <span class='string'>&quot;x86_64.rs&quot;</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>platform</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>),
-          <span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;arm&quot;</span>))]</span>
-<span class='attribute'>#[<span class='ident'>path</span> <span class='op'>=</span> <span class='string'>&quot;arm.rs&quot;</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>platform</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>),
-          <span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;aarch64&quot;</span>))]</span>
-<span class='attribute'>#[<span class='ident'>path</span> <span class='op'>=</span> <span class='string'>&quot;arm64.rs&quot;</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>platform</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>)))]</span>
-<span class='attribute'>#[<span class='ident'>path</span> <span class='op'>=</span> <span class='string'>&quot;gnustep.rs&quot;</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>platform</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>),
+          <span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;x86&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;x86.rs&quot;</span>]</span>
+<span class="kw">mod</span> <span class="ident">platform</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>),
+          <span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;x86_64&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;x86_64.rs&quot;</span>]</span>
+<span class="kw">mod</span> <span class="ident">platform</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>),
+          <span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;arm&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;arm.rs&quot;</span>]</span>
+<span class="kw">mod</span> <span class="ident">platform</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>),
+          <span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;aarch64&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;arm64.rs&quot;</span>]</span>
+<span class="kw">mod</span> <span class="ident">platform</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>)))]</span>
+<span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;gnustep.rs&quot;</span>]</span>
+<span class="kw">mod</span> <span class="ident">platform</span>;
 
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>platform</span>::{<span class='ident'>msg_send_fn</span>, <span class='ident'>msg_send_super_fn</span>};
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>verify</span>::<span class='ident'>verify_message_signature</span>;
+<span class="kw">use</span> <span class="self">self</span>::<span class="ident">platform</span>::{<span class="ident">msg_send_fn</span>, <span class="ident">msg_send_super_fn</span>};
+<span class="kw">use</span> <span class="self">self</span>::<span class="ident">verify</span>::<span class="ident">verify_message_signature</span>;
 
-<span class='doccomment'>/// Specifies the superclass of an instance.</span>
-<span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Super</span> {
-    <span class='doccomment'>/// Specifies an instance of a class.</span>
-    <span class='kw'>pub</span> <span class='ident'>receiver</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>,
-    <span class='doccomment'>/// Specifies the particular superclass of the instance to message.</span>
-    <span class='kw'>pub</span> <span class='ident'>superclass</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Class</span>,
+<span class="doccomment">/// Specifies the superclass of an instance.</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Super</span> {
+    <span class="doccomment">/// Specifies an instance of a class.</span>
+    <span class="kw">pub</span> <span class="ident">receiver</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Object</span>,
+    <span class="doccomment">/// Specifies the particular superclass of the instance to message.</span>
+    <span class="kw">pub</span> <span class="ident">superclass</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">Class</span>,
 }
 
-<span class='doccomment'>/// Types that may be sent Objective-C messages.</span>
-<span class='doccomment'>/// For example: objects, classes, and blocks.</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>Message</span> {
-    <span class='doccomment'>/**
+<span class="doccomment">/// Types that may be sent Objective-C messages.</span>
+<span class="doccomment">/// For example: objects, classes, and blocks.</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">trait</span> <span class="ident">Message</span> {
+    <span class="doccomment">/**
     Sends a message to self with the given selector and arguments.
 
     The correct version of `objc_msgSend` will be chosen based on the
-    return type. For more information, see Apple&#39;s documenation:
-    https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778
+    return type. For more information, see Apple&#39;s documentation:
+    &lt;https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/index.html#//apple_ref/doc/uid/TP40001418-CH1g-88778&gt;
 
     If the selector is known at compile-time, it is recommended to use the
     `msg_send!` macro rather than this method.
     */</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;verify_message&quot;</span>))]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send_message</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>, <span class='ident'>args</span>: <span class='ident'>A</span>)
-            <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>MessageError</span><span class='op'>&gt;</span>
-            <span class='kw'>where</span> <span class='self'>Self</span>: <span class='ident'>Sized</span>, <span class='ident'>A</span>: <span class='ident'>MessageArguments</span>, <span class='ident'>R</span>: <span class='ident'>Any</span> {
-        <span class='ident'>send_message</span>(<span class='self'>self</span>, <span class='ident'>sel</span>, <span class='ident'>args</span>)
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;verify_message&quot;</span>))]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">send_message</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">sel</span>: <span class="ident">Sel</span>, <span class="ident">args</span>: <span class="ident">A</span>)
+            <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">MessageError</span><span class="op">&gt;</span>
+            <span class="kw">where</span> <span class="self">Self</span>: <span class="ident">Sized</span>, <span class="ident">A</span>: <span class="ident">MessageArguments</span>, <span class="ident">R</span>: <span class="ident">Any</span> {
+        <span class="ident">send_message</span>(<span class="self">self</span>, <span class="ident">sel</span>, <span class="ident">args</span>)
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;verify_message&quot;</span>)]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send_message</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>, <span class='ident'>args</span>: <span class='ident'>A</span>)
-            <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>MessageError</span><span class='op'>&gt;</span>
-            <span class='kw'>where</span> <span class='self'>Self</span>: <span class='ident'>Sized</span>, <span class='ident'>A</span>: <span class='ident'>MessageArguments</span> <span class='op'>+</span> <span class='ident'>EncodeArguments</span>,
-            <span class='ident'>R</span>: <span class='ident'>Any</span> <span class='op'>+</span> <span class='ident'>Encode</span> {
-        <span class='ident'>send_message</span>(<span class='self'>self</span>, <span class='ident'>sel</span>, <span class='ident'>args</span>)
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;verify_message&quot;</span>)]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">send_message</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">sel</span>: <span class="ident">Sel</span>, <span class="ident">args</span>: <span class="ident">A</span>)
+            <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">MessageError</span><span class="op">&gt;</span>
+            <span class="kw">where</span> <span class="self">Self</span>: <span class="ident">Sized</span>, <span class="ident">A</span>: <span class="ident">MessageArguments</span> <span class="op">+</span> <span class="ident">EncodeArguments</span>,
+            <span class="ident">R</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Encode</span> {
+        <span class="ident">send_message</span>(<span class="self">self</span>, <span class="ident">sel</span>, <span class="ident">args</span>)
     }
 
-    <span class='doccomment'>/**
+    <span class="doccomment">/**
     Verifies that the argument and return types match the encoding of the
     method for the given selector.
 
@@ -453,7 +466,7 @@
     # use objc::Message;
     # fn main() {
     let obj: &amp;Object;
-    # obj = unsafe { msg_send![Class::get(&quot;NSObject&quot;).unwrap(), new] };
+    # obj = unsafe { msg_send![class!(NSObject), new] };
     let sel = sel!(isKindOfClass:);
     // Verify isKindOfClass: takes one Class and returns a BOOL
     let result = obj.verify_message::&lt;(&amp;Class,), BOOL&gt;(sel);
@@ -461,56 +474,56 @@
     # }
     ```
     */</span>
-    <span class='kw'>fn</span> <span class='ident'>verify_message</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>MessageError</span><span class='op'>&gt;</span>
-            <span class='kw'>where</span> <span class='self'>Self</span>: <span class='ident'>Sized</span>, <span class='ident'>A</span>: <span class='ident'>EncodeArguments</span>, <span class='ident'>R</span>: <span class='ident'>Encode</span> {
-        <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='op'>*</span>(<span class='self'>self</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Object</span>) };
-        <span class='ident'>verify_message_signature</span>::<span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>obj</span>.<span class='ident'>class</span>(), <span class='ident'>sel</span>)
+    <span class="kw">fn</span> <span class="ident">verify_message</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">sel</span>: <span class="ident">Sel</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">MessageError</span><span class="op">&gt;</span>
+            <span class="kw">where</span> <span class="self">Self</span>: <span class="ident">Sized</span>, <span class="ident">A</span>: <span class="ident">EncodeArguments</span>, <span class="ident">R</span>: <span class="ident">Encode</span> {
+        <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="self">self</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">Object</span>) };
+        <span class="ident">verify_message_signature</span>::<span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">obj</span>.<span class="ident">class</span>(), <span class="ident">sel</span>)
     }
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Message</span> <span class='kw'>for</span> <span class='ident'>Object</span> { }
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Message</span> <span class="kw">for</span> <span class="ident">Object</span> { }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Message</span> <span class='kw'>for</span> <span class='ident'>Class</span> { }
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Message</span> <span class="kw">for</span> <span class="ident">Class</span> { }
 
-<span class='doccomment'>/// Types that may be used as the arguments of an Objective-C message.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>MessageArguments</span>: <span class='ident'>Sized</span> {
-    <span class='doccomment'>/// Invoke an `Imp` with the given object, selector, and arguments.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This method is the primitive used when sending messages and should not</span>
-    <span class='doccomment'>/// be called directly; instead, use the `msg_send!` macro or, in cases</span>
-    <span class='doccomment'>/// with a dynamic selector, the `Message::send_message` method.</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>invoke</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>imp</span>: <span class='ident'>Imp</span>, <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>, <span class='ident'>args</span>: <span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span>
-            <span class='kw'>where</span> <span class='ident'>R</span>: <span class='ident'>Any</span>;
+<span class="doccomment">/// Types that may be used as the arguments of an Objective-C message.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">MessageArguments</span>: <span class="ident">Sized</span> {
+    <span class="doccomment">/// Invoke an `Imp` with the given object, selector, and arguments.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This method is the primitive used when sending messages and should not</span>
+    <span class="doccomment">/// be called directly; instead, use the `msg_send!` macro or, in cases</span>
+    <span class="doccomment">/// with a dynamic selector, the `Message::send_message` method.</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">invoke</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">imp</span>: <span class="ident">Imp</span>, <span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Object</span>, <span class="ident">sel</span>: <span class="ident">Sel</span>, <span class="ident">args</span>: <span class="self">Self</span>) <span class="op">-&gt;</span> <span class="ident">R</span>
+            <span class="kw">where</span> <span class="ident">R</span>: <span class="ident">Any</span>;
 }
 
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>message_args_impl</span> {
-    ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>:<span class='ident'>ident</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> (
-        <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>),<span class='op'>*</span><span class='op'>&gt;</span> <span class='ident'>MessageArguments</span> <span class='kw'>for</span> ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>,)<span class='op'>*</span>) {
-            <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>invoke</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>imp</span>: <span class='ident'>Imp</span>, <span class='ident'>obj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>, ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>,)<span class='op'>*</span>): <span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span>
-                    <span class='kw'>where</span> <span class='ident'>R</span>: <span class='ident'>Any</span> {
-                <span class='kw'>let</span> <span class='ident'>imp</span>: <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>Sel</span> $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>)<span class='op'>*</span>) <span class='op'>-&gt;</span> <span class='ident'>R</span> <span class='op'>=</span>
-                    <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>imp</span>);
-                <span class='ident'>imp</span>(<span class='ident'>obj</span>, <span class='ident'>sel</span> $(, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>)<span class='op'>*</span>)
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">message_args_impl</span> {
+    ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">ident</span> : <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>:<span class="ident">ident</span>),<span class="kw-2">*</span>) <span class="op">=&gt;</span> (
+        <span class="kw">impl</span><span class="op">&lt;</span>$(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>),<span class="kw-2">*</span><span class="op">&gt;</span> <span class="ident">MessageArguments</span> <span class="kw">for</span> ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>,)<span class="kw-2">*</span>) {
+            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">invoke</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">imp</span>: <span class="ident">Imp</span>, <span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Object</span>, <span class="ident">sel</span>: <span class="ident">Sel</span>, ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>,)<span class="kw-2">*</span>): <span class="self">Self</span>) <span class="op">-&gt;</span> <span class="ident">R</span>
+                    <span class="kw">where</span> <span class="ident">R</span>: <span class="ident">Any</span> {
+                <span class="kw">let</span> <span class="ident">imp</span>: <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="kw">fn</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Object</span>, <span class="ident">Sel</span> $(, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>)<span class="kw-2">*</span>) <span class="op">-&gt;</span> <span class="ident">R</span> <span class="op">=</span>
+                    <span class="ident">mem</span>::<span class="ident">transmute</span>(<span class="ident">imp</span>);
+                <span class="ident">imp</span>(<span class="ident">obj</span>, <span class="ident">sel</span> $(, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>)<span class="kw-2">*</span>)
             }
         }
     );
 }
 
-<span class='macro'>message_args_impl</span><span class='macro'>!</span>();
-<span class='macro'>message_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>);
-<span class='macro'>message_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>);
-<span class='macro'>message_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>);
-<span class='macro'>message_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>);
-<span class='macro'>message_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>);
-<span class='macro'>message_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>);
-<span class='macro'>message_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>);
-<span class='macro'>message_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>);
-<span class='macro'>message_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>);
-<span class='macro'>message_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>, <span class='ident'>j</span>: <span class='ident'>J</span>);
-<span class='macro'>message_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>, <span class='ident'>j</span>: <span class='ident'>J</span>, <span class='ident'>k</span>: <span class='ident'>K</span>);
-<span class='macro'>message_args_impl</span><span class='macro'>!</span>(<span class='ident'>a</span>: <span class='ident'>A</span>, <span class='ident'>b</span>: <span class='ident'>B</span>, <span class='ident'>c</span>: <span class='ident'>C</span>, <span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>e</span>: <span class='ident'>E</span>, <span class='ident'>f</span>: <span class='ident'>F</span>, <span class='ident'>g</span>: <span class='ident'>G</span>, <span class='ident'>h</span>: <span class='ident'>H</span>, <span class='ident'>i</span>: <span class='ident'>I</span>, <span class='ident'>j</span>: <span class='ident'>J</span>, <span class='ident'>k</span>: <span class='ident'>K</span>, <span class='ident'>l</span>: <span class='ident'>L</span>);
+<span class="macro">message_args_impl</span><span class="macro">!</span>();
+<span class="macro">message_args_impl</span><span class="macro">!</span>(<span class="ident">a</span>: <span class="ident">A</span>);
+<span class="macro">message_args_impl</span><span class="macro">!</span>(<span class="ident">a</span>: <span class="ident">A</span>, <span class="ident">b</span>: <span class="ident">B</span>);
+<span class="macro">message_args_impl</span><span class="macro">!</span>(<span class="ident">a</span>: <span class="ident">A</span>, <span class="ident">b</span>: <span class="ident">B</span>, <span class="ident">c</span>: <span class="ident">C</span>);
+<span class="macro">message_args_impl</span><span class="macro">!</span>(<span class="ident">a</span>: <span class="ident">A</span>, <span class="ident">b</span>: <span class="ident">B</span>, <span class="ident">c</span>: <span class="ident">C</span>, <span class="ident">d</span>: <span class="ident">D</span>);
+<span class="macro">message_args_impl</span><span class="macro">!</span>(<span class="ident">a</span>: <span class="ident">A</span>, <span class="ident">b</span>: <span class="ident">B</span>, <span class="ident">c</span>: <span class="ident">C</span>, <span class="ident">d</span>: <span class="ident">D</span>, <span class="ident">e</span>: <span class="ident">E</span>);
+<span class="macro">message_args_impl</span><span class="macro">!</span>(<span class="ident">a</span>: <span class="ident">A</span>, <span class="ident">b</span>: <span class="ident">B</span>, <span class="ident">c</span>: <span class="ident">C</span>, <span class="ident">d</span>: <span class="ident">D</span>, <span class="ident">e</span>: <span class="ident">E</span>, <span class="ident">f</span>: <span class="ident">F</span>);
+<span class="macro">message_args_impl</span><span class="macro">!</span>(<span class="ident">a</span>: <span class="ident">A</span>, <span class="ident">b</span>: <span class="ident">B</span>, <span class="ident">c</span>: <span class="ident">C</span>, <span class="ident">d</span>: <span class="ident">D</span>, <span class="ident">e</span>: <span class="ident">E</span>, <span class="ident">f</span>: <span class="ident">F</span>, <span class="ident">g</span>: <span class="ident">G</span>);
+<span class="macro">message_args_impl</span><span class="macro">!</span>(<span class="ident">a</span>: <span class="ident">A</span>, <span class="ident">b</span>: <span class="ident">B</span>, <span class="ident">c</span>: <span class="ident">C</span>, <span class="ident">d</span>: <span class="ident">D</span>, <span class="ident">e</span>: <span class="ident">E</span>, <span class="ident">f</span>: <span class="ident">F</span>, <span class="ident">g</span>: <span class="ident">G</span>, <span class="ident">h</span>: <span class="ident">H</span>);
+<span class="macro">message_args_impl</span><span class="macro">!</span>(<span class="ident">a</span>: <span class="ident">A</span>, <span class="ident">b</span>: <span class="ident">B</span>, <span class="ident">c</span>: <span class="ident">C</span>, <span class="ident">d</span>: <span class="ident">D</span>, <span class="ident">e</span>: <span class="ident">E</span>, <span class="ident">f</span>: <span class="ident">F</span>, <span class="ident">g</span>: <span class="ident">G</span>, <span class="ident">h</span>: <span class="ident">H</span>, <span class="ident">i</span>: <span class="ident">I</span>);
+<span class="macro">message_args_impl</span><span class="macro">!</span>(<span class="ident">a</span>: <span class="ident">A</span>, <span class="ident">b</span>: <span class="ident">B</span>, <span class="ident">c</span>: <span class="ident">C</span>, <span class="ident">d</span>: <span class="ident">D</span>, <span class="ident">e</span>: <span class="ident">E</span>, <span class="ident">f</span>: <span class="ident">F</span>, <span class="ident">g</span>: <span class="ident">G</span>, <span class="ident">h</span>: <span class="ident">H</span>, <span class="ident">i</span>: <span class="ident">I</span>, <span class="ident">j</span>: <span class="ident">J</span>);
+<span class="macro">message_args_impl</span><span class="macro">!</span>(<span class="ident">a</span>: <span class="ident">A</span>, <span class="ident">b</span>: <span class="ident">B</span>, <span class="ident">c</span>: <span class="ident">C</span>, <span class="ident">d</span>: <span class="ident">D</span>, <span class="ident">e</span>: <span class="ident">E</span>, <span class="ident">f</span>: <span class="ident">F</span>, <span class="ident">g</span>: <span class="ident">G</span>, <span class="ident">h</span>: <span class="ident">H</span>, <span class="ident">i</span>: <span class="ident">I</span>, <span class="ident">j</span>: <span class="ident">J</span>, <span class="ident">k</span>: <span class="ident">K</span>);
+<span class="macro">message_args_impl</span><span class="macro">!</span>(<span class="ident">a</span>: <span class="ident">A</span>, <span class="ident">b</span>: <span class="ident">B</span>, <span class="ident">c</span>: <span class="ident">C</span>, <span class="ident">d</span>: <span class="ident">D</span>, <span class="ident">e</span>: <span class="ident">E</span>, <span class="ident">f</span>: <span class="ident">F</span>, <span class="ident">g</span>: <span class="ident">G</span>, <span class="ident">h</span>: <span class="ident">H</span>, <span class="ident">i</span>: <span class="ident">I</span>, <span class="ident">j</span>: <span class="ident">J</span>, <span class="ident">k</span>: <span class="ident">K</span>, <span class="ident">l</span>: <span class="ident">L</span>);
 
-<span class='doccomment'>/**
+<span class="doccomment">/**
 An error encountered while attempting to send a message.
 
 Currently, an error may be returned in two cases:
@@ -519,178 +532,178 @@ Currently, an error may be returned in two cases:
 * the encodings of the arguments do not match the encoding of the method
   and the `verify_message` feature is enabled
 */</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>MessageError</span>(<span class='ident'>String</span>);
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MessageError</span>(<span class="ident">String</span>);
 
-<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>MessageError</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='ident'>fmt</span>::<span class='ident'>Display</span>::<span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>f</span>)
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">MessageError</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="ident">fmt</span>::<span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">f</span>)
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Error</span> <span class='kw'>for</span> <span class='ident'>MessageError</span> {
-    <span class='kw'>fn</span> <span class='ident'>description</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>
+<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">MessageError</span> {
+    <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;exception&quot;</span>)]</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>objc_try</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>:<span class='ident'>block</span>) <span class='op'>=&gt;</span> (
-        <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>exception</span>::<span class='ident'>try</span>(<span class='op'>||</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>).<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>exception</span><span class='op'>|</span> <span class='kw'>match</span> <span class='ident'>exception</span> {
-            <span class='prelude-val'>Some</span>(<span class='ident'>exception</span>) <span class='op'>=&gt;</span> <span class='ident'>MessageError</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Uncaught exception {:?}&quot;</span>, <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>exception</span>)),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>MessageError</span>(<span class='string'>&quot;Uncaught exception nil&quot;</span>.<span class='ident'>to_owned</span>()),
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;exception&quot;</span>)]</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">objc_try</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>:<span class="ident">block</span>) <span class="op">=&gt;</span> (
+        <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">exception</span>::<span class="ident">try</span>(<span class="op">||</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">exception</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">exception</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">exception</span>) <span class="op">=&gt;</span> <span class="ident">MessageError</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Uncaught exception {:?}&quot;</span>, <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">exception</span>)),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">MessageError</span>(<span class="string">&quot;Uncaught exception nil&quot;</span>.<span class="ident">to_owned</span>()),
         })
     )
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;exception&quot;</span>))]</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>objc_try</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>:<span class='ident'>block</span>) <span class='op'>=&gt;</span> (<span class='prelude-val'>Ok</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>))
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;exception&quot;</span>))]</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">objc_try</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>:<span class="ident">block</span>) <span class="op">=&gt;</span> (<span class="prelude-val">Ok</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>))
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send_unverified</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>obj</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>T</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>, <span class='ident'>args</span>: <span class='ident'>A</span>)
-        <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>MessageError</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span>, <span class='ident'>A</span>: <span class='ident'>MessageArguments</span>, <span class='ident'>R</span>: <span class='ident'>Any</span> {
-    <span class='kw'>let</span> (<span class='ident'>msg_send_fn</span>, <span class='ident'>receiver</span>) <span class='op'>=</span> <span class='ident'>msg_send_fn</span>::<span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>obj</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>sel</span>);
-    <span class='macro'>objc_try</span><span class='macro'>!</span>({
-        <span class='ident'>A</span>::<span class='ident'>invoke</span>(<span class='ident'>msg_send_fn</span>, <span class='ident'>receiver</span>, <span class='ident'>sel</span>, <span class='ident'>args</span>)
+<span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">send_unverified</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">A</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">T</span>, <span class="ident">sel</span>: <span class="ident">Sel</span>, <span class="ident">args</span>: <span class="ident">A</span>)
+        <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">MessageError</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Message</span>, <span class="ident">A</span>: <span class="ident">MessageArguments</span>, <span class="ident">R</span>: <span class="ident">Any</span> {
+    <span class="kw">let</span> (<span class="ident">msg_send_fn</span>, <span class="ident">receiver</span>) <span class="op">=</span> <span class="ident">msg_send_fn</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">obj</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Object</span>, <span class="ident">sel</span>);
+    <span class="macro">objc_try</span><span class="macro">!</span>({
+        <span class="ident">A</span>::<span class="ident">invoke</span>(<span class="ident">msg_send_fn</span>, <span class="ident">receiver</span>, <span class="ident">sel</span>, <span class="ident">args</span>)
     })
 }
 
-<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-<span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;verify_message&quot;</span>))]</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send_message</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>obj</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>T</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>, <span class='ident'>args</span>: <span class='ident'>A</span>)
-        <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>MessageError</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span>, <span class='ident'>A</span>: <span class='ident'>MessageArguments</span>, <span class='ident'>R</span>: <span class='ident'>Any</span> {
-    <span class='ident'>send_unverified</span>(<span class='ident'>obj</span>, <span class='ident'>sel</span>, <span class='ident'>args</span>)
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+<span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;verify_message&quot;</span>))]</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">send_message</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">A</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">T</span>, <span class="ident">sel</span>: <span class="ident">Sel</span>, <span class="ident">args</span>: <span class="ident">A</span>)
+        <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">MessageError</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Message</span>, <span class="ident">A</span>: <span class="ident">MessageArguments</span>, <span class="ident">R</span>: <span class="ident">Any</span> {
+    <span class="ident">send_unverified</span>(<span class="ident">obj</span>, <span class="ident">sel</span>, <span class="ident">args</span>)
 }
 
-<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-<span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;verify_message&quot;</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send_message</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>obj</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>T</span>, <span class='ident'>sel</span>: <span class='ident'>Sel</span>, <span class='ident'>args</span>: <span class='ident'>A</span>)
-        <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>MessageError</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span>, <span class='ident'>A</span>: <span class='ident'>MessageArguments</span> <span class='op'>+</span> <span class='ident'>EncodeArguments</span>,
-        <span class='ident'>R</span>: <span class='ident'>Any</span> <span class='op'>+</span> <span class='ident'>Encode</span> {
-    <span class='kw'>let</span> <span class='ident'>cls</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>obj</span>.<span class='ident'>is_null</span>() {
-        <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>MessageError</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Messaging {:?} to nil&quot;</span>, <span class='ident'>sel</span>)));
-    } <span class='kw'>else</span> {
-        (<span class='op'>*</span>(<span class='ident'>obj</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Object</span>)).<span class='ident'>class</span>()
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+<span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;verify_message&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">send_message</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">A</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">T</span>, <span class="ident">sel</span>: <span class="ident">Sel</span>, <span class="ident">args</span>: <span class="ident">A</span>)
+        <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">MessageError</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Message</span>, <span class="ident">A</span>: <span class="ident">MessageArguments</span> <span class="op">+</span> <span class="ident">EncodeArguments</span>,
+        <span class="ident">R</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Encode</span> {
+    <span class="kw">let</span> <span class="ident">cls</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">obj</span>.<span class="ident">is_null</span>() {
+        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">MessageError</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Messaging {:?} to nil&quot;</span>, <span class="ident">sel</span>)));
+    } <span class="kw">else</span> {
+        (<span class="kw-2">*</span>(<span class="ident">obj</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">Object</span>)).<span class="ident">class</span>()
     };
 
-    <span class='ident'>verify_message_signature</span>::<span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>cls</span>, <span class='ident'>sel</span>).<span class='ident'>and_then</span>(<span class='op'>|</span>_<span class='op'>|</span> {
-        <span class='ident'>send_unverified</span>(<span class='ident'>obj</span>, <span class='ident'>sel</span>, <span class='ident'>args</span>)
+    <span class="ident">verify_message_signature</span>::<span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">cls</span>, <span class="ident">sel</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
+        <span class="ident">send_unverified</span>(<span class="ident">obj</span>, <span class="ident">sel</span>, <span class="ident">args</span>)
     })
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send_super_unverified</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>obj</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>T</span>, <span class='ident'>superclass</span>: <span class='kw-2'>&amp;</span><span class='ident'>Class</span>,
-        <span class='ident'>sel</span>: <span class='ident'>Sel</span>, <span class='ident'>args</span>: <span class='ident'>A</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>MessageError</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span>, <span class='ident'>A</span>: <span class='ident'>MessageArguments</span>, <span class='ident'>R</span>: <span class='ident'>Any</span> {
-    <span class='kw'>let</span> <span class='ident'>sup</span> <span class='op'>=</span> <span class='ident'>Super</span> { <span class='ident'>receiver</span>: <span class='ident'>obj</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span>, <span class='ident'>superclass</span>: <span class='ident'>superclass</span> };
-    <span class='kw'>let</span> (<span class='ident'>msg_send_fn</span>, <span class='ident'>receiver</span>) <span class='op'>=</span> <span class='ident'>msg_send_super_fn</span>::<span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>sup</span>, <span class='ident'>sel</span>);
-    <span class='macro'>objc_try</span><span class='macro'>!</span>({
-        <span class='ident'>A</span>::<span class='ident'>invoke</span>(<span class='ident'>msg_send_fn</span>, <span class='ident'>receiver</span>, <span class='ident'>sel</span>, <span class='ident'>args</span>)
+<span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">send_super_unverified</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">A</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">T</span>, <span class="ident">superclass</span>: <span class="kw-2">&amp;</span><span class="ident">Class</span>,
+        <span class="ident">sel</span>: <span class="ident">Sel</span>, <span class="ident">args</span>: <span class="ident">A</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">MessageError</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Message</span>, <span class="ident">A</span>: <span class="ident">MessageArguments</span>, <span class="ident">R</span>: <span class="ident">Any</span> {
+    <span class="kw">let</span> <span class="ident">sup</span> <span class="op">=</span> <span class="ident">Super</span> { <span class="ident">receiver</span>: <span class="ident">obj</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Object</span>, <span class="ident">superclass</span>: <span class="ident">superclass</span> };
+    <span class="kw">let</span> (<span class="ident">msg_send_fn</span>, <span class="ident">receiver</span>) <span class="op">=</span> <span class="ident">msg_send_super_fn</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">sup</span>, <span class="ident">sel</span>);
+    <span class="macro">objc_try</span><span class="macro">!</span>({
+        <span class="ident">A</span>::<span class="ident">invoke</span>(<span class="ident">msg_send_fn</span>, <span class="ident">receiver</span>, <span class="ident">sel</span>, <span class="ident">args</span>)
     })
 }
 
-<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-<span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;verify_message&quot;</span>))]</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send_super_message</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>obj</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>T</span>, <span class='ident'>superclass</span>: <span class='kw-2'>&amp;</span><span class='ident'>Class</span>,
-        <span class='ident'>sel</span>: <span class='ident'>Sel</span>, <span class='ident'>args</span>: <span class='ident'>A</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>MessageError</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span>, <span class='ident'>A</span>: <span class='ident'>MessageArguments</span>, <span class='ident'>R</span>: <span class='ident'>Any</span> {
-    <span class='ident'>send_super_unverified</span>(<span class='ident'>obj</span>, <span class='ident'>superclass</span>, <span class='ident'>sel</span>, <span class='ident'>args</span>)
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+<span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;verify_message&quot;</span>))]</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">send_super_message</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">A</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">T</span>, <span class="ident">superclass</span>: <span class="kw-2">&amp;</span><span class="ident">Class</span>,
+        <span class="ident">sel</span>: <span class="ident">Sel</span>, <span class="ident">args</span>: <span class="ident">A</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">MessageError</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Message</span>, <span class="ident">A</span>: <span class="ident">MessageArguments</span>, <span class="ident">R</span>: <span class="ident">Any</span> {
+    <span class="ident">send_super_unverified</span>(<span class="ident">obj</span>, <span class="ident">superclass</span>, <span class="ident">sel</span>, <span class="ident">args</span>)
 }
 
-<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-<span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;verify_message&quot;</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>send_super_message</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>obj</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>T</span>, <span class='ident'>superclass</span>: <span class='kw-2'>&amp;</span><span class='ident'>Class</span>,
-        <span class='ident'>sel</span>: <span class='ident'>Sel</span>, <span class='ident'>args</span>: <span class='ident'>A</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>MessageError</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Message</span>, <span class='ident'>A</span>: <span class='ident'>MessageArguments</span> <span class='op'>+</span> <span class='ident'>EncodeArguments</span>,
-        <span class='ident'>R</span>: <span class='ident'>Any</span> <span class='op'>+</span> <span class='ident'>Encode</span> {
-    <span class='kw'>if</span> <span class='ident'>obj</span>.<span class='ident'>is_null</span>() {
-        <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>MessageError</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Messaging {:?} to nil&quot;</span>, <span class='ident'>sel</span>)));
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+<span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;verify_message&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">send_super_message</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">A</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">T</span>, <span class="ident">superclass</span>: <span class="kw-2">&amp;</span><span class="ident">Class</span>,
+        <span class="ident">sel</span>: <span class="ident">Sel</span>, <span class="ident">args</span>: <span class="ident">A</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">MessageError</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Message</span>, <span class="ident">A</span>: <span class="ident">MessageArguments</span> <span class="op">+</span> <span class="ident">EncodeArguments</span>,
+        <span class="ident">R</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Encode</span> {
+    <span class="kw">if</span> <span class="ident">obj</span>.<span class="ident">is_null</span>() {
+        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">MessageError</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Messaging {:?} to nil&quot;</span>, <span class="ident">sel</span>)));
     }
 
-    <span class='ident'>verify_message_signature</span>::<span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>superclass</span>, <span class='ident'>sel</span>).<span class='ident'>and_then</span>(<span class='op'>|</span>_<span class='op'>|</span> {
-        <span class='ident'>send_super_unverified</span>(<span class='ident'>obj</span>, <span class='ident'>superclass</span>, <span class='ident'>sel</span>, <span class='ident'>args</span>)
+    <span class="ident">verify_message_signature</span>::<span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">superclass</span>, <span class="ident">sel</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
+        <span class="ident">send_super_unverified</span>(<span class="ident">obj</span>, <span class="ident">superclass</span>, <span class="ident">sel</span>, <span class="ident">args</span>)
     })
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='ident'>test_utils</span>;
-    <span class='kw'>use</span> <span class='ident'>runtime</span>::<span class='ident'>Object</span>;
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>Message</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">use</span> <span class="ident">test_utils</span>;
+    <span class="kw">use</span> <span class="ident">runtime</span>::<span class="ident">Object</span>;
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Message</span>;
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_send_message</span>() {
-        <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>custom_object</span>();
-        <span class='kw'>let</span> <span class='ident'>result</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> _: () <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>setFoo</span>:<span class='number'>4u32</span>];
-            <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>foo</span>]
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_send_message</span>() {
+        <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">test_utils</span>::<span class="ident">custom_object</span>();
+        <span class="kw">let</span> <span class="ident">result</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw">_</span>: () <span class="op">=</span> <span class="macro">msg_send</span><span class="macro">!</span>[<span class="ident">obj</span>, <span class="ident">setFoo</span>:<span class="number">4u32</span>];
+            <span class="macro">msg_send</span><span class="macro">!</span>[<span class="ident">obj</span>, <span class="ident">foo</span>]
         };
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>result</span> <span class='op'>==</span> <span class='number'>4</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span> <span class="op">==</span> <span class="number">4</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_send_message_stret</span>() {
-        <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>custom_object</span>();
-        <span class='kw'>let</span> <span class='ident'>result</span>: <span class='ident'>test_utils</span>::<span class='ident'>CustomStruct</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>customStruct</span>]
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_send_message_stret</span>() {
+        <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">test_utils</span>::<span class="ident">custom_object</span>();
+        <span class="kw">let</span> <span class="ident">result</span>: <span class="ident">test_utils</span>::<span class="ident">CustomStruct</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="macro">msg_send</span><span class="macro">!</span>[<span class="ident">obj</span>, <span class="ident">customStruct</span>]
         };
-        <span class='kw'>let</span> <span class='ident'>expected</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>CustomStruct</span> { <span class='ident'>a</span>: <span class='number'>1</span>, <span class='ident'>b</span>:<span class='number'>2</span>, <span class='ident'>c</span>: <span class='number'>3</span>, <span class='ident'>d</span>: <span class='number'>4</span> };
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>result</span> <span class='op'>==</span> <span class='ident'>expected</span>);
+        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">test_utils</span>::<span class="ident">CustomStruct</span> { <span class="ident">a</span>: <span class="number">1</span>, <span class="ident">b</span>:<span class="number">2</span>, <span class="ident">c</span>: <span class="number">3</span>, <span class="ident">d</span>: <span class="number">4</span> };
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span> <span class="op">==</span> <span class="ident">expected</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;verify_message&quot;</span>))]</span>
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_send_message_nil</span>() {
-        <span class='kw'>let</span> <span class='ident'>nil</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> <span class='op'>=</span> ::<span class='ident'>std</span>::<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>();
-        <span class='kw'>let</span> <span class='ident'>result</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>nil</span>, <span class='ident'>hash</span>]
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;verify_message&quot;</span>))]</span>
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_send_message_nil</span>() {
+        <span class="kw">let</span> <span class="ident">nil</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Object</span> <span class="op">=</span> ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>();
+        <span class="kw">let</span> <span class="ident">result</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="macro">msg_send</span><span class="macro">!</span>[<span class="ident">nil</span>, <span class="ident">hash</span>]
         };
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>result</span> <span class='op'>==</span> <span class='number'>0</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span> <span class="op">==</span> <span class="number">0</span>);
 
-        <span class='kw'>let</span> <span class='ident'>result</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Object</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>nil</span>, <span class='ident'>description</span>]
+        <span class="kw">let</span> <span class="ident">result</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Object</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="macro">msg_send</span><span class="macro">!</span>[<span class="ident">nil</span>, <span class="ident">description</span>]
         };
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>result</span>.<span class='ident'>is_null</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span>.<span class="ident">is_null</span>());
 
-        <span class='kw'>let</span> <span class='ident'>result</span>: <span class='ident'>f64</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>nil</span>, <span class='ident'>doubleValue</span>]
+        <span class="kw">let</span> <span class="ident">result</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="macro">msg_send</span><span class="macro">!</span>[<span class="ident">nil</span>, <span class="ident">doubleValue</span>]
         };
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>result</span> <span class='op'>==</span> <span class='number'>0.0</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span> <span class="op">==</span> <span class="number">0.0</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_send_message_super</span>() {
-        <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>custom_subclass_object</span>();
-        <span class='kw'>let</span> <span class='ident'>superclass</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>custom_class</span>();
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> _: () <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>setFoo</span>:<span class='number'>4u32</span>];
-            <span class='kw'>let</span> <span class='ident'>foo</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='kw'>super</span>(<span class='ident'>obj</span>, <span class='ident'>superclass</span>), <span class='ident'>foo</span>];
-            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>foo</span> <span class='op'>==</span> <span class='number'>4</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_send_message_super</span>() {
+        <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">test_utils</span>::<span class="ident">custom_subclass_object</span>();
+        <span class="kw">let</span> <span class="ident">superclass</span> <span class="op">=</span> <span class="ident">test_utils</span>::<span class="ident">custom_class</span>();
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw">_</span>: () <span class="op">=</span> <span class="macro">msg_send</span><span class="macro">!</span>[<span class="ident">obj</span>, <span class="ident">setFoo</span>:<span class="number">4u32</span>];
+            <span class="kw">let</span> <span class="ident">foo</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="macro">msg_send</span><span class="macro">!</span>[<span class="kw">super</span>(<span class="ident">obj</span>, <span class="ident">superclass</span>), <span class="ident">foo</span>];
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">foo</span> <span class="op">==</span> <span class="number">4</span>);
 
-            <span class='comment'>// The subclass is overriden to return foo + 2</span>
-            <span class='kw'>let</span> <span class='ident'>foo</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='macro'>msg_send</span><span class='macro'>!</span>[<span class='ident'>obj</span>, <span class='ident'>foo</span>];
-            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>foo</span> <span class='op'>==</span> <span class='number'>6</span>);
+            <span class="comment">// The subclass is overriden to return foo + 2</span>
+            <span class="kw">let</span> <span class="ident">foo</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="macro">msg_send</span><span class="macro">!</span>[<span class="ident">obj</span>, <span class="ident">foo</span>];
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">foo</span> <span class="op">==</span> <span class="number">6</span>);
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_verify_message</span>() {
-        <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>custom_object</span>();
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>obj</span>.<span class='ident'>verify_message</span>::<span class='op'>&lt;</span>(), <span class='ident'>u32</span><span class='op'>&gt;</span>(<span class='macro'>sel</span><span class='macro'>!</span>(<span class='ident'>foo</span>)).<span class='ident'>is_ok</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>obj</span>.<span class='ident'>verify_message</span>::<span class='op'>&lt;</span>(<span class='ident'>u32</span>,), ()<span class='op'>&gt;</span>(<span class='macro'>sel</span><span class='macro'>!</span>(<span class='ident'>setFoo</span>:)).<span class='ident'>is_ok</span>());
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_verify_message</span>() {
+        <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">test_utils</span>::<span class="ident">custom_object</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">obj</span>.<span class="ident">verify_message</span>::<span class="op">&lt;</span>(), <span class="ident">u32</span><span class="op">&gt;</span>(<span class="macro">sel</span><span class="macro">!</span>(<span class="ident">foo</span>)).<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">obj</span>.<span class="ident">verify_message</span>::<span class="op">&lt;</span>(<span class="ident">u32</span>,), ()<span class="op">&gt;</span>(<span class="macro">sel</span><span class="macro">!</span>(<span class="ident">setFoo</span>:)).<span class="ident">is_ok</span>());
 
-        <span class='comment'>// Incorrect types</span>
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>obj</span>.<span class='ident'>verify_message</span>::<span class='op'>&lt;</span>(), <span class='ident'>u64</span><span class='op'>&gt;</span>(<span class='macro'>sel</span><span class='macro'>!</span>(<span class='ident'>setFoo</span>:)).<span class='ident'>is_err</span>());
-        <span class='comment'>// Unimplemented selector</span>
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>obj</span>.<span class='ident'>verify_message</span>::<span class='op'>&lt;</span>(<span class='ident'>u32</span>,), ()<span class='op'>&gt;</span>(<span class='macro'>sel</span><span class='macro'>!</span>(<span class='ident'>setFoo</span>)).<span class='ident'>is_err</span>());
+        <span class="comment">// Incorrect types</span>
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">obj</span>.<span class="ident">verify_message</span>::<span class="op">&lt;</span>(), <span class="ident">u64</span><span class="op">&gt;</span>(<span class="macro">sel</span><span class="macro">!</span>(<span class="ident">setFoo</span>:)).<span class="ident">is_err</span>());
+        <span class="comment">// Unimplemented selector</span>
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">obj</span>.<span class="ident">verify_message</span>::<span class="op">&lt;</span>(<span class="ident">u32</span>,), ()<span class="op">&gt;</span>(<span class="macro">sel</span><span class="macro">!</span>(<span class="ident">setFoo</span>)).<span class="ident">is_err</span>());
     }
 }
 </pre>
@@ -707,18 +720,22 @@ Currently, an error may be returned in two cases:
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -751,7 +768,6 @@ Currently, an error may be returned in two cases:
         window.rootPath = "../../../";
         window.currentCrate = "objc";
     </script>
-    <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
     <script defer src="../../../search-index.js"></script>
 </body>

@@ -9,14 +9,19 @@
 
     <title>objc_foundation - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc mod">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'></p><script>window.sidebarCurrent = {name: 'objc_foundation', ty: 'mod', relpath: '../'};</script>
+        <p class='location'>Crate objc_foundation</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#macros">Macros</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'objc_foundation', ty: 'mod', relpath: '../'};</script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,196 +55,194 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>objc_foundation</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>objc_foundation</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/objc_foundation/lib.rs.html#1-33' title='goto source code'>[src]</a></span></h1>
-<h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
+               </span><a class='srclink' href='../src/objc_foundation/lib.rs.html#1-33' title='goto source code'>[src]</a></span></h1><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='macro' href='macro.object_struct.html'
-                                  title='objc_foundation::object_struct'>object_struct</a></td>
+                           <td><a class="macro" href="macro.object_struct.html"
+                                  title='macro objc_foundation::object_struct'>object_struct</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.NSArray.html'
-                                  title='objc_foundation::NSArray'>NSArray</a></td>
+                           <td><a class="struct" href="struct.NSArray.html"
+                                  title='struct objc_foundation::NSArray'>NSArray</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.NSData.html'
-                                  title='objc_foundation::NSData'>NSData</a></td>
+                           <td><a class="struct" href="struct.NSData.html"
+                                  title='struct objc_foundation::NSData'>NSData</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.NSDictionary.html'
-                                  title='objc_foundation::NSDictionary'>NSDictionary</a></td>
+                           <td><a class="struct" href="struct.NSDictionary.html"
+                                  title='struct objc_foundation::NSDictionary'>NSDictionary</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.NSEnumerator.html'
-                                  title='objc_foundation::NSEnumerator'>NSEnumerator</a></td>
+                           <td><a class="struct" href="struct.NSEnumerator.html"
+                                  title='struct objc_foundation::NSEnumerator'>NSEnumerator</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.NSFastEnumerator.html'
-                                  title='objc_foundation::NSFastEnumerator'>NSFastEnumerator</a></td>
+                           <td><a class="struct" href="struct.NSFastEnumerator.html"
+                                  title='struct objc_foundation::NSFastEnumerator'>NSFastEnumerator</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.NSMutableArray.html'
-                                  title='objc_foundation::NSMutableArray'>NSMutableArray</a></td>
+                           <td><a class="struct" href="struct.NSMutableArray.html"
+                                  title='struct objc_foundation::NSMutableArray'>NSMutableArray</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.NSMutableData.html'
-                                  title='objc_foundation::NSMutableData'>NSMutableData</a></td>
+                           <td><a class="struct" href="struct.NSMutableData.html"
+                                  title='struct objc_foundation::NSMutableData'>NSMutableData</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.NSObject.html'
-                                  title='objc_foundation::NSObject'>NSObject</a></td>
+                           <td><a class="struct" href="struct.NSObject.html"
+                                  title='struct objc_foundation::NSObject'>NSObject</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.NSRange.html'
-                                  title='objc_foundation::NSRange'>NSRange</a></td>
+                           <td><a class="struct" href="struct.NSRange.html"
+                                  title='struct objc_foundation::NSRange'>NSRange</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.NSString.html'
-                                  title='objc_foundation::NSString'>NSString</a></td>
+                           <td><a class="struct" href="struct.NSString.html"
+                                  title='struct objc_foundation::NSString'>NSString</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.NSValue.html'
-                                  title='objc_foundation::NSValue'>NSValue</a></td>
+                           <td><a class="struct" href="struct.NSValue.html"
+                                  title='struct objc_foundation::NSValue'>NSValue</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.NSComparisonResult.html'
-                                  title='objc_foundation::NSComparisonResult'>NSComparisonResult</a></td>
+                           <td><a class="enum" href="enum.NSComparisonResult.html"
+                                  title='enum objc_foundation::NSComparisonResult'>NSComparisonResult</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.INSArray.html'
-                                  title='objc_foundation::INSArray'>INSArray</a></td>
+                           <td><a class="trait" href="trait.INSArray.html"
+                                  title='trait objc_foundation::INSArray'>INSArray</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.INSCopying.html'
-                                  title='objc_foundation::INSCopying'>INSCopying</a></td>
+                           <td><a class="trait" href="trait.INSCopying.html"
+                                  title='trait objc_foundation::INSCopying'>INSCopying</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.INSData.html'
-                                  title='objc_foundation::INSData'>INSData</a></td>
+                           <td><a class="trait" href="trait.INSData.html"
+                                  title='trait objc_foundation::INSData'>INSData</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.INSDictionary.html'
-                                  title='objc_foundation::INSDictionary'>INSDictionary</a></td>
+                           <td><a class="trait" href="trait.INSDictionary.html"
+                                  title='trait objc_foundation::INSDictionary'>INSDictionary</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.INSFastEnumeration.html'
-                                  title='objc_foundation::INSFastEnumeration'>INSFastEnumeration</a></td>
+                           <td><a class="trait" href="trait.INSFastEnumeration.html"
+                                  title='trait objc_foundation::INSFastEnumeration'>INSFastEnumeration</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.INSMutableArray.html'
-                                  title='objc_foundation::INSMutableArray'>INSMutableArray</a></td>
+                           <td><a class="trait" href="trait.INSMutableArray.html"
+                                  title='trait objc_foundation::INSMutableArray'>INSMutableArray</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.INSMutableCopying.html'
-                                  title='objc_foundation::INSMutableCopying'>INSMutableCopying</a></td>
+                           <td><a class="trait" href="trait.INSMutableCopying.html"
+                                  title='trait objc_foundation::INSMutableCopying'>INSMutableCopying</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.INSMutableData.html'
-                                  title='objc_foundation::INSMutableData'>INSMutableData</a></td>
+                           <td><a class="trait" href="trait.INSMutableData.html"
+                                  title='trait objc_foundation::INSMutableData'>INSMutableData</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.INSObject.html'
-                                  title='objc_foundation::INSObject'>INSObject</a></td>
+                           <td><a class="trait" href="trait.INSObject.html"
+                                  title='trait objc_foundation::INSObject'>INSObject</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.INSString.html'
-                                  title='objc_foundation::INSString'>INSString</a></td>
+                           <td><a class="trait" href="trait.INSString.html"
+                                  title='trait objc_foundation::INSString'>INSString</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.INSValue.html'
-                                  title='objc_foundation::INSValue'>INSValue</a></td>
+                           <td><a class="trait" href="trait.INSValue.html"
+                                  title='trait objc_foundation::INSValue'>INSValue</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='type' href='type.NSMutableSharedArray.html'
-                                  title='objc_foundation::NSMutableSharedArray'>NSMutableSharedArray</a></td>
+                           <td><a class="type" href="type.NSMutableSharedArray.html"
+                                  title='type objc_foundation::NSMutableSharedArray'>NSMutableSharedArray</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='type' href='type.NSSharedArray.html'
-                                  title='objc_foundation::NSSharedArray'>NSSharedArray</a></td>
+                           <td><a class="type" href="type.NSSharedArray.html"
+                                  title='type objc_foundation::NSSharedArray'>NSSharedArray</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
@@ -248,18 +259,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -292,7 +307,6 @@
         window.rootPath = "../";
         window.currentCrate = "objc_foundation";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

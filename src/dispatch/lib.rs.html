@@ -9,14 +9,19 @@
 
     <title>lib.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +55,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -855,8 +868,8 @@
 <span id="811">811</span>
 <span id="812">812</span>
 <span id="813">813</span>
-</pre><pre class='rust '>
-<span class='doccomment'>/*!
+</pre><pre class="rust ">
+<span class="doccomment">/*!
 Rust wrapper for Apple&#39;s Grand Central Dispatch (GCD).
 
 GCD is an implementation of task parallelism that allows tasks to be submitted
@@ -900,773 +913,773 @@ assert!(nums[0] == &quot;2&quot;);
 ```
 */</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>warn</span>(<span class='ident'>missing_docs</span>)]</span>
+<span class="attribute">#![<span class="ident">warn</span>(<span class="ident">missing_docs</span>)]</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>UnsafeCell</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::{<span class='ident'>CStr</span>, <span class='ident'>CString</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>raw</span>::{<span class='ident'>c_long</span>, <span class='ident'>c_void</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cell</span>::<span class="ident">UnsafeCell</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::{<span class="ident">CStr</span>, <span class="ident">CString</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::{<span class="ident">c_long</span>, <span class="ident">c_void</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>;
 
-<span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='op'>*</span>;
+<span class="kw">use</span> <span class="ident">ffi</span>::<span class="kw-2">*</span>;
 
-<span class='doccomment'>/// Raw foreign function interface for libdispatch.</span>
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>ffi</span>;
+<span class="doccomment">/// Raw foreign function interface for libdispatch.</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ffi</span>;
 
-<span class='doccomment'>/// The type of a dispatch queue.</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>QueueAttribute</span> {
-    <span class='doccomment'>/// The queue executes blocks serially in FIFO order.</span>
-    <span class='ident'>Serial</span>,
-    <span class='doccomment'>/// The queue executes blocks concurrently.</span>
-    <span class='ident'>Concurrent</span>,
+<span class="doccomment">/// The type of a dispatch queue.</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">QueueAttribute</span> {
+    <span class="doccomment">/// The queue executes blocks serially in FIFO order.</span>
+    <span class="ident">Serial</span>,
+    <span class="doccomment">/// The queue executes blocks concurrently.</span>
+    <span class="ident">Concurrent</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>QueueAttribute</span> {
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>all</span>(<span class='ident'>test</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>)))]</span>
-    <span class='kw'>fn</span> <span class='ident'>as_raw</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>dispatch_queue_attr_t</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>QueueAttribute</span>::<span class='ident'>Serial</span> <span class='op'>=&gt;</span> <span class='ident'>DISPATCH_QUEUE_SERIAL</span>,
-            <span class='ident'>QueueAttribute</span>::<span class='ident'>Concurrent</span> <span class='op'>=&gt;</span> <span class='ident'>DISPATCH_QUEUE_CONCURRENT</span>,
+<span class="kw">impl</span> <span class="ident">QueueAttribute</span> {
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">all</span>(<span class="ident">test</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)))]</span>
+    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">dispatch_queue_attr_t</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">QueueAttribute</span>::<span class="ident">Serial</span> <span class="op">=&gt;</span> <span class="ident">DISPATCH_QUEUE_SERIAL</span>,
+            <span class="ident">QueueAttribute</span>::<span class="ident">Concurrent</span> <span class="op">=&gt;</span> <span class="ident">DISPATCH_QUEUE_CONCURRENT</span>,
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>test</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>))]</span>
-    <span class='kw'>fn</span> <span class='ident'>as_raw</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>dispatch_queue_attr_t</span> {
-        <span class='comment'>// The Linux tests use Ubuntu&#39;s libdispatch-dev package, which is</span>
-        <span class='comment'>// apparently really old from before OSX 10.7.</span>
-        <span class='comment'>// Back then, the attr for dispatch_queue_create must be NULL.</span>
-        <span class='ident'>ptr</span>::<span class='ident'>null</span>()
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">test</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>))]</span>
+    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">dispatch_queue_attr_t</span> {
+        <span class="comment">// The Linux tests use Ubuntu&#39;s libdispatch-dev package, which is</span>
+        <span class="comment">// apparently really old from before OSX 10.7.</span>
+        <span class="comment">// Back then, the attr for dispatch_queue_create must be NULL.</span>
+        <span class="ident">ptr</span>::<span class="ident">null</span>()
     }
 }
 
-<span class='doccomment'>/// The priority of a global concurrent queue.</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>QueuePriority</span> {
-    <span class='doccomment'>/// The queue is scheduled for execution before any default priority or low</span>
-    <span class='doccomment'>/// priority queue.</span>
-    <span class='ident'>High</span>,
-    <span class='doccomment'>/// The queue is scheduled for execution after all high priority queues,</span>
-    <span class='doccomment'>/// but before any low priority queues.</span>
-    <span class='ident'>Default</span>,
-    <span class='doccomment'>/// The queue is scheduled for execution after all default priority and</span>
-    <span class='doccomment'>/// high priority queues.</span>
-    <span class='ident'>Low</span>,
-    <span class='doccomment'>/// The queue is scheduled for execution after all high priority queues</span>
-    <span class='doccomment'>/// have been scheduled. The system runs items on a thread whose</span>
-    <span class='doccomment'>/// priority is set for background status and any disk I/O is throttled to</span>
-    <span class='doccomment'>/// minimize the impact on the system.</span>
-    <span class='ident'>Background</span>,
+<span class="doccomment">/// The priority of a global concurrent queue.</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">QueuePriority</span> {
+    <span class="doccomment">/// The queue is scheduled for execution before any default priority or low</span>
+    <span class="doccomment">/// priority queue.</span>
+    <span class="ident">High</span>,
+    <span class="doccomment">/// The queue is scheduled for execution after all high priority queues,</span>
+    <span class="doccomment">/// but before any low priority queues.</span>
+    <span class="ident">Default</span>,
+    <span class="doccomment">/// The queue is scheduled for execution after all default priority and</span>
+    <span class="doccomment">/// high priority queues.</span>
+    <span class="ident">Low</span>,
+    <span class="doccomment">/// The queue is scheduled for execution after all high priority queues</span>
+    <span class="doccomment">/// have been scheduled. The system runs items on a thread whose</span>
+    <span class="doccomment">/// priority is set for background status and any disk I/O is throttled to</span>
+    <span class="doccomment">/// minimize the impact on the system.</span>
+    <span class="ident">Background</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>QueuePriority</span> {
-    <span class='kw'>fn</span> <span class='ident'>as_raw</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>c_long</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>QueuePriority</span>::<span class='ident'>High</span>       <span class='op'>=&gt;</span> <span class='ident'>DISPATCH_QUEUE_PRIORITY_HIGH</span>,
-            <span class='ident'>QueuePriority</span>::<span class='ident'>Default</span>    <span class='op'>=&gt;</span> <span class='ident'>DISPATCH_QUEUE_PRIORITY_DEFAULT</span>,
-            <span class='ident'>QueuePriority</span>::<span class='ident'>Low</span>        <span class='op'>=&gt;</span> <span class='ident'>DISPATCH_QUEUE_PRIORITY_LOW</span>,
-            <span class='ident'>QueuePriority</span>::<span class='ident'>Background</span> <span class='op'>=&gt;</span> <span class='ident'>DISPATCH_QUEUE_PRIORITY_BACKGROUND</span>,
+<span class="kw">impl</span> <span class="ident">QueuePriority</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">c_long</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">QueuePriority</span>::<span class="ident">High</span>       <span class="op">=&gt;</span> <span class="ident">DISPATCH_QUEUE_PRIORITY_HIGH</span>,
+            <span class="ident">QueuePriority</span>::<span class="ident">Default</span>    <span class="op">=&gt;</span> <span class="ident">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>,
+            <span class="ident">QueuePriority</span>::<span class="ident">Low</span>        <span class="op">=&gt;</span> <span class="ident">DISPATCH_QUEUE_PRIORITY_LOW</span>,
+            <span class="ident">QueuePriority</span>::<span class="ident">Background</span> <span class="op">=&gt;</span> <span class="ident">DISPATCH_QUEUE_PRIORITY_BACKGROUND</span>,
         }
     }
 }
 
-<span class='doccomment'>/// A Grand Central Dispatch queue.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// For more information, see Apple&#39;s [Grand Central Dispatch reference](</span>
-<span class='doccomment'>/// https://developer.apple.com/library/mac/documentation/Performance/Reference/GCD_libdispatch_Ref/index.html).</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Queue</span> {
-    <span class='ident'>ptr</span>: <span class='ident'>dispatch_queue_t</span>,
+<span class="doccomment">/// A Grand Central Dispatch queue.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// For more information, see Apple&#39;s [Grand Central Dispatch reference](</span>
+<span class="doccomment">/// https://developer.apple.com/library/mac/documentation/Performance/Reference/GCD_libdispatch_Ref/index.html).</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Queue</span> {
+    <span class="ident">ptr</span>: <span class="ident">dispatch_queue_t</span>,
 }
 
-<span class='kw'>fn</span> <span class='ident'>time_after_delay</span>(<span class='ident'>delay</span>: <span class='ident'>Duration</span>) <span class='op'>-&gt;</span> <span class='ident'>dispatch_time_t</span> {
-    <span class='ident'>delay</span>.<span class='ident'>as_secs</span>().<span class='ident'>checked_mul</span>(<span class='number'>1_000_000_000</span>).<span class='ident'>and_then</span>(<span class='op'>|</span><span class='ident'>i</span><span class='op'>|</span> {
-        <span class='ident'>i</span>.<span class='ident'>checked_add</span>(<span class='ident'>delay</span>.<span class='ident'>subsec_nanos</span>() <span class='kw'>as</span> <span class='ident'>u64</span>)
-    }).<span class='ident'>and_then</span>(<span class='op'>|</span><span class='ident'>i</span><span class='op'>|</span> {
-        <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>&lt;</span> (<span class='ident'>i64</span>::<span class='ident'>max_value</span>() <span class='kw'>as</span> <span class='ident'>u64</span>) { <span class='prelude-val'>Some</span>(<span class='ident'>i</span> <span class='kw'>as</span> <span class='ident'>i64</span>) } <span class='kw'>else</span> { <span class='prelude-val'>None</span> }
-    }).<span class='ident'>map_or</span>(<span class='ident'>DISPATCH_TIME_FOREVER</span>, <span class='op'>|</span><span class='ident'>i</span><span class='op'>|</span> <span class='kw'>unsafe</span> {
-        <span class='ident'>dispatch_time</span>(<span class='ident'>DISPATCH_TIME_NOW</span>, <span class='ident'>i</span>)
+<span class="kw">fn</span> <span class="ident">time_after_delay</span>(<span class="ident">delay</span>: <span class="ident">Duration</span>) <span class="op">-&gt;</span> <span class="ident">dispatch_time_t</span> {
+    <span class="ident">delay</span>.<span class="ident">as_secs</span>().<span class="ident">checked_mul</span>(<span class="number">1_000_000_000</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> {
+        <span class="ident">i</span>.<span class="ident">checked_add</span>(<span class="ident">delay</span>.<span class="ident">subsec_nanos</span>() <span class="kw">as</span> <span class="ident">u64</span>)
+    }).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> {
+        <span class="kw">if</span> <span class="ident">i</span> <span class="op">&lt;</span> (<span class="ident">i64</span>::<span class="ident">max_value</span>() <span class="kw">as</span> <span class="ident">u64</span>) { <span class="prelude-val">Some</span>(<span class="ident">i</span> <span class="kw">as</span> <span class="ident">i64</span>) } <span class="kw">else</span> { <span class="prelude-val">None</span> }
+    }).<span class="ident">map_or</span>(<span class="ident">DISPATCH_TIME_FOREVER</span>, <span class="op">|</span><span class="ident">i</span><span class="op">|</span> <span class="kw">unsafe</span> {
+        <span class="ident">dispatch_time</span>(<span class="ident">DISPATCH_TIME_NOW</span>, <span class="ident">i</span>)
     })
 }
 
-<span class='kw'>fn</span> <span class='ident'>context_and_function</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>closure</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> (<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>dispatch_function_t</span>)
-        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>() {
-    <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>work_execute_closure</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>context</span>: <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>) <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>() {
-        (<span class='op'>*</span><span class='ident'>context</span>)();
+<span class="kw">fn</span> <span class="ident">context_and_function</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">closure</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> (<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">dispatch_function_t</span>)
+        <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>() {
+    <span class="kw">extern</span> <span class="kw">fn</span> <span class="ident">work_execute_closure</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">context</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>) <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>() {
+        (<span class="kw-2">*</span><span class="ident">context</span>)();
     }
 
-    <span class='kw'>let</span> <span class='ident'>closure</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>closure</span>);
-    <span class='kw'>let</span> <span class='ident'>func</span>: <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>) <span class='op'>=</span> <span class='ident'>work_execute_closure</span>::<span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>;
-    <span class='kw'>unsafe</span> {
-        (<span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>closure</span>), <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>func</span>))
-    }
-}
-
-<span class='kw'>fn</span> <span class='ident'>context_and_sync_function</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>closure</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span>
-        (<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>dispatch_function_t</span>)
-        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>() {
-    <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>work_read_closure</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>) <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>() {
-        <span class='comment'>// This is always passed Some, so it&#39;s safe to unwrap</span>
-        <span class='kw'>let</span> <span class='ident'>closure</span> <span class='op'>=</span> <span class='ident'>context</span>.<span class='ident'>take</span>().<span class='ident'>unwrap</span>();
-        <span class='ident'>closure</span>();
-    }
-
-    <span class='kw'>let</span> <span class='ident'>context</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>closure</span>;
-    <span class='kw'>let</span> <span class='ident'>func</span>: <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>) <span class='op'>=</span> <span class='ident'>work_read_closure</span>::<span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>;
-    <span class='kw'>unsafe</span> {
-        (<span class='ident'>context</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>func</span>))
+    <span class="kw">let</span> <span class="ident">closure</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">closure</span>);
+    <span class="kw">let</span> <span class="ident">func</span>: <span class="kw">extern</span> <span class="kw">fn</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>) <span class="op">=</span> <span class="ident">work_execute_closure</span>::<span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>;
+    <span class="kw">unsafe</span> {
+        (<span class="ident">mem</span>::<span class="ident">transmute</span>(<span class="ident">closure</span>), <span class="ident">mem</span>::<span class="ident">transmute</span>(<span class="ident">func</span>))
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>context_and_apply_function</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>closure</span>: <span class='kw-2'>&amp;</span><span class='ident'>F</span>) <span class='op'>-&gt;</span>
-        (<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>usize</span>))
-        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Fn</span>(<span class='ident'>usize</span>) {
-    <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>work_apply_closure</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>F</span>, <span class='ident'>iter</span>: <span class='ident'>usize</span>)
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Fn</span>(<span class='ident'>usize</span>) {
-        <span class='ident'>context</span>(<span class='ident'>iter</span>);
+<span class="kw">fn</span> <span class="ident">context_and_sync_function</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">closure</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>) <span class="op">-&gt;</span>
+        (<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">dispatch_function_t</span>)
+        <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>() {
+    <span class="kw">extern</span> <span class="kw">fn</span> <span class="ident">work_read_closure</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>) <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>() {
+        <span class="comment">// This is always passed Some, so it&#39;s safe to unwrap</span>
+        <span class="kw">let</span> <span class="ident">closure</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
+        <span class="ident">closure</span>();
     }
 
-    <span class='kw'>let</span> <span class='ident'>context</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>F</span> <span class='op'>=</span> <span class='ident'>closure</span>;
-    <span class='kw'>let</span> <span class='ident'>func</span>: <span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>F</span>, <span class='ident'>usize</span>) <span class='op'>=</span> <span class='ident'>work_apply_closure</span>::<span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>;
-    <span class='kw'>unsafe</span> {
-        (<span class='ident'>context</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>func</span>))
+    <span class="kw">let</span> <span class="ident">context</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">closure</span>;
+    <span class="kw">let</span> <span class="ident">func</span>: <span class="kw">extern</span> <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>) <span class="op">=</span> <span class="ident">work_read_closure</span>::<span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>;
+    <span class="kw">unsafe</span> {
+        (<span class="ident">context</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">mem</span>::<span class="ident">transmute</span>(<span class="ident">func</span>))
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Queue</span> {
-    <span class='doccomment'>/// Returns the serial dispatch `Queue` associated with the application&#39;s</span>
-    <span class='doccomment'>/// main thread.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>main</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='kw'>let</span> <span class='ident'>queue</span> <span class='op'>=</span> <span class='ident'>dispatch_get_main_queue</span>();
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_retain</span>(<span class='ident'>queue</span>);
+<span class="kw">fn</span> <span class="ident">context_and_apply_function</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">closure</span>: <span class="kw-2">&amp;</span><span class="ident">F</span>) <span class="op">-&gt;</span>
+        (<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="kw">extern</span> <span class="kw">fn</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">usize</span>))
+        <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">usize</span>) {
+    <span class="kw">extern</span> <span class="kw">fn</span> <span class="ident">work_apply_closure</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">F</span>, <span class="ident">iter</span>: <span class="ident">usize</span>)
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">usize</span>) {
+        <span class="ident">context</span>(<span class="ident">iter</span>);
+    }
+
+    <span class="kw">let</span> <span class="ident">context</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span> <span class="op">=</span> <span class="ident">closure</span>;
+    <span class="kw">let</span> <span class="ident">func</span>: <span class="kw">extern</span> <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="ident">F</span>, <span class="ident">usize</span>) <span class="op">=</span> <span class="ident">work_apply_closure</span>::<span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>;
+    <span class="kw">unsafe</span> {
+        (<span class="ident">context</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">mem</span>::<span class="ident">transmute</span>(<span class="ident">func</span>))
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Queue</span> {
+    <span class="doccomment">/// Returns the serial dispatch `Queue` associated with the application&#39;s</span>
+    <span class="doccomment">/// main thread.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">main</span>() <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">queue</span> <span class="op">=</span> <span class="ident">dispatch_get_main_queue</span>();
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_retain</span>(<span class="ident">queue</span>);
         }
-        <span class='ident'>Queue</span> { <span class='ident'>ptr</span>: <span class='ident'>queue</span> }
+        <span class="ident">Queue</span> { <span class="ident">ptr</span>: <span class="ident">queue</span> }
     }
 
-    <span class='doccomment'>/// Returns a system-defined global concurrent `Queue` with the specified</span>
-    <span class='doccomment'>/// priority.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>global</span>(<span class='ident'>priority</span>: <span class='ident'>QueuePriority</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>queue</span> <span class='op'>=</span> <span class='ident'>dispatch_get_global_queue</span>(<span class='ident'>priority</span>.<span class='ident'>as_raw</span>(), <span class='number'>0</span>);
-            <span class='ident'>dispatch_retain</span>(<span class='ident'>queue</span>);
-            <span class='ident'>Queue</span> { <span class='ident'>ptr</span>: <span class='ident'>queue</span> }
+    <span class="doccomment">/// Returns a system-defined global concurrent `Queue` with the specified</span>
+    <span class="doccomment">/// priority.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">global</span>(<span class="ident">priority</span>: <span class="ident">QueuePriority</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">queue</span> <span class="op">=</span> <span class="ident">dispatch_get_global_queue</span>(<span class="ident">priority</span>.<span class="ident">as_raw</span>(), <span class="number">0</span>);
+            <span class="ident">dispatch_retain</span>(<span class="ident">queue</span>);
+            <span class="ident">Queue</span> { <span class="ident">ptr</span>: <span class="ident">queue</span> }
         }
     }
 
-    <span class='doccomment'>/// Creates a new dispatch `Queue`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>create</span>(<span class='ident'>label</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>attr</span>: <span class='ident'>QueueAttribute</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='kw'>let</span> <span class='ident'>label</span> <span class='op'>=</span> <span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>label</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>queue</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_queue_create</span>(<span class='ident'>label</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>attr</span>.<span class='ident'>as_raw</span>())
+    <span class="doccomment">/// Creates a new dispatch `Queue`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create</span>(<span class="ident">label</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">attr</span>: <span class="ident">QueueAttribute</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">label</span> <span class="op">=</span> <span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">label</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">queue</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_queue_create</span>(<span class="ident">label</span>.<span class="ident">as_ptr</span>(), <span class="ident">attr</span>.<span class="ident">as_raw</span>())
         };
-        <span class='ident'>Queue</span> { <span class='ident'>ptr</span>: <span class='ident'>queue</span> }
+        <span class="ident">Queue</span> { <span class="ident">ptr</span>: <span class="ident">queue</span> }
     }
 
-    <span class='doccomment'>/// Creates a new dispatch `Queue` with the given target queue.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A dispatch queue&#39;s priority is inherited from its target queue.</span>
-    <span class='doccomment'>/// Additionally, if both the queue and its target are serial queues,</span>
-    <span class='doccomment'>/// their blocks will not be invoked concurrently.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>with_target_queue</span>(<span class='ident'>label</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>attr</span>: <span class='ident'>QueueAttribute</span>, <span class='ident'>target</span>: <span class='kw-2'>&amp;</span><span class='ident'>Queue</span>)
-            <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='kw'>let</span> <span class='ident'>queue</span> <span class='op'>=</span> <span class='ident'>Queue</span>::<span class='ident'>create</span>(<span class='ident'>label</span>, <span class='ident'>attr</span>);
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_set_target_queue</span>(<span class='ident'>queue</span>.<span class='ident'>ptr</span>, <span class='ident'>target</span>.<span class='ident'>ptr</span>);
+    <span class="doccomment">/// Creates a new dispatch `Queue` with the given target queue.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A dispatch queue&#39;s priority is inherited from its target queue.</span>
+    <span class="doccomment">/// Additionally, if both the queue and its target are serial queues,</span>
+    <span class="doccomment">/// their blocks will not be invoked concurrently.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_target_queue</span>(<span class="ident">label</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">attr</span>: <span class="ident">QueueAttribute</span>, <span class="ident">target</span>: <span class="kw-2">&amp;</span><span class="ident">Queue</span>)
+            <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">queue</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="ident">create</span>(<span class="ident">label</span>, <span class="ident">attr</span>);
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_set_target_queue</span>(<span class="ident">queue</span>.<span class="ident">ptr</span>, <span class="ident">target</span>.<span class="ident">ptr</span>);
         }
-        <span class='ident'>queue</span>
+        <span class="ident">queue</span>
     }
 
-    <span class='doccomment'>/// Returns the label that was specified for self.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>label</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='kw'>let</span> <span class='ident'>label</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>label_ptr</span> <span class='op'>=</span> <span class='ident'>dispatch_queue_get_label</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>);
-            <span class='kw'>if</span> <span class='ident'>label_ptr</span>.<span class='ident'>is_null</span>() {
-                <span class='kw'>return</span> <span class='string'>&quot;&quot;</span>;
+    <span class="doccomment">/// Returns the label that was specified for self.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">label</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="kw">let</span> <span class="ident">label</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">label_ptr</span> <span class="op">=</span> <span class="ident">dispatch_queue_get_label</span>(<span class="self">self</span>.<span class="ident">ptr</span>);
+            <span class="kw">if</span> <span class="ident">label_ptr</span>.<span class="ident">is_null</span>() {
+                <span class="kw">return</span> <span class="string">&quot;&quot;</span>;
             }
-            <span class='ident'>CStr</span>::<span class='ident'>from_ptr</span>(<span class='ident'>label_ptr</span>)
+            <span class="ident">CStr</span>::<span class="ident">from_ptr</span>(<span class="ident">label_ptr</span>)
         };
-        <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>label</span>.<span class='ident'>to_bytes</span>()).<span class='ident'>unwrap</span>()
+        <span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="ident">label</span>.<span class="ident">to_bytes</span>()).<span class="ident">unwrap</span>()
     }
 
-    <span class='doccomment'>/// Submits a closure for execution on self and waits until it completes.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sync</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>work</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>T</span>
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>FnOnce</span>() <span class='op'>-&gt;</span> <span class='ident'>T</span>, <span class='ident'>T</span>: <span class='ident'>Send</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='prelude-val'>None</span>;
+    <span class="doccomment">/// Submits a closure for execution on self and waits until it completes.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sync</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">work</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">T</span>
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">FnOnce</span>() <span class="op">-&gt;</span> <span class="ident">T</span>, <span class="ident">T</span>: <span class="ident">Send</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         {
-            <span class='kw'>let</span> <span class='ident'>result_ref</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>result</span>;
-            <span class='kw'>let</span> <span class='ident'>work</span> <span class='op'>=</span> <span class='kw'>move</span> <span class='op'>||</span> {
-                <span class='op'>*</span><span class='ident'>result_ref</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>work</span>());
+            <span class="kw">let</span> <span class="ident">result_ref</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">result</span>;
+            <span class="kw">let</span> <span class="ident">work</span> <span class="op">=</span> <span class="kw">move</span> <span class="op">||</span> {
+                <span class="kw-2">*</span><span class="ident">result_ref</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">work</span>());
             };
 
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>work</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>work</span>);
-            <span class='kw'>let</span> (<span class='ident'>context</span>, <span class='ident'>work</span>) <span class='op'>=</span> <span class='ident'>context_and_sync_function</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>work</span>);
-            <span class='kw'>unsafe</span> {
-                <span class='ident'>dispatch_sync_f</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>, <span class='ident'>context</span>, <span class='ident'>work</span>);
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">work</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">work</span>);
+            <span class="kw">let</span> (<span class="ident">context</span>, <span class="ident">work</span>) <span class="op">=</span> <span class="ident">context_and_sync_function</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">work</span>);
+            <span class="kw">unsafe</span> {
+                <span class="ident">dispatch_sync_f</span>(<span class="self">self</span>.<span class="ident">ptr</span>, <span class="ident">context</span>, <span class="ident">work</span>);
             }
         }
-        <span class='comment'>// This was set so it&#39;s safe to unwrap</span>
-        <span class='ident'>result</span>.<span class='ident'>unwrap</span>()
+        <span class="comment">// This was set so it&#39;s safe to unwrap</span>
+        <span class="ident">result</span>.<span class="ident">unwrap</span>()
     }
 
-    <span class='doccomment'>/// Submits a closure for asynchronous execution on self and returns</span>
-    <span class='doccomment'>/// immediately.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>async</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>work</span>: <span class='ident'>F</span>) <span class='kw'>where</span> <span class='ident'>F</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>FnOnce</span>() {
-        <span class='kw'>let</span> (<span class='ident'>context</span>, <span class='ident'>work</span>) <span class='op'>=</span> <span class='ident'>context_and_function</span>(<span class='ident'>work</span>);
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_async_f</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>, <span class='ident'>context</span>, <span class='ident'>work</span>);
+    <span class="doccomment">/// Submits a closure for asynchronous execution on self and returns</span>
+    <span class="doccomment">/// immediately.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">async</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">work</span>: <span class="ident">F</span>) <span class="kw">where</span> <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">FnOnce</span>() {
+        <span class="kw">let</span> (<span class="ident">context</span>, <span class="ident">work</span>) <span class="op">=</span> <span class="ident">context_and_function</span>(<span class="ident">work</span>);
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_async_f</span>(<span class="self">self</span>.<span class="ident">ptr</span>, <span class="ident">context</span>, <span class="ident">work</span>);
         }
     }
 
-    <span class='doccomment'>/// After the specified delay, submits a closure for asynchronous execution</span>
-    <span class='doccomment'>/// on self.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>after_ms</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>ms</span>: <span class='ident'>u32</span>, <span class='ident'>work</span>: <span class='ident'>F</span>)
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>FnOnce</span>() {
-        <span class='self'>self</span>.<span class='ident'>after</span>(<span class='ident'>Duration</span>::<span class='ident'>from_millis</span>(<span class='ident'>ms</span> <span class='kw'>as</span> <span class='ident'>u64</span>), <span class='ident'>work</span>);
+    <span class="doccomment">/// After the specified delay, submits a closure for asynchronous execution</span>
+    <span class="doccomment">/// on self.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">after_ms</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ms</span>: <span class="ident">u32</span>, <span class="ident">work</span>: <span class="ident">F</span>)
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">FnOnce</span>() {
+        <span class="self">self</span>.<span class="ident">after</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="ident">ms</span> <span class="kw">as</span> <span class="ident">u64</span>), <span class="ident">work</span>);
     }
 
-    <span class='doccomment'>/// After the specified delay, submits a closure for asynchronous execution</span>
-    <span class='doccomment'>/// on self.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>after</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>delay</span>: <span class='ident'>Duration</span>, <span class='ident'>work</span>: <span class='ident'>F</span>)
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>FnOnce</span>() {
-        <span class='kw'>let</span> <span class='ident'>when</span> <span class='op'>=</span> <span class='ident'>time_after_delay</span>(<span class='ident'>delay</span>);
-        <span class='kw'>let</span> (<span class='ident'>context</span>, <span class='ident'>work</span>) <span class='op'>=</span> <span class='ident'>context_and_function</span>(<span class='ident'>work</span>);
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_after_f</span>(<span class='ident'>when</span>, <span class='self'>self</span>.<span class='ident'>ptr</span>, <span class='ident'>context</span>, <span class='ident'>work</span>);
+    <span class="doccomment">/// After the specified delay, submits a closure for asynchronous execution</span>
+    <span class="doccomment">/// on self.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">after</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">delay</span>: <span class="ident">Duration</span>, <span class="ident">work</span>: <span class="ident">F</span>)
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">FnOnce</span>() {
+        <span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">time_after_delay</span>(<span class="ident">delay</span>);
+        <span class="kw">let</span> (<span class="ident">context</span>, <span class="ident">work</span>) <span class="op">=</span> <span class="ident">context_and_function</span>(<span class="ident">work</span>);
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_after_f</span>(<span class="ident">when</span>, <span class="self">self</span>.<span class="ident">ptr</span>, <span class="ident">context</span>, <span class="ident">work</span>);
         }
     }
 
-    <span class='doccomment'>/// Submits a closure to be executed on self the given number of iterations</span>
-    <span class='doccomment'>/// and waits until it completes.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>apply</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>iterations</span>: <span class='ident'>usize</span>, <span class='ident'>work</span>: <span class='ident'>F</span>)
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Sync</span> <span class='op'>+</span> <span class='ident'>Fn</span>(<span class='ident'>usize</span>) {
-        <span class='kw'>let</span> (<span class='ident'>context</span>, <span class='ident'>work</span>) <span class='op'>=</span> <span class='ident'>context_and_apply_function</span>(<span class='kw-2'>&amp;</span><span class='ident'>work</span>);
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_apply_f</span>(<span class='ident'>iterations</span>, <span class='self'>self</span>.<span class='ident'>ptr</span>, <span class='ident'>context</span>, <span class='ident'>work</span>);
+    <span class="doccomment">/// Submits a closure to be executed on self the given number of iterations</span>
+    <span class="doccomment">/// and waits until it completes.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">apply</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">iterations</span>: <span class="ident">usize</span>, <span class="ident">work</span>: <span class="ident">F</span>)
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="ident">usize</span>) {
+        <span class="kw">let</span> (<span class="ident">context</span>, <span class="ident">work</span>) <span class="op">=</span> <span class="ident">context_and_apply_function</span>(<span class="kw-2">&amp;</span><span class="ident">work</span>);
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_apply_f</span>(<span class="ident">iterations</span>, <span class="self">self</span>.<span class="ident">ptr</span>, <span class="ident">context</span>, <span class="ident">work</span>);
         }
     }
 
-    <span class='doccomment'>/// Submits a closure to be executed on self for each element of the</span>
-    <span class='doccomment'>/// provided slice and waits until it completes.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>foreach</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>slice</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>work</span>: <span class='ident'>F</span>)
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Sync</span> <span class='op'>+</span> <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>T</span>), <span class='ident'>T</span>: <span class='ident'>Send</span> {
-        <span class='kw'>let</span> <span class='ident'>slice_ptr</span> <span class='op'>=</span> <span class='ident'>slice</span>.<span class='ident'>as_mut_ptr</span>();
-        <span class='kw'>let</span> <span class='ident'>work</span> <span class='op'>=</span> <span class='kw'>move</span> <span class='op'>|</span><span class='ident'>i</span><span class='op'>|</span> <span class='kw'>unsafe</span> {
-            <span class='ident'>work</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='ident'>slice_ptr</span>.<span class='ident'>offset</span>(<span class='ident'>i</span> <span class='kw'>as</span> <span class='ident'>isize</span>));
+    <span class="doccomment">/// Submits a closure to be executed on self for each element of the</span>
+    <span class="doccomment">/// provided slice and waits until it completes.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">foreach</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">work</span>: <span class="ident">F</span>)
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>), <span class="ident">T</span>: <span class="ident">Send</span> {
+        <span class="kw">let</span> <span class="ident">slice_ptr</span> <span class="op">=</span> <span class="ident">slice</span>.<span class="ident">as_mut_ptr</span>();
+        <span class="kw">let</span> <span class="ident">work</span> <span class="op">=</span> <span class="kw">move</span> <span class="op">|</span><span class="ident">i</span><span class="op">|</span> <span class="kw">unsafe</span> {
+            <span class="ident">work</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">slice_ptr</span>.<span class="ident">offset</span>(<span class="ident">i</span> <span class="kw">as</span> <span class="ident">isize</span>));
         };
-        <span class='kw'>let</span> (<span class='ident'>context</span>, <span class='ident'>work</span>) <span class='op'>=</span> <span class='ident'>context_and_apply_function</span>(<span class='kw-2'>&amp;</span><span class='ident'>work</span>);
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_apply_f</span>(<span class='ident'>slice</span>.<span class='ident'>len</span>(), <span class='self'>self</span>.<span class='ident'>ptr</span>, <span class='ident'>context</span>, <span class='ident'>work</span>);
+        <span class="kw">let</span> (<span class="ident">context</span>, <span class="ident">work</span>) <span class="op">=</span> <span class="ident">context_and_apply_function</span>(<span class="kw-2">&amp;</span><span class="ident">work</span>);
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_apply_f</span>(<span class="ident">slice</span>.<span class="ident">len</span>(), <span class="self">self</span>.<span class="ident">ptr</span>, <span class="ident">context</span>, <span class="ident">work</span>);
         }
     }
 
-    <span class='doccomment'>/// Submits a closure to be executed on self for each element of the</span>
-    <span class='doccomment'>/// provided vector and returns a `Vec` of the mapped elements.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>map</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>U</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>vec</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>work</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>U</span><span class='op'>&gt;</span>
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Sync</span> <span class='op'>+</span> <span class='ident'>Fn</span>(<span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>U</span>, <span class='ident'>T</span>: <span class='ident'>Send</span>, <span class='ident'>U</span>: <span class='ident'>Send</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>src</span> <span class='op'>=</span> <span class='ident'>vec</span>;
-        <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>src</span>.<span class='ident'>len</span>();
-        <span class='kw'>let</span> <span class='ident'>src_ptr</span> <span class='op'>=</span> <span class='ident'>src</span>.<span class='ident'>as_ptr</span>();
+    <span class="doccomment">/// Submits a closure to be executed on self for each element of the</span>
+    <span class="doccomment">/// provided vector and returns a `Vec` of the mapped elements.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">vec</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">work</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">U</span>, <span class="ident">T</span>: <span class="ident">Send</span>, <span class="ident">U</span>: <span class="ident">Send</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">src</span> <span class="op">=</span> <span class="ident">vec</span>;
+        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">src</span>.<span class="ident">len</span>();
+        <span class="kw">let</span> <span class="ident">src_ptr</span> <span class="op">=</span> <span class="ident">src</span>.<span class="ident">as_ptr</span>();
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dest</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>len</span>);
-        <span class='kw'>let</span> <span class='ident'>dest_ptr</span> <span class='op'>=</span> <span class='ident'>dest</span>.<span class='ident'>as_mut_ptr</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dest</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">len</span>);
+        <span class="kw">let</span> <span class="ident">dest_ptr</span> <span class="op">=</span> <span class="ident">dest</span>.<span class="ident">as_mut_ptr</span>();
 
-        <span class='kw'>let</span> <span class='ident'>work</span> <span class='op'>=</span> <span class='kw'>move</span> <span class='op'>|</span><span class='ident'>i</span><span class='op'>|</span> <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>work</span>(<span class='ident'>ptr</span>::<span class='ident'>read</span>(<span class='ident'>src_ptr</span>.<span class='ident'>offset</span>(<span class='ident'>i</span> <span class='kw'>as</span> <span class='ident'>isize</span>)));
-            <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>dest_ptr</span>.<span class='ident'>offset</span>(<span class='ident'>i</span> <span class='kw'>as</span> <span class='ident'>isize</span>), <span class='ident'>result</span>);
+        <span class="kw">let</span> <span class="ident">work</span> <span class="op">=</span> <span class="kw">move</span> <span class="op">|</span><span class="ident">i</span><span class="op">|</span> <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">work</span>(<span class="ident">ptr</span>::<span class="ident">read</span>(<span class="ident">src_ptr</span>.<span class="ident">offset</span>(<span class="ident">i</span> <span class="kw">as</span> <span class="ident">isize</span>)));
+            <span class="ident">ptr</span>::<span class="ident">write</span>(<span class="ident">dest_ptr</span>.<span class="ident">offset</span>(<span class="ident">i</span> <span class="kw">as</span> <span class="ident">isize</span>), <span class="ident">result</span>);
         };
-        <span class='kw'>let</span> (<span class='ident'>context</span>, <span class='ident'>work</span>) <span class='op'>=</span> <span class='ident'>context_and_apply_function</span>(<span class='kw-2'>&amp;</span><span class='ident'>work</span>);
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>src</span>.<span class='ident'>set_len</span>(<span class='number'>0</span>);
-            <span class='ident'>dispatch_apply_f</span>(<span class='ident'>len</span>, <span class='self'>self</span>.<span class='ident'>ptr</span>, <span class='ident'>context</span>, <span class='ident'>work</span>);
-            <span class='ident'>dest</span>.<span class='ident'>set_len</span>(<span class='ident'>len</span>);
+        <span class="kw">let</span> (<span class="ident">context</span>, <span class="ident">work</span>) <span class="op">=</span> <span class="ident">context_and_apply_function</span>(<span class="kw-2">&amp;</span><span class="ident">work</span>);
+        <span class="kw">unsafe</span> {
+            <span class="ident">src</span>.<span class="ident">set_len</span>(<span class="number">0</span>);
+            <span class="ident">dispatch_apply_f</span>(<span class="ident">len</span>, <span class="self">self</span>.<span class="ident">ptr</span>, <span class="ident">context</span>, <span class="ident">work</span>);
+            <span class="ident">dest</span>.<span class="ident">set_len</span>(<span class="ident">len</span>);
         }
 
-        <span class='ident'>dest</span>
+        <span class="ident">dest</span>
     }
 
-    <span class='doccomment'>/// Submits a closure to be executed on self as a barrier and waits until</span>
-    <span class='doccomment'>/// it completes.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Barriers create synchronization points within a concurrent queue.</span>
-    <span class='doccomment'>/// If self is concurrent, when it encounters a barrier it delays execution</span>
-    <span class='doccomment'>/// of the closure (and any further ones) until all closures submitted</span>
-    <span class='doccomment'>/// before the barrier finish executing.</span>
-    <span class='doccomment'>/// At that point, the barrier closure executes by itself.</span>
-    <span class='doccomment'>/// Upon completion, self resumes its normal execution behavior.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If self is a serial queue or one of the global concurrent queues,</span>
-    <span class='doccomment'>/// this method behaves like the normal `sync` method.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>barrier_sync</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>work</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>T</span>
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>FnOnce</span>() <span class='op'>-&gt;</span> <span class='ident'>T</span>, <span class='ident'>T</span>: <span class='ident'>Send</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='prelude-val'>None</span>;
+    <span class="doccomment">/// Submits a closure to be executed on self as a barrier and waits until</span>
+    <span class="doccomment">/// it completes.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Barriers create synchronization points within a concurrent queue.</span>
+    <span class="doccomment">/// If self is concurrent, when it encounters a barrier it delays execution</span>
+    <span class="doccomment">/// of the closure (and any further ones) until all closures submitted</span>
+    <span class="doccomment">/// before the barrier finish executing.</span>
+    <span class="doccomment">/// At that point, the barrier closure executes by itself.</span>
+    <span class="doccomment">/// Upon completion, self resumes its normal execution behavior.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If self is a serial queue or one of the global concurrent queues,</span>
+    <span class="doccomment">/// this method behaves like the normal `sync` method.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">barrier_sync</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">work</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">T</span>
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">FnOnce</span>() <span class="op">-&gt;</span> <span class="ident">T</span>, <span class="ident">T</span>: <span class="ident">Send</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         {
-            <span class='kw'>let</span> <span class='ident'>result_ref</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>result</span>;
-            <span class='kw'>let</span> <span class='ident'>work</span> <span class='op'>=</span> <span class='kw'>move</span> <span class='op'>||</span> {
-                <span class='op'>*</span><span class='ident'>result_ref</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>work</span>());
+            <span class="kw">let</span> <span class="ident">result_ref</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">result</span>;
+            <span class="kw">let</span> <span class="ident">work</span> <span class="op">=</span> <span class="kw">move</span> <span class="op">||</span> {
+                <span class="kw-2">*</span><span class="ident">result_ref</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">work</span>());
             };
 
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>work</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>work</span>);
-            <span class='kw'>let</span> (<span class='ident'>context</span>, <span class='ident'>work</span>) <span class='op'>=</span> <span class='ident'>context_and_sync_function</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>work</span>);
-            <span class='kw'>unsafe</span> {
-                <span class='ident'>dispatch_barrier_sync_f</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>, <span class='ident'>context</span>, <span class='ident'>work</span>);
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">work</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">work</span>);
+            <span class="kw">let</span> (<span class="ident">context</span>, <span class="ident">work</span>) <span class="op">=</span> <span class="ident">context_and_sync_function</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">work</span>);
+            <span class="kw">unsafe</span> {
+                <span class="ident">dispatch_barrier_sync_f</span>(<span class="self">self</span>.<span class="ident">ptr</span>, <span class="ident">context</span>, <span class="ident">work</span>);
             }
         }
-        <span class='comment'>// This was set so it&#39;s safe to unwrap</span>
-        <span class='ident'>result</span>.<span class='ident'>unwrap</span>()
+        <span class="comment">// This was set so it&#39;s safe to unwrap</span>
+        <span class="ident">result</span>.<span class="ident">unwrap</span>()
     }
 
-    <span class='doccomment'>/// Submits a closure to be executed on self as a barrier and returns</span>
-    <span class='doccomment'>/// immediately.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Barriers create synchronization points within a concurrent queue.</span>
-    <span class='doccomment'>/// If self is concurrent, when it encounters a barrier it delays execution</span>
-    <span class='doccomment'>/// of the closure (and any further ones) until all closures submitted</span>
-    <span class='doccomment'>/// before the barrier finish executing.</span>
-    <span class='doccomment'>/// At that point, the barrier closure executes by itself.</span>
-    <span class='doccomment'>/// Upon completion, self resumes its normal execution behavior.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If self is a serial queue or one of the global concurrent queues,</span>
-    <span class='doccomment'>/// this method behaves like the normal `async` method.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>barrier_async</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>work</span>: <span class='ident'>F</span>)
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>FnOnce</span>() {
-        <span class='kw'>let</span> (<span class='ident'>context</span>, <span class='ident'>work</span>) <span class='op'>=</span> <span class='ident'>context_and_function</span>(<span class='ident'>work</span>);
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_barrier_async_f</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>, <span class='ident'>context</span>, <span class='ident'>work</span>);
+    <span class="doccomment">/// Submits a closure to be executed on self as a barrier and returns</span>
+    <span class="doccomment">/// immediately.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Barriers create synchronization points within a concurrent queue.</span>
+    <span class="doccomment">/// If self is concurrent, when it encounters a barrier it delays execution</span>
+    <span class="doccomment">/// of the closure (and any further ones) until all closures submitted</span>
+    <span class="doccomment">/// before the barrier finish executing.</span>
+    <span class="doccomment">/// At that point, the barrier closure executes by itself.</span>
+    <span class="doccomment">/// Upon completion, self resumes its normal execution behavior.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If self is a serial queue or one of the global concurrent queues,</span>
+    <span class="doccomment">/// this method behaves like the normal `async` method.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">barrier_async</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">work</span>: <span class="ident">F</span>)
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">FnOnce</span>() {
+        <span class="kw">let</span> (<span class="ident">context</span>, <span class="ident">work</span>) <span class="op">=</span> <span class="ident">context_and_function</span>(<span class="ident">work</span>);
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_barrier_async_f</span>(<span class="self">self</span>.<span class="ident">ptr</span>, <span class="ident">context</span>, <span class="ident">work</span>);
         }
     }
 
-    <span class='doccomment'>/// Suspends the invocation of blocks on self and returns a `SuspendGuard`</span>
-    <span class='doccomment'>/// that can be dropped to resume.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The suspension occurs after completion of any blocks running at the</span>
-    <span class='doccomment'>/// time of the call.</span>
-    <span class='doccomment'>/// Invocation does not resume until all `SuspendGuard`s have been dropped.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>suspend</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>SuspendGuard</span> {
-        <span class='ident'>SuspendGuard</span>::<span class='ident'>new</span>(<span class='self'>self</span>)
+    <span class="doccomment">/// Suspends the invocation of blocks on self and returns a `SuspendGuard`</span>
+    <span class="doccomment">/// that can be dropped to resume.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The suspension occurs after completion of any blocks running at the</span>
+    <span class="doccomment">/// time of the call.</span>
+    <span class="doccomment">/// Invocation does not resume until all `SuspendGuard`s have been dropped.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">suspend</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">SuspendGuard</span> {
+        <span class="ident">SuspendGuard</span>::<span class="ident">new</span>(<span class="self">self</span>)
     }
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Sync</span> <span class='kw'>for</span> <span class='ident'>Queue</span> { }
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Send</span> <span class='kw'>for</span> <span class='ident'>Queue</span> { }
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">Queue</span> { }
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">Queue</span> { }
 
-<span class='kw'>impl</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>Queue</span> {
-    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_retain</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>);
+<span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Queue</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_retain</span>(<span class="self">self</span>.<span class="ident">ptr</span>);
         }
-        <span class='ident'>Queue</span> { <span class='ident'>ptr</span>: <span class='self'>self</span>.<span class='ident'>ptr</span> }
+        <span class="ident">Queue</span> { <span class="ident">ptr</span>: <span class="self">self</span>.<span class="ident">ptr</span> }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>Queue</span> {
-    <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_release</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>);
-        }
-    }
-}
-
-<span class='doccomment'>/// An RAII guard which will resume a suspended `Queue` when dropped.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SuspendGuard</span> {
-    <span class='ident'>queue</span>: <span class='ident'>Queue</span>,
-}
-
-<span class='kw'>impl</span> <span class='ident'>SuspendGuard</span> {
-    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>queue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Queue</span>) <span class='op'>-&gt;</span> <span class='ident'>SuspendGuard</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_suspend</span>(<span class='ident'>queue</span>.<span class='ident'>ptr</span>);
-        }
-        <span class='ident'>SuspendGuard</span> { <span class='ident'>queue</span>: <span class='ident'>queue</span>.<span class='ident'>clone</span>() }
-    }
-
-    <span class='doccomment'>/// Drops self, allowing the suspended `Queue` to resume.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>resume</span>(<span class='self'>self</span>) { }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>SuspendGuard</span> {
-    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='ident'>SuspendGuard</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>queue</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>SuspendGuard</span> {
-    <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_resume</span>(<span class='self'>self</span>.<span class='ident'>queue</span>.<span class='ident'>ptr</span>);
+<span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Queue</span> {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_release</span>(<span class="self">self</span>.<span class="ident">ptr</span>);
         }
     }
 }
 
-<span class='doccomment'>/// A Grand Central Dispatch group.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// A `Group` is a mechanism for grouping closures and monitoring them. This</span>
-<span class='doccomment'>/// allows for aggregate synchronization, so you can track when all the</span>
-<span class='doccomment'>/// closures complete, even if they are running on different queues.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Group</span> {
-    <span class='ident'>ptr</span>: <span class='ident'>dispatch_group_t</span>,
+<span class="doccomment">/// An RAII guard which will resume a suspended `Queue` when dropped.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SuspendGuard</span> {
+    <span class="ident">queue</span>: <span class="ident">Queue</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>Group</span> {
-    <span class='doccomment'>/// Creates a new dispatch `Group`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>create</span>() <span class='op'>-&gt;</span> <span class='ident'>Group</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>Group</span> { <span class='ident'>ptr</span>: <span class='ident'>dispatch_group_create</span>() }
+<span class="kw">impl</span> <span class="ident">SuspendGuard</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">queue</span>: <span class="kw-2">&amp;</span><span class="ident">Queue</span>) <span class="op">-&gt;</span> <span class="ident">SuspendGuard</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_suspend</span>(<span class="ident">queue</span>.<span class="ident">ptr</span>);
+        }
+        <span class="ident">SuspendGuard</span> { <span class="ident">queue</span>: <span class="ident">queue</span>.<span class="ident">clone</span>() }
+    }
+
+    <span class="doccomment">/// Drops self, allowing the suspended `Queue` to resume.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">resume</span>(<span class="self">self</span>) { }
+}
+
+<span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">SuspendGuard</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">SuspendGuard</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">queue</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">SuspendGuard</span> {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_resume</span>(<span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">ptr</span>);
+        }
+    }
+}
+
+<span class="doccomment">/// A Grand Central Dispatch group.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// A `Group` is a mechanism for grouping closures and monitoring them. This</span>
+<span class="doccomment">/// allows for aggregate synchronization, so you can track when all the</span>
+<span class="doccomment">/// closures complete, even if they are running on different queues.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Group</span> {
+    <span class="ident">ptr</span>: <span class="ident">dispatch_group_t</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">Group</span> {
+    <span class="doccomment">/// Creates a new dispatch `Group`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create</span>() <span class="op">-&gt;</span> <span class="ident">Group</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">Group</span> { <span class="ident">ptr</span>: <span class="ident">dispatch_group_create</span>() }
         }
     }
 
-    <span class='doccomment'>/// Indicates that a closure has entered self, and increments the current</span>
-    <span class='doccomment'>/// count of outstanding tasks. Returns a `GroupGuard` that should be</span>
-    <span class='doccomment'>/// dropped when the closure leaves self, decrementing the count.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>enter</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>GroupGuard</span> {
-        <span class='ident'>GroupGuard</span>::<span class='ident'>new</span>(<span class='self'>self</span>)
+    <span class="doccomment">/// Indicates that a closure has entered self, and increments the current</span>
+    <span class="doccomment">/// count of outstanding tasks. Returns a `GroupGuard` that should be</span>
+    <span class="doccomment">/// dropped when the closure leaves self, decrementing the count.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">enter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">GroupGuard</span> {
+        <span class="ident">GroupGuard</span>::<span class="ident">new</span>(<span class="self">self</span>)
     }
 
-    <span class='doccomment'>/// Submits a closure asynchronously to the given `Queue` and associates it</span>
-    <span class='doccomment'>/// with self.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>async</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>queue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Queue</span>, <span class='ident'>work</span>: <span class='ident'>F</span>)
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>FnOnce</span>() {
-        <span class='kw'>let</span> (<span class='ident'>context</span>, <span class='ident'>work</span>) <span class='op'>=</span> <span class='ident'>context_and_function</span>(<span class='ident'>work</span>);
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_group_async_f</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>, <span class='ident'>queue</span>.<span class='ident'>ptr</span>, <span class='ident'>context</span>, <span class='ident'>work</span>);
+    <span class="doccomment">/// Submits a closure asynchronously to the given `Queue` and associates it</span>
+    <span class="doccomment">/// with self.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">async</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">queue</span>: <span class="kw-2">&amp;</span><span class="ident">Queue</span>, <span class="ident">work</span>: <span class="ident">F</span>)
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">FnOnce</span>() {
+        <span class="kw">let</span> (<span class="ident">context</span>, <span class="ident">work</span>) <span class="op">=</span> <span class="ident">context_and_function</span>(<span class="ident">work</span>);
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_group_async_f</span>(<span class="self">self</span>.<span class="ident">ptr</span>, <span class="ident">queue</span>.<span class="ident">ptr</span>, <span class="ident">context</span>, <span class="ident">work</span>);
         }
     }
 
-    <span class='doccomment'>/// Schedules a closure to be submitted to the given `Queue` when all tasks</span>
-    <span class='doccomment'>/// associated with self have completed.</span>
-    <span class='doccomment'>/// If self is empty, the closure is submitted immediately.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>notify</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>queue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Queue</span>, <span class='ident'>work</span>: <span class='ident'>F</span>)
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>FnOnce</span>() {
-        <span class='kw'>let</span> (<span class='ident'>context</span>, <span class='ident'>work</span>) <span class='op'>=</span> <span class='ident'>context_and_function</span>(<span class='ident'>work</span>);
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_group_notify_f</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>, <span class='ident'>queue</span>.<span class='ident'>ptr</span>, <span class='ident'>context</span>, <span class='ident'>work</span>);
+    <span class="doccomment">/// Schedules a closure to be submitted to the given `Queue` when all tasks</span>
+    <span class="doccomment">/// associated with self have completed.</span>
+    <span class="doccomment">/// If self is empty, the closure is submitted immediately.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">notify</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">queue</span>: <span class="kw-2">&amp;</span><span class="ident">Queue</span>, <span class="ident">work</span>: <span class="ident">F</span>)
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">FnOnce</span>() {
+        <span class="kw">let</span> (<span class="ident">context</span>, <span class="ident">work</span>) <span class="op">=</span> <span class="ident">context_and_function</span>(<span class="ident">work</span>);
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_group_notify_f</span>(<span class="self">self</span>.<span class="ident">ptr</span>, <span class="ident">queue</span>.<span class="ident">ptr</span>, <span class="ident">context</span>, <span class="ident">work</span>);
         }
     }
 
-    <span class='doccomment'>/// Waits synchronously for all tasks associated with self to complete.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>wait</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) {
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_group_wait</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>, <span class='ident'>DISPATCH_TIME_FOREVER</span>)
+    <span class="doccomment">/// Waits synchronously for all tasks associated with self to complete.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_group_wait</span>(<span class="self">self</span>.<span class="ident">ptr</span>, <span class="ident">DISPATCH_TIME_FOREVER</span>)
         };
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>result</span> <span class='op'>==</span> <span class='number'>0</span>, <span class='string'>&quot;Dispatch group wait errored&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">result</span> <span class="op">==</span> <span class="number">0</span>, <span class="string">&quot;Dispatch group wait errored&quot;</span>);
     }
 
-    <span class='doccomment'>/// Waits for all tasks associated with self to complete within the</span>
-    <span class='doccomment'>/// specified duration.</span>
-    <span class='doccomment'>/// Returns true if the tasks completed or false if the timeout elapsed.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>wait_timeout_ms</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>ms</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='self'>self</span>.<span class='ident'>wait_timeout</span>(<span class='ident'>Duration</span>::<span class='ident'>from_millis</span>(<span class='ident'>ms</span> <span class='kw'>as</span> <span class='ident'>u64</span>))
+    <span class="doccomment">/// Waits for all tasks associated with self to complete within the</span>
+    <span class="doccomment">/// specified duration.</span>
+    <span class="doccomment">/// Returns true if the tasks completed or false if the timeout elapsed.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_timeout_ms</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ms</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">wait_timeout</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="ident">ms</span> <span class="kw">as</span> <span class="ident">u64</span>))
     }
 
-    <span class='doccomment'>/// Waits for all tasks associated with self to complete within the</span>
-    <span class='doccomment'>/// specified duration.</span>
-    <span class='doccomment'>/// Returns true if the tasks completed or false if the timeout elapsed.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>wait_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>timeout</span>: <span class='ident'>Duration</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>let</span> <span class='ident'>when</span> <span class='op'>=</span> <span class='ident'>time_after_delay</span>(<span class='ident'>timeout</span>);
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_group_wait</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>, <span class='ident'>when</span>)
+    <span class="doccomment">/// Waits for all tasks associated with self to complete within the</span>
+    <span class="doccomment">/// specified duration.</span>
+    <span class="doccomment">/// Returns true if the tasks completed or false if the timeout elapsed.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_timeout</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">time_after_delay</span>(<span class="ident">timeout</span>);
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_group_wait</span>(<span class="self">self</span>.<span class="ident">ptr</span>, <span class="ident">when</span>)
         };
-        <span class='ident'>result</span> <span class='op'>==</span> <span class='number'>0</span>
+        <span class="ident">result</span> <span class="op">==</span> <span class="number">0</span>
     }
 
-    <span class='doccomment'>/// Returns whether self is currently empty.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_empty</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_group_wait</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>, <span class='ident'>DISPATCH_TIME_NOW</span>)
+    <span class="doccomment">/// Returns whether self is currently empty.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_group_wait</span>(<span class="self">self</span>.<span class="ident">ptr</span>, <span class="ident">DISPATCH_TIME_NOW</span>)
         };
-        <span class='ident'>result</span> <span class='op'>==</span> <span class='number'>0</span>
+        <span class="ident">result</span> <span class="op">==</span> <span class="number">0</span>
     }
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Sync</span> <span class='kw'>for</span> <span class='ident'>Group</span> { }
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Send</span> <span class='kw'>for</span> <span class='ident'>Group</span> { }
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">Group</span> { }
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">Group</span> { }
 
-<span class='kw'>impl</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>Group</span> {
-    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_retain</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>);
+<span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Group</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_retain</span>(<span class="self">self</span>.<span class="ident">ptr</span>);
         }
-        <span class='ident'>Group</span> { <span class='ident'>ptr</span>: <span class='self'>self</span>.<span class='ident'>ptr</span> }
+        <span class="ident">Group</span> { <span class="ident">ptr</span>: <span class="self">self</span>.<span class="ident">ptr</span> }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>Group</span> {
-    <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_release</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>);
-        }
-    }
-}
-
-<span class='doccomment'>/// An RAII guard which will leave a `Group` when dropped.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>GroupGuard</span> {
-    <span class='ident'>group</span>: <span class='ident'>Group</span>,
-}
-
-<span class='kw'>impl</span> <span class='ident'>GroupGuard</span> {
-    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>group</span>: <span class='kw-2'>&amp;</span><span class='ident'>Group</span>) <span class='op'>-&gt;</span> <span class='ident'>GroupGuard</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_group_enter</span>(<span class='ident'>group</span>.<span class='ident'>ptr</span>);
-        }
-        <span class='ident'>GroupGuard</span> { <span class='ident'>group</span>: <span class='ident'>group</span>.<span class='ident'>clone</span>() }
-    }
-
-    <span class='doccomment'>/// Drops self, leaving the `Group`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>leave</span>(<span class='self'>self</span>) { }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>GroupGuard</span> {
-    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='ident'>GroupGuard</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>group</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>GroupGuard</span> {
-    <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>dispatch_group_leave</span>(<span class='self'>self</span>.<span class='ident'>group</span>.<span class='ident'>ptr</span>);
+<span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Group</span> {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_release</span>(<span class="self">self</span>.<span class="ident">ptr</span>);
         }
     }
 }
 
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
-<span class='kw'>struct</span> <span class='ident'>Once</span> {
-    <span class='ident'>predicate</span>: <span class='ident'>UnsafeCell</span><span class='op'>&lt;</span><span class='ident'>dispatch_once_t</span><span class='op'>&gt;</span>,
+<span class="doccomment">/// An RAII guard which will leave a `Group` when dropped.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GroupGuard</span> {
+    <span class="ident">group</span>: <span class="ident">Group</span>,
 }
 
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
-<span class='kw'>impl</span> <span class='ident'>Once</span> {
-    <span class='comment'>// TODO: make this a const fn when the feature is stable</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>Once</span> {
-        <span class='ident'>Once</span> { <span class='ident'>predicate</span>: <span class='ident'>UnsafeCell</span>::<span class='ident'>new</span>(<span class='number'>0</span>) }
+<span class="kw">impl</span> <span class="ident">GroupGuard</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">Group</span>) <span class="op">-&gt;</span> <span class="ident">GroupGuard</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_group_enter</span>(<span class="ident">group</span>.<span class="ident">ptr</span>);
+        }
+        <span class="ident">GroupGuard</span> { <span class="ident">group</span>: <span class="ident">group</span>.<span class="ident">clone</span>() }
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>call_once</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='self'>self</span>, <span class='ident'>work</span>: <span class='ident'>F</span>) <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>() {
-        <span class='attribute'>#[<span class='ident'>cold</span>]</span>
-        <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>never</span>)]</span>
-        <span class='kw'>fn</span> <span class='ident'>once</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>predicate</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>dispatch_once_t</span>, <span class='ident'>work</span>: <span class='ident'>F</span>)
-                <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>() {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>work</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>work</span>);
-            <span class='kw'>let</span> (<span class='ident'>context</span>, <span class='ident'>work</span>) <span class='op'>=</span> <span class='ident'>context_and_sync_function</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>work</span>);
-            <span class='kw'>unsafe</span> {
-                <span class='ident'>dispatch_once_f</span>(<span class='ident'>predicate</span>, <span class='ident'>context</span>, <span class='ident'>work</span>);
+    <span class="doccomment">/// Drops self, leaving the `Group`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">leave</span>(<span class="self">self</span>) { }
+}
+
+<span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">GroupGuard</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">GroupGuard</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">group</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">GroupGuard</span> {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">dispatch_group_leave</span>(<span class="self">self</span>.<span class="ident">group</span>.<span class="ident">ptr</span>);
+        }
+    }
+}
+
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+<span class="kw">struct</span> <span class="ident">Once</span> {
+    <span class="ident">predicate</span>: <span class="ident">UnsafeCell</span><span class="op">&lt;</span><span class="ident">dispatch_once_t</span><span class="op">&gt;</span>,
+}
+
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+<span class="kw">impl</span> <span class="ident">Once</span> {
+    <span class="comment">// TODO: make this a const fn when the feature is stable</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">Once</span> {
+        <span class="ident">Once</span> { <span class="ident">predicate</span>: <span class="ident">UnsafeCell</span>::<span class="ident">new</span>(<span class="number">0</span>) }
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">call_once</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="self">self</span>, <span class="ident">work</span>: <span class="ident">F</span>) <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>() {
+        <span class="attribute">#[<span class="ident">cold</span>]</span>
+        <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">never</span>)]</span>
+        <span class="kw">fn</span> <span class="ident">once</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">predicate</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">dispatch_once_t</span>, <span class="ident">work</span>: <span class="ident">F</span>)
+                <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>() {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">work</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">work</span>);
+            <span class="kw">let</span> (<span class="ident">context</span>, <span class="ident">work</span>) <span class="op">=</span> <span class="ident">context_and_sync_function</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">work</span>);
+            <span class="kw">unsafe</span> {
+                <span class="ident">dispatch_once_f</span>(<span class="ident">predicate</span>, <span class="ident">context</span>, <span class="ident">work</span>);
             }
         }
 
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>predicate</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>predicate</span>.<span class='ident'>get</span>();
-            <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>predicate</span> <span class='op'>!=</span> <span class='op'>!</span><span class='number'>0</span> {
-                <span class='ident'>once</span>(<span class='ident'>predicate</span>, <span class='ident'>work</span>);
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">predicate</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">predicate</span>.<span class="ident">get</span>();
+            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">predicate</span> <span class="op">!=</span> <span class="op">!</span><span class="number">0</span> {
+                <span class="ident">once</span>(<span class="ident">predicate</span>, <span class="ident">work</span>);
             }
         }
     }
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Sync</span> <span class='kw'>for</span> <span class='ident'>Once</span> { }
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">Once</span> { }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::{<span class='ident'>Duration</span>, <span class='ident'>Instant</span>};
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::{<span class="ident">Arc</span>, <span class="ident">Mutex</span>};
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>::{<span class="ident">Duration</span>, <span class="ident">Instant</span>};
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>async_increment</span>(<span class='ident'>queue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Queue</span>, <span class='ident'>num</span>: <span class='kw-2'>&amp;</span><span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;&gt;</span>) {
-        <span class='kw'>let</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>num</span>.<span class='ident'>clone</span>();
-        <span class='ident'>queue</span>.<span class='ident'>async</span>(<span class='kw'>move</span> <span class='op'>||</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>num</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>();
-            <span class='op'>*</span><span class='ident'>num</span> <span class='op'>+=</span> <span class='number'>1</span>;
+    <span class="kw">fn</span> <span class="ident">async_increment</span>(<span class="ident">queue</span>: <span class="kw-2">&amp;</span><span class="ident">Queue</span>, <span class="ident">num</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;&gt;</span>) {
+        <span class="kw">let</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">num</span>.<span class="ident">clone</span>();
+        <span class="ident">queue</span>.<span class="ident">async</span>(<span class="kw">move</span> <span class="op">||</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">num</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+            <span class="kw-2">*</span><span class="ident">num</span> <span class="op">+=</span> <span class="number">1</span>;
         });
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_serial_queue</span>() {
-        <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>Queue</span>::<span class='ident'>create</span>(<span class='string'>&quot;&quot;</span>, <span class='ident'>QueueAttribute</span>::<span class='ident'>Serial</span>);
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='number'>0</span>;
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_serial_queue</span>() {
+        <span class="kw">let</span> <span class="ident">q</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="ident">create</span>(<span class="string">&quot;&quot;</span>, <span class="ident">QueueAttribute</span>::<span class="ident">Serial</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">num</span> <span class="op">=</span> <span class="number">0</span>;
 
-        <span class='ident'>q</span>.<span class='ident'>sync</span>(<span class='op'>||</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='number'>1</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>num</span>, <span class='number'>1</span>);
+        <span class="ident">q</span>.<span class="ident">sync</span>(<span class="op">||</span> <span class="ident">num</span> <span class="op">=</span> <span class="number">1</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">num</span>, <span class="number">1</span>);
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>q</span>.<span class='ident'>sync</span>(<span class='op'>||</span> <span class='ident'>num</span>), <span class='number'>1</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">q</span>.<span class="ident">sync</span>(<span class="op">||</span> <span class="ident">num</span>), <span class="number">1</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_sync_owned</span>() {
-        <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>Queue</span>::<span class='ident'>create</span>(<span class='string'>&quot;&quot;</span>, <span class='ident'>QueueAttribute</span>::<span class='ident'>Serial</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_sync_owned</span>() {
+        <span class="kw">let</span> <span class="ident">q</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="ident">create</span>(<span class="string">&quot;&quot;</span>, <span class="ident">QueueAttribute</span>::<span class="ident">Serial</span>);
 
-        <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot;Hello, world!&quot;</span>.<span class='ident'>to_string</span>();
-        <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>q</span>.<span class='ident'>sync</span>(<span class='kw'>move</span> <span class='op'>||</span> <span class='ident'>s</span>.<span class='ident'>len</span>());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>len</span>, <span class='number'>13</span>);
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;Hello, world!&quot;</span>.<span class="ident">to_string</span>();
+        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">q</span>.<span class="ident">sync</span>(<span class="kw">move</span> <span class="op">||</span> <span class="ident">s</span>.<span class="ident">len</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">len</span>, <span class="number">13</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_serial_queue_async</span>() {
-        <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>Queue</span>::<span class='ident'>create</span>(<span class='string'>&quot;&quot;</span>, <span class='ident'>QueueAttribute</span>::<span class='ident'>Serial</span>);
-        <span class='kw'>let</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Mutex</span>::<span class='ident'>new</span>(<span class='number'>0</span>));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_serial_queue_async</span>() {
+        <span class="kw">let</span> <span class="ident">q</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="ident">create</span>(<span class="string">&quot;&quot;</span>, <span class="ident">QueueAttribute</span>::<span class="ident">Serial</span>);
+        <span class="kw">let</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">Mutex</span>::<span class="ident">new</span>(<span class="number">0</span>));
 
-        <span class='ident'>async_increment</span>(<span class='kw-2'>&amp;</span><span class='ident'>q</span>, <span class='kw-2'>&amp;</span><span class='ident'>num</span>);
+        <span class="ident">async_increment</span>(<span class="kw-2">&amp;</span><span class="ident">q</span>, <span class="kw-2">&amp;</span><span class="ident">num</span>);
 
-        <span class='comment'>// Sync an empty block to ensure the async one finishes</span>
-        <span class='ident'>q</span>.<span class='ident'>sync</span>(<span class='op'>||</span> ());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>num</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>(), <span class='number'>1</span>);
+        <span class="comment">// Sync an empty block to ensure the async one finishes</span>
+        <span class="ident">q</span>.<span class="ident">sync</span>(<span class="op">||</span> ());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">num</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>(), <span class="number">1</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_after</span>() {
-        <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>Queue</span>::<span class='ident'>create</span>(<span class='string'>&quot;&quot;</span>, <span class='ident'>QueueAttribute</span>::<span class='ident'>Serial</span>);
-        <span class='kw'>let</span> <span class='ident'>group</span> <span class='op'>=</span> <span class='ident'>Group</span>::<span class='ident'>create</span>();
-        <span class='kw'>let</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Mutex</span>::<span class='ident'>new</span>(<span class='number'>0</span>));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_after</span>() {
+        <span class="kw">let</span> <span class="ident">q</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="ident">create</span>(<span class="string">&quot;&quot;</span>, <span class="ident">QueueAttribute</span>::<span class="ident">Serial</span>);
+        <span class="kw">let</span> <span class="ident">group</span> <span class="op">=</span> <span class="ident">Group</span>::<span class="ident">create</span>();
+        <span class="kw">let</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">Mutex</span>::<span class="ident">new</span>(<span class="number">0</span>));
 
-        <span class='kw'>let</span> <span class='ident'>delay</span> <span class='op'>=</span> <span class='ident'>Duration</span>::<span class='ident'>from_millis</span>(<span class='number'>5</span>);
-        <span class='kw'>let</span> <span class='ident'>num2</span> <span class='op'>=</span> <span class='ident'>num</span>.<span class='ident'>clone</span>();
-        <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='ident'>group</span>.<span class='ident'>enter</span>();
-        <span class='kw'>let</span> <span class='ident'>start</span> <span class='op'>=</span> <span class='ident'>Instant</span>::<span class='ident'>now</span>();
-        <span class='ident'>q</span>.<span class='ident'>after</span>(<span class='ident'>delay</span>, <span class='kw'>move</span> <span class='op'>||</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>num2</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>();
-            <span class='op'>*</span><span class='ident'>num</span> <span class='op'>=</span> <span class='number'>1</span>;
-            <span class='ident'>guard</span>.<span class='ident'>leave</span>();
+        <span class="kw">let</span> <span class="ident">delay</span> <span class="op">=</span> <span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">5</span>);
+        <span class="kw">let</span> <span class="ident">num2</span> <span class="op">=</span> <span class="ident">num</span>.<span class="ident">clone</span>();
+        <span class="kw">let</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">enter</span>();
+        <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">Instant</span>::<span class="ident">now</span>();
+        <span class="ident">q</span>.<span class="ident">after</span>(<span class="ident">delay</span>, <span class="kw">move</span> <span class="op">||</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">num2</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+            <span class="kw-2">*</span><span class="ident">num</span> <span class="op">=</span> <span class="number">1</span>;
+            <span class="ident">guard</span>.<span class="ident">leave</span>();
         });
 
-        <span class='comment'>// Wait for the previous block to complete</span>
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>group</span>.<span class='ident'>wait_timeout</span>(<span class='ident'>Duration</span>::<span class='ident'>from_millis</span>(<span class='number'>5000</span>)));
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>start</span>.<span class='ident'>elapsed</span>() <span class='op'>&gt;=</span> <span class='ident'>delay</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>num</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>(), <span class='number'>1</span>);
+        <span class="comment">// Wait for the previous block to complete</span>
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">group</span>.<span class="ident">wait_timeout</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">5000</span>)));
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">start</span>.<span class="ident">elapsed</span>() <span class="op">&gt;=</span> <span class="ident">delay</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">num</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>(), <span class="number">1</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_queue_label</span>() {
-        <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>Queue</span>::<span class='ident'>create</span>(<span class='string'>&quot;com.example.rust&quot;</span>, <span class='ident'>QueueAttribute</span>::<span class='ident'>Serial</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>q</span>.<span class='ident'>label</span>(), <span class='string'>&quot;com.example.rust&quot;</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_queue_label</span>() {
+        <span class="kw">let</span> <span class="ident">q</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="ident">create</span>(<span class="string">&quot;com.example.rust&quot;</span>, <span class="ident">QueueAttribute</span>::<span class="ident">Serial</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">q</span>.<span class="ident">label</span>(), <span class="string">&quot;com.example.rust&quot;</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_apply</span>() {
-        <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>Queue</span>::<span class='ident'>create</span>(<span class='string'>&quot;&quot;</span>, <span class='ident'>QueueAttribute</span>::<span class='ident'>Serial</span>);
-        <span class='kw'>let</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Mutex</span>::<span class='ident'>new</span>(<span class='number'>0</span>));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_apply</span>() {
+        <span class="kw">let</span> <span class="ident">q</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="ident">create</span>(<span class="string">&quot;&quot;</span>, <span class="ident">QueueAttribute</span>::<span class="ident">Serial</span>);
+        <span class="kw">let</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">Mutex</span>::<span class="ident">new</span>(<span class="number">0</span>));
 
-        <span class='ident'>q</span>.<span class='ident'>apply</span>(<span class='number'>5</span>, <span class='op'>|</span>_<span class='op'>|</span> <span class='op'>*</span><span class='ident'>num</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>() <span class='op'>+=</span> <span class='number'>1</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>num</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>(), <span class='number'>5</span>);
+        <span class="ident">q</span>.<span class="ident">apply</span>(<span class="number">5</span>, <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">num</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>() <span class="op">+=</span> <span class="number">1</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">num</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>(), <span class="number">5</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_foreach</span>() {
-        <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>Queue</span>::<span class='ident'>create</span>(<span class='string'>&quot;&quot;</span>, <span class='ident'>QueueAttribute</span>::<span class='ident'>Serial</span>);
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>nums</span> <span class='op'>=</span> [<span class='number'>0</span>, <span class='number'>1</span>];
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_foreach</span>() {
+        <span class="kw">let</span> <span class="ident">q</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="ident">create</span>(<span class="string">&quot;&quot;</span>, <span class="ident">QueueAttribute</span>::<span class="ident">Serial</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">nums</span> <span class="op">=</span> [<span class="number">0</span>, <span class="number">1</span>];
 
-        <span class='ident'>q</span>.<span class='ident'>foreach</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>nums</span>, <span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>x</span> <span class='op'>+=</span> <span class='number'>1</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>nums</span>, [<span class='number'>1</span>, <span class='number'>2</span>]);
+        <span class="ident">q</span>.<span class="ident">foreach</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">nums</span>, <span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">+=</span> <span class="number">1</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">nums</span>, [<span class="number">1</span>, <span class="number">2</span>]);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_map</span>() {
-        <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>Queue</span>::<span class='ident'>create</span>(<span class='string'>&quot;&quot;</span>, <span class='ident'>QueueAttribute</span>::<span class='ident'>Serial</span>);
-        <span class='kw'>let</span> <span class='ident'>nums</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>0</span>, <span class='number'>1</span>];
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_map</span>() {
+        <span class="kw">let</span> <span class="ident">q</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="ident">create</span>(<span class="string">&quot;&quot;</span>, <span class="ident">QueueAttribute</span>::<span class="ident">Serial</span>);
+        <span class="kw">let</span> <span class="ident">nums</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0</span>, <span class="number">1</span>];
 
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>q</span>.<span class='ident'>map</span>(<span class='ident'>nums</span>, <span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>result</span>, [<span class='number'>1</span>, <span class='number'>2</span>]);
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">q</span>.<span class="ident">map</span>(<span class="ident">nums</span>, <span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span> <span class="op">+</span> <span class="number">1</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">result</span>, [<span class="number">1</span>, <span class="number">2</span>]);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_barrier_sync</span>() {
-        <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>Queue</span>::<span class='ident'>create</span>(<span class='string'>&quot;&quot;</span>, <span class='ident'>QueueAttribute</span>::<span class='ident'>Concurrent</span>);
-        <span class='kw'>let</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Mutex</span>::<span class='ident'>new</span>(<span class='number'>0</span>));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_barrier_sync</span>() {
+        <span class="kw">let</span> <span class="ident">q</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="ident">create</span>(<span class="string">&quot;&quot;</span>, <span class="ident">QueueAttribute</span>::<span class="ident">Concurrent</span>);
+        <span class="kw">let</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">Mutex</span>::<span class="ident">new</span>(<span class="number">0</span>));
 
-        <span class='ident'>async_increment</span>(<span class='kw-2'>&amp;</span><span class='ident'>q</span>, <span class='kw-2'>&amp;</span><span class='ident'>num</span>);
-        <span class='ident'>async_increment</span>(<span class='kw-2'>&amp;</span><span class='ident'>q</span>, <span class='kw-2'>&amp;</span><span class='ident'>num</span>);
+        <span class="ident">async_increment</span>(<span class="kw-2">&amp;</span><span class="ident">q</span>, <span class="kw-2">&amp;</span><span class="ident">num</span>);
+        <span class="ident">async_increment</span>(<span class="kw-2">&amp;</span><span class="ident">q</span>, <span class="kw-2">&amp;</span><span class="ident">num</span>);
 
-        <span class='kw'>let</span> <span class='ident'>num2</span> <span class='op'>=</span> <span class='ident'>num</span>.<span class='ident'>clone</span>();
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>q</span>.<span class='ident'>barrier_sync</span>(<span class='kw'>move</span> <span class='op'>||</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>num2</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>();
-            <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>num</span> <span class='op'>==</span> <span class='number'>2</span> {
-                <span class='op'>*</span><span class='ident'>num</span> <span class='op'>=</span> <span class='number'>10</span>;
+        <span class="kw">let</span> <span class="ident">num2</span> <span class="op">=</span> <span class="ident">num</span>.<span class="ident">clone</span>();
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">q</span>.<span class="ident">barrier_sync</span>(<span class="kw">move</span> <span class="op">||</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">num2</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">num</span> <span class="op">==</span> <span class="number">2</span> {
+                <span class="kw-2">*</span><span class="ident">num</span> <span class="op">=</span> <span class="number">10</span>;
             }
-            <span class='op'>*</span><span class='ident'>num</span>
+            <span class="kw-2">*</span><span class="ident">num</span>
         });
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>result</span>, <span class='number'>10</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">result</span>, <span class="number">10</span>);
 
-        <span class='ident'>async_increment</span>(<span class='kw-2'>&amp;</span><span class='ident'>q</span>, <span class='kw-2'>&amp;</span><span class='ident'>num</span>);
-        <span class='ident'>async_increment</span>(<span class='kw-2'>&amp;</span><span class='ident'>q</span>, <span class='kw-2'>&amp;</span><span class='ident'>num</span>);
+        <span class="ident">async_increment</span>(<span class="kw-2">&amp;</span><span class="ident">q</span>, <span class="kw-2">&amp;</span><span class="ident">num</span>);
+        <span class="ident">async_increment</span>(<span class="kw-2">&amp;</span><span class="ident">q</span>, <span class="kw-2">&amp;</span><span class="ident">num</span>);
 
-        <span class='ident'>q</span>.<span class='ident'>barrier_sync</span>(<span class='op'>||</span> ());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>num</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>(), <span class='number'>12</span>);
+        <span class="ident">q</span>.<span class="ident">barrier_sync</span>(<span class="op">||</span> ());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">num</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>(), <span class="number">12</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_barrier_async</span>() {
-        <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>Queue</span>::<span class='ident'>create</span>(<span class='string'>&quot;&quot;</span>, <span class='ident'>QueueAttribute</span>::<span class='ident'>Concurrent</span>);
-        <span class='kw'>let</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Mutex</span>::<span class='ident'>new</span>(<span class='number'>0</span>));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_barrier_async</span>() {
+        <span class="kw">let</span> <span class="ident">q</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="ident">create</span>(<span class="string">&quot;&quot;</span>, <span class="ident">QueueAttribute</span>::<span class="ident">Concurrent</span>);
+        <span class="kw">let</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">Mutex</span>::<span class="ident">new</span>(<span class="number">0</span>));
 
-        <span class='ident'>async_increment</span>(<span class='kw-2'>&amp;</span><span class='ident'>q</span>, <span class='kw-2'>&amp;</span><span class='ident'>num</span>);
-        <span class='ident'>async_increment</span>(<span class='kw-2'>&amp;</span><span class='ident'>q</span>, <span class='kw-2'>&amp;</span><span class='ident'>num</span>);
+        <span class="ident">async_increment</span>(<span class="kw-2">&amp;</span><span class="ident">q</span>, <span class="kw-2">&amp;</span><span class="ident">num</span>);
+        <span class="ident">async_increment</span>(<span class="kw-2">&amp;</span><span class="ident">q</span>, <span class="kw-2">&amp;</span><span class="ident">num</span>);
 
-        <span class='kw'>let</span> <span class='ident'>num2</span> <span class='op'>=</span> <span class='ident'>num</span>.<span class='ident'>clone</span>();
-        <span class='ident'>q</span>.<span class='ident'>barrier_async</span>(<span class='kw'>move</span> <span class='op'>||</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>num2</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>();
-            <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>num</span> <span class='op'>==</span> <span class='number'>2</span> {
-                <span class='op'>*</span><span class='ident'>num</span> <span class='op'>=</span> <span class='number'>10</span>;
-            }
-        });
-
-        <span class='ident'>async_increment</span>(<span class='kw-2'>&amp;</span><span class='ident'>q</span>, <span class='kw-2'>&amp;</span><span class='ident'>num</span>);
-        <span class='ident'>async_increment</span>(<span class='kw-2'>&amp;</span><span class='ident'>q</span>, <span class='kw-2'>&amp;</span><span class='ident'>num</span>);
-
-        <span class='ident'>q</span>.<span class='ident'>barrier_sync</span>(<span class='op'>||</span> ());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>num</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>(), <span class='number'>12</span>);
-    }
-
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_suspend</span>() {
-        <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>Queue</span>::<span class='ident'>create</span>(<span class='string'>&quot;&quot;</span>, <span class='ident'>QueueAttribute</span>::<span class='ident'>Serial</span>);
-        <span class='kw'>let</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Mutex</span>::<span class='ident'>new</span>(<span class='number'>0</span>));
-
-        <span class='comment'>// Suspend the queue and then dispatch some work to it</span>
-        <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='ident'>q</span>.<span class='ident'>suspend</span>();
-        <span class='ident'>async_increment</span>(<span class='kw-2'>&amp;</span><span class='ident'>q</span>, <span class='kw-2'>&amp;</span><span class='ident'>num</span>);
-
-        <span class='comment'>// Sleep and ensure the work doesn&#39;t occur</span>
-        ::<span class='ident'>std</span>::<span class='ident'>thread</span>::<span class='ident'>sleep</span>(<span class='ident'>Duration</span>::<span class='ident'>from_millis</span>(<span class='number'>5</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>num</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>(), <span class='number'>0</span>);
-
-        <span class='comment'>// But ensure the work does complete after we resume</span>
-        <span class='ident'>guard</span>.<span class='ident'>resume</span>();
-        <span class='ident'>q</span>.<span class='ident'>sync</span>(<span class='op'>||</span> ());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>num</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>(), <span class='number'>1</span>);
-    }
-
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_group</span>() {
-        <span class='kw'>let</span> <span class='ident'>group</span> <span class='op'>=</span> <span class='ident'>Group</span>::<span class='ident'>create</span>();
-        <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>Queue</span>::<span class='ident'>create</span>(<span class='string'>&quot;&quot;</span>, <span class='ident'>QueueAttribute</span>::<span class='ident'>Serial</span>);
-        <span class='kw'>let</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Mutex</span>::<span class='ident'>new</span>(<span class='number'>0</span>));
-
-        <span class='kw'>let</span> <span class='ident'>num2</span> <span class='op'>=</span> <span class='ident'>num</span>.<span class='ident'>clone</span>();
-        <span class='ident'>group</span>.<span class='ident'>async</span>(<span class='kw-2'>&amp;</span><span class='ident'>q</span>, <span class='kw'>move</span> <span class='op'>||</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>num2</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>();
-            <span class='op'>*</span><span class='ident'>num</span> <span class='op'>+=</span> <span class='number'>1</span>;
-        });
-
-        <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='ident'>group</span>.<span class='ident'>enter</span>();
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>group</span>.<span class='ident'>is_empty</span>());
-        <span class='kw'>let</span> <span class='ident'>num3</span> <span class='op'>=</span> <span class='ident'>num</span>.<span class='ident'>clone</span>();
-        <span class='ident'>q</span>.<span class='ident'>async</span>(<span class='kw'>move</span> <span class='op'>||</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>num3</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>();
-            <span class='op'>*</span><span class='ident'>num</span> <span class='op'>+=</span> <span class='number'>1</span>;
-            <span class='ident'>guard</span>.<span class='ident'>leave</span>();
-        });
-
-        <span class='kw'>let</span> <span class='ident'>num4</span> <span class='op'>=</span> <span class='ident'>num</span>.<span class='ident'>clone</span>();
-        <span class='ident'>group</span>.<span class='ident'>notify</span>(<span class='kw-2'>&amp;</span><span class='ident'>q</span>, <span class='kw'>move</span> <span class='op'>||</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>num4</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>();
-            <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>num</span> <span class='op'>==</span> <span class='number'>2</span> {
-                <span class='op'>*</span><span class='ident'>num</span> <span class='op'>=</span> <span class='number'>10</span>;
+        <span class="kw">let</span> <span class="ident">num2</span> <span class="op">=</span> <span class="ident">num</span>.<span class="ident">clone</span>();
+        <span class="ident">q</span>.<span class="ident">barrier_async</span>(<span class="kw">move</span> <span class="op">||</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">num2</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">num</span> <span class="op">==</span> <span class="number">2</span> {
+                <span class="kw-2">*</span><span class="ident">num</span> <span class="op">=</span> <span class="number">10</span>;
             }
         });
 
-        <span class='ident'>group</span>.<span class='ident'>wait</span>();
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>group</span>.<span class='ident'>is_empty</span>());
+        <span class="ident">async_increment</span>(<span class="kw-2">&amp;</span><span class="ident">q</span>, <span class="kw-2">&amp;</span><span class="ident">num</span>);
+        <span class="ident">async_increment</span>(<span class="kw-2">&amp;</span><span class="ident">q</span>, <span class="kw-2">&amp;</span><span class="ident">num</span>);
 
-        <span class='comment'>// Our group is empty, but the notify may not have finished yet</span>
-        <span class='ident'>q</span>.<span class='ident'>sync</span>(<span class='op'>||</span> ());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>num</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>(), <span class='number'>10</span>);
+        <span class="ident">q</span>.<span class="ident">barrier_sync</span>(<span class="op">||</span> ());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">num</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>(), <span class="number">12</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_suspend</span>() {
+        <span class="kw">let</span> <span class="ident">q</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="ident">create</span>(<span class="string">&quot;&quot;</span>, <span class="ident">QueueAttribute</span>::<span class="ident">Serial</span>);
+        <span class="kw">let</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">Mutex</span>::<span class="ident">new</span>(<span class="number">0</span>));
+
+        <span class="comment">// Suspend the queue and then dispatch some work to it</span>
+        <span class="kw">let</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">q</span>.<span class="ident">suspend</span>();
+        <span class="ident">async_increment</span>(<span class="kw-2">&amp;</span><span class="ident">q</span>, <span class="kw-2">&amp;</span><span class="ident">num</span>);
+
+        <span class="comment">// Sleep and ensure the work doesn&#39;t occur</span>
+        ::<span class="ident">std</span>::<span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">5</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">num</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>(), <span class="number">0</span>);
+
+        <span class="comment">// But ensure the work does complete after we resume</span>
+        <span class="ident">guard</span>.<span class="ident">resume</span>();
+        <span class="ident">q</span>.<span class="ident">sync</span>(<span class="op">||</span> ());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">num</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>(), <span class="number">1</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_group</span>() {
+        <span class="kw">let</span> <span class="ident">group</span> <span class="op">=</span> <span class="ident">Group</span>::<span class="ident">create</span>();
+        <span class="kw">let</span> <span class="ident">q</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="ident">create</span>(<span class="string">&quot;&quot;</span>, <span class="ident">QueueAttribute</span>::<span class="ident">Serial</span>);
+        <span class="kw">let</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">Mutex</span>::<span class="ident">new</span>(<span class="number">0</span>));
+
+        <span class="kw">let</span> <span class="ident">num2</span> <span class="op">=</span> <span class="ident">num</span>.<span class="ident">clone</span>();
+        <span class="ident">group</span>.<span class="ident">async</span>(<span class="kw-2">&amp;</span><span class="ident">q</span>, <span class="kw">move</span> <span class="op">||</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">num2</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+            <span class="kw-2">*</span><span class="ident">num</span> <span class="op">+=</span> <span class="number">1</span>;
+        });
+
+        <span class="kw">let</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">group</span>.<span class="ident">enter</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">group</span>.<span class="ident">is_empty</span>());
+        <span class="kw">let</span> <span class="ident">num3</span> <span class="op">=</span> <span class="ident">num</span>.<span class="ident">clone</span>();
+        <span class="ident">q</span>.<span class="ident">async</span>(<span class="kw">move</span> <span class="op">||</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">num3</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+            <span class="kw-2">*</span><span class="ident">num</span> <span class="op">+=</span> <span class="number">1</span>;
+            <span class="ident">guard</span>.<span class="ident">leave</span>();
+        });
+
+        <span class="kw">let</span> <span class="ident">num4</span> <span class="op">=</span> <span class="ident">num</span>.<span class="ident">clone</span>();
+        <span class="ident">group</span>.<span class="ident">notify</span>(<span class="kw-2">&amp;</span><span class="ident">q</span>, <span class="kw">move</span> <span class="op">||</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">num4</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">num</span> <span class="op">==</span> <span class="number">2</span> {
+                <span class="kw-2">*</span><span class="ident">num</span> <span class="op">=</span> <span class="number">10</span>;
+            }
+        });
+
+        <span class="ident">group</span>.<span class="ident">wait</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">group</span>.<span class="ident">is_empty</span>());
+
+        <span class="comment">// Our group is empty, but the notify may not have finished yet</span>
+        <span class="ident">q</span>.<span class="ident">sync</span>(<span class="op">||</span> ());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">num</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>(), <span class="number">10</span>);
     }
 }
 </pre>
@@ -1683,18 +1696,22 @@ assert!(nums[0] == &quot;2&quot;);
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -1727,7 +1744,6 @@ assert!(nums[0] == &quot;2&quot;);
         window.rootPath = "../../";
         window.currentCrate = "dispatch";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

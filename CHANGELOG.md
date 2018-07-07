@@ -1,3 +1,19 @@
+## 0.2.3
+
+### Added
+
+* Added a `class!` macro for getting statically-known classes. The result is
+  non-optional (avoiding a need to unwrap) and cached so each usage will only
+  look up the class once.
+
+* Added caching to the `sel!` macro so that each usage will only register the
+  selector once.
+
+### Fixed
+
+* Fixed the implementation of `objc::runtime` structs so there can't be unsound
+  references to uninhabited types.
+
 ## 0.2.2
 
 ### Added

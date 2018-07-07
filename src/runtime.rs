@@ -40,7 +40,7 @@ pub struct Sel {
 
 /// A marker type to be embedded into other types just so that they cannot be
 /// constructed externally.
-enum PrivateMarker { }
+type PrivateMarker = [u8; 0];
 
 /// A type that represents an instance variable.
 #[repr(C)]

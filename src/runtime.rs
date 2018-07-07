@@ -154,7 +154,7 @@ impl Sel {
     #[inline]
     pub unsafe fn from_ptr(ptr: *const c_void) -> Sel {
         Sel {
-            ptr,
+            ptr: ptr,
         }
     }
 

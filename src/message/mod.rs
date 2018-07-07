@@ -83,7 +83,7 @@ pub unsafe trait Message {
     # use objc::Message;
     # fn main() {
     let obj: &Object;
-    # obj = unsafe { msg_send![Class::get("NSObject").unwrap(), new] };
+    # obj = unsafe { msg_send![class!(NSObject), new] };
     let sel = sel!(isKindOfClass:);
     // Verify isKindOfClass: takes one Class and returns a BOOL
     let result = obj.verify_message::<(&Class,), BOOL>(sel);

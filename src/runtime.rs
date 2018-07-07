@@ -553,6 +553,8 @@ mod tests {
         assert!(cls.instance_size() > 0);
         assert!(cls.superclass().is_none());
 
+        assert!(Class::get(cls.name()) == Some(cls));
+
         let metaclass = cls.metaclass();
         // The metaclass of a root class is a subclass of the root class
         assert!(metaclass.superclass().unwrap() == cls);

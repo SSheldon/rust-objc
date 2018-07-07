@@ -118,7 +118,7 @@ pub fn custom_class() -> &'static Class {
         decl.register();
     });
 
-    Class::get("CustomObject").unwrap()
+    class!(CustomObject)
 }
 
 pub fn custom_protocol() -> &'static Protocol {
@@ -179,7 +179,7 @@ pub fn custom_subclass() -> &'static Class {
         decl.register();
     });
 
-    Class::get("CustomSubclassObject").unwrap()
+    class!(CustomSubclassObject)
 }
 
 pub fn custom_subclass_object() -> CustomObject {

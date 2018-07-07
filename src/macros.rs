@@ -1,3 +1,43 @@
+/**
+Gets a reference to a `Class`.
+
+Panics if no class with the given name can be found.
+To check for a class that may not exist, use `Class::get`.
+
+# Example
+``` no_run
+# #[macro_use] extern crate objc;
+# fn main() {
+let cls = class!(NSObject);
+# }
+```
+*/
+#[macro_export]
+macro_rules! class {
+    ($name:ident) => ({
+        #[inline(always)]
+        fn get_class(name: &str) -> Option<&'static $crate::runtime::Class> {
+            unsafe {
+                static CLASS: ::std::sync::atomic::AtomicPtr<$crate::runtime::Class> =
+                    ::std::sync::atomic::AtomicPtr::new(0 as *mut _);
+                // `Relaxed` should be fine since `objc_getClass` is thread-safe.
+                let ptr = CLASS.load(::std::sync::atomic::Ordering::Relaxed);
+                if ptr.is_null() {
+                    let cls = $crate::runtime::objc_getClass(name.as_ptr() as *const _);
+                    CLASS.store(cls as *mut _, ::std::sync::atomic::Ordering::Relaxed);
+                    if cls.is_null() { None } else { Some(&*cls) }
+                } else {
+                    Some(&*ptr)
+                }
+            }
+        }
+        match get_class(concat!(stringify!($name), '\0')) {
+            Some(cls) => cls,
+            None => panic!("Class with name {} could not be found", stringify!($name)),
+        }
+    })
+}
+
 #[doc(hidden)]
 #[macro_export]
 macro_rules! sel_impl {

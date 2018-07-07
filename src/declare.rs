@@ -14,7 +14,7 @@ one ivar, a `u32` named `_number` and a `number` method that returns it:
 # use objc::declare::ClassDecl;
 # use objc::runtime::{Class, Object, Sel};
 # fn main() {
-let superclass = Class::get("NSObject").unwrap();
+let superclass = class!(NSObject);
 let mut decl = ClassDecl::new("MyNumber", superclass).unwrap();
 
 // Add an instance variable

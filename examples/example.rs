@@ -23,7 +23,7 @@ impl Drop for StrongPtr {
 
 fn main() {
     // Get a class
-    let cls = Class::get("NSObject").unwrap();
+    let cls = class!(NSObject);
     println!("NSObject size: {}", cls.instance_size());
 
     // Inspect its ivars

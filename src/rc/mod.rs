@@ -11,15 +11,18 @@ For more information on Objective-C's reference counting, see Apple's documentat
 
 mod strong;
 mod weak;
+mod autorelease;
 
 pub use self::strong::StrongPtr;
 pub use self::weak::WeakPtr;
+pub use self::autorelease::autoreleasepool;
 
 // These tests use NSObject, which isn't present for GNUstep
 #[cfg(all(test, any(target_os = "macos", target_os = "ios")))]
 mod tests {
     use runtime::Object;
     use super::StrongPtr;
+    use super::autoreleasepool;
 
     #[test]
     fn test_strong_clone() {
@@ -65,5 +68,25 @@ mod tests {
         let weak2 = weak.clone();
         let strong = weak2.load();
         assert!(*strong == *obj);
+    }
+
+    #[test]
+    fn test_autorelease() {
+        let obj = unsafe {
+            StrongPtr::new(msg_send![class!(NSObject), new])
+        };
+
+        fn retain_count(obj: *mut Object) -> usize {
+            unsafe { msg_send![obj, retainCount] }
+        }
+        let cloned = obj.clone();
+
+        autoreleasepool(|| {
+                        obj.autorelease();
+                        assert!(retain_count(*cloned) == 2);
+        });
+
+        // make sure that the autoreleased value has been released
+        assert!(retain_count(*cloned) == 1);
     }
 }

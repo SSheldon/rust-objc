@@ -109,6 +109,9 @@ extern {
     pub fn objc_allocateProtocol(name: *const c_char) -> *mut Protocol;
     pub fn objc_registerProtocol(proto: *mut Protocol);
 
+    pub fn objc_autoreleasePoolPush() -> *mut c_void;
+    pub fn objc_autoreleasePoolPop(context: *mut c_void);
+
     pub fn protocol_addMethodDescription(proto: *mut Protocol, name: Sel, types: *const c_char, isRequiredMethod: BOOL,
                                          isInstanceMethod: BOOL);
     pub fn protocol_addProtocol(proto: *mut Protocol, addition: *const Protocol);

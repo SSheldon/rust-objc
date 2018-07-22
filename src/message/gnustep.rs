@@ -1,24 +1,35 @@
-use runtime::{Object, Imp, Sel};
-use super::Super;
+use std::any::Any;
+use std::mem;
 
-pub fn msg_send_fn<R>(obj: *mut Object, sel: Sel) -> (Imp, *mut Object) {
-    extern {
-        fn objc_msg_lookup(receiver: *mut Object, op: Sel) -> Imp;
-    }
+use runtime::{Class, Object, Imp, Sel};
+use super::{Message, MessageArguments, MessageError, Super};
 
-    let imp_fn = unsafe {
-        objc_msg_lookup(obj, sel)
-    };
-    (imp_fn, obj)
+extern {
+    fn objc_msg_lookup(receiver: *mut Object, op: Sel) -> Imp;
+    fn objc_msg_lookup_super(sup: *const Super, sel: Sel) -> Imp;
 }
 
-pub fn msg_send_super_fn<R>(sup: &Super, sel: Sel) -> (Imp, *mut Object) {
-    extern {
-        fn objc_msg_lookup_super(sup: *const Super, sel: Sel) -> Imp;
+pub unsafe fn send_unverified<T, A, R>(obj: *const T, sel: Sel, args: A)
+        -> Result<R, MessageError>
+        where T: Message, A: MessageArguments, R: Any {
+    if obj.is_null() {
+        return mem::zeroed();
     }
 
-    let imp_fn = unsafe {
-        objc_msg_lookup_super(sup, sel)
-    };
-    (imp_fn, sup.receiver)
+    let receiver = obj as *mut T as *mut Object;
+    let msg_send_fn = objc_msg_lookup(receiver, sel);
+    objc_try!({
+        A::invoke(msg_send_fn, receiver, sel, args)
+    })
+}
+
+pub unsafe fn send_super_unverified<T, A, R>(obj: *const T, superclass: &Class,
+        sel: Sel, args: A) -> Result<R, MessageError>
+        where T: Message, A: MessageArguments, R: Any {
+    let receiver = obj as *mut T as *mut Object;
+    let sup = Super { receiver: receiver, superclass: superclass };
+    let msg_send_fn = objc_msg_lookup_super(&sup, sel);
+    objc_try!({
+        A::invoke(msg_send_fn, receiver, sel, args)
+    })
 }

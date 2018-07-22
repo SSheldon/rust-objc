@@ -1,21 +1,18 @@
-use runtime::{Object, Imp, Sel};
-use super::Super;
+use runtime::Imp;
 
-pub fn msg_send_fn<R>(obj: *mut Object, _: Sel) -> (Imp, *mut Object) {
+extern {
+    fn objc_msgSend();
+
+    fn objc_msgSendSuper();
+}
+
+pub fn msg_send_fn<R>() -> Imp {
     // stret is not even available in arm64.
     // <https://twitter.com/gparker/status/378079715824660480>
 
-    extern {
-        fn objc_msgSend();
-    }
-
-    (objc_msgSend, obj)
+    objc_msgSend
 }
 
-pub fn msg_send_super_fn<R>(sup: &Super, _: Sel) -> (Imp, *mut Object) {
-    extern {
-        fn objc_msgSendSuper();
-    }
-
-    (objc_msgSendSuper, sup as *const Super as *mut Object)
+pub fn msg_send_super_fn<R>() -> Imp {
+    objc_msgSendSuper
 }

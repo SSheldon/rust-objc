@@ -6,6 +6,21 @@ use std::mem;
 use runtime::{Class, Imp, Object, Sel};
 use {Encode, EncodeArguments};
 
+#[cfg(feature = "exception")]
+macro_rules! objc_try {
+    ($b:block) => (
+        $crate::exception::try(|| $b).map_err(|exception| match exception {
+            Some(exception) => MessageError(format!("Uncaught exception {:?}", &*exception)),
+            None => MessageError("Uncaught exception nil".to_owned()),
+        })
+    )
+}
+
+#[cfg(not(feature = "exception"))]
+macro_rules! objc_try {
+    ($b:block) => (Ok($b))
+}
+
 mod verify;
 
 #[cfg(any(target_os = "macos", target_os = "ios"))]
@@ -15,7 +30,7 @@ mod platform;
 #[path = "gnustep.rs"]
 mod platform;
 
-use self::platform::{msg_send_fn, msg_send_super_fn};
+use self::platform::{send_unverified, send_super_unverified};
 use self::verify::verify_message_signature;
 
 /// Specifies the superclass of an instance.
@@ -151,30 +166,6 @@ impl Error for MessageError {
     }
 }
 
-#[cfg(feature = "exception")]
-macro_rules! objc_try {
-    ($b:block) => (
-        $crate::exception::try(|| $b).map_err(|exception| match exception {
-            Some(exception) => MessageError(format!("Uncaught exception {:?}", &*exception)),
-            None => MessageError("Uncaught exception nil".to_owned()),
-        })
-    )
-}
-
-#[cfg(not(feature = "exception"))]
-macro_rules! objc_try {
-    ($b:block) => (Ok($b))
-}
-
-unsafe fn send_unverified<T, A, R>(obj: *const T, sel: Sel, args: A)
-        -> Result<R, MessageError>
-        where T: Message, A: MessageArguments, R: Any {
-    let (msg_send_fn, receiver) = msg_send_fn::<R>(obj as *mut T as *mut Object, sel);
-    objc_try!({
-        A::invoke(msg_send_fn, receiver, sel, args)
-    })
-}
-
 #[doc(hidden)]
 #[inline(always)]
 #[cfg(not(feature = "verify_message"))]
@@ -199,16 +190,6 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
 
     verify_message_signature::<A, R>(cls, sel).and_then(|_| {
         send_unverified(obj, sel, args)
-    })
-}
-
-unsafe fn send_super_unverified<T, A, R>(obj: *const T, superclass: &Class,
-        sel: Sel, args: A) -> Result<R, MessageError>
-        where T: Message, A: MessageArguments, R: Any {
-    let sup = Super { receiver: obj as *mut T as *mut Object, superclass: superclass };
-    let (msg_send_fn, receiver) = msg_send_super_fn::<R>(&sup, sel);
-    objc_try!({
-        A::invoke(msg_send_fn, receiver, sel, args)
     })
 }
 

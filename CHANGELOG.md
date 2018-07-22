@@ -1,3 +1,17 @@
+## 0.2.4
+
+### Added
+
+* Added an `rc` module with reference counting utilities:
+  `StrongPtr`, `WeakPtr`, and `autoreleasepool`.
+
+* Added some reference counting ABI foreign functions to the `runtime` module.
+
+### Fixed
+
+* Messaging nil under GNUstep now correctly returns zeroed results for all
+  return types.
+
 ## 0.2.3
 
 ### Added

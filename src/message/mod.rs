@@ -9,10 +9,13 @@ use {Encode, EncodeArguments};
 #[cfg(feature = "exception")]
 macro_rules! objc_try {
     ($b:block) => (
-        $crate::exception::try(|| $b).map_err(|exception| match exception {
-            Some(exception) => MessageError(format!("Uncaught exception {:?}", &*exception)),
-            None => MessageError("Uncaught exception nil".to_owned()),
-        })
+        $crate::exception::try(|| $b).map_err(|exception|
+            if exception.is_null() {
+                MessageError("Uncaught exception nil".to_owned())
+            } else {
+                MessageError(format!("Uncaught exception {:?}", &**exception))
+            }
+        )
     )
 }
 

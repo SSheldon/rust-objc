@@ -128,6 +128,15 @@ extern {
     pub fn method_getNumberOfArguments(method: *const Method) -> c_uint;
     pub fn method_setImplementation(method: *mut Method, imp: Imp) -> Imp;
     pub fn method_exchangeImplementations(m1: *mut Method, m2: *mut Method);
+
+    pub fn objc_retain(obj: *mut Object) -> *mut Object;
+    pub fn objc_release(obj: *mut Object);
+    pub fn objc_autorelease(obj: *mut Object);
+
+    pub fn objc_loadWeakRetained(location: *mut *mut Object) -> *mut Object;
+    pub fn objc_initWeak(location: *mut *mut Object, obj: *mut Object) -> *mut Object;
+    pub fn objc_destroyWeak(location: *mut *mut Object);
+    pub fn objc_copyWeak(to: *mut *mut Object, from: *mut *mut Object);
 }
 
 impl Sel {

@@ -75,11 +75,10 @@ mod macros;
 
 pub mod runtime;
 pub mod declare;
+pub mod rc;
 mod encode;
 #[cfg(feature = "exception")]
 mod exception;
-#[cfg(feature = "exception")]
-mod id;
 mod message;
 
 #[cfg(test)]

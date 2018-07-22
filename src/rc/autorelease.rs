@@ -20,8 +20,9 @@ impl Drop for AutoReleaseHelper {
 
 /**
 Execute `f` in the context of a new autorelease pool. The pool is drained
-after the execution of `f` completes. This corresponds to @autoreleasepool blocks
-in Objective-c and Swift.
+after the execution of `f` completes.
+
+This corresponds to `@autoreleasepool` blocks in Objective-C and Swift.
 */
 pub fn autoreleasepool<F: FnOnce()>(f: F) {
     let _context = unsafe { AutoReleaseHelper::new() };

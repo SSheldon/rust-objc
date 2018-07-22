@@ -20,6 +20,11 @@ let _: () = msg_send![obj, release];
 # }
 ```
 
+# Reference counting
+
+Utilities for reference counting Objective-C objects are provided in the
+[`rc`](rc/index.html) module.
+
 # Declaring classes
 
 Objective-C classes can even be declared from Rust using the functionality of

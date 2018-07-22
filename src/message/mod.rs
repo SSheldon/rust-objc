@@ -8,21 +8,8 @@ use {Encode, EncodeArguments};
 
 mod verify;
 
-#[cfg(all(any(target_os = "macos", target_os = "ios"),
-          target_arch = "x86"))]
-#[path = "x86.rs"]
-mod platform;
-#[cfg(all(any(target_os = "macos", target_os = "ios"),
-          target_arch = "x86_64"))]
-#[path = "x86_64.rs"]
-mod platform;
-#[cfg(all(any(target_os = "macos", target_os = "ios"),
-          target_arch = "arm"))]
-#[path = "arm.rs"]
-mod platform;
-#[cfg(all(any(target_os = "macos", target_os = "ios"),
-          target_arch = "aarch64"))]
-#[path = "arm64.rs"]
+#[cfg(any(target_os = "macos", target_os = "ios"))]
+#[path = "apple/mod.rs"]
 mod platform;
 #[cfg(not(any(target_os = "macos", target_os = "ios")))]
 #[path = "gnustep.rs"]

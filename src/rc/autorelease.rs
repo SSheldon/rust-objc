@@ -24,7 +24,7 @@ after the execution of `f` completes.
 
 This corresponds to `@autoreleasepool` blocks in Objective-C and Swift.
 */
-pub fn autoreleasepool<F: FnOnce()>(f: F) {
+pub fn autoreleasepool<T, F: FnOnce() -> T>(f: F) -> T {
     let _context = unsafe { AutoReleaseHelper::new() };
-    f();
+    f()
 }

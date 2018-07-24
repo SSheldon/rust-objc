@@ -1,3 +1,9 @@
+## 0.2.5
+
+### Added
+
+* `autoreleasepool` returns the value returned by its body closure.
+
 ## 0.2.4
 
 ### Added

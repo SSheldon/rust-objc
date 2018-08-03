@@ -65,7 +65,7 @@ The bindings can be used on Linux or *BSD utilizing the
 
 #![warn(missing_docs)]
 
-extern crate malloc_buf;
+extern crate mbox;
 #[cfg(feature = "exception")]
 extern crate objc_exception;
 

@@ -2,7 +2,7 @@ use std::ffi::CStr;
 use std::fmt;
 use std::os::raw::{c_char, c_void};
 use std::str;
-use malloc_buf::MallocBuffer;
+use mbox::MBox;
 
 use runtime::{Class, Object, Sel};
 
@@ -26,7 +26,7 @@ enum Code {
     Slice(&'static str),
     Owned(String),
     Inline(u8, [u8; CODE_INLINE_CAP]),
-    Malloc(MallocBuffer<u8>)
+    Malloc(MBox<[u8]>)
 }
 
 /// An Objective-C type encoding.
@@ -104,7 +104,7 @@ pub unsafe fn from_malloc_str(ptr: *mut c_char) -> Encoding {
     let s = CStr::from_ptr(ptr);
     let bytes = s.to_bytes_with_nul();
     assert!(str::from_utf8(bytes).is_ok());
-    let buf = MallocBuffer::new(ptr as *mut u8, bytes.len()).unwrap();
+    let buf = MBox::from_raw_parts(ptr as *mut u8, bytes.len());
     Encoding { code: Code::Malloc(buf) }
 }
 

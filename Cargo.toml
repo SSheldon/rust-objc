@@ -23,8 +23,9 @@ exclude = [
 exception = ["objc_exception"]
 verify_message = []
 
-[dependencies]
-malloc_buf = "0.0"
+[dependencies.mbox]
+version = "0.5"
+default_features = false
 
 [dependencies.objc_exception]
 version = "0.1"

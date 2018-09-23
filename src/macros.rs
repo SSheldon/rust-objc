@@ -75,10 +75,22 @@ let sel = sel!(setObject:forKey:);
 # }
 ```
 */
-#[macro_export]
+#[macro_export(local_inner_macros)]
 macro_rules! sel {
-    ($name:ident) => ({sel_impl!(concat!(stringify!($name), '\0'))});
-    ($($name:ident :)+) => ({sel_impl!(concat!($(stringify!($name), ':'),+, '\0'))});
+    ($name:ident) => ({sel_impl!(__objc__concat!(__objc__stringify!($name), '\0'))});
+    ($($name:ident :)+) => ({sel_impl!(__objc__concat!($(__objc__stringify!($name), ':'),+, '\0'))});
+}
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __objc__concat {
+    ($($t:tt)*) => ( concat!($($t)*) );
+}
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __objc__stringify {
+    ($($t:tt)*) => ( stringify!($($t)*) );
 }
 
 /**

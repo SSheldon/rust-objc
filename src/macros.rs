@@ -81,18 +81,6 @@ macro_rules! sel {
     ($($name:ident :)+) => ({sel_impl!(__objc__concat!($(__objc__stringify!($name), ':'),+, '\0'))});
 }
 
-#[doc(hidden)]
-#[macro_export]
-macro_rules! __objc__concat {
-    ($($t:tt)*) => ( concat!($($t)*) );
-}
-
-#[doc(hidden)]
-#[macro_export]
-macro_rules! __objc__stringify {
-    ($($t:tt)*) => ( stringify!($($t)*) );
-}
-
 /**
 Sends a message to an object.
 
@@ -115,34 +103,52 @@ let _: () = msg_send![obj, setArg1:1 arg2:2];
 # }
 ```
 */
-#[macro_export]
+#[macro_export(local_inner_macros)]
 macro_rules! msg_send {
     (super($obj:expr, $superclass:expr), $name:ident) => ({
         let sel = sel!($name);
         match $crate::__send_super_message(&*$obj, $superclass, sel, ()) {
-            Err(s) => panic!("{}", s),
+            Err(s) => __objc__panic!("{}", s),
             Ok(r) => r,
         }
     });
     (super($obj:expr, $superclass:expr), $($name:ident : $arg:expr)+) => ({
         let sel = sel!($($name:)+);
         match $crate::__send_super_message(&*$obj, $superclass, sel, ($($arg,)*)) {
-            Err(s) => panic!("{}", s),
+            Err(s) => __objc__panic!("{}", s),
             Ok(r) => r,
         }
     });
     ($obj:expr, $name:ident) => ({
         let sel = sel!($name);
         match $crate::__send_message(&*$obj, sel, ()) {
-            Err(s) => panic!("{}", s),
+            Err(s) => __objc__panic!("{}", s),
             Ok(r) => r,
         }
     });
     ($obj:expr, $($name:ident : $arg:expr)+) => ({
         let sel = sel!($($name:)+);
         match $crate::__send_message(&*$obj, sel, ($($arg,)*)) {
-            Err(s) => panic!("{}", s),
+            Err(s) => __objc__panic!("{}", s),
             Ok(r) => r,
         }
     });
+}
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __objc__concat {
+    ($($t:tt)*) => ( concat!($($t)*) );
+}
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __objc__stringify {
+    ($($t:tt)*) => ( stringify!($($t)*) );
+}
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __objc__panic {
+    ($($t:tt)*) => ( panic!($($t)*) );
 }

@@ -79,8 +79,8 @@ let sel = sel!(setObject:forKey:);
 */
 #[macro_export]
 macro_rules! sel {
-    ($name:ident) => ({sel_impl!(concat!(stringify!($name), '\0'))});
-    ($($name:ident :)+) => ({sel_impl!(concat!($(stringify!($name), ':'),+, '\0'))});
+    ($name:ident) => ({$crate::sel_impl!(concat!(stringify!($name), '\0'))});
+    ($($name:ident :)+) => ({$crate::sel_impl!(concat!($(stringify!($name), ':'),+, '\0'))});
 }
 
 /**
@@ -108,28 +108,28 @@ let _: () = msg_send![obj, setArg1:1 arg2:2];
 #[macro_export]
 macro_rules! msg_send {
     (super($obj:expr, $superclass:expr), $name:ident) => ({
-        let sel = sel!($name);
+        let sel = $crate::sel!($name);
         match $crate::__send_super_message(&*$obj, $superclass, sel, ()) {
             Err(s) => panic!("{}", s),
             Ok(r) => r,
         }
     });
     (super($obj:expr, $superclass:expr), $($name:ident : $arg:expr)+) => ({
-        let sel = sel!($($name:)+);
+        let sel = $crate::sel!($($name:)+);
         match $crate::__send_super_message(&*$obj, $superclass, sel, ($($arg,)*)) {
             Err(s) => panic!("{}", s),
             Ok(r) => r,
         }
     });
     ($obj:expr, $name:ident) => ({
-        let sel = sel!($name);
+        let sel = $crate::sel!($name);
         match $crate::__send_message(&*$obj, sel, ()) {
             Err(s) => panic!("{}", s),
             Ok(r) => r,
         }
     });
     ($obj:expr, $($name:ident : $arg:expr)+) => ({
-        let sel = sel!($($name:)+);
+        let sel = $crate::sel!($($name:)+);
         match $crate::__send_message(&*$obj, sel, ($($arg,)*)) {
             Err(s) => panic!("{}", s),
             Ok(r) => r,

@@ -15,6 +15,7 @@ let cls = class!(NSObject);
 #[macro_export]
 macro_rules! class {
     ($name:ident) => ({
+        #[allow(deprecated)]
         #[inline(always)]
         fn get_class(name: &str) -> Option<&'static $crate::runtime::Class> {
             unsafe {
@@ -44,6 +45,7 @@ macro_rules! sel_impl {
     // Declare a function to hide unsafety, otherwise we can trigger the
     // unused_unsafe lint; see rust-lang/rust#8472
     ($name:expr) => ({
+        #[allow(deprecated)]
         #[inline(always)]
         fn register_sel(name: &str) -> $crate::runtime::Sel {
             unsafe {

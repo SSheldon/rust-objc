@@ -1,3 +1,9 @@
+## 0.2.6
+
+### Fixed
+
+* Suppressed a deprecation warning in `sel!`, `msg_send!`, and `class!`.
+
 ## 0.2.5
 
 ### Added

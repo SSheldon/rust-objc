@@ -13,18 +13,17 @@ pub fn verify_message_signature<A, R>(cls: &Class, sel: Sel)
         )),
     };
 
-    let ret = R::encode();
+    let ret = R::ENCODING;
     let expected_ret = method.return_type();
-    if ret != expected_ret {
+    if ret != *expected_ret {
         return Err(MessageError(
-            format!("Return type code {:?} does not match expected {:?} for method {:?}",
+            format!("Return type code {} does not match expected {} for method {:?}",
                 ret, expected_ret, method.name())
         ));
     }
 
-    let self_and_cmd = [<*mut Object>::encode(), Sel::encode()];
-    let args = A::encodings();
-    let args = args.as_ref();
+    let self_and_cmd = [<*mut Object>::ENCODING, Sel::ENCODING];
+    let args = A::ENCODINGS;
 
     let count = self_and_cmd.len() + args.len();
     let expected_count = method.arguments_count();
@@ -37,7 +36,7 @@ pub fn verify_message_signature<A, R>(cls: &Class, sel: Sel)
 
     for (i, arg) in self_and_cmd.iter().chain(args).enumerate() {
         let expected = method.argument_type(i).unwrap();
-        if *arg != expected {
+        if *arg != *expected {
             return Err(MessageError(
                 format!("Method {:?} expected argument at index {} with type code {:?} but was given {:?}",
                     method.name(), i, expected, arg)

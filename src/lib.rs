@@ -66,10 +66,13 @@ The bindings can be used on Linux or *BSD utilizing the
 #![warn(missing_docs)]
 
 extern crate malloc_buf;
+extern crate objc_encode;
 #[cfg(feature = "exception")]
 extern crate objc_exception;
 
-pub use encode::{Encode, EncodeArguments, Encoding};
+pub use objc_encode::{Encode, Encoding};
+
+pub use encode::EncodeArguments;
 pub use message::{Message, MessageArguments, MessageError};
 
 pub use message::send_message as __send_message;

@@ -51,7 +51,7 @@ pub use self::autorelease::autoreleasepool;
 // These tests use NSObject, which isn't present for GNUstep
 #[cfg(all(test, any(target_os = "macos", target_os = "ios")))]
 mod tests {
-    use runtime::Object;
+    use crate::runtime::Object;
     use super::StrongPtr;
     use super::autoreleasepool;
 

@@ -1,5 +1,5 @@
-use runtime::{Class, Object, Sel};
-use {Encode, EncodeArguments};
+use crate::runtime::{Class, Object, Sel};
+use crate::{Encode, EncodeArguments};
 use super::MessageError;
 
 pub fn verify_message_signature<A, R>(cls: &Class, sel: Sel)

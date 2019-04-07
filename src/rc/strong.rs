@@ -2,7 +2,7 @@ use std::fmt;
 use std::mem;
 use std::ops::Deref;
 
-use runtime::{Object, self};
+use crate::runtime::{Object, self};
 use super::WeakPtr;
 
 /// A pointer that strongly references an object, ensuring it won't be deallocated.

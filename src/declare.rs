@@ -38,8 +38,8 @@ use std::ffi::CString;
 use std::mem;
 use std::ptr;
 
-use runtime::{BOOL, Class, Imp, NO, Object, Protocol, Sel, self};
-use {Encode, EncodeArguments, Encoding, Message};
+use crate::runtime::{BOOL, Class, Imp, NO, Object, Protocol, Sel, self};
+use crate::{Encode, EncodeArguments, Encoding, Message};
 
 /// Types that can be used as the implementation of an Objective-C method.
 pub trait MethodImplementation {
@@ -315,7 +315,7 @@ impl ProtocolDecl {
 
 #[cfg(test)]
 mod tests {
-    use test_utils;
+    use crate::test_utils;
 
     #[test]
     fn test_custom_class() {

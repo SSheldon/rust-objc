@@ -1,5 +1,5 @@
-use runtime::{Class, Object, Sel};
-use {Encode, Encoding};
+use crate::runtime::{Class, Object, Sel};
+use crate::{Encode, Encoding};
 
 unsafe impl Encode for Sel {
     const ENCODING: Encoding<'static> = Encoding::Sel;
@@ -55,7 +55,7 @@ encode_args_impl!(A, B, C, D, E, F, G, H, I, J, K, L);
 #[cfg(test)]
 mod tests {
     use objc_encode::Encode;
-    use runtime::{Class, Object, Sel};
+    use crate::runtime::{Class, Object, Sel};
 
     #[test]
     fn test_encode() {

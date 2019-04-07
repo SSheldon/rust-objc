@@ -1,6 +1,6 @@
 use std::any::Any;
 
-use runtime::{Class, Object, Sel};
+use crate::runtime::{Class, Object, Sel};
 use super::{Message, MessageArguments, MessageError, Super};
 
 #[cfg(target_arch = "x86")]

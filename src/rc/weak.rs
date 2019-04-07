@@ -1,7 +1,7 @@
 use std::cell::UnsafeCell;
 use std::ptr;
 
-use runtime::{Object, self};
+use crate::runtime::{Object, self};
 use super::StrongPtr;
 
 // Our pointer must have the same address even if we are moved, so Box it.

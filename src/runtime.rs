@@ -10,7 +10,7 @@ use std::ptr;
 use std::str;
 use malloc_buf::Malloc;
 
-use Encode;
+use crate::Encode;
 
 /// The Objective-C `BOOL` type.
 ///
@@ -526,8 +526,8 @@ impl fmt::Debug for Object {
 
 #[cfg(test)]
 mod tests {
-    use test_utils;
-    use Encode;
+    use crate::test_utils;
+    use crate::Encode;
     use super::{Class, Protocol, Sel};
 
     #[test]

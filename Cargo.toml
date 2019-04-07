@@ -2,6 +2,7 @@
 name = "objc"
 version = "0.2.6"
 authors = ["Steven Sheldon"]
+edition = "2018"
 
 description = "Objective-C Runtime bindings and wrapper for Rust."
 keywords = ["objective-c", "osx", "ios", "cocoa", "uikit"]

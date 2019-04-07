@@ -3,13 +3,13 @@ use std::error::Error;
 use std::fmt;
 use std::mem;
 
-use runtime::{Class, Imp, Object, Sel};
-use {Encode, EncodeArguments};
+use crate::runtime::{Class, Imp, Object, Sel};
+use crate::{Encode, EncodeArguments};
 
 #[cfg(feature = "exception")]
 macro_rules! objc_try {
     ($b:block) => (
-        $crate::exception::try(|| $b).map_err(|exception|
+        $crate::exception::r#try(|| $b).map_err(|exception|
             if exception.is_null() {
                 MessageError("Uncaught exception nil".to_owned())
             } else {
@@ -223,8 +223,8 @@ pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
 
 #[cfg(test)]
 mod tests {
-    use test_utils;
-    use runtime::Object;
+    use crate::test_utils;
+    use crate::runtime::Object;
     use super::Message;
 
     #[test]

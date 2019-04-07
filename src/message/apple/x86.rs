@@ -1,7 +1,7 @@
 use std::any::{Any, TypeId};
 use std::mem;
 
-use runtime::Imp;
+use crate::runtime::Imp;
 
 extern {
     fn objc_msgSend();

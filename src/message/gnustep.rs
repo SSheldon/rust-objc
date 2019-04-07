@@ -1,7 +1,7 @@
 use std::any::Any;
 use std::mem;
 
-use runtime::{Class, Object, Imp, Sel};
+use crate::runtime::{Class, Object, Imp, Sel};
 use super::{Message, MessageArguments, MessageError, Super};
 
 extern {

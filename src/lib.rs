@@ -75,6 +75,8 @@ pub use objc_encode::{Encode, Encoding};
 pub use crate::encode::EncodeArguments;
 pub use crate::message::{Message, MessageArguments, MessageError};
 
+pub use crate::cache::CachedClass as __CachedClass;
+pub use crate::cache::CachedSel as __CachedSel;
 pub use crate::message::send_message as __send_message;
 pub use crate::message::send_super_message as __send_super_message;
 
@@ -84,6 +86,7 @@ mod macros;
 pub mod runtime;
 pub mod declare;
 pub mod rc;
+mod cache;
 mod encode;
 #[cfg(feature = "exception")]
 mod exception;

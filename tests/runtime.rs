@@ -1,4 +1,4 @@
-use objc::runtime::{Class, Protocol, Sel};
+use objc::runtime::{Class, Object, Protocol, Sel};
 use objc::{Encode, msg_send};
 
 #[path = "common/mod.rs"]
@@ -100,4 +100,12 @@ fn test_object() {
         *obj.get_ivar("_foo")
     };
     assert!(result == 4);
+}
+
+#[test]
+fn test_encode() {
+    assert!(<&Object>::ENCODING.to_string() == "@");
+    assert!(<*mut Object>::ENCODING.to_string() == "@");
+    assert!(<&Class>::ENCODING.to_string() == "#");
+    assert!(Sel::ENCODING.to_string() == ":");
 }

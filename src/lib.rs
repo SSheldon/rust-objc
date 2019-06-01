@@ -91,6 +91,3 @@ mod encode;
 #[cfg(feature = "exception")]
 mod exception;
 mod message;
-
-#[cfg(test)]
-mod test_utils;

@@ -1,10 +1,13 @@
+// Each integration test will not use every util
+#![allow(dead_code)]
+
 use std::ops::{Deref, DerefMut};
 use std::os::raw::c_char;
 use std::sync::{Once, ONCE_INIT};
 
-use crate::declare::{ClassDecl, ProtocolDecl};
-use crate::runtime::{Class, Object, Protocol, Sel, self};
-use crate::{Encode, Encoding};
+use objc::declare::{ClassDecl, ProtocolDecl};
+use objc::runtime::{Class, Object, Protocol, Sel, self};
+use objc::{Encode, Encoding, class, sel, msg_send};
 
 pub struct CustomObject {
     obj: *mut Object,

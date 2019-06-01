@@ -5,7 +5,7 @@ use std::ops::{Deref, DerefMut};
 use std::os::raw::c_char;
 use std::sync::{Once, ONCE_INIT};
 
-use objc::declare::{ClassDecl, ProtocolDecl};
+use objc_declare::{ClassDecl, ProtocolDecl};
 use objc::runtime::{Class, Object, Protocol, Sel, self};
 use objc::{Encode, Encoding, class, sel, msg_send};
 

@@ -31,3 +31,8 @@ objc-encode = "1.0"
 [dependencies.objc_exception]
 version = "0.1"
 optional = true
+
+[dev-dependencies]
+objc-declare = { path = "./declare" }
+
+[workspace]

@@ -38,8 +38,8 @@ use std::ffi::CString;
 use std::mem;
 use std::ptr;
 
-use crate::runtime::{BOOL, Class, Imp, NO, Object, Protocol, Sel, self};
-use crate::{Encode, EncodeArguments, Encoding, Message};
+use objc::runtime::{BOOL, Class, Imp, NO, Object, Protocol, Sel, self};
+use objc::{Encode, EncodeArguments, Encoding, Message, sel};
 
 /// Types that can be used as the implementation of an Objective-C method.
 pub trait MethodImplementation {

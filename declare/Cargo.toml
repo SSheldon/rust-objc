@@ -1,0 +1,8 @@
+[package]
+name = "objc-declare"
+version = "0.1.0"
+authors = ["Steven Sheldon"]
+edition = "2018"
+
+[dependencies]
+objc = { path = ".." }

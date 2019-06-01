@@ -84,7 +84,6 @@ pub use crate::message::send_super_message as __send_super_message;
 mod macros;
 
 pub mod runtime;
-pub mod declare;
 pub mod rc;
 mod cache;
 mod encode;

@@ -1,6 +1,6 @@
 Objective-C Runtime bindings and wrapper for Rust.
 
-* Documentation: http://docs.rs/objc/
+* Documentation: https://docs.rs/objc/
 * Crate: https://crates.io/crates/objc
 
 ## Messaging objects

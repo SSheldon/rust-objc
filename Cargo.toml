@@ -8,7 +8,7 @@ description = "Objective-C Runtime bindings and wrapper for Rust."
 keywords = ["objective-c", "osx", "ios", "cocoa", "uikit"]
 readme = "README.md"
 repository = "http://github.com/SSheldon/rust-objc"
-documentation = "http://ssheldon.github.io/rust-objc/objc/"
+documentation = "https://docs.rs/objc/"
 license = "MIT"
 
 exclude = [

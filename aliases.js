@@ -1,0 +1,12 @@
+var ALIASES = {};
+ALIASES["block"] = {};
+ALIASES["dispatch"] = {};
+ALIASES["doc"] = {};
+ALIASES["libc"] = {};
+ALIASES["malloc_buf"] = {};
+ALIASES["objc"] = {};
+ALIASES["objc_encode"] = {};
+ALIASES["objc_exception"] = {};
+ALIASES["objc_foundation"] = {};
+ALIASES["objc_id"] = {};
+ALIASES["objc_test_utils"] = {};

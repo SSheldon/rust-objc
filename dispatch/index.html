@@ -1,65 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `dispatch` crate.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, dispatch">
-
-    <title>dispatch - Rust</title>
-
-    <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../dark.css">
-    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
-    <script src="../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc mod">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        <p class='location'>Crate dispatch</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'dispatch', ty: 'mod', relpath: '../'};</script></div>
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>dispatch</a></span><span class='out-of-band'><span id='render-detail'>
-                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                       [<span class='inner'>&#x2212;</span>]
-                   </a>
-               </span><a class='srclink' href='../src/dispatch/lib.rs.html#1-813' title='goto source code'>[src]</a></span></h1><div class='docblock'><p>Rust wrapper for Apple's Grand Central Dispatch (GCD).</p>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `dispatch` crate."><meta name="keywords" content="rust, rustlang, rust-lang, dispatch"><title>dispatch - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="shortcut icon" href="../favicon.ico"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../dispatch/index.html'><img src='../rust-logo.png' alt='logo' width='100'></a><p class='location'>Crate dispatch</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all dispatch's items</p></a><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'dispatch', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/dispatch/lib.rs.html#1-816' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>dispatch</a></span></h1><div class='docblock'><p>Rust wrapper for Apple's Grand Central Dispatch (GCD).</p>
 <p>GCD is an implementation of task parallelism that allows tasks to be submitted
 to queues where they are scheduled to execute.</p>
 <p>For more information, see Apple's <a href="https://developer.apple.com/library/mac/documentation/Performance/Reference/GCD_libdispatch_Ref/index.html">Grand Central Dispatch reference</a>.</p>
@@ -67,19 +6,19 @@ to queues where they are scheduled to execute.</p>
 <p>Serial queues execute tasks serially in FIFO order. The application's main
 queue is serial and can be accessed through the <code>Queue::main</code> function.</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">dispatch</span>::{<span class="ident">Queue</span>, <span class="ident">QueueAttribute</span>};
 
 <span class="kw">let</span> <span class="ident">queue</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="ident">create</span>(<span class="string">&quot;com.example.rust&quot;</span>, <span class="ident">QueueAttribute</span>::<span class="ident">Serial</span>);
 <span class="ident">queue</span>.<span class="ident">async</span>(<span class="op">||</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Hello&quot;</span>));
-<span class="ident">queue</span>.<span class="ident">async</span>(<span class="op">||</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;World&quot;</span>));</pre>
+<span class="ident">queue</span>.<span class="ident">async</span>(<span class="op">||</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;World&quot;</span>));</pre></div>
 <h1 id="concurrent-queues" class="section-header"><a href="#concurrent-queues">Concurrent Queues</a></h1>
 <p>Concurrent dispatch queues execute tasks concurrently. GCD provides global
 concurrent queues that can be accessed through the <code>Queue::global</code> function.</p>
 <p><code>Queue</code> has two methods that can simplify processing data in parallel, <code>foreach</code>
 and <code>map</code>:</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">dispatch</span>::{<span class="ident">Queue</span>, <span class="ident">QueuePriority</span>};
 
 <span class="kw">let</span> <span class="ident">queue</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="ident">global</span>(<span class="ident">QueuePriority</span>::<span class="ident">Default</span>);
@@ -89,128 +28,15 @@ and <code>map</code>:</p>
 <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">nums</span> <span class="op">==</span> [<span class="number">2</span>, <span class="number">3</span>]);
 
 <span class="kw">let</span> <span class="ident">nums</span> <span class="op">=</span> <span class="ident">queue</span>.<span class="ident">map</span>(<span class="ident">nums</span>, <span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">to_string</span>());
-<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">nums</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&quot;2&quot;</span>);</pre>
+<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">nums</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&quot;2&quot;</span>);</pre></div>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class="mod" href="ffi/index.html"
-                                  title='mod dispatch::ffi'>ffi</a></td>
-                           <td class='docblock-short'>
-                                <p>Raw foreign function interface for libdispatch.</p>
-
-                           </td>
-                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Group.html"
-                                  title='struct dispatch::Group'>Group</a></td>
-                           <td class='docblock-short'>
-                                <p>A Grand Central Dispatch group.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.GroupGuard.html"
-                                  title='struct dispatch::GroupGuard'>GroupGuard</a></td>
-                           <td class='docblock-short'>
-                                <p>An RAII guard which will leave a <code>Group</code> when dropped.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Queue.html"
-                                  title='struct dispatch::Queue'>Queue</a></td>
-                           <td class='docblock-short'>
-                                <p>A Grand Central Dispatch queue.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.SuspendGuard.html"
-                                  title='struct dispatch::SuspendGuard'>SuspendGuard</a></td>
-                           <td class='docblock-short'>
-                                <p>An RAII guard which will resume a suspended <code>Queue</code> when dropped.</p>
-
-                           </td>
-                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class="enum" href="enum.QueueAttribute.html"
-                                  title='enum dispatch::QueueAttribute'>QueueAttribute</a></td>
-                           <td class='docblock-short'>
-                                <p>The type of a dispatch queue.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="enum" href="enum.QueuePriority.html"
-                                  title='enum dispatch::QueuePriority'>QueuePriority</a></td>
-                           <td class='docblock-short'>
-                                <p>The priority of a global concurrent queue.</p>
-
-                           </td>
-                       </tr></table></section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../";
-        window.currentCrate = "dispatch";
-    </script>
-    <script src="../main.js"></script>
-    <script defer src="../search-index.js"></script>
-</body>
-</html>
+<table><tr class='module-item'><td><a class="mod" href="ffi/index.html" title='dispatch::ffi mod'>ffi</a></td><td class='docblock-short'><p>Raw foreign function interface for libdispatch.</p>
+</td></tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table><tr class='module-item'><td><a class="struct" href="struct.Group.html" title='dispatch::Group struct'>Group</a></td><td class='docblock-short'><p>A Grand Central Dispatch group.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.GroupGuard.html" title='dispatch::GroupGuard struct'>GroupGuard</a></td><td class='docblock-short'><p>An RAII guard which will leave a <code>Group</code> when dropped.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.Queue.html" title='dispatch::Queue struct'>Queue</a></td><td class='docblock-short'><p>A Grand Central Dispatch queue.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.SuspendGuard.html" title='dispatch::SuspendGuard struct'>SuspendGuard</a></td><td class='docblock-short'><p>An RAII guard which will resume a suspended <code>Queue</code> when dropped.</p>
+</td></tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table><tr class='module-item'><td><a class="enum" href="enum.QueueAttribute.html" title='dispatch::QueueAttribute enum'>QueueAttribute</a></td><td class='docblock-short'><p>The type of a dispatch queue.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.QueuePriority.html" title='dispatch::QueuePriority enum'>QueuePriority</a></td><td class='docblock-short'><p>The priority of a global concurrent queue.</p>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "dispatch";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

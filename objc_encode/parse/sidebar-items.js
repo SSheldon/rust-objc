@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["ParseEncodingError","An error returned when constructing a `StrEncoding` if the string could not be parsed as a valid encoding."],["StrEncoding","An Objective-C type encoding parsed from its string representation."]]});

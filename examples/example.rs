@@ -18,8 +18,8 @@ fn main() {
 
     // Allocate an instance
     let obj = unsafe {
-        let obj: *mut Object = msg_send![cls, alloc];
-        let obj: *mut Object = msg_send![obj, init];
+        let obj = msg_send![cls, alloc => *mut Object];
+        let obj = msg_send![obj, init => *mut Object];
         StrongPtr::new(obj)
     };
     println!("NSObject address: {:p}", obj);
@@ -38,8 +38,8 @@ fn main() {
     assert!(*hash_return == usize::ENCODING);
 
     // Invoke a method on the object
-    let hash: usize = unsafe {
-        msg_send![*obj, hash]
+    let hash = unsafe {
+        msg_send![*obj, hash => usize]
     };
     println!("NSObject hash: {}", hash);
 }

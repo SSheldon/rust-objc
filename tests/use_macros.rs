@@ -9,9 +9,9 @@ use objc::runtime::Object;
 fn use_class_and_msg_send() {
     unsafe {
         let cls = class!(NSObject);
-        let obj: *mut Object = msg_send![cls, new];
-        let _hash: usize = msg_send![obj, hash];
-        let _: () = msg_send![obj, release];
+        let obj = msg_send![cls, new => *mut Object];
+        let _hash = msg_send![obj, hash => usize];
+        msg_send![obj, release => ()];
     }
 }
 

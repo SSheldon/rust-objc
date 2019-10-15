@@ -9,11 +9,11 @@ Objective-C objects can be messaged using the `msg_send!` macro:
 
 ``` rust
 let cls = class!(NSObject);
-let obj: *mut Object = msg_send![cls, new];
-let hash: usize = msg_send![obj, hash];
-let is_kind: BOOL = msg_send![obj, isKindOfClass:cls];
+let obj = msg_send![cls, new => *mut Object];
+let hash = msg_send![obj, hash => usize];
+let is_kind = msg_send![obj, isKindOfClass:cls => BOOL];
 // Even void methods must have their return type annotated
-let _: () = msg_send![obj, release];
+msg_send![obj, release => ()];
 ```
 
 ## Reference counting
@@ -27,7 +27,7 @@ and safely fails if the object has been deallocated.
 ``` rust
 // StrongPtr will release the object when dropped
 let obj = unsafe {
-    StrongPtr::new(msg_send![class!(NSObject), new])
+    StrongPtr::new(msg_send![class!(NSObject), new => *mut Object])
 };
 
 // Cloning retains the object an additional time

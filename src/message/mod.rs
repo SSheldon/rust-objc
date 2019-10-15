@@ -88,7 +88,7 @@ pub unsafe trait Message {
     # use objc::Message;
     # fn main() {
     let obj: &Object;
-    # obj = unsafe { msg_send![class!(NSObject), new] };
+    # obj = unsafe { msg_send![class!(NSObject), new => &Object] };
     let sel = sel!(isKindOfClass:);
     // Verify isKindOfClass: takes one Class and returns a BOOL
     let result = obj.verify_message::<(&Class,), BOOL>(sel);
@@ -230,9 +230,9 @@ mod tests {
     #[test]
     fn test_send_message() {
         let obj = test_utils::custom_object();
-        let result: u32 = unsafe {
-            let _: () = msg_send![obj, setFoo:4u32];
-            msg_send![obj, foo]
+        let result = unsafe {
+            msg_send![obj, setFoo:4u32 => ()];
+            msg_send![obj, foo => u32]
         };
         assert!(result == 4);
     }
@@ -240,8 +240,8 @@ mod tests {
     #[test]
     fn test_send_message_stret() {
         let obj = test_utils::custom_object();
-        let result: test_utils::CustomStruct = unsafe {
-            msg_send![obj, customStruct]
+        let result  = unsafe {
+            msg_send![obj, customStruct => test_utils::CustomStruct]
         };
         let expected = test_utils::CustomStruct { a: 1, b:2, c: 3, d: 4 };
         assert!(result == expected);
@@ -251,18 +251,18 @@ mod tests {
     #[test]
     fn test_send_message_nil() {
         let nil: *mut Object = ::std::ptr::null_mut();
-        let result: usize = unsafe {
-            msg_send![nil, hash]
+        let result = unsafe {
+            msg_send![nil, hash => usize]
         };
         assert!(result == 0);
 
-        let result: *mut Object = unsafe {
-            msg_send![nil, description]
+        let result = unsafe {
+            msg_send![nil, description => *mut Object]
         };
         assert!(result.is_null());
 
-        let result: f64 = unsafe {
-            msg_send![nil, doubleValue]
+        let result = unsafe {
+            msg_send![nil, doubleValue => f64]
         };
         assert!(result == 0.0);
     }
@@ -272,13 +272,12 @@ mod tests {
         let obj = test_utils::custom_subclass_object();
         let superclass = test_utils::custom_class();
         unsafe {
-            let _: () = msg_send![obj, setFoo:4u32];
-            let foo: u32 = msg_send![super(obj, superclass), foo];
+            msg_send![obj, setFoo:4u32 => ()];
+            let foo = msg_send![super(obj, superclass), foo => u32];
             assert!(foo == 4);
 
             // The subclass is overriden to return foo + 2
-            let foo: u32 = msg_send![obj, foo];
-            assert!(foo == 6);
+            assert!(msg_send![obj, foo => u32] == 6);
         }
     }
 

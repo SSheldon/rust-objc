@@ -1,3 +1,22 @@
+## 0.3.0
+
+### Changed
+
+* Require users of `msg_send!` to specify the return type.
+
+  Previously, the return type was inferred based on context, and
+  `let () = msg_send![…];` was documented as the correct use when there is no return value.
+  However `msg_send![…];` compiled fine and was equivalent as of Rust 1.38,
+  even though it happened to rely on an unspecified part of the language
+  (type inference fallback for diverging expressions)
+
+  When Rust first tried to change fallback from `()` (the unit type) to `!` (the never type),
+  this cause such uses of `msg_send!` to have Undefined Behavior
+  beacause a function was returning `Result<!, SomeError>::Ok`, which should be impossible:
+  <https://github.com/SSheldon/rust-objc/issues/62>
+
+  With this change, both `let () = msg_send![…];` and `msg_send![…];` become `msg_send![… => ()];`.
+
 ## 0.2.6
 
 ### Fixed

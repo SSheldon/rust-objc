@@ -69,39 +69,39 @@ Variadic arguments are not currently supported.
 # fn main() {
 # unsafe {
 let obj: *mut Object;
-# let obj: *mut Object = 0 as *mut Object;
-let description: *const Object = msg_send![obj, description];
-let _: () = msg_send![obj, setArg1:1 arg2:2];
+# let obj = 0 as *mut Object;
+let description = msg_send![obj, description => *mut Object];
+msg_send![obj, setArg1:1 arg2:2 => ()];
 # }
 # }
 ```
 */
 #[macro_export]
 macro_rules! msg_send {
-    (super($obj:expr, $superclass:expr), $name:ident) => ({
+    (super($obj:expr, $superclass:expr), $name:ident => $ret:ty) => ({
         let sel = $crate::sel!($name);
-        match $crate::__send_super_message(&*$obj, $superclass, sel, ()) {
+        match $crate::__send_super_message::<_, _, $ret>(&*$obj, $superclass, sel, ()) {
             Err(s) => panic!("{}", s),
             Ok(r) => r,
         }
     });
-    (super($obj:expr, $superclass:expr), $($name:ident : $arg:expr)+) => ({
+    (super($obj:expr, $superclass:expr), $($name:ident : $arg:expr)+ => $ret:ty) => ({
         let sel = $crate::sel!($($name:)+);
-        match $crate::__send_super_message(&*$obj, $superclass, sel, ($($arg,)*)) {
+        match $crate::__send_super_message::<_, _, $ret>(&*$obj, $superclass, sel, ($($arg,)*)) {
             Err(s) => panic!("{}", s),
             Ok(r) => r,
         }
     });
-    ($obj:expr, $name:ident) => ({
+    ($obj:expr, $name:ident => $ret:ty) => ({
         let sel = $crate::sel!($name);
-        match $crate::__send_message(&*$obj, sel, ()) {
+        match $crate::__send_message::<_, _, $ret>(&*$obj, sel, ()) {
             Err(s) => panic!("{}", s),
             Ok(r) => r,
         }
     });
-    ($obj:expr, $($name:ident : $arg:expr)+) => ({
+    ($obj:expr, $($name:ident : $arg:expr)+ => $ret:ty) => ({
         let sel = $crate::sel!($($name:)+);
-        match $crate::__send_message(&*$obj, sel, ($($arg,)*)) {
+        match $crate::__send_message::<_, _, $ret>(&*$obj, sel, ($($arg,)*)) {
             Err(s) => panic!("{}", s),
             Ok(r) => r,
         }

@@ -18,10 +18,11 @@ For more information on Objective-C's reference counting, see Apple's documentat
 ``` no_run
 # #[macro_use] extern crate objc;
 # use objc::rc::{autoreleasepool, StrongPtr};
+# use objc::runtime::Object;
 # fn main() {
 // StrongPtr will release the object when dropped
 let obj = unsafe {
-    StrongPtr::new(msg_send![class!(NSObject), new])
+    StrongPtr::new(msg_send![class!(NSObject), new => *mut Object])
 };
 
 // Cloning retains the object an additional time
@@ -58,11 +59,11 @@ mod tests {
     #[test]
     fn test_strong_clone() {
         fn retain_count(obj: *mut Object) -> usize {
-            unsafe { msg_send![obj, retainCount] }
+            unsafe { msg_send![obj, retainCount => usize] }
         }
 
         let obj = unsafe {
-            StrongPtr::new(msg_send![class!(NSObject), new])
+            StrongPtr::new(msg_send![class!(NSObject), new => *mut Object])
         };
         assert!(retain_count(*obj) == 1);
 
@@ -77,7 +78,7 @@ mod tests {
     #[test]
     fn test_weak() {
         let obj = unsafe {
-            StrongPtr::new(msg_send![class!(NSObject), new])
+            StrongPtr::new(msg_send![class!(NSObject), new => *mut Object])
         };
         let weak = obj.weak();
 
@@ -92,7 +93,7 @@ mod tests {
     #[test]
     fn test_weak_copy() {
         let obj = unsafe {
-            StrongPtr::new(msg_send![class!(NSObject), new])
+            StrongPtr::new(msg_send![class!(NSObject), new => *mut Object])
         };
         let weak = obj.weak();
 
@@ -104,11 +105,11 @@ mod tests {
     #[test]
     fn test_autorelease() {
         let obj = unsafe {
-            StrongPtr::new(msg_send![class!(NSObject), new])
+            StrongPtr::new(msg_send![class!(NSObject), new => *mut Object])
         };
 
         fn retain_count(obj: *mut Object) -> usize {
-            unsafe { msg_send![obj, retainCount] }
+            unsafe { msg_send![obj, retainCount => usize] }
         }
         let cloned = obj.clone();
 

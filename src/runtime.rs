@@ -593,8 +593,8 @@ mod tests {
     #[test]
     fn test_protocol_method() {
         let class = test_utils::custom_class();
-        let result: i32 = unsafe {
-            msg_send![class, addNumber:1 toNumber:2]
+        let result = unsafe {
+            msg_send![class, addNumber:1 toNumber:2 => i32]
         };
         assert_eq!(result, 3);
     }

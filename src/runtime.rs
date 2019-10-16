@@ -86,6 +86,7 @@ extern {
     pub fn class_getInstanceSize(cls: *const Class) -> usize;
     pub fn class_getInstanceMethod(cls: *const Class, sel: Sel) -> *const Method;
     pub fn class_getInstanceVariable(cls: *const Class, name: *const c_char) -> *const Ivar;
+    pub fn class_getClassVariable(cls: *const Class, name: *const c_char) -> *const Ivar;
     pub fn class_copyMethodList(cls: *const Class, outCount: *mut c_uint) -> *mut *const Method;
     pub fn class_copyIvarList(cls: *const Class, outCount: *mut c_uint) -> *mut *const Ivar;
     pub fn class_addMethod(cls: *mut Class, name: Sel, imp: Imp, types: *const c_char) -> BOOL;
@@ -350,6 +351,17 @@ impl Class {
         }
     }
 
+    /// Returns the ivar for a specified class variable of self, or `None`
+    /// if self has no ivar with the given name.
+    pub fn class_variable(&self, name: &NulTerminatedStr) -> Option<&Ivar> {
+        let name_ptr = name.as_ptr() as *const c_char;
+        unsafe {
+            let ivar = class_getClassVariable(self, name_ptr);
+            if ivar.is_null() { None } else { Some(&*ivar) }
+        }
+    }
+
+   
     /// Describes the instance methods implemented by self.
     pub fn instance_methods(&self) -> Malloc<[&Method]> {
         unsafe {

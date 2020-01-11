@@ -34,7 +34,7 @@ mod platform;
 mod platform;
 
 use self::platform::{send_unverified, send_super_unverified};
-use self::verify::verify_message_signature;
+use self::verify::{VerificationError, verify_message_signature};
 
 /// Specifies the superclass of an instance.
 #[repr(C)]
@@ -100,6 +100,7 @@ pub unsafe trait Message {
             where Self: Sized, A: EncodeArguments, R: Encode {
         let obj = unsafe { &*(self as *const _ as *const Object) };
         verify_message_signature::<A, R>(obj.class(), sel)
+            .map_err(MessageError::from)
     }
 }
 
@@ -169,6 +170,12 @@ impl Error for MessageError {
     }
 }
 
+impl<'a> From<VerificationError<'a>> for MessageError {
+    fn from(err: VerificationError) -> MessageError {
+        MessageError(err.to_string())
+    }
+}
+
 #[doc(hidden)]
 #[inline(always)]
 #[cfg(not(feature = "verify_message"))]
@@ -186,14 +193,13 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
         where T: Message, A: MessageArguments + EncodeArguments,
         R: Any + Encode {
     let cls = if obj.is_null() {
-        return Err(MessageError(format!("Messaging {:?} to nil", sel)));
+        return Err(VerificationError::NilReceiver(sel).into());
     } else {
         (*(obj as *const Object)).class()
     };
 
-    verify_message_signature::<A, R>(cls, sel).and_then(|_| {
-        send_unverified(obj, sel, args)
-    })
+    verify_message_signature::<A, R>(cls, sel)?;
+    send_unverified(obj, sel, args)
 }
 
 #[doc(hidden)]
@@ -213,12 +219,11 @@ pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
         where T: Message, A: MessageArguments + EncodeArguments,
         R: Any + Encode {
     if obj.is_null() {
-        return Err(MessageError(format!("Messaging {:?} to nil", sel)));
+        return Err(VerificationError::NilReceiver(sel).into());
     }
 
-    verify_message_signature::<A, R>(superclass, sel).and_then(|_| {
-        send_super_unverified(obj, superclass, sel, args)
-    })
+    verify_message_signature::<A, R>(superclass, sel)?;
+    send_super_unverified(obj, superclass, sel, args)
 }
 
 #[cfg(test)]

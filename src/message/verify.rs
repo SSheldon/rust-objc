@@ -32,7 +32,7 @@ impl<'a> fmt::Display for VerificationError<'a> {
             }
             VerificationError::MismatchedArgument(method, i, arg) => {
                 let expected = method.argument_type(i).unwrap();
-                write!(f, "Method {:?} expected argument at index {} with type code {:?} but was given {:?}",
+                write!(f, "Method {:?} expected argument at index {} with type code {} but was given {}",
                     method.name(), i, expected, arg)
             }
         }

@@ -1,6 +1,6 @@
 use std::ops::{Deref, DerefMut};
 use std::os::raw::c_char;
-use std::sync::{Once, ONCE_INIT};
+use std::sync::Once;
 
 use crate::declare::{ClassDecl, ProtocolDecl};
 use crate::runtime::{Class, Object, Protocol, Sel, self};
@@ -55,7 +55,7 @@ unsafe impl Encode for CustomStruct {
 }
 
 pub fn custom_class() -> &'static Class {
-    static REGISTER_CUSTOM_CLASS: Once = ONCE_INIT;
+    static REGISTER_CUSTOM_CLASS: Once = Once::new();
 
     REGISTER_CUSTOM_CLASS.call_once(|| {
         // The runtime will call this method, so it has to be implemented
@@ -114,7 +114,7 @@ pub fn custom_class() -> &'static Class {
 }
 
 pub fn custom_protocol() -> &'static Protocol {
-    static REGISTER_CUSTOM_PROTOCOL: Once = ONCE_INIT;
+    static REGISTER_CUSTOM_PROTOCOL: Once = Once::new();
 
     REGISTER_CUSTOM_PROTOCOL.call_once(|| {
         let mut decl = ProtocolDecl::new("CustomProtocol").unwrap();
@@ -130,7 +130,7 @@ pub fn custom_protocol() -> &'static Protocol {
 }
 
 pub fn custom_subprotocol() -> &'static Protocol {
-    static REGISTER_CUSTOM_SUBPROTOCOL: Once = ONCE_INIT;
+    static REGISTER_CUSTOM_SUBPROTOCOL: Once = Once::new();
 
     REGISTER_CUSTOM_SUBPROTOCOL.call_once(|| {
         let super_proto = custom_protocol();
@@ -150,7 +150,7 @@ pub fn custom_object() -> CustomObject {
 }
 
 pub fn custom_subclass() -> &'static Class {
-    static REGISTER_CUSTOM_SUBCLASS: Once = ONCE_INIT;
+    static REGISTER_CUSTOM_SUBCLASS: Once = Once::new();
 
     REGISTER_CUSTOM_SUBCLASS.call_once(|| {
         let superclass = custom_class();

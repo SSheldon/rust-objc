@@ -6,6 +6,7 @@ use crate::runtime::{Object, self};
 use super::WeakPtr;
 
 /// A pointer that strongly references an object, ensuring it won't be deallocated.
+#[derive(Debug, PartialEq)]
 pub struct StrongPtr(*mut Object);
 
 impl StrongPtr {

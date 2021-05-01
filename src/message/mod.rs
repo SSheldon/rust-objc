@@ -155,7 +155,7 @@ Currently, an error may be returned in two cases:
 * the encodings of the arguments do not match the encoding of the method
   and the `verify_message` feature is enabled
 */
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct MessageError(String);
 
 impl fmt::Display for MessageError {

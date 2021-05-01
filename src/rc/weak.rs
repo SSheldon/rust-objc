@@ -10,6 +10,7 @@ use super::StrongPtr;
 
 /// A pointer that weakly references an object, allowing to safely check
 /// whether it has been deallocated.
+#[derive(Debug)]
 pub struct WeakPtr(Box<UnsafeCell<*mut Object>>);
 
 impl WeakPtr {

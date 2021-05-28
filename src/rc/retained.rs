@@ -211,7 +211,8 @@ impl<T> Unpin for Retained<T> {}
 
 #[cfg(test)]
 mod tests {
-    use std::mem::size_of;
+    use core::mem::size_of;
+    use core::ptr::NonNull;
 
     use super::Retained;
     use crate::runtime::Object;
@@ -232,7 +233,9 @@ mod tests {
     #[cfg(any(target_os = "macos", target_os = "ios"))]
     #[test]
     fn test_clone() {
-        let obj: Retained<Object> = unsafe { Retained::new(msg_send![class!(NSObject), new]) };
+        // TODO: Maybe make a way to return `Retained` directly?
+        let obj: *mut Object = unsafe { msg_send![class!(NSObject), new] };
+        let obj: Retained<Object> = unsafe { Retained::new(NonNull::new(obj).unwrap()) };
         assert!(obj.retain_count() == 1);
 
         let cloned = obj.clone();

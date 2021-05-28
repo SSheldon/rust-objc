@@ -16,6 +16,11 @@ matrix:
       osx_image: xcode7.3
       rust: 1.41.0
       env: FEATURES="exception" IOS_ARCHS="i386 x86_64 armv7 armv7s aarch64"
+    - os: linux
+      rust: stable
+      install:
+      - rustup component add rustfmt
+      script: cargo fmt --all -- --check
 sudo: false
 install: ./travis_install.sh
 before_script: >

@@ -74,6 +74,7 @@ pub struct Object {
 /// A pointer to the start of a method implementation.
 pub type Imp = unsafe extern "C" fn();
 
+#[allow(missing_docs)]
 #[link(name = "objc", kind = "dylib")]
 extern "C" {
     pub fn sel_registerName(name: *const c_char) -> Sel;

@@ -70,6 +70,7 @@ pub unsafe trait Message {
         send_message(self, sel, args)
     }
 
+    #[allow(missing_docs)]
     #[cfg(feature = "verify_message")]
     unsafe fn send_message<A, R>(&self, sel: Sel, args: A) -> Result<R, MessageError>
     where
@@ -285,7 +286,6 @@ where
 #[cfg(test)]
 mod tests {
     use super::Message;
-    use crate::runtime::Object;
     use crate::test_utils;
 
     #[test]
@@ -314,6 +314,7 @@ mod tests {
     #[cfg(not(feature = "verify_message"))]
     #[test]
     fn test_send_message_nil() {
+        use crate::runtime::Object;
         let nil: *mut Object = ::std::ptr::null_mut();
         let result: usize = unsafe { msg_send![nil, hash] };
         assert!(result == 0);

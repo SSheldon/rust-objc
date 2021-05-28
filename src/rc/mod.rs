@@ -40,10 +40,12 @@ assert!(weak.load().is_null());
 ```
 */
 
+mod retained;
 mod strong;
 mod weak;
 mod autorelease;
 
+pub use self::retained::Retained;
 pub use self::strong::StrongPtr;
 pub use self::weak::WeakPtr;
 pub use self::autorelease::autoreleasepool;
@@ -54,25 +56,6 @@ mod tests {
     use crate::runtime::Object;
     use super::StrongPtr;
     use super::autoreleasepool;
-
-    #[test]
-    fn test_strong_clone() {
-        fn retain_count(obj: *mut Object) -> usize {
-            unsafe { msg_send![obj, retainCount] }
-        }
-
-        let obj = unsafe {
-            StrongPtr::new(msg_send![class!(NSObject), new])
-        };
-        assert!(retain_count(*obj) == 1);
-
-        let cloned = obj.clone();
-        assert!(retain_count(*cloned) == 2);
-        assert!(retain_count(*obj) == 2);
-
-        drop(obj);
-        assert!(retain_count(*cloned) == 1);
-    }
 
     #[test]
     fn test_weak() {

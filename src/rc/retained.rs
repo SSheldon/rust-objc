@@ -9,8 +9,11 @@ use core::ptr::NonNull;
 use super::Owned;
 use crate::runtime::{self, Object};
 
-/// A smart pointer that strongly references an object, ensuring it won't be
+/// An smart pointer that strongly references an object, ensuring it won't be
 /// deallocated.
+///
+/// This doesn't own the object, so it is not safe to obtain a mutable
+/// reference from this. For that, see [`Owned`].
 ///
 /// This is guaranteed to have the same size as the underlying pointer.
 ///

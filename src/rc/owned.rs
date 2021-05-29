@@ -16,6 +16,18 @@ use crate::runtime::{self, Object};
 ///
 /// This is guaranteed to have the same size as the underlying pointer.
 ///
+/// # Cloning and [`Retained`]
+///
+/// This does not implement [`Clone`], but [`Retained`] has a [`From`]
+/// implementation to convert from this, so you can easily reliquish ownership
+/// and work with a normal [`Retained`] pointer.
+///
+/// ```no_run
+/// let obj: Owned<T> = ...;
+/// let retained: Retained<T> = obj.into();
+/// let cloned: Retained<T> = retained.clone();
+/// ```
+///
 /// TODO: Explain similarities to [`Box`].
 ///
 /// TODO: Explain this vs. [`Retained`]
@@ -43,7 +55,8 @@ impl<T> Owned<T> {
     /// else, usually Objective-C methods like `init`, `alloc`, `new`, or
     /// `copy`).
     ///
-    /// Additionally, there must be no other pointers to the same object.
+    /// Additionally, there must be no other pointers or references to the same
+    /// object, and the given reference must not be used afterwards.
     ///
     /// # Example
     ///
@@ -55,6 +68,8 @@ impl<T> Owned<T> {
     /// ```
     ///
     /// TODO: Something about there not being other references.
+    // Note: The fact that we take a `&mut` here is more of a lint; the lifetime
+    // information is lost, so whatever produced the reference can still be
     #[inline]
     pub unsafe fn new(obj: &mut T) -> Self {
         Self {

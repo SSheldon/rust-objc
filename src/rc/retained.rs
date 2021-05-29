@@ -6,8 +6,8 @@ use core::mem;
 use core::ops::Deref;
 use core::ptr::NonNull;
 
-use crate::runtime::{self, Object};
 use super::Owned;
+use crate::runtime::{self, Object};
 
 /// A smart pointer that strongly references an object, ensuring it won't be
 /// deallocated.
@@ -64,29 +64,33 @@ unsafe impl<T: Sync + Send> Send for Retained<T> {}
 // SAFETY: TODO
 unsafe impl<T: Sync + Send> Sync for Retained<T> {}
 
-
 impl<T> Retained<T> {
     /// Constructs a `Retained<T>` to an object that already has a +1 retain
     /// count. This will not retain the object.
     ///
     /// When dropped, the object will be released.
     ///
+    /// See also [`Owned::new`] for the common case of creating objects.
+    ///
     /// # Safety
     ///
-    /// The caller must ensure the given object pointer is valid, and has +1
-    /// retain count.
+    /// The caller must ensure the given object reference has +1 retain count
+    /// (that is, a retain count that has been handed off from somewhere else,
+    /// usually Objective-C methods with the `ns_returns_retained` attribute).
+    ///
+    /// Additionally, there must be no [`Owned`] pointers to the same object.
     ///
     /// TODO: Something about there not being any mutable references.
     #[inline]
-    pub unsafe fn new(ptr: NonNull<T>) -> Self {
+    pub unsafe fn new(obj: &T) -> Self {
         Self {
-            ptr,
+            ptr: obj.into(),
             phantom: PhantomData,
         }
     }
 
     #[inline]
-    pub fn as_ptr(&self) -> *mut T {
+    pub fn as_ptr(&self) -> *const T {
         self.ptr.as_ptr()
     }
 
@@ -96,16 +100,28 @@ impl<T> Retained<T> {
     ///
     /// # Safety
     ///
-    /// The caller must ensure the given object pointer is valid.
+    /// The caller must ensure that there are no [`Owned`] pointers to the
+    /// same object.
+    //
+    // So this would be illegal:
+    // ```rust
+    // let owned: Owned<T> = ...;
+    // // Lifetime information is discarded
+    // let retained = Retained::retain(&*owned);
+    // // Which means we can still mutate `Owned`:
+    // let x: &mut T = &mut *owned;
+    // // While we have an immutable reference
+    // let y: &T = &*retained;
+    // ```
     #[doc(alias = "objc_retain")]
-    #[inline]
-    // TODO: Maybe just take a normal reference, and then this can be safe?
-    pub unsafe fn retain(ptr: NonNull<T>) -> Self {
+    // Inlined since it's `objc_retain` that does the work.
+    #[cfg_attr(debug_assertions, inline)]
+    pub unsafe fn retain(obj: &T) -> Self {
         // SAFETY: The caller upholds that the pointer is valid
-        let rtn = runtime::objc_retain(ptr.as_ptr() as *mut Object);
-        debug_assert_eq!(rtn, ptr.as_ptr() as *mut Object);
+        let rtn = runtime::objc_retain(obj as *const T as *mut Object);
+        debug_assert_eq!(rtn, obj as *const T as *mut Object);
         Self {
-            ptr,
+            ptr: obj.into(),
             phantom: PhantomData,
         }
     }
@@ -119,6 +135,8 @@ impl<T> Retained<T> {
     #[doc(alias = "objc_autorelease")]
     #[must_use = "If you don't intend to use the object any more, just drop it as usual"]
     #[inline]
+    // TODO: Get a lifetime relating to the pool, so that we can return a
+    // reference instead of a pointer.
     pub fn autorelease(self) -> NonNull<T> {
         let ptr = mem::ManuallyDrop::new(self).ptr;
         // SAFETY: The `ptr` is guaranteed to be valid and have at least one
@@ -159,7 +177,7 @@ impl<T> Clone for Retained<T> {
     #[inline]
     fn clone(&self) -> Self {
         // SAFETY: The `ptr` is guaranteed to be valid
-        unsafe { Self::retain(self.ptr) }
+        unsafe { Self::retain(&*self) }
     }
 }
 
@@ -230,7 +248,7 @@ impl<T> Unpin for Retained<T> {}
 impl<T> From<Owned<T>> for Retained<T> {
     fn from(obj: Owned<T>) -> Self {
         // SAFETY: TODO
-        unsafe { Self::new(obj.ptr) }
+        unsafe { Self::new(&*obj) }
     }
 }
 
@@ -259,8 +277,8 @@ mod tests {
     #[test]
     fn test_clone() {
         // TODO: Maybe make a way to return `Retained` directly?
-        let obj: *mut Object = unsafe { msg_send![class!(NSObject), new] };
-        let obj: Retained<Object> = unsafe { Retained::new(NonNull::new(obj).unwrap()) };
+        let obj: &Object = unsafe { msg_send![class!(NSObject), new] };
+        let obj: Retained<Object> = unsafe { Retained::new(obj) };
         assert!(obj.retain_count() == 1);
 
         let cloned = obj.clone();

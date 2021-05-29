@@ -1,18 +1,18 @@
-use core::marker::PhantomData;
-use core::ptr::{NonNull, drop_in_place};
-use core::mem;
-use core::ops::{DerefMut, Deref};
+use core::borrow;
 use core::fmt;
 use core::hash;
-use core::borrow;
+use core::marker::PhantomData;
+use core::mem;
+use core::ops::{Deref, DerefMut};
+use core::ptr::{drop_in_place, NonNull};
 
 use super::Retained;
 use crate::runtime::{self, Object};
 
 /// A smart pointer that strongly references and owns an Objective-C object.
 ///
-/// The fact that we own the pointer means that we're safe to mutate it, hence
-/// why this implements [`DerefMut`].
+/// The fact that we own the pointer means that it's safe to mutate it. As
+/// such, this implements [`DerefMut`].
 ///
 /// This is guaranteed to have the same size as the underlying pointer.
 ///
@@ -32,27 +32,44 @@ unsafe impl<T: Send> Send for Owned<T> {}
 // SAFETY: TODO
 unsafe impl<T: Sync> Sync for Owned<T> {}
 
+// TODO: Unsure how the API should look...
 impl<T> Owned<T> {
-    #[inline]
-    pub unsafe fn new(ptr: NonNull<T>) -> Self {
-        Self {
-            ptr,
-            phantom: PhantomData,
-        }
-    }
-
-    // TODO: Unsure how the API should look...
-    #[inline]
-    pub unsafe fn retain(ptr: NonNull<T>) -> Self {
-        Self::from_retained(Retained::retain(ptr))
-    }
-
     /// TODO
     ///
     /// # Safety
     ///
-    /// The given [`Retained`] must be the only reference to the object
-    /// anywhere in the program - even in other Objective-C code.
+    /// The caller must ensure the given object reference has exactly 1 retain
+    /// count (that is, a retain count that has been handed off from somewhere
+    /// else, usually Objective-C methods like `init`, `alloc`, `new`, or
+    /// `copy`).
+    ///
+    /// Additionally, there must be no other pointers to the same object.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// let obj: &mut Object = unsafe { msg_send![cls, alloc] };
+    /// let obj: Owned<Object> = unsafe { Owned::new(msg_send![obj, init]) };
+    /// // Or in this case simply just:
+    /// let obj: Owned<Object> = unsafe { Owned::new(msg_send![cls, new]) };
+    /// ```
+    ///
+    /// TODO: Something about there not being other references.
+    #[inline]
+    pub unsafe fn new(obj: &mut T) -> Self {
+        Self {
+            ptr: obj.into(),
+            phantom: PhantomData,
+        }
+    }
+
+    /// Construct an `Owned` pointer
+    ///
+    /// # Safety
+    ///
+    /// The caller must ensure that there are no other pointers to the same
+    /// object (which also means that the given [`Retained`] should have a
+    /// retain count of exactly 1).
     #[inline]
     pub unsafe fn from_retained(obj: Retained<T>) -> Self {
         let ptr = mem::ManuallyDrop::new(obj).ptr;
@@ -77,7 +94,7 @@ impl<T> Drop for Owned<T> {
         unsafe {
             drop_in_place(ptr.as_ptr());
             // Construct a new `Retained`, which will be dropped immediately
-            Retained::new(ptr);
+            Retained::new(ptr.as_ref());
         };
     }
 }

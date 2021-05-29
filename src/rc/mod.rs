@@ -40,12 +40,14 @@ assert!(weak.load().is_null());
 ```
 */
 
+mod owned;
 mod retained;
 mod strong;
 mod weak;
 mod autorelease;
 
 pub use self::retained::Retained;
+pub use self::owned::Owned;
 pub use self::strong::StrongPtr;
 pub use self::weak::WeakPtr;
 pub use self::autorelease::autoreleasepool;

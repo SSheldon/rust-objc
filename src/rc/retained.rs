@@ -7,6 +7,7 @@ use core::ops::Deref;
 use core::ptr::NonNull;
 
 use crate::runtime::{self, Object};
+use super::Owned;
 
 /// A smart pointer that strongly references an object, ensuring it won't be
 /// deallocated.
@@ -208,6 +209,13 @@ impl<T> AsRef<T> for Retained<T> {
 }
 
 impl<T> Unpin for Retained<T> {}
+
+impl<T> From<Owned<T>> for Retained<T> {
+    fn from(obj: Owned<T>) -> Self {
+        // SAFETY: TODO
+        unsafe { Self::new(obj.ptr) }
+    }
+}
 
 #[cfg(test)]
 mod tests {

@@ -14,12 +14,17 @@ use super::Owned;
 ///
 /// This is guaranteed to have the same size as the underlying pointer.
 ///
+/// TODO: Something about the fact that we haven't made the methods associated
+/// for [reasons]???
+///
 /// ## Caveats
 ///
 /// If the inner type implements [`Drop`], that implementation will not be
 /// called, since there is no way to ensure that the Objective-C runtime will
 /// do so. If you need to run some code when the object is destroyed,
 /// implement the `dealloc` selector instead.
+///
+/// TODO: Restrict the possible types with some kind of unsafe marker trait?
 ///
 /// TODO: Explain similarities with `Arc` and `RefCell`.
 #[repr(transparent)]
@@ -47,7 +52,9 @@ pub struct Retained<T> {
     /// https://doc.rust-lang.org/core/ptr/traitalias.Thin.html
     ///
     /// [extern-type-rfc]: https://github.com/rust-lang/rfcs/blob/master/text/1861-extern-types.md
-    ptr: NonNull<T>, // Covariant
+    pub(super) ptr: NonNull<T>, // Covariant - but should probably be invariant?
+    /// TODO:
+    /// https://github.com/rust-lang/rfcs/blob/master/text/0769-sound-generic-drop.md#phantom-data
     phantom: PhantomData<T>,
 }
 
@@ -92,6 +99,7 @@ impl<T> Retained<T> {
     /// The caller must ensure the given object pointer is valid.
     #[doc(alias = "objc_retain")]
     #[inline]
+    // TODO: Maybe just take a normal reference, and then this can be safe?
     pub unsafe fn retain(ptr: NonNull<T>) -> Self {
         // SAFETY: The caller upholds that the pointer is valid
         let rtn = runtime::objc_retain(ptr.as_ptr() as *mut Object);
@@ -214,6 +222,8 @@ impl<T> AsRef<T> for Retained<T> {
         &**self
     }
 }
+
+// TODO: CoerceUnsized?
 
 impl<T> Unpin for Retained<T> {}
 

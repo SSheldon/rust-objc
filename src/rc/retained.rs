@@ -51,6 +51,13 @@ pub struct Retained<T> {
     phantom: PhantomData<T>,
 }
 
+// SAFETY: TODO
+unsafe impl<T: Sync + Send> Send for Retained<T> {}
+
+// SAFETY: TODO
+unsafe impl<T: Sync + Send> Sync for Retained<T> {}
+
+
 impl<T> Retained<T> {
     /// Constructs a `Retained<T>` to an object that already has a +1 retain
     /// count. This will not retain the object.

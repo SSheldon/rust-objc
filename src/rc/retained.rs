@@ -71,15 +71,15 @@ impl<T> Retained<T> {
     ///
     /// TODO: Something about there not being any mutable references.
     #[inline]
-    pub const unsafe fn new(ptr: NonNull<T>) -> Self {
-        Retained {
+    pub unsafe fn new(ptr: NonNull<T>) -> Self {
+        Self {
             ptr,
             phantom: PhantomData,
         }
     }
 
     #[inline]
-    pub const fn as_ptr(&self) -> *mut T {
+    pub fn as_ptr(&self) -> *mut T {
         self.ptr.as_ptr()
     }
 
@@ -96,7 +96,7 @@ impl<T> Retained<T> {
         // SAFETY: The caller upholds that the pointer is valid
         let rtn = runtime::objc_retain(ptr.as_ptr() as *mut Object);
         debug_assert_eq!(rtn, ptr.as_ptr() as *mut Object);
-        Retained {
+        Self {
             ptr,
             phantom: PhantomData,
         }
@@ -167,12 +167,12 @@ impl<T> Deref for Retained<T> {
 
 impl<T: PartialEq> PartialEq for Retained<T> {
     #[inline]
-    fn eq(&self, other: &Retained<T>) -> bool {
+    fn eq(&self, other: &Self) -> bool {
         &**self == &**other
     }
 
     #[inline]
-    fn ne(&self, other: &Retained<T>) -> bool {
+    fn ne(&self, other: &Self) -> bool {
         &**self != &**other
     }
 }
@@ -193,7 +193,7 @@ impl<T: fmt::Debug> fmt::Debug for Retained<T> {
 
 impl<T> fmt::Pointer for Retained<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::Pointer::fmt(&self.as_ptr(), f)
+        fmt::Pointer::fmt(&self.ptr.as_ptr(), f)
     }
 }
 

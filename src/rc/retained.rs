@@ -129,6 +129,12 @@ impl<T> Retained<T> {
         }
     }
 
+    /// TODO
+    #[doc(alias = "objc_retainAutoreleasedReturnValue")]
+    pub unsafe fn retain_autoreleased_return(obj: &T) -> Self {
+        todo!()
+    }
+
     /// Autoreleases the retained pointer, meaning that the object is not
     /// immediately released, but will be when the innermost / current
     /// autorelease pool is drained.
@@ -150,12 +156,45 @@ impl<T> Retained<T> {
         ptr
     }
 
-    #[cfg(test)]
+    /// TODO
+    #[doc(alias = "objc_autoreleaseReturnValue")]
+    pub fn autorelease_return(self) -> *const T {
+        todo!()
+    }
+
+    /// TODO
+    ///
+    /// Equivalent to `Retained::retain(&obj).autorelease()`, but slightly
+    /// more efficient.
+    #[doc(alias = "objc_retainAutorelease")]
+    pub unsafe fn retain_and_autorelease(obj: &T) -> *const T {
+        todo!()
+    }
+
+    /// TODO
+    ///
+    /// Equivalent to `Retained::retain(&obj).autorelease_return()`, but
+    /// slightly more efficient.
+    #[doc(alias = "objc_retainAutoreleaseReturnValue")]
+    pub unsafe fn retain_and_autorelease_return(obj: &T) -> *const T {
+        todo!()
+    }
+
+    #[cfg(test)] // TODO
     #[doc(alias = "retainCount")]
     pub fn retain_count(&self) -> usize {
         unsafe { msg_send![self.ptr.as_ptr() as *mut Object, retainCount] }
     }
 }
+
+// TODO: Consider something like this
+// #[cfg(block)]
+// impl<T: Block> Retained<T> {
+//     #[doc(alias = "objc_retainBlock")]
+//     pub unsafe fn retain_block(block: &T) -> Self {
+//         todo!()
+//     }
+// }
 
 // TODO: #[may_dangle]
 // https://doc.rust-lang.org/nightly/nomicon/dropck.html

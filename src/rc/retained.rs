@@ -92,13 +92,17 @@ impl<T> Retained<T> {
     ///
     /// The caller must ensure the given object reference has +1 retain count.
     ///
-    /// Additionally, there must be no [`Owned`] pointers to the same object.
+    /// Additionally, there must be no [`Owned`] pointers or mutable
+    /// references to the same object.
     ///
-    /// TODO: Something about there not being any mutable references.
+    /// And lastly, the object pointer must be valid as a reference (non-null,
+    /// aligned, dereferencable, initialized and upholds aliasing rules, see
+    /// the [`std::ptr`] module for more information).
     #[inline]
-    pub unsafe fn new(obj: &T) -> Self {
+    pub unsafe fn new(ptr: *const T) -> Self {
         Self {
-            ptr: obj.into(),
+            // SAFETY: Upheld by the caller
+            ptr: NonNull::new_unchecked(ptr as *mut T),
             phantom: PhantomData,
         }
     }
@@ -117,6 +121,10 @@ impl<T> Retained<T> {
     ///
     /// The caller must ensure that there are no [`Owned`] pointers to the
     /// same object.
+    ///
+    /// Additionally, the object pointer must be valid as a reference
+    /// (non-null, aligned, dereferencable, initialized and upholds aliasing
+    /// rules, see the [`std::ptr`] module for more information).
     //
     // So this would be illegal:
     // ```rust
@@ -131,12 +139,14 @@ impl<T> Retained<T> {
     #[doc(alias = "objc_retain")]
     // Inlined since it's `objc_retain` that does the work.
     #[cfg_attr(debug_assertions, inline)]
-    pub unsafe fn retain(obj: &T) -> Self {
+    pub unsafe fn retain(ptr: *const T) -> Self {
         // SAFETY: The caller upholds that the pointer is valid
-        let rtn = runtime::objc_retain(obj as *const T as *mut Object);
-        debug_assert_eq!(rtn, obj as *const T as *mut Object);
+        let rtn = runtime::objc_retain(ptr as *mut Object) as *const T;
+        debug_assert_eq!(rtn, ptr);
         Self {
-            ptr: obj.into(),
+            // SAFETY: Non-null upheld by the caller and `objc_retain` always
+            // returns the same pointer.
+            ptr: NonNull::new_unchecked(rtn as *mut T),
             phantom: PhantomData,
         }
     }
@@ -234,7 +244,7 @@ impl<T> Clone for Retained<T> {
     #[inline]
     fn clone(&self) -> Self {
         // SAFETY: The `ptr` is guaranteed to be valid
-        unsafe { Self::retain(&*self) }
+        unsafe { Self::retain(self.as_ptr()) }
     }
 }
 
@@ -312,7 +322,6 @@ impl<T> From<Owned<T>> for Retained<T> {
 #[cfg(test)]
 mod tests {
     use core::mem::size_of;
-    use core::ptr::NonNull;
 
     use super::Retained;
     use crate::runtime::Object;

@@ -21,7 +21,7 @@ use crate::runtime::{self, Object};
 ///
 /// This does not implement [`Clone`], but [`Retained`] has a [`From`]
 /// implementation to convert from this, so you can easily reliquish ownership
-/// and work with a normal [`Retained`] pointer.
+/// and work with a clonable [`Retained`] pointer.
 ///
 /// ```no_run
 /// let obj: Owned<T> = ...;
@@ -57,9 +57,13 @@ impl<T> Owned<T> {
     /// # Safety
     ///
     /// The caller must ensure that there are no other pointers or references
-    /// to the same object, and the given reference is not be used afterwards.
+    /// to the same object, and the given pointer is not be used afterwards.
     ///
-    /// Additionally, the given object reference must have +1 retain count.
+    /// Additionally, the given object pointer must have +1 retain count.
+    ///
+    /// And lastly, the object pointer must be valid as a mutable reference
+    /// (non-null, aligned, dereferencable, initialized and upholds aliasing
+    /// rules, see the [`std::ptr`] module for more information).
     ///
     /// # Example
     ///
@@ -69,15 +73,13 @@ impl<T> Owned<T> {
     /// // Or in this case simply just:
     /// let obj: Owned<Object> = unsafe { Owned::new(msg_send![cls, new]) };
     /// ```
-    ///
-    /// TODO: Something about there not being other references.
-    // Note: The fact that we take a `&mut` here is more of a lint; the lifetime
-    // information is lost, so whatever produced the reference can still be
-    // mutated or aliased afterwards.
     #[inline]
-    pub unsafe fn new(obj: &mut T) -> Self {
+    // Note: We don't take a mutable reference as a parameter since it would
+    // be too easy to accidentally create two aliasing mutable references.
+    pub unsafe fn new(ptr: *mut T) -> Self {
         Self {
-            ptr: obj.into(),
+            // SAFETY: Upheld by the caller
+            ptr: NonNull::new_unchecked(ptr),
             phantom: PhantomData,
         }
     }

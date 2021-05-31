@@ -55,16 +55,26 @@ pub struct Retained<T> {
     /// https://doc.rust-lang.org/core/ptr/traitalias.Thin.html
     ///
     /// [extern-type-rfc]: https://github.com/rust-lang/rfcs/blob/master/text/1861-extern-types.md
-    pub(super) ptr: NonNull<T>, // Covariant - but should probably be invariant?
+    ptr: NonNull<T>, // T is immutable, so covariance is correct
     /// TODO:
     /// https://github.com/rust-lang/rfcs/blob/master/text/0769-sound-generic-drop.md#phantom-data
     phantom: PhantomData<T>,
 }
 
-// SAFETY: TODO
+/// The `Send` implementation requires `T: Sync` because `Retained` gives
+/// access to `&T`.
+///
+/// Additiontally, it requires `T: Send` because if `T: !Send`, you could
+/// clone a `Retained`, send it to another thread, and drop the clone last,
+/// making `dealloc` get called on the other thread, violating `T: !Send`.
 unsafe impl<T: Sync + Send> Send for Retained<T> {}
 
-// SAFETY: TODO
+/// The `Sync` implementation requires `T: Sync` because `&Retained` gives
+/// access to `&T`.
+///
+/// Additiontally, it requires `T: Send`, because if `T: !Send`, you could
+/// clone a `&Retained` from another thread, and drop the clone last, making
+/// `dealloc` get called on the other thread, violating `T: !Send`.
 unsafe impl<T: Sync + Send> Sync for Retained<T> {}
 
 impl<T> Retained<T> {
@@ -73,13 +83,14 @@ impl<T> Retained<T> {
     ///
     /// When dropped, the object will be released.
     ///
-    /// See also [`Owned::new`] for the common case of creating objects.
+    /// This is used when you have a retain count that has been handed off
+    /// from somewhere else, usually Objective-C methods with the
+    /// `ns_returns_retained` attribute. See [`Owned::new`] for the more
+    /// common case when creating objects.
     ///
     /// # Safety
     ///
-    /// The caller must ensure the given object reference has +1 retain count
-    /// (that is, a retain count that has been handed off from somewhere else,
-    /// usually Objective-C methods with the `ns_returns_retained` attribute).
+    /// The caller must ensure the given object reference has +1 retain count.
     ///
     /// Additionally, there must be no [`Owned`] pointers to the same object.
     ///
@@ -92,6 +103,7 @@ impl<T> Retained<T> {
         }
     }
 
+    /// Acquires a `*const` pointer to the object.
     #[inline]
     pub fn as_ptr(&self) -> *const T {
         self.ptr.as_ptr()
@@ -196,8 +208,11 @@ impl<T> Retained<T> {
 //     }
 // }
 
-// TODO: #[may_dangle]
-// https://doc.rust-lang.org/nightly/nomicon/dropck.html
+/// `#[may_dangle]` (see [this][dropck_eyepatch]) doesn't really make sense
+/// here, since we actually want to disallow creating `Retained` pointers to
+/// objects that have a `Drop` implementation.
+///
+/// [dropck_eyepatch]: https://doc.rust-lang.org/nightly/nomicon/dropck.html#an-escape-hatch
 impl<T> Drop for Retained<T> {
     /// Releases the retained object
     #[doc(alias = "objc_release")]

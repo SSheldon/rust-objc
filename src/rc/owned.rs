@@ -9,10 +9,11 @@ use core::ptr::{drop_in_place, NonNull};
 use super::Retained;
 use crate::runtime::{self, Object};
 
-/// A smart pointer that strongly references and owns an Objective-C object.
+/// A smart pointer that strongly references and uniquely owns an Objective-C
+/// object.
 ///
-/// The fact that we own the pointer means that it's safe to mutate it. As
-/// such, this implements [`DerefMut`].
+/// The fact that we uniquely own the pointer means that it's safe to mutate
+/// it. As such, this implements [`DerefMut`].
 ///
 /// This is guaranteed to have the same size as the underlying pointer.
 ///
@@ -34,29 +35,31 @@ use crate::runtime::{self, Object};
 #[repr(transparent)]
 pub struct Owned<T> {
     /// The pointer is always retained.
-    pub(super) ptr: NonNull<T>, // Covariant
-    phantom: PhantomData<T>, // Necessary for dropcheck
+    ptr: NonNull<T>, // We are the unique owner of T, so covariance is correct
+    phantom: PhantomData<T>, // Necessary for dropck
 }
 
-// SAFETY: TODO
+/// `Owned` pointers are `Send` if `T` is `Send` because they give the same
+/// access as having a T directly.
 unsafe impl<T: Send> Send for Owned<T> {}
 
-// SAFETY: TODO
+/// `Owned` pointers are `Sync` if `T` is `Sync` because they give the same
+/// access as having a `T` directly.
 unsafe impl<T: Sync> Sync for Owned<T> {}
 
 // TODO: Unsure how the API should look...
 impl<T> Owned<T> {
-    /// TODO
+    /// Create a new `Owned` pointer to the object.
+    ///
+    /// Uses a retain count that has been handed off from somewhere else,
+    /// usually Objective-C methods like `init`, `alloc`, `new`, or `copy`.
     ///
     /// # Safety
     ///
-    /// The caller must ensure the given object reference has exactly 1 retain
-    /// count (that is, a retain count that has been handed off from somewhere
-    /// else, usually Objective-C methods like `init`, `alloc`, `new`, or
-    /// `copy`).
+    /// The caller must ensure that there are no other pointers or references
+    /// to the same object, and the given reference is not be used afterwards.
     ///
-    /// Additionally, there must be no other pointers or references to the same
-    /// object, and the given reference must not be used afterwards.
+    /// Additionally, the given object reference must have +1 retain count.
     ///
     /// # Example
     ///
@@ -70,6 +73,7 @@ impl<T> Owned<T> {
     /// TODO: Something about there not being other references.
     // Note: The fact that we take a `&mut` here is more of a lint; the lifetime
     // information is lost, so whatever produced the reference can still be
+    // mutated or aliased afterwards.
     #[inline]
     pub unsafe fn new(obj: &mut T) -> Self {
         Self {
@@ -78,16 +82,23 @@ impl<T> Owned<T> {
         }
     }
 
-    /// Construct an `Owned` pointer
+    /// Acquires a `*mut` pointer to the object.
+    #[inline]
+    pub fn as_ptr(&self) -> *mut T {
+        self.ptr.as_ptr()
+    }
+
+    /// Construct an `Owned` pointer from a `Retained` pointer.
     ///
     /// # Safety
     ///
     /// The caller must ensure that there are no other pointers to the same
     /// object (which also means that the given [`Retained`] should have a
-    /// retain count of exactly 1).
+    /// retain count of exactly 1 in almost all cases).
     #[inline]
     pub unsafe fn from_retained(obj: Retained<T>) -> Self {
-        let ptr = mem::ManuallyDrop::new(obj).ptr;
+        // SAFETY: The pointer is guaranteed by `Retained` to be NonNull
+        let ptr = NonNull::new_unchecked(mem::ManuallyDrop::new(obj).as_ptr() as *mut T);
         Self {
             ptr,
             phantom: PhantomData,
@@ -95,10 +106,13 @@ impl<T> Owned<T> {
     }
 }
 
-// TODO: #[may_dangle]
-// https://doc.rust-lang.org/nightly/nomicon/dropck.html
+/// `#[may_dangle]` (see [this][dropck_eyepatch]) would not be safe here,
+/// since we cannot verify that a `dealloc` method doesn't access borrowed
+/// data.
+///
+/// [dropck_eyepatch]: https://doc.rust-lang.org/nightly/nomicon/dropck.html#an-escape-hatch
 impl<T> Drop for Owned<T> {
-    /// Releases the retained object
+    /// Releases the retained object.
     ///
     /// This is guaranteed to be the last destructor that runs, in contrast to
     /// [`Retained`], which means that we can run the [`Drop`] implementation
@@ -113,8 +127,6 @@ impl<T> Drop for Owned<T> {
         };
     }
 }
-
-// Note: `Clone` is not implemented for this!
 
 impl<T> Deref for Owned<T> {
     type Target = T;

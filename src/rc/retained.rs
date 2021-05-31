@@ -165,14 +165,14 @@ impl<T> Retained<T> {
     #[must_use = "If you don't intend to use the object any more, just drop it as usual"]
     #[inline]
     pub fn autorelease<'p>(self, _pool: &'p AutoreleasePool) -> &'p T {
-        let ptr = mem::ManuallyDrop::new(self).ptr;
+        let ptr = mem::ManuallyDrop::new(self).as_ptr();
         // SAFETY: The `ptr` is guaranteed to be valid and have at least one
         // retain count.
         // And because of the ManuallyDrop, we don't call the Drop
         // implementation, so the object won't also be released there.
-        unsafe { runtime::objc_autorelease(ptr.as_ptr() as *mut Object) };
+        unsafe { runtime::objc_autorelease(ptr as *mut Object) };
         // SAFETY: The lifetime is bounded by the type function signature
-        unsafe { &*ptr.as_ptr() }
+        unsafe { &*ptr }
     }
 
     /// TODO
@@ -231,7 +231,7 @@ impl<T> Drop for Retained<T> {
     fn drop(&mut self) {
         // SAFETY: The `ptr` is guaranteed to be valid and have at least one
         // retain count
-        unsafe { runtime::objc_release(self.ptr.as_ptr() as *mut Object) };
+        unsafe { runtime::objc_release(self.as_ptr() as *mut Object) };
     }
 }
 
@@ -286,7 +286,7 @@ impl<T: fmt::Debug> fmt::Debug for Retained<T> {
 
 impl<T> fmt::Pointer for Retained<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::Pointer::fmt(&self.ptr.as_ptr(), f)
+        fmt::Pointer::fmt(&self.as_ptr(), f)
     }
 }
 
@@ -314,8 +314,9 @@ impl<T> Unpin for Retained<T> {}
 
 impl<T> From<Owned<T>> for Retained<T> {
     fn from(obj: Owned<T>) -> Self {
+        let ptr = mem::ManuallyDrop::new(obj).as_ptr();
         // SAFETY: TODO
-        unsafe { Self::new(&*obj) }
+        unsafe { Self::new(ptr) }
     }
 }
 

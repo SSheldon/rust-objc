@@ -134,11 +134,11 @@ impl<T> Drop for Owned<T> {
     /// on the contained object as well.
     #[inline]
     fn drop(&mut self) {
-        let ptr = self.ptr;
+        let ptr = self.as_ptr();
         unsafe {
-            drop_in_place(ptr.as_ptr());
+            drop_in_place(ptr);
             // Construct a new `Retained`, which will be dropped immediately
-            Retained::new(ptr.as_ref());
+            Retained::new(ptr);
         };
     }
 }
@@ -177,7 +177,7 @@ impl<T: fmt::Debug> fmt::Debug for Owned<T> {
 
 impl<T> fmt::Pointer for Owned<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::Pointer::fmt(&self.ptr.as_ptr(), f)
+        fmt::Pointer::fmt(&self.as_ptr(), f)
     }
 }
 

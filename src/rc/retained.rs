@@ -313,6 +313,7 @@ impl<T> AsRef<T> for Retained<T> {
 impl<T> Unpin for Retained<T> {}
 
 impl<T> From<Owned<T>> for Retained<T> {
+    #[inline]
     fn from(obj: Owned<T>) -> Self {
         let ptr = mem::ManuallyDrop::new(obj).as_ptr();
         // SAFETY: TODO

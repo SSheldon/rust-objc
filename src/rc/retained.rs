@@ -6,6 +6,7 @@ use core::mem;
 use core::ops::Deref;
 use core::ptr::NonNull;
 
+use super::AutoreleasePool;
 use super::Owned;
 use crate::runtime::{self, Object};
 
@@ -153,59 +154,58 @@ impl<T> Retained<T> {
 
     /// TODO
     #[doc(alias = "objc_retainAutoreleasedReturnValue")]
-    pub unsafe fn retain_autoreleased_return(obj: &T) -> Self {
+    pub unsafe fn retain_autoreleased_return(_obj: *const T) -> Self {
         todo!()
     }
 
     /// Autoreleases the retained pointer, meaning that the object is not
     /// immediately released, but will be when the innermost / current
     /// autorelease pool is drained.
-    ///
-    /// A pointer to the object is returned, but it's validity is only until
-    /// guaranteed until the innermost pool is drained.
     #[doc(alias = "objc_autorelease")]
     #[must_use = "If you don't intend to use the object any more, just drop it as usual"]
     #[inline]
-    // TODO: Get a lifetime relating to the pool, so that we can return a
-    // reference instead of a pointer.
-    pub fn autorelease(self) -> NonNull<T> {
+    pub fn autorelease<'p>(self, _pool: &'p AutoreleasePool) -> &'p T {
         let ptr = mem::ManuallyDrop::new(self).ptr;
         // SAFETY: The `ptr` is guaranteed to be valid and have at least one
         // retain count.
         // And because of the ManuallyDrop, we don't call the Drop
         // implementation, so the object won't also be released there.
         unsafe { runtime::objc_autorelease(ptr.as_ptr() as *mut Object) };
-        ptr
+        // SAFETY: The lifetime is bounded by the type function signature
+        unsafe { &*ptr.as_ptr() }
     }
 
     /// TODO
     #[doc(alias = "objc_autoreleaseReturnValue")]
-    pub fn autorelease_return(self) -> *const T {
+    pub fn autorelease_return<'p>(self, _pool: &'p AutoreleasePool) -> &'p T {
         todo!()
     }
 
     /// TODO
     ///
-    /// Equivalent to `Retained::retain(&obj).autorelease()`, but slightly
+    /// Equivalent to `Retained::retain(&obj).autorelease(pool)`, but slightly
     /// more efficient.
     #[doc(alias = "objc_retainAutorelease")]
-    pub unsafe fn retain_and_autorelease(obj: &T) -> *const T {
+    pub unsafe fn retain_and_autorelease<'p>(_obj: *const T, _pool: &'p AutoreleasePool) -> &'p T {
         todo!()
     }
 
     /// TODO
     ///
-    /// Equivalent to `Retained::retain(&obj).autorelease_return()`, but
+    /// Equivalent to `Retained::retain(&obj).autorelease_return(pool)`, but
     /// slightly more efficient.
     #[doc(alias = "objc_retainAutoreleaseReturnValue")]
-    pub unsafe fn retain_and_autorelease_return(obj: &T) -> *const T {
+    pub unsafe fn retain_and_autorelease_return<'p>(
+        _obj: *const T,
+        _pool: &'p AutoreleasePool,
+    ) -> &'p T {
         todo!()
     }
 
     #[cfg(test)] // TODO
     #[doc(alias = "retainCount")]
     pub fn retain_count(&self) -> usize {
-        unsafe { msg_send![self.ptr.as_ptr() as *mut Object, retainCount] }
+        unsafe { msg_send![self.as_ptr() as *mut Object, retainCount] }
     }
 }
 

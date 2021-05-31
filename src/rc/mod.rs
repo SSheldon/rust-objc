@@ -40,17 +40,17 @@ assert!(weak.load().is_null());
 ```
 */
 
+mod autorelease;
 mod owned;
 mod retained;
 mod strong;
 mod weak;
-mod autorelease;
 
-pub use self::retained::Retained;
+pub use self::autorelease::{autoreleasepool, AutoreleasePool};
 pub use self::owned::Owned;
+pub use self::retained::Retained;
 pub use self::strong::StrongPtr;
 pub use self::weak::WeakPtr;
-pub use self::autorelease::autoreleasepool;
 
 // These tests use NSObject, which isn't present for GNUstep
 #[cfg(all(test, any(target_os = "macos", target_os = "ios")))]
@@ -97,9 +97,9 @@ mod tests {
         }
         let cloned = obj.clone();
 
-        autoreleasepool(|| {
-                        obj.autorelease();
-                        assert!(retain_count(*cloned) == 2);
+        autoreleasepool(|_| {
+            obj.autorelease();
+            assert!(retain_count(*cloned) == 2);
         });
 
         // make sure that the autoreleased value has been released

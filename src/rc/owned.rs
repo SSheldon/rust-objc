@@ -6,8 +6,8 @@ use core::mem;
 use core::ops::{Deref, DerefMut};
 use core::ptr::{drop_in_place, NonNull};
 
+use super::AutoreleasePool;
 use super::Retained;
-use crate::runtime::{self, Object};
 
 /// A smart pointer that strongly references and uniquely owns an Objective-C
 /// object.
@@ -105,6 +105,19 @@ impl<T> Owned<T> {
             ptr,
             phantom: PhantomData,
         }
+    }
+
+    /// Autoreleases the retained pointer, meaning that the object is not
+    /// immediately released, but will be when the innermost / current
+    /// autorelease pool is drained.
+    #[doc(alias = "objc_autorelease")]
+    #[must_use = "If you don't intend to use the object any more, just drop it as usual"]
+    #[inline]
+    pub fn autorelease<'p>(self, pool: &'p AutoreleasePool) -> &'p mut T {
+        let retained: Retained<T> = self.into();
+        let ptr = retained.autorelease(pool) as *const T as *mut T;
+        // SAFETY: The pointer was previously `Owned`, so is safe to be mutable
+        unsafe { &mut *ptr }
     }
 }
 

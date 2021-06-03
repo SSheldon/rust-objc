@@ -285,7 +285,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::Message;
+    use super::*;
     use crate::test_utils;
 
     #[test]
@@ -314,7 +314,6 @@ mod tests {
     #[cfg(not(feature = "verify_message"))]
     #[test]
     fn test_send_message_nil() {
-        use crate::runtime::Object;
         let nil: *mut Object = ::std::ptr::null_mut();
         let result: usize = unsafe { msg_send![nil, hash] };
         assert!(result == 0);

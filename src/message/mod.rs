@@ -1,4 +1,3 @@
-use std::any::Any;
 use std::error::Error;
 use std::fmt;
 use std::mem;
@@ -65,7 +64,7 @@ pub unsafe trait Message {
     where
         Self: Sized,
         A: MessageArguments,
-        R: Any,
+        R: Encode + 'static,
     {
         send_message(self, sel, args)
     }
@@ -76,7 +75,7 @@ pub unsafe trait Message {
     where
         Self: Sized,
         A: MessageArguments + EncodeArguments,
-        R: Any + Encode,
+        R: Encode + 'static,
     {
         send_message(self, sel, args)
     }
@@ -126,16 +125,13 @@ pub trait MessageArguments: Sized {
     /// This method is the primitive used when sending messages and should not
     /// be called directly; instead, use the `msg_send!` macro or, in cases
     /// with a dynamic selector, the `Message::send_message` method.
-    unsafe fn invoke<R>(imp: Imp, obj: *mut Object, sel: Sel, args: Self) -> R
-    where
-        R: Any;
+    unsafe fn invoke<R>(imp: Imp, obj: *mut Object, sel: Sel, args: Self) -> R;
 }
 
 macro_rules! message_args_impl {
     ($($a:ident : $t:ident),*) => (
         impl<$($t),*> MessageArguments for ($($t,)*) {
-            unsafe fn invoke<R>(imp: Imp, obj: *mut Object, sel: Sel, ($($a,)*): Self) -> R
-                    where R: Any {
+            unsafe fn invoke<R>(imp: Imp, obj: *mut Object, sel: Sel, ($($a,)*): Self) -> R {
                 let imp: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
                     mem::transmute(imp);
                 imp(obj, sel $(, $a)*)
@@ -220,7 +216,7 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A) -> Result<
 where
     T: Message,
     A: MessageArguments,
-    R: Any,
+    R: Encode + 'static,
 {
     send_unverified(obj, sel, args)
 }
@@ -232,7 +228,7 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A) -> Result<
 where
     T: Message,
     A: MessageArguments + EncodeArguments,
-    R: Any + Encode,
+    R: Encode + 'static,
 {
     let cls = if obj.is_null() {
         return Err(VerificationError::NilReceiver(sel).into());
@@ -256,7 +252,7 @@ pub unsafe fn send_super_message<T, A, R>(
 where
     T: Message,
     A: MessageArguments,
-    R: Any,
+    R: Encode + 'static,
 {
     send_super_unverified(obj, superclass, sel, args)
 }
@@ -273,7 +269,7 @@ pub unsafe fn send_super_message<T, A, R>(
 where
     T: Message,
     A: MessageArguments + EncodeArguments,
-    R: Any + Encode,
+    R: Encode + 'static,
 {
     if obj.is_null() {
         return Err(VerificationError::NilReceiver(sel).into());

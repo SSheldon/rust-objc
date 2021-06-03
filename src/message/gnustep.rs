@@ -1,5 +1,4 @@
-use std::any::Any;
-use std::mem;
+use core::mem;
 
 use super::{Message, MessageArguments, MessageError, Super};
 use crate::runtime::{Class, Imp, Object, Sel};
@@ -13,7 +12,6 @@ pub unsafe fn send_unverified<T, A, R>(obj: *const T, sel: Sel, args: A) -> Resu
 where
     T: Message,
     A: MessageArguments,
-    R: Any,
 {
     if obj.is_null() {
         return mem::zeroed();
@@ -33,7 +31,6 @@ pub unsafe fn send_super_unverified<T, A, R>(
 where
     T: Message,
     A: MessageArguments,
-    R: Any,
 {
     let receiver = obj as *mut T as *mut Object;
     let sup = Super {

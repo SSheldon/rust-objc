@@ -1,3 +1,12 @@
+## Unreleased
+
+### Changed
+
+* `msg_send!` no longer dereferences it's first argument, which would invoke
+  undefined behaviour when called with a null pointer. So if you were passing
+  `objc_id::Id` or similar directly, you now have to manually dereference it
+  like this: `msg_send![&*obj, ...]`.
+
 ## 0.2.7
 
 ### Fixed

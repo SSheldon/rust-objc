@@ -236,8 +236,8 @@ mod tests {
     fn test_send_message() {
         let obj = test_utils::custom_object();
         let result: u32 = unsafe {
-            let _: () = msg_send![obj, setFoo:4u32];
-            msg_send![obj, foo]
+            let _: () = msg_send![&*obj, setFoo:4u32];
+            msg_send![&*obj, foo]
         };
         assert!(result == 4);
     }
@@ -246,7 +246,7 @@ mod tests {
     fn test_send_message_stret() {
         let obj = test_utils::custom_object();
         let result: test_utils::CustomStruct = unsafe {
-            msg_send![obj, customStruct]
+            msg_send![&*obj, customStruct]
         };
         let expected = test_utils::CustomStruct { a: 1, b:2, c: 3, d: 4 };
         assert!(result == expected);
@@ -277,12 +277,12 @@ mod tests {
         let obj = test_utils::custom_subclass_object();
         let superclass = test_utils::custom_class();
         unsafe {
-            let _: () = msg_send![obj, setFoo:4u32];
-            let foo: u32 = msg_send![super(obj, superclass), foo];
+            let _: () = msg_send![&*obj, setFoo:4u32];
+            let foo: u32 = msg_send![super(&*obj, superclass), foo];
             assert!(foo == 4);
 
             // The subclass is overriden to return foo + 2
-            let foo: u32 = msg_send![obj, foo];
+            let foo: u32 = msg_send![&*obj, foo];
             assert!(foo == 6);
         }
     }

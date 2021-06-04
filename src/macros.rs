@@ -57,8 +57,9 @@ macro_rules! sel {
 /**
 Sends a message to an object.
 
-The first argument can be any type that dereferences to a type that implements
-`Message`, like a reference, pointer, or an `Id`.
+The first argument can be any reference or pointer to a type that implements
+[`Message`].
+
 The syntax is similar to the message syntax in Objective-C.
 Variadic arguments are not currently supported.
 
@@ -81,7 +82,7 @@ macro_rules! msg_send {
     (super($obj:expr, $superclass:expr), $name:ident) => ({
         let sel = $crate::sel!($name);
         let result;
-        match $crate::__send_super_message(&*$obj, $superclass, sel, ()) {
+        match $crate::__send_super_message($obj, $superclass, sel, ()) {
             Err(s) => panic!("{}", s),
             Ok(r) => result = r,
         }
@@ -90,7 +91,7 @@ macro_rules! msg_send {
     (super($obj:expr, $superclass:expr), $($name:ident : $arg:expr)+) => ({
         let sel = $crate::sel!($($name:)+);
         let result;
-        match $crate::__send_super_message(&*$obj, $superclass, sel, ($($arg,)*)) {
+        match $crate::__send_super_message($obj, $superclass, sel, ($($arg,)*)) {
             Err(s) => panic!("{}", s),
             Ok(r) => result = r,
         }
@@ -99,7 +100,7 @@ macro_rules! msg_send {
     ($obj:expr, $name:ident) => ({
         let sel = $crate::sel!($name);
         let result;
-        match $crate::__send_message(&*$obj, sel, ()) {
+        match $crate::__send_message($obj, sel, ()) {
             Err(s) => panic!("{}", s),
             Ok(r) => result = r,
         }
@@ -108,7 +109,7 @@ macro_rules! msg_send {
     ($obj:expr, $($name:ident : $arg:expr)+) => ({
         let sel = $crate::sel!($($name:)+);
         let result;
-        match $crate::__send_message(&*$obj, sel, ($($arg,)*)) {
+        match $crate::__send_message($obj, sel, ($($arg,)*)) {
             Err(s) => panic!("{}", s),
             Ok(r) => result = r,
         }

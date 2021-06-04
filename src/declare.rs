@@ -322,8 +322,8 @@ mod tests {
         // Registering the custom class is in test_utils
         let obj = test_utils::custom_object();
         unsafe {
-            let _: () = msg_send![obj, setFoo:13u32];
-            let result: u32 = msg_send![obj, foo];
+            let _: () = msg_send![&*obj, setFoo:13u32];
+            let result: u32 = msg_send![&*obj, foo];
             assert!(result == 13);
         }
     }

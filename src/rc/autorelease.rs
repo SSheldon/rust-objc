@@ -21,8 +21,21 @@ pub struct AutoreleasePool {
     context: *mut c_void,
 }
 
+/// ```rust,compile_fail
+/// use objc::rc::AutoreleasePool;
+/// fn needs_sync<T: Send>() {}
+/// needs_sync::<AutoreleasePool>();
+/// ```
+/// ```rust,compile_fail
+/// use objc::rc::AutoreleasePool;
+/// fn needs_send<T: Send>() {}
+/// needs_send::<AutoreleasePool>();
+/// ```
+#[cfg(doctest)]
+pub struct AutoreleasePoolNotSendNorSync;
+
 impl AutoreleasePool {
-    /// Construct a new autoreleasepool.
+    /// Construct a new autorelease pool.
     ///
     /// Use the [`autoreleasepool`] block for a safe alternative.
     ///
@@ -36,7 +49,7 @@ impl AutoreleasePool {
     #[doc(alias = "objc_autoreleasePoolPush")]
     unsafe fn new() -> Self {
         // TODO: Make this function pub when we're more certain of the API
-        AutoreleasePool {
+        Self {
             context: objc_autoreleasePoolPush(),
         }
     }

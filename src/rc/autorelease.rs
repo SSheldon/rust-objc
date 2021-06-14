@@ -81,12 +81,26 @@ impl Drop for AutoreleasePool {
     }
 }
 
-/// A trait for the sole purpose of ensuring we can't pass an `&AutoreleasePool`
-/// through to the closure inside `autoreleasepool`
 #[cfg(feature = "unstable_autoreleasesafe")]
+/// Marks types that are safe to pass across the closure in an
+/// [`autoreleasepool`].
+///
+/// This is implemented for all types except [`AutoreleasePool`].
+///
+/// You should not need to implement this trait yourself.
+///
+/// # Safety
+///
+/// Must not be implemented for types that interract with the autorelease pool
+/// - so if you reimplement the `AutoreleasePool` struct, this should be
+/// negatively implemented for that.
+// TODO: We can technically make this private, but should we?
 pub unsafe auto trait AutoreleaseSafe {}
 #[cfg(feature = "unstable_autoreleasesafe")]
 impl !AutoreleaseSafe for AutoreleasePool {}
+
+// We use a macro here so that the function documentation is included whether
+// the feature is enabled or not.
 
 #[cfg(feature = "unstable_autoreleasesafe")]
 macro_rules! fn_autoreleasepool {
@@ -201,6 +215,7 @@ fn_autoreleasepool!(
     ///     // inner pool already.
     /// });
     /// ```
+    #[doc(alias = "@autoreleasepool")]
     pub fn autoreleasepool(f) {
         let pool = unsafe { AutoreleasePool::new() };
         f(&pool)

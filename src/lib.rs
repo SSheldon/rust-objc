@@ -63,6 +63,8 @@ The bindings can be used on Linux or *BSD utilizing the
 #![crate_name = "objc"]
 #![crate_type = "lib"]
 
+#![cfg_attr(feature = "unstable_autoreleasesafe", feature(negative_impls, auto_traits))]
+
 #![warn(missing_docs)]
 
 extern crate malloc_buf;

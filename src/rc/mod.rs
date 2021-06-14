@@ -26,7 +26,7 @@ let obj = unsafe {
 
 // Cloning retains the object an additional time
 let cloned = obj.clone();
-autoreleasepool(|| {
+autoreleasepool(|_| {
     // Autorelease consumes the StrongPtr, but won't
     // actually release until the end of an autoreleasepool
     cloned.autorelease();
@@ -44,9 +44,11 @@ mod strong;
 mod weak;
 mod autorelease;
 
+#[cfg(feature = "unstable_autoreleasesafe")]
+pub use self::autorelease::AutoreleaseSafe;
+pub use self::autorelease::{autoreleasepool, AutoreleasePool};
 pub use self::strong::StrongPtr;
 pub use self::weak::WeakPtr;
-pub use self::autorelease::autoreleasepool;
 
 // These tests use NSObject, which isn't present for GNUstep
 #[cfg(all(test, any(target_os = "macos", target_os = "ios")))]
@@ -112,9 +114,9 @@ mod tests {
         }
         let cloned = obj.clone();
 
-        autoreleasepool(|| {
-                        obj.autorelease();
-                        assert!(retain_count(*cloned) == 2);
+        autoreleasepool(|_| {
+            obj.autorelease();
+            assert!(retain_count(*cloned) == 2);
         });
 
         // make sure that the autoreleased value has been released

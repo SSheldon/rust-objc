@@ -36,7 +36,6 @@ decl.register();
 
 use std::ffi::CString;
 use std::mem;
-use std::ptr;
 
 use crate::runtime::{BOOL, Class, Imp, NO, Object, Protocol, Sel, self};
 use crate::{Encode, EncodeArguments, Encoding, Message};
@@ -44,7 +43,7 @@ use crate::{Encode, EncodeArguments, Encoding, Message};
 /// Types that can be used as the implementation of an Objective-C method.
 pub trait MethodImplementation {
     /// The callee type of the method.
-    type Callee: Message;
+    type Callee: ?Sized + Message;
     /// The return type of the method.
     type Ret: Encode;
     /// The argument types of the method.
@@ -57,7 +56,7 @@ pub trait MethodImplementation {
 macro_rules! method_decl_impl {
     (-$s:ident, $r:ident, $f:ty, $($t:ident),*) => (
         impl<$s, $r $(, $t)*> MethodImplementation for $f
-                where $s: Message, $r: Encode $(, $t: Encode)* {
+                where $s: ?Sized + Message, $r: Encode $(, $t: Encode)* {
             type Callee = $s;
             type Ret = $r;
             type Args = ($($t,)*);
@@ -120,7 +119,7 @@ impl ClassDecl {
     fn with_superclass(name: &str, superclass: Option<&Class>)
             -> Option<ClassDecl> {
         let name = CString::new(name).unwrap();
-        let super_ptr = superclass.map_or(ptr::null(), |c| c);
+        let super_ptr = superclass.map_or(0 as *const Class, |c| c);
         let cls = unsafe {
             runtime::objc_allocateClassPair(super_ptr, name.as_ptr(), 0)
         };

@@ -1,5 +1,4 @@
 use std::cell::UnsafeCell;
-use std::ptr;
 
 use crate::runtime::{Object, self};
 use super::StrongPtr;
@@ -16,7 +15,7 @@ impl WeakPtr {
     /// Constructs a `WeakPtr` to the given object.
     /// Unsafe because the caller must ensure the given object pointer is valid.
     pub unsafe fn new(obj: *mut Object) -> Self {
-        let ptr = Box::new(UnsafeCell::new(ptr::null_mut()));
+        let ptr = Box::new(UnsafeCell::new(0 as *mut Object));
         runtime::objc_initWeak(ptr.get(), obj);
         WeakPtr(ptr)
     }
@@ -41,7 +40,7 @@ impl Drop for WeakPtr {
 
 impl Clone for WeakPtr {
     fn clone(&self) -> Self {
-        let ptr = Box::new(UnsafeCell::new(ptr::null_mut()));
+        let ptr = Box::new(UnsafeCell::new(0 as *mut Object));
         unsafe {
             runtime::objc_copyWeak(ptr.get(), self.0.get());
         }

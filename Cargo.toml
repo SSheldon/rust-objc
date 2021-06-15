@@ -23,10 +23,11 @@ exclude = [
 [features]
 exception = ["objc_exception"]
 verify_message = []
+unstable_extern_types = []
 
 [dependencies]
 malloc_buf = "1.0"
-objc-encode = "1.0"
+objc-encode = { git = "https://github.com/madsmtm/rust-objc-encode", branch = "unsized" }
 
 [dependencies.objc_exception]
 version = "0.1"

@@ -38,7 +38,7 @@ impl CachedSel {
 /// Allows storing a `Class` reference in a static and lazily loading it.
 #[doc(hidden)]
 pub struct CachedClass {
-    ptr: AtomicPtr<Class>
+    ptr: AtomicPtr<c_void>
 }
 
 impl CachedClass {
@@ -60,7 +60,7 @@ impl CachedClass {
             self.ptr.store(cls as *mut _, Ordering::Relaxed);
             cls.as_ref()
         } else {
-            Some(&*ptr)
+            Some(&*(ptr as *const Class))
         }
     }
 }

@@ -61,14 +61,14 @@ pub unsafe trait Message {
     #[cfg(not(feature = "verify_message"))]
     unsafe fn send_message<A, R>(&self, sel: Sel, args: A)
             -> Result<R, MessageError>
-            where Self: Sized, A: MessageArguments, R: Any {
+            where A: MessageArguments, R: Any {
         send_message(self, sel, args)
     }
 
     #[cfg(feature = "verify_message")]
     unsafe fn send_message<A, R>(&self, sel: Sel, args: A)
             -> Result<R, MessageError>
-            where Self: Sized, A: MessageArguments + EncodeArguments,
+            where A: MessageArguments + EncodeArguments,
             R: Any + Encode {
         send_message(self, sel, args)
     }
@@ -97,7 +97,7 @@ pub unsafe trait Message {
     ```
     */
     fn verify_message<A, R>(&self, sel: Sel) -> Result<(), MessageError>
-            where Self: Sized, A: EncodeArguments, R: Encode {
+            where A: EncodeArguments, R: Encode {
         let obj = unsafe { &*(self as *const _ as *const Object) };
         verify_message_signature::<A, R>(obj.class(), sel)
             .map_err(MessageError::from)
@@ -181,7 +181,7 @@ impl<'a> From<VerificationError<'a>> for MessageError {
 #[cfg(not(feature = "verify_message"))]
 pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
         -> Result<R, MessageError>
-        where T: Message, A: MessageArguments, R: Any {
+        where T: ?Sized + Message, A: MessageArguments, R: Any {
     send_unverified(obj, sel, args)
 }
 
@@ -190,7 +190,7 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
 #[cfg(feature = "verify_message")]
 pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
         -> Result<R, MessageError>
-        where T: Message, A: MessageArguments + EncodeArguments,
+        where T: ?Sized + Message, A: MessageArguments + EncodeArguments,
         R: Any + Encode {
     let cls = if obj.is_null() {
         return Err(VerificationError::NilReceiver(sel).into());
@@ -207,7 +207,7 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
 #[cfg(not(feature = "verify_message"))]
 pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
         sel: Sel, args: A) -> Result<R, MessageError>
-        where T: Message, A: MessageArguments, R: Any {
+        where T: ?Sized + Message, A: MessageArguments, R: Any {
     send_super_unverified(obj, superclass, sel, args)
 }
 
@@ -216,7 +216,7 @@ pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
 #[cfg(feature = "verify_message")]
 pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
         sel: Sel, args: A) -> Result<R, MessageError>
-        where T: Message, A: MessageArguments + EncodeArguments,
+        where T: ?Sized + Message, A: MessageArguments + EncodeArguments,
         R: Any + Encode {
     if obj.is_null() {
         return Err(VerificationError::NilReceiver(sel).into());
@@ -255,7 +255,7 @@ mod tests {
     #[cfg(not(feature = "verify_message"))]
     #[test]
     fn test_send_message_nil() {
-        let nil: *mut Object = ::std::ptr::null_mut();
+        let nil = 0 as *mut Object;
         let result: usize = unsafe {
             msg_send![nil, hash]
         };

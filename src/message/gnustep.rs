@@ -5,11 +5,11 @@ use crate::runtime::{Class, Object, Imp, Sel};
 use super::{Message, MessageArguments, MessageError, Super};
 
 extern {
-    fn objc_msg_lookup(receiver: *mut Object, op: Sel) -> Imp;
-    fn objc_msg_lookup_super(sup: *const Super, sel: Sel) -> Imp;
+    fn objc_msg_lookup(receiver: *mut Object, op: &Sel) -> Imp;
+    fn objc_msg_lookup_super(sup: *const Super, sel: &Sel) -> Imp;
 }
 
-pub unsafe fn send_unverified<T, A, R>(obj: *const T, sel: Sel, args: A)
+pub unsafe fn send_unverified<T, A, R>(obj: *const T, sel: &Sel, args: A)
         -> Result<R, MessageError>
         where T: Message, A: MessageArguments, R: Any {
     if obj.is_null() {
@@ -24,7 +24,7 @@ pub unsafe fn send_unverified<T, A, R>(obj: *const T, sel: Sel, args: A)
 }
 
 pub unsafe fn send_super_unverified<T, A, R>(obj: *const T, superclass: &Class,
-        sel: Sel, args: A) -> Result<R, MessageError>
+        sel: &Sel, args: A) -> Result<R, MessageError>
         where T: Message, A: MessageArguments, R: Any {
     let receiver = obj as *mut T as *mut Object;
     let sup = Super { receiver: receiver, superclass: superclass };

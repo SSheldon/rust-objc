@@ -27,7 +27,7 @@ macro_rules! class {
 }
 
 /**
-Registers a selector, returning a `Sel`.
+Registers a selector, returning a `&'static Sel`.
 
 # Example
 ```

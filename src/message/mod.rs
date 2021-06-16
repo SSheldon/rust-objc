@@ -59,14 +59,14 @@ pub unsafe trait Message {
     `msg_send!` macro rather than this method.
     */
     #[cfg(not(feature = "verify_message"))]
-    unsafe fn send_message<A, R>(&self, sel: Sel, args: A)
+    unsafe fn send_message<A, R>(&self, sel: &Sel, args: A)
             -> Result<R, MessageError>
             where Self: Sized, A: MessageArguments, R: Any {
         send_message(self, sel, args)
     }
 
     #[cfg(feature = "verify_message")]
-    unsafe fn send_message<A, R>(&self, sel: Sel, args: A)
+    unsafe fn send_message<A, R>(&self, sel: &Sel, args: A)
             -> Result<R, MessageError>
             where Self: Sized, A: MessageArguments + EncodeArguments,
             R: Any + Encode {
@@ -96,7 +96,7 @@ pub unsafe trait Message {
     # }
     ```
     */
-    fn verify_message<A, R>(&self, sel: Sel) -> Result<(), MessageError>
+    fn verify_message<A, R>(&self, sel: &Sel) -> Result<(), MessageError>
             where Self: Sized, A: EncodeArguments, R: Encode {
         let obj = unsafe { &*(self as *const _ as *const Object) };
         verify_message_signature::<A, R>(obj.class(), sel)
@@ -115,16 +115,16 @@ pub trait MessageArguments: Sized {
     /// This method is the primitive used when sending messages and should not
     /// be called directly; instead, use the `msg_send!` macro or, in cases
     /// with a dynamic selector, the `Message::send_message` method.
-    unsafe fn invoke<R>(imp: Imp, obj: *mut Object, sel: Sel, args: Self) -> R
+    unsafe fn invoke<R>(imp: Imp, obj: *mut Object, sel: &Sel, args: Self) -> R
             where R: Any;
 }
 
 macro_rules! message_args_impl {
     ($($a:ident : $t:ident),*) => (
         impl<$($t),*> MessageArguments for ($($t,)*) {
-            unsafe fn invoke<R>(imp: Imp, obj: *mut Object, sel: Sel, ($($a,)*): Self) -> R
+            unsafe fn invoke<R>(imp: Imp, obj: *mut Object, sel: &Sel, ($($a,)*): Self) -> R
                     where R: Any {
-                let imp: unsafe extern fn(*mut Object, Sel $(, $t)*) -> R =
+                let imp: unsafe extern fn(*mut Object, &Sel $(, $t)*) -> R =
                     mem::transmute(imp);
                 imp(obj, sel $(, $a)*)
             }
@@ -179,7 +179,7 @@ impl<'a> From<VerificationError<'a>> for MessageError {
 #[doc(hidden)]
 #[inline(always)]
 #[cfg(not(feature = "verify_message"))]
-pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
+pub unsafe fn send_message<T, A, R>(obj: *const T, sel: &Sel, args: A)
         -> Result<R, MessageError>
         where T: Message, A: MessageArguments, R: Any {
     send_unverified(obj, sel, args)
@@ -188,7 +188,7 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
 #[doc(hidden)]
 #[inline(always)]
 #[cfg(feature = "verify_message")]
-pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
+pub unsafe fn send_message<T, A, R>(obj: *const T, sel: &Sel, args: A)
         -> Result<R, MessageError>
         where T: Message, A: MessageArguments + EncodeArguments,
         R: Any + Encode {
@@ -206,7 +206,7 @@ pub unsafe fn send_message<T, A, R>(obj: *const T, sel: Sel, args: A)
 #[inline(always)]
 #[cfg(not(feature = "verify_message"))]
 pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
-        sel: Sel, args: A) -> Result<R, MessageError>
+        sel: &Sel, args: A) -> Result<R, MessageError>
         where T: Message, A: MessageArguments, R: Any {
     send_super_unverified(obj, superclass, sel, args)
 }
@@ -215,7 +215,7 @@ pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
 #[inline(always)]
 #[cfg(feature = "verify_message")]
 pub unsafe fn send_super_message<T, A, R>(obj: *const T, superclass: &Class,
-        sel: Sel, args: A) -> Result<R, MessageError>
+        sel: &Sel, args: A) -> Result<R, MessageError>
         where T: Message, A: MessageArguments + EncodeArguments,
         R: Any + Encode {
     if obj.is_null() {

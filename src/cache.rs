@@ -1,4 +1,3 @@
-use std::os::raw::c_void;
 use std::ptr;
 use std::sync::atomic::{AtomicPtr, Ordering};
 
@@ -7,7 +6,7 @@ use crate::runtime::{Class, Sel, self};
 /// Allows storing a `Sel` in a static and lazily loading it.
 #[doc(hidden)]
 pub struct CachedSel {
-    ptr: AtomicPtr<c_void>
+    ptr: AtomicPtr<Sel>,
 }
 
 impl CachedSel {
@@ -21,16 +20,16 @@ impl CachedSel {
     /// Returns the cached selector. If no selector is yet cached, registers
     /// one with the given name and stores it.
     #[inline(always)]
-    pub unsafe fn get(&self, name: &str) -> Sel {
+    pub unsafe fn get(&self, name: &str) -> &'static Sel {
         let ptr = self.ptr.load(Ordering::Relaxed);
         // It should be fine to use `Relaxed` ordering here because `sel_registerName` is
         // thread-safe.
         if ptr.is_null() {
             let sel = runtime::sel_registerName(name.as_ptr() as *const _);
-            self.ptr.store(sel.as_ptr() as *mut _, Ordering::Relaxed);
-            sel
+            self.ptr.store(sel as *mut _, Ordering::Relaxed);
+            &*sel
         } else {
-            Sel::from_ptr(ptr)
+            &*ptr
         }
     }
 }

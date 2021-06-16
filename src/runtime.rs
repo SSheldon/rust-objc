@@ -31,15 +31,15 @@ pub const YES: BOOL = true;
 #[cfg(target_arch = "aarch64")]
 pub const NO: BOOL = false;
 
-/// A type that represents a method selector.
-#[repr(C)]
-pub struct Sel {
-    ptr: *const c_void,
-}
-
 /// A marker type to be embedded into other types just so that they cannot be
 /// constructed externally.
 type PrivateMarker = [u8; 0];
+
+/// A type that represents a method selector.
+#[repr(C)]
+pub struct Sel {
+    _priv: PrivateMarker,
+}
 
 /// A type that represents an instance variable.
 #[repr(C)]
@@ -76,17 +76,17 @@ pub type Imp = unsafe extern fn();
 
 #[link(name = "objc", kind = "dylib")]
 extern {
-    pub fn sel_registerName(name: *const c_char) -> Sel;
-    pub fn sel_getName(sel: Sel) -> *const c_char;
+    pub fn sel_registerName(name: *const c_char) -> *const Sel;
+    pub fn sel_getName(sel: *const Sel) -> *const c_char;
 
     pub fn class_getName(cls: *const Class) -> *const c_char;
     pub fn class_getSuperclass(cls: *const Class) -> *const Class;
     pub fn class_getInstanceSize(cls: *const Class) -> usize;
-    pub fn class_getInstanceMethod(cls: *const Class, sel: Sel) -> *const Method;
+    pub fn class_getInstanceMethod(cls: *const Class, sel: *const Sel) -> *const Method;
     pub fn class_getInstanceVariable(cls: *const Class, name: *const c_char) -> *const Ivar;
     pub fn class_copyMethodList(cls: *const Class, outCount: *mut c_uint) -> *mut *const Method;
     pub fn class_copyIvarList(cls: *const Class, outCount: *mut c_uint) -> *mut *const Ivar;
-    pub fn class_addMethod(cls: *mut Class, name: Sel, imp: Imp, types: *const c_char) -> BOOL;
+    pub fn class_addMethod(cls: *mut Class, name: *const Sel, imp: Imp, types: *const c_char) -> BOOL;
     pub fn class_addIvar(cls: *mut Class, name: *const c_char, size: usize, alignment: u8, types: *const c_char) -> BOOL;
     pub fn class_addProtocol(cls: *mut Class, proto: *const Protocol) -> BOOL;
     pub fn class_conformsToProtocol(cls: *const Class, proto: *const Protocol) -> BOOL;
@@ -111,7 +111,7 @@ extern {
     pub fn objc_autoreleasePoolPush() -> *mut c_void;
     pub fn objc_autoreleasePoolPop(context: *mut c_void);
 
-    pub fn protocol_addMethodDescription(proto: *mut Protocol, name: Sel, types: *const c_char, isRequiredMethod: BOOL,
+    pub fn protocol_addMethodDescription(proto: *mut Protocol, name: *const Sel, types: *const c_char, isRequiredMethod: BOOL,
                                          isInstanceMethod: BOOL);
     pub fn protocol_addProtocol(proto: *mut Protocol, addition: *const Protocol);
     pub fn protocol_getName(proto: *const Protocol) -> *const c_char;
@@ -123,7 +123,7 @@ extern {
     pub fn ivar_getOffset(ivar: *const Ivar) -> isize;
     pub fn ivar_getTypeEncoding(ivar: *const Ivar) -> *const c_char;
 
-    pub fn method_getName(method: *const Method) -> Sel;
+    pub fn method_getName(method: *const Method) -> *const Sel;
     pub fn method_getImplementation(method: *const Method) -> Imp;
     pub fn method_copyReturnType(method: *const Method) -> *mut c_char;
     pub fn method_copyArgumentType(method: *const Method, index: c_uint) -> *mut c_char;
@@ -144,55 +144,34 @@ extern {
 impl Sel {
     /// Registers a method with the Objective-C runtime system,
     /// maps the method name to a selector, and returns the selector value.
-    pub fn register(name: &str) -> Sel {
+    pub fn register(name: &str) -> &'static Sel {
         let name = CString::new(name).unwrap();
-        unsafe {
-            sel_registerName(name.as_ptr())
-        }
+        // The input is not a null pointer, so this cannot return null
+        unsafe { &*sel_registerName(name.as_ptr()) }
     }
 
     /// Returns the name of the method specified by self.
     pub fn name(&self) -> &str {
-        let name = unsafe {
-            CStr::from_ptr(sel_getName(*self))
-        };
+        let name = unsafe { CStr::from_ptr(sel_getName(self)) };
         str::from_utf8(name.to_bytes()).unwrap()
-    }
-
-    /// Wraps a raw pointer to a selector into a `Sel` object.
-    ///
-    /// This is almost never what you want; use `Sel::register()` instead.
-    #[inline]
-    pub unsafe fn from_ptr(ptr: *const c_void) -> Sel {
-        Sel {
-            ptr: ptr,
-        }
-    }
-
-    /// Returns a pointer to the raw selector.
-    #[inline]
-    pub fn as_ptr(&self) -> *const c_void {
-        self.ptr
     }
 }
 
 impl PartialEq for Sel {
-    fn eq(&self, other: &Sel) -> bool {
-        self.ptr == other.ptr
+    fn eq(&self, other: &Self) -> bool {
+        // Pointer equality
+        self as *const Self == other as *const Self
     }
 }
 
 impl Eq for Sel { }
 
-// Sel is safe to share across threads because it is immutable
-unsafe impl Sync for Sel { }
-unsafe impl Send for Sel { }
+/// [`Sel`] is immutable and safe to share across threads.
+unsafe impl Sync for Sel {}
 
-impl Copy for Sel { }
-
-impl Clone for Sel {
-    fn clone(&self) -> Sel { *self }
-}
+/// You can never own a [`Sel`], so this implementation is a bit moot, but a
+/// [`Sel`] is not bound to a specific thread, so this should be safe.
+unsafe impl Send for Sel {}
 
 impl fmt::Debug for Sel {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -228,10 +207,8 @@ impl Ivar {
 
 impl Method {
     /// Returns the name of self.
-    pub fn name(&self) -> Sel {
-        unsafe {
-            method_getName(self)
-        }
+    pub fn name(&self) -> &'static Sel {
+        unsafe { &*method_getName(self) }
     }
 
     /// Returns the `Encoding` of self's return type.
@@ -331,7 +308,7 @@ impl Class {
     /// Returns a specified instance method for self, or `None` if self and
     /// its superclasses do not contain an instance method with the
     /// specified selector.
-    pub fn instance_method(&self, sel: Sel) -> Option<&Method> {
+    pub fn instance_method<'a>(&'a self, sel: &Sel) -> Option<&'a Method> {
         unsafe {
             let method = class_getInstanceMethod(self, sel);
             if method.is_null() { None } else { Some(&*method) }
@@ -550,7 +527,7 @@ mod tests {
         assert!(method.name().name() == "foo");
         assert!(method.arguments_count() == 2);
         assert!(*method.return_type() == <u32>::ENCODING);
-        assert!(*method.argument_type(1).unwrap() == Sel::ENCODING);
+        assert!(*method.argument_type(1).unwrap() == <&Sel>::ENCODING);
 
         let methods = cls.instance_methods();
         assert!(methods.len() > 0);

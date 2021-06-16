@@ -60,12 +60,12 @@ let mut decl = ClassDecl::new("MyNumber", superclass).unwrap();
 decl.add_ivar::<u32>("_number");
 
 // Add an ObjC method for getting the number
-extern fn my_number_get(this: &Object, _cmd: Sel) -> u32 {
+extern fn my_number_get(this: &Object, _cmd: &Sel) -> u32 {
     unsafe { *this.get_ivar("_number") }
 }
 unsafe {
     decl.add_method(sel!(number),
-        my_number_get as extern fn(&Object, Sel) -> u32);
+        my_number_get as extern fn(&Object, &Sel) -> u32);
 }
 
 decl.register();

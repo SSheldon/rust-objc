@@ -59,7 +59,7 @@ pub fn custom_class() -> &'static Class {
 
     REGISTER_CUSTOM_CLASS.call_once(|| {
         // The runtime will call this method, so it has to be implemented
-        extern fn custom_obj_class_initialize(_this: &Class, _cmd: Sel) { }
+        extern fn custom_obj_class_initialize(_this: &Class, _cmd: &Sel) { }
 
         let mut decl = ClassDecl::root("CustomObject", custom_obj_class_initialize).unwrap();
         let proto = custom_protocol();
@@ -67,43 +67,43 @@ pub fn custom_class() -> &'static Class {
         decl.add_protocol(proto);
         decl.add_ivar::<u32>("_foo");
 
-        extern fn custom_obj_set_foo(this: &mut Object, _cmd: Sel, foo: u32) {
+        extern fn custom_obj_set_foo(this: &mut Object, _cmd: &Sel, foo: u32) {
             unsafe { this.set_ivar::<u32>("_foo", foo); }
         }
 
-        extern fn custom_obj_get_foo(this: &Object, _cmd: Sel) -> u32 {
+        extern fn custom_obj_get_foo(this: &Object, _cmd: &Sel) -> u32 {
             unsafe { *this.get_ivar::<u32>("_foo") }
         }
 
-        extern fn custom_obj_get_struct(_this: &Object, _cmd: Sel) -> CustomStruct {
+        extern fn custom_obj_get_struct(_this: &Object, _cmd: &Sel) -> CustomStruct {
             CustomStruct { a: 1, b: 2, c: 3, d: 4 }
         }
 
-        extern fn custom_obj_class_method(_this: &Class, _cmd: Sel) -> u32 {
+        extern fn custom_obj_class_method(_this: &Class, _cmd: &Sel) -> u32 {
             7
         }
 
-        extern fn custom_obj_set_bar(this: &mut Object, _cmd: Sel, bar: u32) {
+        extern fn custom_obj_set_bar(this: &mut Object, _cmd: &Sel, bar: u32) {
             unsafe { this.set_ivar::<u32>("_foo", bar) ;}
         }
 
-        extern fn custom_obj_add_number_to_number(_this: &Class, _cmd: Sel, fst: i32, snd: i32) -> i32 {
+        extern fn custom_obj_add_number_to_number(_this: &Class, _cmd: &Sel, fst: i32, snd: i32) -> i32 {
             fst + snd
         }
 
         unsafe {
-            let set_foo: extern fn(&mut Object, Sel, u32) = custom_obj_set_foo;
+            let set_foo: extern fn(&mut Object, &Sel, u32) = custom_obj_set_foo;
             decl.add_method(sel!(setFoo:), set_foo);
-            let get_foo: extern fn(&Object, Sel) -> u32 = custom_obj_get_foo;
+            let get_foo: extern fn(&Object, &Sel) -> u32 = custom_obj_get_foo;
             decl.add_method(sel!(foo), get_foo);
-            let get_struct: extern fn(&Object, Sel) -> CustomStruct = custom_obj_get_struct;
+            let get_struct: extern fn(&Object, &Sel) -> CustomStruct = custom_obj_get_struct;
             decl.add_method(sel!(customStruct), get_struct);
-            let class_method: extern fn(&Class, Sel) -> u32 = custom_obj_class_method;
+            let class_method: extern fn(&Class, &Sel) -> u32 = custom_obj_class_method;
             decl.add_class_method(sel!(classFoo), class_method);
 
-            let protocol_instance_method: extern fn(&mut Object, Sel, u32) = custom_obj_set_bar;
+            let protocol_instance_method: extern fn(&mut Object, &Sel, u32) = custom_obj_set_bar;
             decl.add_method(sel!(setBar:), protocol_instance_method);
-            let protocol_class_method: extern fn(&Class, Sel, i32, i32) -> i32 = custom_obj_add_number_to_number;
+            let protocol_class_method: extern fn(&Class, &Sel, i32, i32) -> i32 = custom_obj_add_number_to_number;
             decl.add_class_method(sel!(addNumber:toNumber:), protocol_class_method);
         }
 
@@ -156,7 +156,7 @@ pub fn custom_subclass() -> &'static Class {
         let superclass = custom_class();
         let mut decl = ClassDecl::new("CustomSubclassObject", superclass).unwrap();
 
-        extern fn custom_subclass_get_foo(this: &Object, _cmd: Sel) -> u32 {
+        extern fn custom_subclass_get_foo(this: &Object, _cmd: &Sel) -> u32 {
             let foo: u32 = unsafe {
                 msg_send![super(this, custom_class()), foo]
             };
@@ -164,7 +164,7 @@ pub fn custom_subclass() -> &'static Class {
         }
 
         unsafe {
-            let get_foo: extern fn(&Object, Sel) -> u32 = custom_subclass_get_foo;
+            let get_foo: extern fn(&Object, &Sel) -> u32 = custom_subclass_get_foo;
             decl.add_method(sel!(foo), get_foo);
         }
 

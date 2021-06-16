@@ -21,12 +21,12 @@ let mut decl = ClassDecl::new("MyNumber", superclass).unwrap();
 decl.add_ivar::<u32>("_number");
 
 // Add an ObjC method for getting the number
-extern fn my_number_get(this: &Object, _cmd: Sel) -> u32 {
+extern fn my_number_get(this: &Object, _cmd: &Sel) -> u32 {
     unsafe { *this.get_ivar("_number") }
 }
 unsafe {
     decl.add_method(sel!(number),
-        my_number_get as extern fn(&Object, Sel) -> u32);
+        my_number_get as extern fn(&Object, &Sel) -> u32);
 }
 
 decl.register();
@@ -68,8 +68,8 @@ macro_rules! method_decl_impl {
         }
     );
     ($($t:ident),*) => (
-        method_decl_impl!(-T, R, extern fn(&T, Sel $(, $t)*) -> R, $($t),*);
-        method_decl_impl!(-T, R, extern fn(&mut T, Sel $(, $t)*) -> R, $($t),*);
+        method_decl_impl!(-T, R, extern fn(&T, &Sel $(, $t)*) -> R, $($t),*);
+        method_decl_impl!(-T, R, extern fn(&mut T, &Sel $(, $t)*) -> R, $($t),*);
     );
 }
 
@@ -87,14 +87,13 @@ method_decl_impl!(A, B, C, D, E, F, G, H, I, J);
 method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K);
 method_decl_impl!(A, B, C, D, E, F, G, H, I, J, K, L);
 
-fn count_args(sel: Sel) -> usize {
+fn count_args(sel: &Sel) -> usize {
     sel.name().chars().filter(|&c| c == ':').count()
 }
 
 fn method_type_encoding(ret: &Encoding, args: &[Encoding]) -> CString {
     // First two arguments are always self and the selector
-    let mut types = format!("{}{}{}",
-        ret, <*mut Object>::ENCODING, Sel::ENCODING);
+    let mut types = format!("{}{}{}", ret, <*mut Object>::ENCODING, <&Sel>::ENCODING);
     for enc in args {
         use std::fmt::Write;
         write!(&mut types, "{}", enc).unwrap();
@@ -150,8 +149,7 @@ impl ClassDecl {
     Functionality it expects, like implementations of `-retain` and `-release`
     used by ARC, will not be present otherwise.
     */
-    pub fn root(name: &str, intitialize_fn: extern fn(&Class, Sel))
-            -> Option<ClassDecl> {
+    pub fn root(name: &str, intitialize_fn: extern "C" fn(&Class, &Sel)) -> Option<ClassDecl> {
         let mut decl = ClassDecl::with_superclass(name, None);
         if let Some(ref mut decl) = decl {
             unsafe {
@@ -166,7 +164,7 @@ impl ClassDecl {
     /// or if the selector and function take different numbers of arguments.
     /// Unsafe because the caller must ensure that the types match those that
     /// are expected when the method is invoked from Objective-C.
-    pub unsafe fn add_method<F>(&mut self, sel: Sel, func: F)
+    pub unsafe fn add_method<F>(&mut self, sel: &Sel, func: F)
             where F: MethodImplementation<Callee=Object> {
         let encs = F::Args::ENCODINGS;
         let sel_args = count_args(sel);
@@ -186,8 +184,10 @@ impl ClassDecl {
     /// or if the selector and function take different numbers of arguments.
     /// Unsafe because the caller must ensure that the types match those that
     /// are expected when the method is invoked from Objective-C.
-    pub unsafe fn add_class_method<F>(&mut self, sel: Sel, func: F)
-            where F: MethodImplementation<Callee=Class> {
+    pub unsafe fn add_class_method<F>(&mut self, sel: &Sel, func: F)
+    where
+        F: MethodImplementation<Callee = Class>,
+    {
         let encs = F::Args::ENCODINGS;
         let sel_args = count_args(sel);
         assert!(sel_args == encs.len(),
@@ -265,10 +265,15 @@ impl ProtocolDecl {
         }
     }
 
-    fn add_method_description_common<Args, Ret>(&mut self, sel: Sel, is_required: bool,
-            is_instance_method: bool)
-            where Args: EncodeArguments,
-                  Ret: Encode {
+    fn add_method_description_common<Args, Ret>(
+        &mut self,
+        sel: &Sel,
+        is_required: bool,
+        is_instance_method: bool,
+    ) where
+        Args: EncodeArguments,
+        Ret: Encode,
+    {
         let encs = Args::ENCODINGS;
         let sel_args = count_args(sel);
         assert!(sel_args == encs.len(),
@@ -283,16 +288,20 @@ impl ProtocolDecl {
     }
 
     /// Adds an instance method declaration with a given description to self.
-    pub fn add_method_description<Args, Ret>(&mut self, sel: Sel, is_required: bool)
-            where Args: EncodeArguments,
-                  Ret: Encode {
+    pub fn add_method_description<Args, Ret>(&mut self, sel: &Sel, is_required: bool)
+    where
+        Args: EncodeArguments,
+        Ret: Encode,
+    {
         self.add_method_description_common::<Args, Ret>(sel, is_required, true)
     }
 
     /// Adds a class method declaration with a given description to self.
-    pub fn add_class_method_description<Args, Ret>(&mut self, sel: Sel, is_required: bool)
-            where Args: EncodeArguments,
-                  Ret: Encode {
+    pub fn add_class_method_description<Args, Ret>(&mut self, sel: &Sel, is_required: bool)
+    where
+        Args: EncodeArguments,
+        Ret: Encode,
+    {
         self.add_method_description_common::<Args, Ret>(sel, is_required, false)
     }
 

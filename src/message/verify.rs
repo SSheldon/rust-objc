@@ -4,8 +4,8 @@ use crate::runtime::{Class, Method, Object, Sel};
 use crate::{Encode, Encoding, EncodeArguments};
 
 pub enum VerificationError<'a> {
-    NilReceiver(Sel),
-    MethodNotFound(&'a Class, Sel),
+    NilReceiver(&'a Sel),
+    MethodNotFound(&'a Class, &'a Sel),
     MismatchedReturn(&'a Method, Encoding<'static>),
     MismatchedArgumentsCount(&'a Method, usize),
     MismatchedArgument(&'a Method, usize, Encoding<'static>),
@@ -39,9 +39,10 @@ impl<'a> fmt::Display for VerificationError<'a> {
     }
 }
 
-pub fn verify_message_signature<A, R>(cls: &Class, sel: Sel)
-        -> Result<(), VerificationError>
-        where A: EncodeArguments, R: Encode {
+pub fn verify_message_signature<'a, A: EncodeArguments, R: Encode>(
+    cls: &'a Class,
+    sel: &'a Sel,
+) -> Result<(), VerificationError<'a>> {
     let method = match cls.instance_method(sel) {
         Some(method) => method,
         None => return Err(VerificationError::MethodNotFound(cls, sel)),
@@ -53,7 +54,7 @@ pub fn verify_message_signature<A, R>(cls: &Class, sel: Sel)
         return Err(VerificationError::MismatchedReturn(method, ret));
     }
 
-    let self_and_cmd = [<*mut Object>::ENCODING, Sel::ENCODING];
+    let self_and_cmd = [<*mut Object>::ENCODING, <&Sel>::ENCODING];
     let args = A::ENCODINGS;
 
     let count = self_and_cmd.len() + args.len();

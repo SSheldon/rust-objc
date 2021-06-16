@@ -1,9 +1,11 @@
 use crate::runtime::{Class, Object, Sel};
 use crate::{Encode, Encoding};
 
-unsafe impl Encode for Sel {
+unsafe impl<'a> Encode for &'a Sel {
     const ENCODING: Encoding<'static> = Encoding::Sel;
 }
+
+// We don't implement `Encode` for `&mut Sel` because selectors are immutable.
 
 unsafe impl<'a> Encode for &'a Object {
     const ENCODING: Encoding<'static> = Encoding::Object;
@@ -62,6 +64,7 @@ mod tests {
         assert!(<&Object>::ENCODING.to_string() == "@");
         assert!(<*mut Object>::ENCODING.to_string() == "@");
         assert!(<&Class>::ENCODING.to_string() == "#");
-        assert!(Sel::ENCODING.to_string() == ":");
+        assert!(<*const Sel>::ENCODING.to_string() == ":");
+        assert!(<&Sel>::ENCODING.to_string() == ":");
     }
 }

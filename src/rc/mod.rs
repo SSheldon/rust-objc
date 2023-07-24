@@ -49,7 +49,7 @@ pub use self::weak::WeakPtr;
 pub use self::autorelease::autoreleasepool;
 
 // These tests use NSObject, which isn't present for GNUstep
-#[cfg(all(test, any(target_os = "macos", target_os = "ios")))]
+#[cfg(all(test, any(target_os = "macos", target_os = "ios", target_os = "tvos")))]
 mod tests {
     use crate::runtime::Object;
     use super::StrongPtr;
